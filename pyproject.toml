@@ -27,3 +27,9 @@ codebase-map = "codebase_map.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["codebase_map*"]
+
+[tool.black]
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
