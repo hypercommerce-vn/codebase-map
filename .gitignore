@@ -12,6 +12,7 @@ venv/
 docs/function-map/
 *.json
 !codebase-map.example.yaml
+!.claude/settings.json
 
 # IDE
 .vscode/

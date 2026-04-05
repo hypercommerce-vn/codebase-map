@@ -1,0 +1,175 @@
+# /implement — Codebase Map Feature Implementation
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+
+> Slash command kích hoạt khi user gõ `/implement` hoặc bắt đầu implement 1 feature.
+> Claude thực hiện đúng 7 bước theo thứ tự, không bỏ bước nào.
+> Adapted from HC Implement v1.0.
+
+---
+
+## 7-BƯỚC IMPLEMENT CHUẨN
+
+### Bước 1 — Đọc Spec & Design
+
+```bash
+# Đọc feature spec trước khi làm bất cứ điều gì
+cat specs/spec.md
+cat project/CM-S1-TASK-BOARD.md
+```
+
+Nếu có FE (HTML/D3.js) changes:
+```bash
+# Đọc design approved
+# Mở trong browser: design-preview/codebase-map-CM-S1-design.html
+# Hoặc design tổng thể: design-preview/codebase-map-v2-design.html
+```
+
+Checklist đọc spec:
+- [ ] Hiểu rõ task description + acceptance criteria
+- [ ] Biết files cần tạo/sửa
+- [ ] Biết design reference (nếu FE)
+- [ ] Biết dependencies với tasks khác
+
+---
+
+### Bước 2 — Explore Codebase
+
+Trước khi viết code, khám phá patterns hiện có:
+
+```bash
+# Xem parser pattern
+cat codebase_map/parsers/python_parser.py
+cat codebase_map/parsers/base.py
+
+# Xem graph models
+cat codebase_map/graph/models.py
+cat codebase_map/graph/builder.py
+
+# Xem exporter pattern
+cat codebase_map/exporters/html_exporter.py
+cat codebase_map/exporters/json_exporter.py
+```
+
+Mục tiêu: code mới phải follow đúng pattern đã có, không tự sáng tạo.
+
+---
+
+### Bước 3 — Plan (Optional review với user)
+
+Trình bày plan ngắn gọn:
+- Files sẽ tạo/sửa (list đầy đủ)
+- Thay đổi models (Node, Edge, Graph nếu có)
+- HTML/D3.js changes (nếu có)
+- Impact lên existing features
+
+Hỏi user: "Plan OK không, hay cần điều chỉnh?"
+
+---
+
+### Bước 4 — Implement + Test Loop
+
+**Thứ tự viết code theo layer:**
+
+```
+Parser changes → Graph changes → Exporter changes → CLI changes
+```
+
+**Pattern chuẩn:**
+```python
+# Parser: kế thừa BaseParser, implement parse() method
+# Graph: dùng Node, Edge, Graph dataclasses từ models.py
+# Exporter: generate output từ Graph object
+# CLI: dùng click, gọi qua builder/query engine
+```
+
+**Sau mỗi thay đổi quan trọng:**
+```bash
+# Self-test: chạy generate trên sample project
+python -m codebase_map generate -c codebase-map.example.yaml
+
+# Verify output
+python -m codebase_map summary -f output/graph.json
+```
+
+**Comment bắt buộc trên mọi block AI-generated:**
+```python
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+```
+
+---
+
+### Bước 5 — Quality Gate
+
+```bash
+# 1. Lint gate — BẮT BUỘC
+black --check codebase_map/
+isort --check codebase_map/
+flake8 codebase_map/
+
+# 2. Không hardcode paths
+grep -r "\/Users\/" codebase_map/ --include="*.py"
+# Phải trống — không có absolute paths
+
+# 3. Verify HTML output (nếu có HTML changes)
+# Mở output HTML trong browser, verify D3.js render đúng
+```
+
+---
+
+### Bước 6 — Full Verification
+
+```bash
+# Generate trên HC project (real data)
+codebase-map generate -c /path/to/HyperCommerce/codebase-map.yaml
+
+# Verify graph stats
+codebase-map summary -f graph.json
+# Expected: ~1,386 nodes · ~8,285 edges · 7 domains
+
+# Verify specific queries
+codebase-map search "pipeline" -f graph.json
+codebase-map impact "CustomerService" -f graph.json
+
+# Lint final check
+black --check codebase_map/ && isort --check codebase_map/ && flake8 codebase_map/
+```
+
+---
+
+### Bước 7 — Commit + PR
+
+```bash
+# Tạo branch (KHÔNG push thẳng main)
+git checkout main && git pull
+git checkout -b feat/cm-s1-dayX-[slug]
+
+# Commit với conventional message
+git add [specific files only — không dùng git add -A]
+git commit -m "feat(exporter): add sidebar tree to HTML output
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP"
+
+# Push + tạo PR
+git push -u origin feat/cm-s1-dayX-[slug]
+gh pr create --title "feat: [mô tả ngắn]" --body "..."
+```
+
+**KHÔNG được push thẳng lên main.**
+
+---
+
+## CHECKLIST TRƯỚC KHI BÁO DONE
+
+- [ ] Tất cả task requirements đã implement
+- [ ] Lint pass: black + isort + flake8
+- [ ] Generate chạy thành công trên sample/HC project
+- [ ] HTML output render đúng trong browser (nếu có FE changes)
+- [ ] Design match 100% với design-preview/ (nếu có FE changes)
+- [ ] PR đã tạo đúng format
+- [ ] BRIEF.md đã cập nhật trạng thái
+- [ ] Comment `# HC-AI | ticket: FDD-TOOL-CODEMAP` trên AI blocks
+
+---
+
+*implement.md v1.0 | Codebase Map | Adapted from HC v1.0 | 06/04/2026*

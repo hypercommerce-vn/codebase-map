@@ -62,6 +62,8 @@
 | 05/04/2026 | **Design CM-S1 approved** — `codebase-map-CM-S1-design.html` | CEO |
 | 05/04/2026 | **FDD spec approved** — 3 sprints, 29 tasks, 55 SP | CEO |
 | 05/04/2026 | **Quy trình Day** — Implement → Lint → PR → CI → /review-gate 3 tầng → CEO | CEO |
+| 05/04/2026 | **Retroactive approve Day 1** — CM-S1 Day 1 đã review ở HC repo cũ (PR #82/#84), coi như pass. Exception do migration repo | CEO |
+| 06/04/2026 | **AI Infrastructure Migration** — Copy + adapt từ HC: 7 agents, 5 commands, settings, 7 memory files. CEO approved phương án 3 phase | CEO |
 
 ---
 
@@ -84,6 +86,9 @@
 | `project/CM-S1-TASK-BOARD.md` | Task board sprint 1 |
 | `design-preview/codebase-map-v2-design.html` | Design tổng thể v2.0 |
 | `design-preview/codebase-map-CM-S1-design.html` | Design chi tiết CM-S1 |
+| `agents/README.md` | 7 AI agents overview |
+| `.claude/commands/` | 5 slash commands (review-gate, implement, review, ci-watch, security-audit) |
+| `.claude/settings.json` | Security deny/allow rules |
 
 ---
 

@@ -45,6 +45,25 @@ Gắn vào bất kỳ Python/TypeScript project nào qua YAML config.
 codebase-map/
 ├── CLAUDE.md                          ← file này
 ├── BRIEF.md                           ← trạng thái hiện tại (cập nhật mỗi session)
+├── .claude/
+│   ├── settings.json                  ← security deny/allow rules
+│   ├── commands/
+│   │   ├── review-gate.md             ← /review-gate — 3 tầng review
+│   │   ├── implement.md               ← /implement — 7 bước implement
+│   │   ├── review.md                  ← /review — 5D code review
+│   │   ├── ci-watch.md                ← /ci-watch — CI auto-fix
+│   │   └── security-audit.md          ← /security-audit — 3 tầng security
+│   └── specs/
+│       └── FDD-TOOL-CODEMAP/          ← spec per ticket
+├── agents/
+│   ├── README.md                      ← 7 AI agents overview
+│   ├── cto/SKILL.md                   ← CTO: code quality, architecture
+│   ├── techlead/SKILL.md              ← TechLead: implementation, review
+│   ├── project-manager/SKILL.md       ← PM: sprint tracking, risk
+│   ├── product-owner/SKILL.md         ← PO: backlog, scope, sign-off
+│   ├── business-analyst/SKILL.md      ← BA: spec, business rules
+│   ├── designer/SKILL.md              ← Designer: D3.js/HTML review
+│   └── tester/SKILL.md               ← Tester: functional, regression
 ├── codebase_map/
 │   ├── __init__.py                    ← version
 │   ├── __main__.py                    ← python -m entry
@@ -87,6 +106,34 @@ codebase-map/
 | Task board CM-S1 | **`project/CM-S1-TASK-BOARD.md`** |
 | Design v2.0 tổng thể | **`design-preview/codebase-map-v2-design.html`** |
 | Design CM-S1 chi tiết | **`design-preview/codebase-map-CM-S1-design.html`** |
+| AI Agents overview | **`agents/README.md`** |
+| Slash commands | **`.claude/commands/`** |
+
+---
+
+## 🤖 AI AGENTS & SLASH COMMANDS
+
+### 7 AI Agents (đọc `agents/README.md` để overview)
+
+| Agent | File | Khi nào dùng |
+|-------|------|-------------|
+| CTO | `agents/cto/SKILL.md` | Architecture review, quality gate |
+| Tech Lead | `agents/techlead/SKILL.md` | Implement, code review |
+| PM | `agents/project-manager/SKILL.md` | Sprint tracking, risk |
+| PO | `agents/product-owner/SKILL.md` | Scope, user stories, sign-off |
+| BA | `agents/business-analyst/SKILL.md` | Spec, business rules, flows |
+| Designer | `agents/designer/SKILL.md` | HTML/D3.js design review |
+| Tester | `agents/tester/SKILL.md` | Functional test, regression |
+
+### 5 Slash Commands (trong `.claude/commands/`)
+
+| Command | Khi nào dùng |
+|---------|-------------|
+| `/review-gate` | **BẮT BUỘC** trước CEO review — 3 tầng |
+| `/implement` | Bắt đầu implement feature — 7 bước |
+| `/review` | Code review nhanh — 5D × 20đ |
+| `/ci-watch` | CI fail — auto-fix + re-push |
+| `/security-audit` | Security scan — 3 tầng |
 
 ---
 
@@ -147,4 +194,4 @@ black --check codebase_map/ && isort --check codebase_map/ && flake8 codebase_ma
 
 ---
 
-*CLAUDE.md v1.0 — Codebase Map | Created 05/04/2026*
+*CLAUDE.md v1.1 — Codebase Map | Updated 06/04/2026 | Added agents + commands + settings*
