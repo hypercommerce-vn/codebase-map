@@ -1,0 +1,30 @@
+# codebase-map.example.yaml — Sample config for any project
+# Copy this to your project root as codebase-map.yaml
+
+project: "my-project"
+
+sources:
+  # Python backend
+  - path: "src"
+    language: python
+    base_module: "src"      # Python import root
+    exclude:
+      - "__pycache__"
+      - "migrations"
+      - ".venv"
+      - "tests"
+
+  # TypeScript frontend (v2.0 — coming soon)
+  # - path: "frontend/src"
+  #   language: typescript
+  #   exclude:
+  #     - "node_modules"
+  #     - "dist"
+
+output:
+  dir: "docs/function-map"  # output directory (relative to config file)
+  formats: [json, html]     # json = structured data, html = interactive visual
+
+graph:
+  depth: 3                  # max depth for impact analysis
+  group_by: module          # group nodes by module/directory

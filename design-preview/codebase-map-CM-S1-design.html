@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CM-S1 (v1.1) Design Spec — Codebase Map | Hyper Commerce</title>
+<style>
+:root {
+  --hc-primary: #6366f1;
+  --bg-canvas: #0d1117;
+  --bg-surface: #161b22;
+  --bg-surface-hover: #1c2128;
+  --bg-elevated: #21262d;
+  --border: #30363d;
+  --border-focus: #58a6ff;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #484f58;
+  --domain-crm: #3fb950;
+  --domain-cdp: #a371f7;
+  --domain-ecommerce: #f0883e;
+  --domain-private-traffic: #58a6ff;
+  --domain-core: #79c0ff;
+  --domain-auth: #d29922;
+  --domain-billing: #f778ba;
+  --type-route: #f0883e;
+  --type-class: #a371f7;
+  --type-method: #3fb950;
+  --type-function: #79c0ff;
+  --type-model: #f778ba;
+  --type-celery: #d29922;
+  --layer-router: #f0883e;
+  --layer-service: #3fb950;
+  --layer-repository: #a371f7;
+  --layer-core: #79c0ff;
+  --layer-model: #f778ba;
+  --layer-worker: #d29922;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: #111; color: var(--text-primary); font-size: 14px; line-height: 1.6; }
+
+/* ═══ DESIGN NAV BAR ═══ */
+.design-nav {
+  position: sticky; top: 0; z-index: 999;
+  background: var(--bg-surface);
+  border-bottom: 2px solid var(--hc-primary);
+  padding: 10px 24px;
+  display: flex; align-items: center; gap: 16px;
+  flex-wrap: wrap;
+}
+.design-nav .title { font-size: 15px; font-weight: 700; color: var(--hc-primary); white-space: nowrap; }
+.design-nav .subtitle { font-size: 12px; color: var(--text-muted); }
+.design-nav .nav-links { display: flex; gap: 4px; flex-wrap: wrap; margin-left: auto; }
+.nav-link {
+  padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border);
+  background: transparent; color: var(--text-secondary); font-size: 11px;
+  cursor: pointer; text-decoration: none; transition: all .15s; white-space: nowrap;
+}
+.nav-link:hover { border-color: var(--hc-primary); color: var(--text-primary); }
+.nav-link.active { background: var(--hc-primary); border-color: var(--hc-primary); color: #fff; }
+.back-link { color: var(--border-focus); text-decoration: none; font-size: 12px; }
+
+/* ═══ SECTION LAYOUT ═══ */
+.section {
+  max-width: 1400px; margin: 0 auto;
+  padding: 40px 24px; border-bottom: 1px solid var(--border);
+}
+.section-id { font-size: 11px; color: var(--hc-primary); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.section h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.section .desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; max-width: 700px; }
+.spec-table { width: 100%; font-size: 12px; border-collapse: collapse; margin-bottom: 20px; }
+.spec-table th { text-align: left; color: var(--text-muted); padding: 6px 12px; border-bottom: 1px solid var(--border); font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: .5px; }
+.spec-table td { padding: 8px 12px; border-bottom: 1px solid rgba(48,54,61,.5); vertical-align: top; }
+.spec-table .token { font-family: 'SF Mono', monospace; font-size: 11px; color: var(--domain-cdp); }
+.spec-table .value { color: var(--text-primary); }
+
+/* State showcase */
+.state-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 16px; }
+.state-card {
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+}
+.state-card .state-label {
+  padding: 8px 14px; background: var(--bg-elevated); border-bottom: 1px solid var(--border);
+  font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .5px;
+  display: flex; align-items: center; gap: 6px;
+}
+.state-card .state-label .dot { width: 6px; height: 6px; border-radius: 50%; }
+.state-card .state-body { padding: 16px; }
+
+/* Component preview containers */
+.preview { background: var(--bg-canvas); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.preview-label { font-size: 10px; color: var(--text-muted); padding: 4px 8px; background: var(--bg-elevated); border-bottom: 1px solid var(--border); }
+
+/* Reuse component styles from v2 design */
+.search-box { width: 100%; padding: 8px 12px 8px 34px; background: var(--bg-canvas); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-size: 13px; outline: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238b949e' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 10px center; }
+.search-box:focus { border-color: var(--border-focus); }
+
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; font-size: 11px; border-radius: 12px; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); cursor: pointer; }
+.chip.active { background: var(--hc-primary); border-color: var(--hc-primary); color: #fff; }
+.chip .dot { width: 6px; height: 6px; border-radius: 50%; }
+.chip .count { font-size: 10px; opacity: .7; }
+
+.domain-header { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text-primary); }
+.domain-header:hover { background: var(--bg-surface-hover); }
+.domain-header .arrow { font-size: 10px; color: var(--text-muted); width: 16px; text-align: center; }
+.domain-header .domain-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.domain-header .domain-count { font-size: 10px; color: var(--text-muted); margin-left: auto; background: var(--bg-canvas); padding: 1px 6px; border-radius: 8px; }
+
+.node-item { padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 6px; }
+.node-item:hover { background: var(--bg-surface-hover); }
+.node-item.selected { background: rgba(99,102,241,.15); border-left: 2px solid var(--hc-primary); }
+.node-item .type-icon { font-size: 10px; width: 18px; text-align: center; flex-shrink: 0; }
+.node-item .node-name { color: var(--text-primary); font-weight: 500; }
+.node-item .node-layer { font-size: 10px; color: var(--text-muted); margin-left: auto; }
+
+.method-item { font-size: 11px; padding: 3px 8px 3px 28px; color: var(--text-secondary); cursor: pointer; border-radius: 4px; }
+.method-item:hover { background: var(--bg-surface-hover); color: var(--text-primary); }
+.method-item.selected { color: var(--hc-primary); font-weight: 600; }
+
+.empty-state { text-align: center; padding: 32px 16px; }
+.empty-state .icon { font-size: 28px; margin-bottom: 6px; opacity: .5; }
+.empty-state .title { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+.empty-state .hint { font-size: 11px; color: var(--text-muted); }
+
+/* Topbar component */
+.topbar-preview { height: 48px; background: var(--bg-surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 16px; gap: 12px; }
+.topbar-preview .logo-icon { width: 28px; height: 28px; background: var(--hc-primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; }
+.topbar-preview .logo-text { font-size: 14px; font-weight: 600; }
+.topbar-preview .logo-ver { font-size: 11px; color: var(--text-muted); background: var(--bg-elevated); padding: 2px 6px; border-radius: 4px; }
+.stat-badge { font-size: 11px; color: var(--text-secondary); background: var(--bg-canvas); padding: 4px 10px; border-radius: 12px; border: 1px solid var(--border); }
+.stat-badge strong { color: var(--text-primary); }
+.timestamp { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+.timestamp.stale { color: #ef4444; }
+
+/* Toolbar */
+.tool-btn { width: 36px; height: 36px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; color: var(--text-secondary); cursor: pointer; font-size: 14px; }
+.tool-btn:hover { background: var(--bg-elevated); color: var(--text-primary); }
+.tool-btn.active { background: var(--hc-primary); border-color: var(--hc-primary); color: #fff; }
+
+/* Legend */
+.legend-preview { display: flex; gap: 14px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 11px; }
+.legend-group { display: flex; align-items: center; gap: 8px; }
+.legend-group-title { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+.legend-item { display: flex; align-items: center; gap: 4px; color: var(--text-secondary); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+.legend-line { width: 16px; height: 2px; border-radius: 1px; }
+.legend-line.dashed { background: repeating-linear-gradient(90deg, var(--text-muted) 0 4px, transparent 4px 7px); }
+
+/* Minimap */
+.minimap-preview { width: 180px; height: 120px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; position: relative; }
+
+/* Cluster on graph */
+.cluster-demo { border-radius: 12px; padding: 16px; margin: 8px; position: relative; }
+.cluster-label { font-size: 13px; font-weight: 700; opacity: .4; margin-bottom: 8px; }
+.cluster-nodes { display: flex; gap: 8px; flex-wrap: wrap; }
+.cluster-node { width: 12px; height: 12px; border-radius: 50%; border: 2px solid; }
+
+/* Annotation callouts */
+.annotation { font-size: 11px; color: var(--hc-primary); background: rgba(99,102,241,.08); border: 1px dashed var(--hc-primary); border-radius: 6px; padding: 6px 10px; margin-top: 10px; }
+.annotation strong { color: var(--text-primary); }
+</style>
+</head>
+<body>
+
+<!-- ═══ DESIGN NAV ═══ -->
+<div class="design-nav">
+  <a href="codebase-map-v2-design.html" class="back-link">&#8592; v2.0 Overview</a>
+  <span class="title">CM-S1 (v1.1) — Design Spec</span>
+  <span class="subtitle">10 components &middot; All states</span>
+  <div class="nav-links">
+    <a href="#cm-s1-01" class="nav-link active">01 Sidebar Tree</a>
+    <a href="#cm-s1-02" class="nav-link">02 Clusters</a>
+    <a href="#cm-s1-03" class="nav-link">03 Layer Fix</a>
+    <a href="#cm-s1-06" class="nav-link">06 Minimap</a>
+    <a href="#cm-s1-07" class="nav-link">07 Toolbar</a>
+    <a href="#cm-s1-08" class="nav-link">08 Legend</a>
+    <a href="#cm-s1-09" class="nav-link">09 Empty State</a>
+    <a href="#cm-s1-10" class="nav-link">10 Top Bar</a>
+    <a href="#full-layout" class="nav-link">Full Layout</a>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S1-01: PROGRESSIVE DISCLOSURE — SIDEBAR TREE
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s1-01">
+  <div class="section-id">CM-S1-01 &middot; 3 SP &middot; Designer</div>
+  <h2>Progressive Disclosure — Sidebar Domain Tree</h2>
+  <p class="desc">Sidebar hiện domain tree collapse/expand. Mặc định hiện domain → class level. Click class → expand methods. Giảm visible nodes từ 1,386 → ~350.</p>
+
+  <table class="spec-table">
+    <tr><th>Property</th><th>Token / Value</th><th>Notes</th></tr>
+    <tr><td>Sidebar width</td><td class="token">340px</td><td>Cố định, không resize</td></tr>
+    <tr><td>Domain header padding</td><td class="token">6px 8px</td><td></td></tr>
+    <tr><td>Domain header font</td><td class="token">12px / 600</td><td>Bold for domain names</td></tr>
+    <tr><td>Arrow icon</td><td class="token">&#9654; 10px</td><td>Rotate 90deg when open</td></tr>
+    <tr><td>Domain dot</td><td class="token">8px circle</td><td>Color = domain color</td></tr>
+    <tr><td>Count badge</td><td class="token">10px / bg-canvas / radius 8px</td><td>Right-aligned</td></tr>
+    <tr><td>Node item padding</td><td class="token">5px 8px</td><td></td></tr>
+    <tr><td>Method indent</td><td class="token">padding-left: 28px</td><td>Nested under class</td></tr>
+    <tr><td>Selected state</td><td class="token">bg: rgba(99,102,241,.15) + border-left 2px primary</td><td></td></tr>
+    <tr><td>Hover state</td><td class="token">bg: var(--bg-surface-hover)</td><td></td></tr>
+    <tr><td>Max visible (no scroll)</td><td class="value">~30 items</td><td>Rest scrollable</td></tr>
+  </table>
+
+  <div class="state-grid">
+    <!-- State 1: Default — collapsed -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:#3fb950"></span> Default — All Collapsed</div>
+      <div class="state-body">
+        <div class="preview" style="width:320px;">
+          <div style="padding:12px;border-bottom:1px solid var(--border)">
+            <input type="text" class="search-box" placeholder="Search functions, classes..." style="width:100%">
+          </div>
+          <div style="padding:8px;">
+            <div class="domain-header"><span class="arrow">&#9654;</span><span class="domain-dot" style="background:var(--domain-private-traffic)"></span> Private Traffic <span class="domain-count">375</span></div>
+            <div class="domain-header"><span class="arrow">&#9654;</span><span class="domain-dot" style="background:var(--domain-crm)"></span> CRM <span class="domain-count">268</span></div>
+            <div class="domain-header"><span class="arrow">&#9654;</span><span class="domain-dot" style="background:var(--domain-cdp)"></span> CDP <span class="domain-count">185</span></div>
+            <div class="domain-header"><span class="arrow">&#9654;</span><span class="domain-dot" style="background:var(--domain-ecommerce)"></span> eCommerce <span class="domain-count">165</span></div>
+            <div class="domain-header"><span class="arrow">&#9654;</span><span class="domain-dot" style="background:var(--domain-core)"></span> Core <span class="domain-count">141</span></div>
+            <div class="domain-header"><span class="arrow">&#9654;</span><span class="domain-dot" style="background:var(--domain-billing)"></span> Billing <span class="domain-count">70</span></div>
+            <div class="domain-header"><span class="arrow">&#9654;</span><span class="domain-dot" style="background:var(--domain-auth)"></span> Auth <span class="domain-count">52</span></div>
+          </div>
+        </div>
+        <div class="annotation">Domains sorted by node count descending. 7 domains visible at once — no scroll needed.</div>
+      </div>
+    </div>
+
+    <!-- State 2: CRM expanded — class level -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--border-focus)"></span> CRM Expanded — Class Level</div>
+      <div class="state-body">
+        <div class="preview" style="width:320px;">
+          <div style="padding:8px;">
+            <div class="domain-header"><span class="arrow" style="display:inline-block;transform:rotate(90deg)">&#9654;</span><span class="domain-dot" style="background:var(--domain-crm)"></span> CRM <span class="domain-count">268</span></div>
+            <div style="padding-left:16px;">
+              <div class="node-item"><span class="type-icon" style="color:var(--type-class)">&#9670;</span><span class="node-name">CustomerService</span><span class="node-layer">service</span></div>
+              <div class="node-item"><span class="type-icon" style="color:var(--type-class)">&#9670;</span><span class="node-name">CustomerRepository</span><span class="node-layer">repo</span></div>
+              <div class="node-item"><span class="type-icon" style="color:var(--type-route)">&#9679;</span><span class="node-name">create_customer</span><span class="node-layer">router</span></div>
+              <div class="node-item"><span class="type-icon" style="color:var(--type-route)">&#9679;</span><span class="node-name">list_customers</span><span class="node-layer">router</span></div>
+              <div class="node-item"><span class="type-icon" style="color:var(--type-route)">&#9679;</span><span class="node-name">import_csv</span><span class="node-layer">router</span></div>
+              <div style="padding:4px 8px;font-size:11px;color:var(--text-muted);margin-top:2px;">
+                <span class="arrow">&#9654;</span> Pipeline <span style="background:var(--bg-canvas);padding:1px 6px;border-radius:8px;font-size:10px;">52</span>
+              </div>
+              <div style="padding:4px 8px;font-size:11px;color:var(--text-muted);">
+                <span class="arrow">&#9654;</span> Products <span style="background:var(--bg-canvas);padding:1px 6px;border-radius:8px;font-size:10px;">38</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation">Click domain → expand to classes + routes + sub-modules. Classes show &#9670; icon, routes show &#9679;.</div>
+      </div>
+    </div>
+
+    <!-- State 3: Class expanded — methods -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--type-method)"></span> Class Expanded — Method Level</div>
+      <div class="state-body">
+        <div class="preview" style="width:320px;">
+          <div style="padding:8px;padding-left:16px;">
+            <div class="node-item"><span class="type-icon" style="color:var(--type-class)">&#9670;</span><span class="node-name">CustomerService</span><span class="node-layer">service</span></div>
+            <div class="method-item selected">&#8627; create</div>
+            <div class="method-item">&#8627; update</div>
+            <div class="method-item">&#8627; delete</div>
+            <div class="method-item">&#8627; list</div>
+            <div class="method-item">&#8627; add_tags</div>
+            <div class="method-item">&#8627; import_csv</div>
+            <div class="node-item" style="margin-top:4px;"><span class="type-icon" style="color:var(--type-class)">&#9670;</span><span class="node-name">CustomerRepository</span><span class="node-layer">repo</span></div>
+          </div>
+        </div>
+        <div class="annotation">Click class → expand methods (&#8627; prefix). Selected method = purple highlight + border-left. Click method → select on graph + show detail panel.</div>
+      </div>
+    </div>
+
+    <!-- State 4: Search filtered -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--domain-auth)"></span> Search Filtered — "pipeline"</div>
+      <div class="state-body">
+        <div class="preview" style="width:320px;">
+          <div style="padding:12px;border-bottom:1px solid var(--border)">
+            <input type="text" class="search-box" value="pipeline" style="width:100%;border-color:var(--border-focus);" readonly>
+          </div>
+          <div style="padding:4px 12px;font-size:11px;color:var(--text-muted);">52 results</div>
+          <div style="padding:8px;">
+            <div class="node-item"><span class="type-icon" style="color:var(--type-class)">&#9670;</span><span class="node-name">PipelineService</span><span class="node-layer">service</span></div>
+            <div class="node-item"><span class="type-icon" style="color:var(--type-class)">&#9670;</span><span class="node-name">PipelineRepository</span><span class="node-layer">repo</span></div>
+            <div class="node-item"><span class="type-icon" style="color:var(--type-route)">&#9679;</span><span class="node-name">create_deal</span><span class="node-layer">router</span></div>
+            <div class="node-item"><span class="type-icon" style="color:var(--type-route)">&#9679;</span><span class="node-name">get_kanban</span><span class="node-layer">router</span></div>
+            <div class="node-item"><span class="type-icon" style="color:var(--type-function)">&#402;</span><span class="node-name">train_ml_model</span><span class="node-layer">cdp</span></div>
+          </div>
+        </div>
+        <div class="annotation">Search filters across all domains. Result count shown. Auto-expand matching domains. Highlight matching text (future v1.2).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S1-02: DOMAIN CLUSTERING
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s1-02">
+  <div class="section-id">CM-S1-02 &middot; 3 SP &middot; CTO</div>
+  <h2>Domain Clustering — Visual Grouping on Graph</h2>
+  <p class="desc">Nodes cùng domain được nhóm lại gần nhau trên graph. Mỗi cluster có background màu nhạt + label domain. D3 forceCluster.</p>
+
+  <table class="spec-table">
+    <tr><th>Property</th><th>Value</th><th>Notes</th></tr>
+    <tr><td>Cluster background</td><td class="token">fill-opacity: 0.04</td><td>Rất nhạt, không che nodes</td></tr>
+    <tr><td>Cluster border</td><td class="token">stroke-opacity: 0.15 / stroke-width: 1</td><td></td></tr>
+    <tr><td>Cluster border-radius</td><td class="token">rx: 16</td><td>Rounded corners</td></tr>
+    <tr><td>Cluster label</td><td class="token">14px / 700 / fill-opacity: 0.3</td><td>Domain name + count</td></tr>
+    <tr><td>Cluster padding</td><td class="token">~40px around nodes</td><td>Dynamic based on content</td></tr>
+    <tr><td>Force cluster strength</td><td class="token">0.3</td><td>Gentle pull, not rigid</td></tr>
+    <tr><td>Non-connected dimming</td><td class="token">opacity: 0.1</td><td>When node selected, unrelated nodes dim</td></tr>
+  </table>
+
+  <div class="state-grid">
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:#3fb950"></span> Default — All Clusters Visible</div>
+      <div class="state-body">
+        <div class="preview" style="padding:20px;display:flex;gap:12px;flex-wrap:wrap;">
+          <div class="cluster-demo" style="background:rgba(63,185,80,.06);border:1px solid rgba(63,185,80,.15);flex:1;min-width:140px;">
+            <div class="cluster-label" style="color:var(--domain-crm)">CRM (268)</div>
+            <div class="cluster-nodes">
+              <div class="cluster-node" style="background:var(--type-class);border-color:var(--layer-service)"></div>
+              <div class="cluster-node" style="background:var(--type-route);border-color:var(--layer-router)"></div>
+              <div class="cluster-node" style="background:var(--type-method);border-color:var(--layer-service)"></div>
+              <div class="cluster-node" style="background:var(--type-model);border-color:var(--layer-model)"></div>
+              <div class="cluster-node" style="background:var(--type-method);border-color:var(--layer-repository)"></div>
+            </div>
+          </div>
+          <div class="cluster-demo" style="background:rgba(88,166,255,.06);border:1px solid rgba(88,166,255,.15);flex:1;min-width:140px;">
+            <div class="cluster-label" style="color:var(--domain-private-traffic)">Private Traffic (375)</div>
+            <div class="cluster-nodes">
+              <div class="cluster-node" style="background:var(--type-class);border-color:var(--layer-service)"></div>
+              <div class="cluster-node" style="background:var(--type-celery);border-color:var(--layer-worker)"></div>
+              <div class="cluster-node" style="background:var(--type-route);border-color:var(--layer-router)"></div>
+              <div class="cluster-node" style="background:var(--type-function);border-color:var(--layer-core)"></div>
+            </div>
+          </div>
+          <div class="cluster-demo" style="background:rgba(163,113,247,.06);border:1px solid rgba(163,113,247,.15);flex:1;min-width:140px;">
+            <div class="cluster-label" style="color:var(--domain-cdp)">CDP (185)</div>
+            <div class="cluster-nodes">
+              <div class="cluster-node" style="background:var(--type-class);border-color:var(--layer-service)"></div>
+              <div class="cluster-node" style="background:var(--type-method);border-color:var(--layer-repository)"></div>
+              <div class="cluster-node" style="background:var(--type-model);border-color:var(--layer-model)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation"><strong>Node encoding:</strong> Fill = type color (class/route/method). Stroke = layer color (service/router/repo). Size: class=9px, route=7px, method=5px.</div>
+      </div>
+    </div>
+
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--hc-primary)"></span> Node Selected — Connected Highlighted</div>
+      <div class="state-body">
+        <div class="preview" style="padding:20px;display:flex;gap:12px;flex-wrap:wrap;">
+          <div class="cluster-demo" style="background:rgba(63,185,80,.06);border:1px solid rgba(63,185,80,.15);flex:1;min-width:140px;">
+            <div class="cluster-label" style="color:var(--domain-crm)">CRM (268)</div>
+            <div class="cluster-nodes">
+              <div class="cluster-node" style="background:var(--type-method);border-color:var(--layer-service);box-shadow:0 0 8px var(--type-method);border-width:3px"></div>
+              <div class="cluster-node" style="background:var(--type-class);border-color:var(--layer-service)"></div>
+              <div class="cluster-node" style="background:var(--type-class);border-color:var(--layer-repository)"></div>
+              <div class="cluster-node" style="background:var(--type-route);border-color:var(--layer-router);opacity:.15"></div>
+              <div class="cluster-node" style="background:var(--type-model);border-color:var(--layer-model);opacity:.15"></div>
+            </div>
+          </div>
+          <div class="cluster-demo" style="background:rgba(163,113,247,.06);border:1px solid rgba(163,113,247,.15);flex:1;min-width:140px;opacity:.3;">
+            <div class="cluster-label" style="color:var(--domain-cdp)">CDP (185)</div>
+            <div class="cluster-nodes">
+              <div class="cluster-node" style="background:var(--type-class);border-color:var(--layer-service)"></div>
+              <div class="cluster-node" style="background:var(--type-method);border-color:var(--layer-repository)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation"><strong>Selection behavior:</strong> Selected node = glow shadow + border 3px. Connected nodes = full opacity. Unrelated domains = opacity 0.3. Edges: outgoing = green, incoming = orange.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S1-03: FIX UNKNOWN LAYER
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s1-03">
+  <div class="section-id">CM-S1-03 &middot; 1 SP &middot; CTO</div>
+  <h2>Fix "Unknown" Layer Classification</h2>
+  <p class="desc">Backend-only change. Cải thiện _detect_layer() trong python_parser.py để classify 444 "unknown" nodes xuống &lt; 50 (&lt; 5%).</p>
+
+  <table class="spec-table">
+    <tr><th>Current "unknown" source</th><th>Correct layer</th><th>Detection rule</th></tr>
+    <tr><td>schemas.py (224 models)</td><td class="value">schema</td><td class="token">*/schemas.py → LayerType.SCHEMA (new)</td></tr>
+    <tr><td>__init__.py</td><td class="value">module</td><td class="token">__init__.py → skip or LayerType.MODULE</td></tr>
+    <tr><td>ml_pipeline.py, helpers</td><td class="value">util</td><td class="token">*pipeline*.py, *helper*.py → LayerType.UTIL</td></tr>
+    <tr><td>conftest.py, test_*</td><td class="value">test</td><td class="token">test_*.py, conftest* → LayerType.TEST (new)</td></tr>
+  </table>
+
+  <div class="state-grid">
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:#ef4444"></span> Before — 444 Unknown (32%)</div>
+      <div class="state-body" style="display:flex;gap:4px;flex-wrap:wrap;">
+        <span class="chip active"><span class="dot" style="background:var(--layer-service)"></span>Service <span class="count">301</span></span>
+        <span class="chip active"><span class="dot" style="background:var(--layer-router)"></span>Router <span class="count">233</span></span>
+        <span class="chip active"><span class="dot" style="background:var(--layer-core)"></span>Core <span class="count">170</span></span>
+        <span class="chip active"><span class="dot" style="background:var(--layer-repository)"></span>Repo <span class="count">150</span></span>
+        <span class="chip active"><span class="dot" style="background:var(--layer-worker)"></span>Worker <span class="count">48</span></span>
+        <span class="chip active"><span class="dot" style="background:var(--layer-model)"></span>Model <span class="count">40</span></span>
+        <span class="chip" style="border-color:#ef4444;color:#ef4444;"><span class="dot" style="background:#ef4444"></span>Unknown <span class="count">444 !!!</span></span>
+      </div>
+    </div>
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:#3fb950"></span> After — Unknown &lt; 50 (&lt; 5%)</div>
+      <div class="state-body" style="display:flex;gap:4px;flex-wrap:wrap;">
+        <span class="chip active"><span class="dot" style="background:var(--layer-service)"></span>Service <span class="count">301</span></span>
+        <span class="chip active"><span class="dot" style="background:#f0883e"></span>Schema <span class="count">~224</span></span>
+        <span class="chip active"><span class="dot" style="background:var(--layer-router)"></span>Router <span class="count">233</span></span>
+        <span class="chip active"><span class="dot" style="background:var(--layer-core)"></span>Core <span class="count">170</span></span>
+        <span class="chip active"><span class="dot" style="background:var(--layer-repository)"></span>Repo <span class="count">150</span></span>
+        <span class="chip active"><span class="dot" style="background:var(--type-function)"></span>Util <span class="count">~100</span></span>
+        <span class="chip active"><span class="dot" style="background:var(--layer-worker)"></span>Worker <span class="count">48</span></span>
+        <span class="chip active"><span class="dot" style="background:var(--layer-model)"></span>Model <span class="count">40</span></span>
+        <span class="chip" style="opacity:.5"><span class="dot" style="background:var(--text-muted)"></span>Unknown <span class="count">&lt;50</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S1-06: MINIMAP
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s1-06">
+  <div class="section-id">CM-S1-06 &middot; 2 SP &middot; Designer</div>
+  <h2>Minimap — Graph Overview Navigation</h2>
+  <p class="desc">Canvas nhỏ góc dưới phải hiện toàn cảnh graph. Viewport indicator (rect viền primary) cho biết vùng đang nhìn. Có thể click/drag trên minimap để navigate.</p>
+
+  <table class="spec-table">
+    <tr><th>Property</th><th>Value</th><th>Notes</th></tr>
+    <tr><td>Size</td><td class="token">180px x 120px</td><td>Fixed, bottom-right corner</td></tr>
+    <tr><td>Position</td><td class="token">absolute; bottom: 12px; right: 12px</td><td>z-index: 15</td></tr>
+    <tr><td>Background</td><td class="token">var(--bg-surface)</td><td></td></tr>
+    <tr><td>Border</td><td class="token">1px solid var(--border); radius 8px</td><td></td></tr>
+    <tr><td>Viewport rect</td><td class="token">1.5px solid var(--hc-primary); bg rgba(99,102,241,.08)</td><td>Semi-transparent fill</td></tr>
+    <tr><td>Cluster colors</td><td class="token">Same as main graph, fill-opacity: 0.15</td><td></td></tr>
+    <tr><td>Shadow</td><td class="token">0 4px 12px rgba(0,0,0,.3)</td><td></td></tr>
+    <tr><td>Interaction</td><td class="value">Click to pan, drag viewport rect</td><td></td></tr>
+  </table>
+
+  <div class="state-grid">
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:#3fb950"></span> Default — Full View</div>
+      <div class="state-body" style="display:flex;justify-content:center;">
+        <div class="minimap-preview">
+          <svg viewBox="0 0 360 240" style="width:100%;height:100%;background:var(--bg-canvas)">
+            <rect x="10" y="10" width="100" height="90" fill="var(--domain-crm)" fill-opacity=".15" rx="4"/>
+            <text x="60" y="30" fill="var(--domain-crm)" fill-opacity=".3" font-size="8" text-anchor="middle" font-weight="700">CRM</text>
+            <rect x="130" y="8" width="110" height="95" fill="var(--domain-private-traffic)" fill-opacity=".15" rx="4"/>
+            <text x="185" y="28" fill="var(--domain-private-traffic)" fill-opacity=".3" font-size="8" text-anchor="middle" font-weight="700">PT</text>
+            <rect x="260" y="10" width="90" height="80" fill="var(--domain-cdp)" fill-opacity=".15" rx="4"/>
+            <text x="305" y="30" fill="var(--domain-cdp)" fill-opacity=".3" font-size="8" text-anchor="middle" font-weight="700">CDP</text>
+            <rect x="10" y="120" width="100" height="80" fill="var(--domain-ecommerce)" fill-opacity=".15" rx="4"/>
+            <rect x="130" y="125" width="80" height="75" fill="var(--domain-core)" fill-opacity=".15" rx="4"/>
+            <rect x="230" y="130" width="60" height="60" fill="var(--domain-billing)" fill-opacity=".15" rx="4"/>
+            <!-- Viewport -->
+            <rect x="5" y="5" width="170" height="115" fill="rgba(99,102,241,.06)" stroke="var(--hc-primary)" stroke-width="2" rx="2"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--hc-primary)"></span> Zoomed In — Viewport Smaller</div>
+      <div class="state-body" style="display:flex;justify-content:center;">
+        <div class="minimap-preview">
+          <svg viewBox="0 0 360 240" style="width:100%;height:100%;background:var(--bg-canvas)">
+            <rect x="10" y="10" width="100" height="90" fill="var(--domain-crm)" fill-opacity=".15" rx="4"/>
+            <text x="60" y="30" fill="var(--domain-crm)" fill-opacity=".3" font-size="8" text-anchor="middle" font-weight="700">CRM</text>
+            <rect x="130" y="8" width="110" height="95" fill="var(--domain-private-traffic)" fill-opacity=".15" rx="4"/>
+            <rect x="260" y="10" width="90" height="80" fill="var(--domain-cdp)" fill-opacity=".15" rx="4"/>
+            <rect x="10" y="120" width="100" height="80" fill="var(--domain-ecommerce)" fill-opacity=".15" rx="4"/>
+            <rect x="130" y="125" width="80" height="75" fill="var(--domain-core)" fill-opacity=".15" rx="4"/>
+            <rect x="230" y="130" width="60" height="60" fill="var(--domain-billing)" fill-opacity=".15" rx="4"/>
+            <!-- Smaller viewport on CRM cluster -->
+            <rect x="15" y="15" width="85" height="70" fill="rgba(99,102,241,.08)" stroke="var(--hc-primary)" stroke-width="2" rx="2"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S1-07: TOOLBAR
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s1-07">
+  <div class="section-id">CM-S1-07 &middot; 1 SP &middot; Designer</div>
+  <h2>Toolbar — Graph Controls</h2>
+  <p class="desc">Toolbar ở góc dưới trái. 8 buttons chia 3 nhóm: Zoom | Toggle | Export.</p>
+
+  <div class="state-grid">
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:#3fb950"></span> Default State</div>
+      <div class="state-body" style="display:flex;gap:4px;align-items:center;">
+        <button class="tool-btn" title="Zoom In">+</button>
+        <button class="tool-btn" title="Zoom Out">&minus;</button>
+        <button class="tool-btn" title="Fit">&#9634;</button>
+        <div style="width:1px;height:24px;background:var(--border);margin:0 4px;"></div>
+        <button class="tool-btn" title="Labels">T</button>
+        <button class="tool-btn active" title="Edges">&#8596;</button>
+        <button class="tool-btn" title="Clusters">&#9638;</button>
+        <div style="width:1px;height:24px;background:var(--border);margin:0 4px;"></div>
+        <button class="tool-btn" title="Export PNG">&#128247;</button>
+        <button class="tool-btn" title="Fullscreen">&#9974;</button>
+      </div>
+    </div>
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--hc-primary)"></span> Toggles Active</div>
+      <div class="state-body" style="display:flex;gap:4px;align-items:center;">
+        <button class="tool-btn">+</button>
+        <button class="tool-btn">&minus;</button>
+        <button class="tool-btn">&#9634;</button>
+        <div style="width:1px;height:24px;background:var(--border);margin:0 4px;"></div>
+        <button class="tool-btn active" title="Labels ON">T</button>
+        <button class="tool-btn active" title="Edges ON">&#8596;</button>
+        <button class="tool-btn active" title="Clusters ON">&#9638;</button>
+        <div style="width:1px;height:24px;background:var(--border);margin:0 4px;"></div>
+        <button class="tool-btn">&#128247;</button>
+        <button class="tool-btn">&#9974;</button>
+      </div>
+      <div class="annotation"><strong>Toggle = purple active.</strong> Labels (T) hides/shows node text. Edges (&#8596;) hides/shows connection lines. Clusters (&#9638;) hides/shows domain backgrounds.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S1-08: DUAL LEGEND
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s1-08">
+  <div class="section-id">CM-S1-08 &middot; 1 SP &middot; Designer</div>
+  <h2>Dual Legend — Node Types + Edge Types</h2>
+  <p class="desc">Legend ở bottom-center. Chia 2 nhóm rõ: Type (fill color) + Edge (line style).</p>
+
+  <div class="state-card" style="max-width: 700px;">
+    <div class="state-label"><span class="dot" style="background:#3fb950"></span> Final Design</div>
+    <div class="state-body">
+      <div class="legend-preview">
+        <div class="legend-group">
+          <span class="legend-group-title">Type</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--type-route)"></span>Route</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--type-class)"></span>Class</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--type-method)"></span>Method</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--type-function)"></span>Func</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--type-model)"></span>Model</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--type-celery)"></span>Task</span>
+        </div>
+        <div class="legend-group">
+          <span class="legend-group-title">Edge</span>
+          <span class="legend-item"><span class="legend-line" style="background:var(--text-muted)"></span>calls</span>
+          <span class="legend-item"><span class="legend-line dashed"></span>imports</span>
+          <span class="legend-item"><span class="legend-line" style="background:var(--type-class);height:3px"></span>inherits</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S1-09: EMPTY STATE + ACCESSIBILITY
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s1-09">
+  <div class="section-id">CM-S1-09 &middot; 1 SP &middot; Designer</div>
+  <h2>Empty State + Accessibility</h2>
+  <p class="desc">Search không có kết quả → hiện empty state. Font minimum 11px trên toàn bộ UI.</p>
+
+  <div class="state-grid">
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--text-muted)"></span> Search — No Results</div>
+      <div class="state-body">
+        <div class="preview" style="width:320px;">
+          <div style="padding:12px;border-bottom:1px solid var(--border)">
+            <input type="text" class="search-box" value="xyznonexistent" style="width:100%;" readonly>
+          </div>
+          <div class="empty-state">
+            <div class="icon">&#128269;</div>
+            <div class="title">Không tìm thấy kết quả</div>
+            <div class="hint">Thử tìm bằng tên function, class hoặc domain</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:#3fb950"></span> Accessibility Checklist</div>
+      <div class="state-body" style="font-size:12px;color:var(--text-secondary);">
+        <div style="margin-bottom:6px;">&#9745; Font minimum: <strong style="color:var(--text-primary)">11px</strong> (node labels, method items)</div>
+        <div style="margin-bottom:6px;">&#9745; Contrast ratio: <strong style="color:var(--text-primary)">4.5:1+ AA</strong> (text on surface)</div>
+        <div style="margin-bottom:6px;">&#9745; Click targets: <strong style="color:var(--text-primary)">min 32px height</strong> (tool buttons 36px)</div>
+        <div style="margin-bottom:6px;">&#9745; Focus indicator: <strong style="color:var(--text-primary)">border-color: var(--border-focus)</strong></div>
+        <div style="margin-bottom:6px;">&#9745; Color not sole indicator: <strong style="color:var(--text-primary)">icons + text labels always present</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S1-10: TOP BAR
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s1-10">
+  <div class="section-id">CM-S1-10 &middot; 1 SP &middot; Designer</div>
+  <h2>Top Bar — Logo, Stats, Timestamp</h2>
+  <p class="desc">Bar cố định trên cùng. v1.1 chỉ hiện logo + stats + timestamp (view tabs = v2.0).</p>
+
+  <div class="state-grid">
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:#3fb950"></span> v1.1 — Default</div>
+      <div class="state-body">
+        <div class="preview">
+          <div class="topbar-preview">
+            <div class="logo-icon">CM</div>
+            <span class="logo-text">Codebase Map</span>
+            <span class="logo-ver">v1.1</span>
+            <span class="stat-badge"><strong>1,386</strong> nodes</span>
+            <span class="stat-badge"><strong>8,285</strong> edges</span>
+            <span class="stat-badge"><strong>7</strong> domains</span>
+            <span class="timestamp">Generated: 5 Apr 2026, 15:52</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:#ef4444"></span> Stale (v1.2 preview) — &gt; 7 days</div>
+      <div class="state-body">
+        <div class="preview">
+          <div class="topbar-preview">
+            <div class="logo-icon">CM</div>
+            <span class="logo-text">Codebase Map</span>
+            <span class="logo-ver">v1.1</span>
+            <span class="stat-badge"><strong>1,386</strong> nodes</span>
+            <span class="stat-badge"><strong>8,285</strong> edges</span>
+            <span class="stat-badge"><strong>7</strong> domains</span>
+            <span class="timestamp stale">&#9888; Generated: 28 Mar 2026 (8 days ago)</span>
+          </div>
+        </div>
+        <div class="annotation">Timestamp chuyển đỏ + warning icon khi graph outdated > 7 ngày. Feature staleness alert = CM-S2-11 (v1.2).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     FULL LAYOUT — Assembled v1.1
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="full-layout" style="padding-bottom:60px;">
+  <div class="section-id">FULL LAYOUT PREVIEW</div>
+  <h2>v1.1 — Assembled Full Screen</h2>
+  <p class="desc">Tất cả CM-S1 components ghép lại thành layout hoàn chỉnh. CEO có thể xem tổng thể sản phẩm v1.1 sẽ trông như thế nào.</p>
+
+  <div class="preview" style="height:600px;position:relative;overflow:hidden;">
+    <!-- Top bar -->
+    <div style="height:48px;background:var(--bg-surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:12px;">
+      <div style="width:28px;height:28px;background:var(--hc-primary);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;">CM</div>
+      <span style="font-size:14px;font-weight:600;">Codebase Map</span>
+      <span style="font-size:11px;color:var(--text-muted);background:var(--bg-elevated);padding:2px 6px;border-radius:4px;">v1.1</span>
+      <span class="stat-badge" style="margin-left:12px;"><strong>1,386</strong> nodes</span>
+      <span class="stat-badge"><strong>8,285</strong> edges</span>
+      <span class="stat-badge"><strong>7</strong> domains</span>
+      <span style="font-size:11px;color:var(--text-muted);margin-left:auto;">Generated: 5 Apr 2026, 15:52</span>
+    </div>
+
+    <div style="display:flex;height:calc(100% - 48px);">
+      <!-- Sidebar -->
+      <div style="width:300px;background:var(--bg-surface);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;">
+        <div style="padding:10px;border-bottom:1px solid var(--border);">
+          <input type="text" class="search-box" placeholder="Search functions, classes..." style="width:100%;font-size:12px;">
+        </div>
+        <div style="padding:6px 10px;border-bottom:1px solid var(--border);display:flex;gap:3px;flex-wrap:wrap;">
+          <span class="chip active" style="font-size:10px;padding:2px 7px;"><span class="dot" style="background:var(--layer-router)"></span>Router</span>
+          <span class="chip active" style="font-size:10px;padding:2px 7px;"><span class="dot" style="background:var(--layer-service)"></span>Service</span>
+          <span class="chip active" style="font-size:10px;padding:2px 7px;"><span class="dot" style="background:var(--layer-repository)"></span>Repo</span>
+          <span class="chip active" style="font-size:10px;padding:2px 7px;"><span class="dot" style="background:var(--layer-core)"></span>Core</span>
+        </div>
+        <div style="padding:6px;">
+          <div class="domain-header" style="font-size:11px;padding:4px 6px;"><span class="arrow" style="display:inline-block;transform:rotate(90deg);font-size:8px;">&#9654;</span><span class="domain-dot" style="background:var(--domain-crm);width:6px;height:6px;"></span>CRM<span class="domain-count" style="font-size:9px;">268</span></div>
+          <div style="padding-left:14px;">
+            <div class="node-item" style="font-size:11px;padding:3px 6px;"><span style="color:var(--type-class);font-size:9px;">&#9670;</span><span class="node-name" style="font-size:11px;">CustomerService</span></div>
+            <div style="padding-left:18px;">
+              <div class="method-item selected" style="font-size:10px;padding:2px 4px;">&#8627; create</div>
+              <div class="method-item" style="font-size:10px;padding:2px 4px;">&#8627; update</div>
+              <div class="method-item" style="font-size:10px;padding:2px 4px;">&#8627; list</div>
+            </div>
+            <div class="node-item" style="font-size:11px;padding:3px 6px;"><span style="color:var(--type-route);font-size:9px;">&#9679;</span><span class="node-name" style="font-size:11px;">create_customer</span></div>
+          </div>
+          <div class="domain-header" style="font-size:11px;padding:4px 6px;"><span class="arrow" style="font-size:8px;">&#9654;</span><span class="domain-dot" style="background:var(--domain-private-traffic);width:6px;height:6px;"></span>Private Traffic<span class="domain-count" style="font-size:9px;">375</span></div>
+          <div class="domain-header" style="font-size:11px;padding:4px 6px;"><span class="arrow" style="font-size:8px;">&#9654;</span><span class="domain-dot" style="background:var(--domain-cdp);width:6px;height:6px;"></span>CDP<span class="domain-count" style="font-size:9px;">185</span></div>
+          <div class="domain-header" style="font-size:11px;padding:4px 6px;"><span class="arrow" style="font-size:8px;">&#9654;</span><span class="domain-dot" style="background:var(--domain-ecommerce);width:6px;height:6px;"></span>eCommerce<span class="domain-count" style="font-size:9px;">165</span></div>
+          <div class="domain-header" style="font-size:11px;padding:4px 6px;"><span class="arrow" style="font-size:8px;">&#9654;</span><span class="domain-dot" style="background:var(--domain-core);width:6px;height:6px;"></span>Core<span class="domain-count" style="font-size:9px;">141</span></div>
+        </div>
+      </div>
+
+      <!-- Graph area -->
+      <div style="flex:1;position:relative;background:var(--bg-canvas);">
+        <svg viewBox="0 0 800 550" style="width:100%;height:100%;">
+          <!-- Clusters -->
+          <rect x="30" y="20" width="220" height="220" fill="var(--domain-crm)" fill-opacity=".04" stroke="var(--domain-crm)" stroke-opacity=".15" rx="12"/>
+          <text x="140" y="45" fill="var(--domain-crm)" fill-opacity=".3" font-size="11" text-anchor="middle" font-weight="700">CRM (268)</text>
+          <rect x="300" y="15" width="250" height="240" fill="var(--domain-private-traffic)" fill-opacity=".04" stroke="var(--domain-private-traffic)" stroke-opacity=".15" rx="12"/>
+          <text x="425" y="40" fill="var(--domain-private-traffic)" fill-opacity=".3" font-size="11" text-anchor="middle" font-weight="700">Private Traffic (375)</text>
+          <rect x="600" y="30" width="180" height="190" fill="var(--domain-cdp)" fill-opacity=".04" stroke="var(--domain-cdp)" stroke-opacity=".15" rx="12"/>
+          <text x="690" y="55" fill="var(--domain-cdp)" fill-opacity=".3" font-size="11" text-anchor="middle" font-weight="700">CDP (185)</text>
+          <rect x="30" y="290" width="200" height="180" fill="var(--domain-ecommerce)" fill-opacity=".04" stroke="var(--domain-ecommerce)" stroke-opacity=".15" rx="12"/>
+          <text x="130" y="315" fill="var(--domain-ecommerce)" fill-opacity=".3" font-size="11" text-anchor="middle" font-weight="700">eCommerce (165)</text>
+          <rect x="280" y="300" width="180" height="170" fill="var(--domain-core)" fill-opacity=".04" stroke="var(--domain-core)" stroke-opacity=".15" rx="12"/>
+          <text x="370" y="325" fill="var(--domain-core)" fill-opacity=".3" font-size="11" text-anchor="middle" font-weight="700">Core (141)</text>
+
+          <!-- Edges -->
+          <line x1="120" y1="110" x2="150" y2="170" stroke="#30363d" stroke-opacity=".2"/>
+          <line x1="150" y1="170" x2="180" y2="200" stroke="#30363d" stroke-opacity=".2"/>
+          <line x1="120" y1="110" x2="90" y2="150" stroke="var(--type-method)" stroke-opacity=".7" stroke-width="1.5"/>
+
+          <!-- Highlighted nodes (CRM) -->
+          <g transform="translate(120,110)"><circle r="7" fill="var(--type-method)" stroke="var(--layer-service)" stroke-width="2"/><text dx="11" dy="3" fill="var(--text-primary)" font-size="10" font-weight="600">create</text></g>
+          <g transform="translate(90,150)"><circle r="5" fill="var(--type-method)" stroke="var(--layer-repository)" stroke-width="1.5"/><text dx="9" dy="3" fill="var(--text-secondary)" font-size="10">save</text></g>
+          <g transform="translate(150,170)"><circle r="8" fill="var(--type-class)" stroke="var(--layer-service)" stroke-width="2"/><text dx="12" dy="3" fill="var(--text-primary)" font-size="10" font-weight="600">CustomerService</text></g>
+          <g transform="translate(180,200)"><circle r="8" fill="var(--type-class)" stroke="var(--layer-repository)" stroke-width="2"/><text dx="12" dy="3" fill="var(--text-secondary)" font-size="10">CustomerRepo</text></g>
+
+          <!-- Dimmed nodes (other domains) -->
+          <g opacity=".12"><circle cx="380" cy="120" r="6" fill="var(--type-class)" stroke="var(--layer-service)"/></g>
+          <g opacity=".12"><circle cx="430" cy="160" r="5" fill="var(--type-route)" stroke="var(--layer-router)"/></g>
+          <g opacity=".12"><circle cx="500" cy="140" r="6" fill="var(--type-celery)" stroke="var(--layer-worker)"/></g>
+          <g opacity=".12"><circle cx="660" cy="110" r="6" fill="var(--type-class)" stroke="var(--layer-service)"/></g>
+          <g opacity=".12"><circle cx="720" cy="150" r="5" fill="var(--type-method)" stroke="var(--layer-repository)"/></g>
+          <g opacity=".12"><circle cx="100" cy="370" r="6" fill="var(--type-class)" stroke="var(--layer-service)"/></g>
+          <g opacity=".12"><circle cx="160" cy="400" r="5" fill="var(--type-route)" stroke="var(--layer-router)"/></g>
+          <g opacity=".12"><circle cx="340" cy="380" r="5" fill="var(--type-function)" stroke="var(--layer-core)"/></g>
+          <g opacity=".12"><circle cx="400" cy="420" r="5" fill="var(--type-class)" stroke="var(--layer-core)"/></g>
+        </svg>
+
+        <!-- Toolbar -->
+        <div style="position:absolute;bottom:10px;left:10px;display:flex;gap:3px;">
+          <button class="tool-btn" style="width:30px;height:30px;font-size:12px;">+</button>
+          <button class="tool-btn" style="width:30px;height:30px;font-size:12px;">&minus;</button>
+          <button class="tool-btn" style="width:30px;height:30px;font-size:12px;">&#9634;</button>
+          <div style="width:1px;height:20px;background:var(--border);margin:5px 2px;"></div>
+          <button class="tool-btn" style="width:30px;height:30px;font-size:12px;">T</button>
+          <button class="tool-btn active" style="width:30px;height:30px;font-size:12px;">&#8596;</button>
+          <button class="tool-btn" style="width:30px;height:30px;font-size:12px;">&#9638;</button>
+        </div>
+
+        <!-- Legend -->
+        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:var(--bg-surface);border:1px solid var(--border);border-radius:6px;padding:5px 10px;display:flex;gap:10px;font-size:10px;">
+          <span style="color:var(--text-muted);font-weight:600;font-size:9px;">TYPE</span>
+          <span style="color:var(--text-secondary);display:flex;align-items:center;gap:3px;"><span style="width:6px;height:6px;background:var(--type-route);border-radius:50%;display:inline-block;"></span>Route</span>
+          <span style="color:var(--text-secondary);display:flex;align-items:center;gap:3px;"><span style="width:6px;height:6px;background:var(--type-class);border-radius:50%;display:inline-block;"></span>Class</span>
+          <span style="color:var(--text-secondary);display:flex;align-items:center;gap:3px;"><span style="width:6px;height:6px;background:var(--type-method);border-radius:50%;display:inline-block;"></span>Method</span>
+          <span style="color:var(--text-muted);font-weight:600;font-size:9px;">EDGE</span>
+          <span style="color:var(--text-secondary);">&#8212; calls</span>
+          <span style="color:var(--text-secondary);">- - imports</span>
+        </div>
+
+        <!-- Minimap -->
+        <div style="position:absolute;bottom:10px;right:10px;width:140px;height:95px;background:var(--bg-surface);border:1px solid var(--border);border-radius:6px;overflow:hidden;">
+          <svg viewBox="0 0 800 550" style="width:100%;height:100%;background:var(--bg-canvas)">
+            <rect x="30" y="20" width="220" height="220" fill="var(--domain-crm)" fill-opacity=".15" rx="4"/>
+            <rect x="300" y="15" width="250" height="240" fill="var(--domain-private-traffic)" fill-opacity=".15" rx="4"/>
+            <rect x="600" y="30" width="180" height="190" fill="var(--domain-cdp)" fill-opacity=".15" rx="4"/>
+            <rect x="30" y="290" width="200" height="180" fill="var(--domain-ecommerce)" fill-opacity=".15" rx="4"/>
+            <rect x="280" y="300" width="180" height="170" fill="var(--domain-core)" fill-opacity=".15" rx="4"/>
+            <rect x="10" y="5" width="350" height="260" fill="none" stroke="var(--hc-primary)" stroke-width="4" rx="3"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Smooth scroll for nav links
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+// Chip toggle
+document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => c.classList.toggle('active')));
+</script>
+</body>
+</html>

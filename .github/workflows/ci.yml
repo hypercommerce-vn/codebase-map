@@ -1,0 +1,60 @@
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+name: CI — Codebase Map
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          pip install black isort flake8
+
+      - name: Lint — black
+        run: black --check codebase_map/
+
+      - name: Lint — isort
+        run: isort --check codebase_map/
+
+      - name: Lint — flake8
+        run: flake8 codebase_map/ --exclude=codebase_map/exporters/d3.v7.min.js
+
+      - name: Test — generate on self
+        run: |
+          # Create a minimal config to test on this repo
+          cat > test-config.yaml << 'EOF'
+          project: "codebase-map-self-test"
+          sources:
+            - path: "codebase_map"
+              language: python
+              base_module: "codebase_map"
+              exclude: ["__pycache__", "d3.v7.min.js"]
+          output:
+            dir: "test-output"
+            formats: [json]
+          graph:
+            depth: 3
+            group_by: module
+          EOF
+          python -m codebase_map generate -c test-config.yaml
+          # Verify output exists and has content
+          test -f test-output/graph.json
+          python -c "import json; d=json.load(open('test-output/graph.json')); assert d['stats']['total_nodes'] > 10, f'Too few nodes: {d[\"stats\"][\"total_nodes\"]}'; print(f'Self-test OK: {d[\"stats\"][\"total_nodes\"]} nodes')"
