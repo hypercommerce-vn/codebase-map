@@ -29,7 +29,7 @@ jobs:
           pip install black isort flake8
 
       - name: Lint — black
-        run: black --check codebase_map/
+        run: black --check --target-version py310 codebase_map/
 
       - name: Lint — isort
         run: isort --check codebase_map/

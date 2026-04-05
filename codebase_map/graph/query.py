@@ -67,8 +67,7 @@ class QueryEngine:
             project=data.get("project", ""),
             generated_at=data.get("generated_at", ""),
         )
-        from codebase_map.graph.models import (Edge, EdgeType, LayerType,
-                                               NodeType)
+        from codebase_map.graph.models import Edge, EdgeType, LayerType, NodeType
 
         for n in data.get("nodes", []):
             node = Node(
