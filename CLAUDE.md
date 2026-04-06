@@ -165,7 +165,7 @@ Cập nhật `BRIEF.md`:
 | Version | Sprint | Focus | SP | Status |
 |---------|--------|-------|----|--------|
 | **v1.0** | — | Core: parser + graph + CLI + HTML | 8 | ✅ Done |
-| **v1.1** | CM-S1 | UX: sidebar tree, clusters, minimap, toolbar, D3 bundle | 15 | 🔄 Day 1 Done |
+| **v1.1** | CM-S1 | UX: sidebar tree, clusters, minimap, toolbar, D3 bundle | 15 | ✅ Done (06/04/2026) |
 | **v1.2** | CM-S2 | Workflow: git diff, coverage, API catalog, /implement | 18 | ⏳ Planned |
 | **v2.0** | CM-S3 | Multi-view: Executive, PR Diff, TS parser, responsive | 22 | ⏳ Planned |
 
