@@ -28,6 +28,13 @@ def main(argv: list[str] | None = None) -> int:
         default="codebase-map.yaml",
         help="Path to config file (default: codebase-map.yaml)",
     )
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CM-S2-02: Incremental cache flag
+    gen.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="Disable incremental cache, force full re-parse",
+    )
 
     # query
     q = sub.add_parser("query", help="Query a function/class by name")
@@ -133,7 +140,10 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         return 1
 
     config = Config.from_yaml(config_path)
-    builder = GraphBuilder(config)
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CM-S2-02: Incremental cache support
+    use_cache = not getattr(args, "no_cache", False)
+    builder = GraphBuilder(config, use_cache=use_cache)
     graph = builder.build()
 
     output_dir = config.project_root / config.output.dir
@@ -151,6 +161,17 @@ def _cmd_generate(args: argparse.Namespace) -> int:
     stats = graph.stats()
     print(f"  Layers: {stats['by_layer']}")
     print(f"  Domains: {stats['by_domain']}")
+
+    # Print cache stats
+    cs = builder.cache_stats
+    if cs.total_files > 0:
+        build_ms = graph.metadata.get("build_time_ms", 0)
+        print(f"  Build time: {build_ms}ms")
+        print(
+            f"  Cache: {cs.cached_files}/{cs.total_files} files cached "
+            f"({cs.cache_hit_rate:.0f}% hit rate), "
+            f"{cs.parsed_files} re-parsed"
+        )
     return 0
 
 
