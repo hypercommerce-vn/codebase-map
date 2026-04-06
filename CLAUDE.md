@@ -21,6 +21,7 @@
 5. **No Design = No Implementation** — FE component phải có design approved trước
 6. **PR Per Day Mandatory** — mỗi Day implement → 1 PR → review-gate → CEO approve
 7. **Review Gate 3 tầng:** Tester → CTO → Designer (trước CEO)
+8. **Cập nhật Project Board:** Mỗi khi cập nhật BRIEF.md/task board → cập nhật luôn `project/board.html`
 
 ---
 
@@ -152,11 +153,12 @@ Bước cuối: Cập nhật BRIEF.md
 
 ## 🔁 SESSION END PROTOCOL
 
-Cập nhật `BRIEF.md`:
+Cập nhật `BRIEF.md` + `project/board.html`:
 - Trạng thái sprint/tasks
 - Quyết định quan trọng
 - Vấn đề đang mở
 - Next actions
+- **Board HTML** — sync sprint status, task board, PR history vào `project/board.html`
 
 ---
 
