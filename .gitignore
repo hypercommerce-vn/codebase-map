@@ -10,6 +10,7 @@ venv/
 
 # Output (generated, not committed)
 docs/function-map/
+test-output/
 *.json
 !codebase-map.example.yaml
 !.claude/settings.json
