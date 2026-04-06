@@ -105,6 +105,25 @@ def main(argv: list[str] | None = None) -> int:
         help="Config file (for project root detection)",
     )
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # coverage — test coverage overlay (CM-S2-03)
+    cov_p = sub.add_parser("coverage", help="Overlay test coverage on graph nodes")
+    cov_p.add_argument(
+        "coverage_file",
+        nargs="?",
+        default="coverage.json",
+        help="Path to pytest-cov JSON report (default: coverage.json)",
+    )
+    cov_p.add_argument(
+        "-f",
+        "--file",
+        default="docs/function-map/graph.json",
+        help="Path to graph.json",
+    )
+    cov_p.add_argument(
+        "--json", action="store_true", dest="json_output", help="Output as JSON"
+    )
+
     args = parser.parse_args(argv)
 
     if not args.command:
@@ -123,6 +142,8 @@ def main(argv: list[str] | None = None) -> int:
         return _cmd_search(args)
     elif args.command == "diff":
         return _cmd_diff(args)
+    elif args.command == "coverage":
+        return _cmd_coverage(args)
 
     return 0
 
@@ -263,6 +284,39 @@ def _cmd_diff(args: argparse.Namespace) -> int:
         print(result.to_json())
     else:
         print(result.to_text())
+
+    return 0
+
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+def _cmd_coverage(args: argparse.Namespace) -> int:
+    """Test coverage overlay — map coverage data to graph nodes (CM-S2-03)."""
+    import json as json_mod
+
+    from codebase_map.graph.coverage import CoverageOverlay
+    from codebase_map.graph.query import QueryEngine
+
+    graph_path = Path(args.file)
+    if not graph_path.exists():
+        print(f"[ERROR] Graph file not found: {graph_path}")
+        print("Run 'codebase-map generate' first to create the graph.")
+        return 1
+
+    coverage_path = Path(args.coverage_file)
+    if not coverage_path.exists():
+        print(f"[ERROR] Coverage file not found: {coverage_path}")
+        print("Generate with: pytest --cov --cov-report=json")
+        return 1
+
+    engine = QueryEngine.from_json(str(graph_path))
+    overlay = CoverageOverlay.from_json(str(coverage_path))
+
+    stats = overlay.apply(engine.graph)
+
+    if args.json_output:
+        print(json_mod.dumps(stats, indent=2))
+    else:
+        print(overlay.summary_text(engine.graph))
 
     return 0
 
