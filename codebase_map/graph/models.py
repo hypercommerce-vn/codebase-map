@@ -104,6 +104,7 @@ class Graph:
     generated_at: str = ""
     nodes: dict[str, Node] = field(default_factory=dict)
     edges: list[Edge] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def add_node(self, node: Node) -> None:
         self.nodes[node.id] = node
