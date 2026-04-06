@@ -44,6 +44,8 @@ def _build_html(graph_json: str, project_name: str, d3_code: str = "") -> str:
     CM-S1 Day 2: top bar (CM-S1-10), sidebar tree (CM-S1-01),
     empty state + accessibility (CM-S1-09).
     CM-S1 Day 3: domain clustering (CM-S1-02).
+    CM-S1 Day 4: minimap (CM-S1-06), toolbar (CM-S1-07),
+    dual legend (CM-S1-08).
     """
     if d3_code:
         d3_script = f"<script>{d3_code}</script>"
@@ -235,6 +237,39 @@ body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
   background: repeating-linear-gradient(90deg, var(--text-muted) 0 4px, transparent 4px 7px);
 }}
 
+/* CM-S1-07: Toolbar */
+#toolbar {{
+  position: absolute; bottom: 12px; left: 12px; z-index: 15;
+  display: flex; gap: 4px; align-items: center;
+}}
+#toolbar .divider {{
+  width: 1px; height: 24px; background: var(--border); margin: 0 4px;
+}}
+.tool-btn {{
+  width: 36px; height: 36px; background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: 8px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--text-secondary); cursor: pointer; font-size: 14px;
+}}
+.tool-btn:hover {{ background: var(--bg-elevated); color: var(--text-primary); }}
+.tool-btn.active {{ background: var(--hc-primary); border-color: var(--hc-primary); color: #fff; }}
+
+/* CM-S1-06: Minimap */
+#minimap {{
+  position: absolute; bottom: 12px; right: 12px; z-index: 15;
+  width: 180px; height: 120px; background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: 8px;
+  overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,.3);
+  cursor: pointer;
+}}
+#minimap svg {{ width: 100%; height: 100%; background: var(--bg-canvas); }}
+.minimap-viewport {{
+  fill: rgba(99,102,241,.08); stroke: var(--hc-primary);
+  stroke-width: 1.5; cursor: move;
+}}
+.minimap-cluster {{ fill-opacity: 0.15; stroke: none; }}
+.minimap-node {{ fill-opacity: 0.6; stroke: none; }}
+
 /* CM-S1-02: Domain cluster backgrounds */
 .cluster-bg {{ fill-opacity: 0.04; stroke-opacity: 0.15; stroke-width: 1; pointer-events: none; }}
 .cluster-label {{ font-size: 14px; font-weight: 700; fill-opacity: 0.3; pointer-events: none; }}
@@ -280,7 +315,23 @@ svg {{ width: 100%; height: 100%; }}
         <button id="close-detail">&times;</button>
         <div id="detail-content"></div>
       </div>
+      <!-- CM-S1-07: Toolbar -->
+      <div id="toolbar">
+        <button class="tool-btn" id="btn-zoom-in" title="Zoom In">+</button>
+        <button class="tool-btn" id="btn-zoom-out" title="Zoom Out">&minus;</button>
+        <button class="tool-btn" id="btn-fit" title="Fit to Screen">&#9634;</button>
+        <div class="divider"></div>
+        <button class="tool-btn" id="btn-labels" title="Toggle Labels">T</button>
+        <button class="tool-btn active" id="btn-edges" title="Toggle Edges">&#8596;</button>
+        <button class="tool-btn active" id="btn-clusters" title="Toggle Clusters">&#9638;</button>
+        <div class="divider"></div>
+        <button class="tool-btn" id="btn-export" title="Export PNG">&#128247;</button>
+        <button class="tool-btn" id="btn-fullscreen" title="Fullscreen">&#9974;</button>
+      </div>
+      <!-- CM-S1-08: Dual legend -->
       <div class="legend" id="legend"></div>
+      <!-- CM-S1-06: Minimap -->
+      <div id="minimap"><svg id="minimap-svg"></svg></div>
     </div>
   </div>
 </div>
@@ -635,11 +686,13 @@ function updateClusters() {{
   }});
 }}
 
+// CM-S1-08: Edge styles match dual legend (calls=solid, imports=dashed, inherits=thick)
 const link = g.append('g').selectAll('line')
   .data(edges).join('line')
   .attr('class', 'link')
-  .attr('stroke', '#30363d')
-  .attr('stroke-width', 1);
+  .attr('stroke', d => d.type === 'inherits' ? '#a371f7' : '#30363d')
+  .attr('stroke-width', d => d.type === 'inherits' ? 2 : 1)
+  .attr('stroke-dasharray', d => d.type === 'imports' ? '4 3' : null);
 
 const nodeG = g.append('g').selectAll('g')
   .data(nodes).join('g')
@@ -781,19 +834,188 @@ nodeG.on('dblclick', (e, d) => {{
 // Initial render
 renderDomainTree();
 
-// Fit to screen after simulation settles
-setTimeout(() => {{
+// HC-AI | ticket: FDD-TOOL-CODEMAP
+// CM-S1-07: Toolbar functionality
+let showLabels = false;
+let showEdges = true;
+let showClusters = true;
+
+function fitToScreen() {{
   const bounds = g.node().getBBox();
+  if (bounds.width === 0 || bounds.height === 0) return;
   const fullWidth = bounds.width;
   const fullHeight = bounds.height;
   const midX = bounds.x + fullWidth / 2;
   const midY = bounds.y + fullHeight / 2;
   const scale = 0.8 / Math.max(fullWidth / width, fullHeight / height);
-  const translate = [width / 2 - scale * midX, height / 2 - scale * midY];
+  const tx = width / 2 - scale * midX;
+  const ty = height / 2 - scale * midY;
   svg.transition().duration(750).call(
     zoom.transform,
-    d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
+    d3.zoomIdentity.translate(tx, ty).scale(scale)
   );
+}}
+
+document.getElementById('btn-zoom-in').onclick = () => {{
+  svg.transition().duration(300).call(zoom.scaleBy, 1.5);
+}};
+document.getElementById('btn-zoom-out').onclick = () => {{
+  svg.transition().duration(300).call(zoom.scaleBy, 0.67);
+}};
+document.getElementById('btn-fit').onclick = fitToScreen;
+
+document.getElementById('btn-labels').onclick = function() {{
+  showLabels = !showLabels;
+  this.classList.toggle('active', showLabels);
+  nodeG.selectAll('.node-label').style('display', showLabels ? null : 'none');
+}};
+document.getElementById('btn-edges').onclick = function() {{
+  showEdges = !showEdges;
+  this.classList.toggle('active', showEdges);
+  link.style('display', showEdges ? null : 'none');
+}};
+document.getElementById('btn-clusters').onclick = function() {{
+  showClusters = !showClusters;
+  this.classList.toggle('active', showClusters);
+  clusterG.style('display', showClusters ? null : 'none');
+}};
+
+document.getElementById('btn-export').onclick = () => {{
+  const svgEl = document.getElementById('svg');
+  const serializer = new XMLSerializer();
+  const svgStr = serializer.serializeToString(svgEl);
+  const canvas = document.createElement('canvas');
+  canvas.width = width * 2;
+  canvas.height = height * 2;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#0d1117';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const img = new Image();
+  img.onload = () => {{
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    const a = document.createElement('a');
+    a.download = 'codebase-map.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  }};
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
+}};
+
+document.getElementById('btn-fullscreen').onclick = () => {{
+  const el = document.getElementById('graph-container');
+  if (!document.fullscreenElement) {{
+    el.requestFullscreen().catch(() => {{}});
+  }} else {{
+    document.exitFullscreen();
+  }}
+}};
+
+// Labels hidden by default
+nodeG.selectAll('.node-label').style('display', 'none');
+
+// HC-AI | ticket: FDD-TOOL-CODEMAP
+// CM-S1-06: Minimap — overview + viewport indicator
+const minimapSvg = d3.select('#minimap-svg');
+const mmWidth = 180;
+const mmHeight = 120;
+let currentTransform = d3.zoomIdentity;
+
+// Track zoom transform
+const originalZoomHandler = zoom.on('zoom');
+zoom.on('zoom', (e) => {{
+  g.attr('transform', e.transform);
+  currentTransform = e.transform;
+  updateMinimapViewport();
+}});
+
+function updateMinimap() {{
+  minimapSvg.selectAll('*').remove();
+  const bounds = g.node().getBBox();
+  if (bounds.width === 0) return;
+  const pad = 40;
+  const vbX = bounds.x - pad;
+  const vbY = bounds.y - pad;
+  const vbW = bounds.width + pad * 2;
+  const vbH = bounds.height + pad * 2;
+  minimapSvg.attr('viewBox', `${{vbX}} ${{vbY}} ${{vbW}} ${{vbH}}`);
+
+  // Draw cluster backgrounds on minimap
+  const domainBounds = {{}};
+  nodes.forEach(n => {{
+    if (n.x == null) return;
+    if (!domainBounds[n.domain]) {{
+      domainBounds[n.domain] = {{ x1: n.x, y1: n.y, x2: n.x, y2: n.y }};
+    }} else {{
+      const b = domainBounds[n.domain];
+      b.x1 = Math.min(b.x1, n.x);
+      b.y1 = Math.min(b.y1, n.y);
+      b.x2 = Math.max(b.x2, n.x);
+      b.y2 = Math.max(b.y2, n.y);
+    }}
+  }});
+  Object.entries(domainBounds).forEach(([domain, b]) => {{
+    const color = DOMAIN_COLORS[domain] || '#484f58';
+    minimapSvg.append('rect')
+      .attr('class', 'minimap-cluster')
+      .attr('x', b.x1 - 20).attr('y', b.y1 - 20)
+      .attr('width', b.x2 - b.x1 + 40).attr('height', b.y2 - b.y1 + 40)
+      .attr('rx', 4).attr('fill', color);
+  }});
+
+  // Draw nodes as small dots
+  nodes.forEach(n => {{
+    if (n.x == null) return;
+    const color = TYPE_COLORS[n.type] || '#484f58';
+    minimapSvg.append('circle')
+      .attr('class', 'minimap-node')
+      .attr('cx', n.x).attr('cy', n.y)
+      .attr('r', vbW / 120)
+      .attr('fill', color);
+  }});
+
+  // Viewport indicator rect
+  minimapSvg.append('rect')
+    .attr('class', 'minimap-viewport')
+    .attr('id', 'mm-viewport');
+
+  updateMinimapViewport();
+}}
+
+function updateMinimapViewport() {{
+  const vp = minimapSvg.select('#mm-viewport');
+  if (vp.empty()) return;
+  const t = currentTransform;
+  const vpX = -t.x / t.k;
+  const vpY = -t.y / t.k;
+  const vpW = width / t.k;
+  const vpH = height / t.k;
+  vp.attr('x', vpX).attr('y', vpY).attr('width', vpW).attr('height', vpH);
+}}
+
+// Minimap click to pan
+document.getElementById('minimap').addEventListener('click', (e) => {{
+  const mmEl = document.getElementById('minimap-svg');
+  const rect = mmEl.getBoundingClientRect();
+  const svgVB = mmEl.viewBox.baseVal;
+  if (!svgVB || svgVB.width === 0) return;
+  const clickX = svgVB.x + (e.clientX - rect.left) / rect.width * svgVB.width;
+  const clickY = svgVB.y + (e.clientY - rect.top) / rect.height * svgVB.height;
+  const t = currentTransform;
+  const newX = width / 2 - clickX * t.k;
+  const newY = height / 2 - clickY * t.k;
+  svg.transition().duration(500).call(
+    zoom.transform,
+    d3.zoomIdentity.translate(newX, newY).scale(t.k)
+  );
+}});
+
+// Update minimap after simulation settles
+simulation.on('end', updateMinimap);
+
+// Fit to screen after simulation settles
+setTimeout(() => {{
+  fitToScreen();
+  setTimeout(updateMinimap, 800);
 }}, 3000);
 </script>
 </body>
