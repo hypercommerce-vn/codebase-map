@@ -70,6 +70,34 @@ def main(argv: list[str] | None = None) -> int:
         help="Path to graph.json",
     )
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # diff — git diff integration (CM-S2-01)
+    diff_p = sub.add_parser("diff", help="Show changed + impacted nodes from git diff")
+    diff_p.add_argument(
+        "ref",
+        nargs="?",
+        default="HEAD~1",
+        help="Git ref to diff against (default: HEAD~1)",
+    )
+    diff_p.add_argument(
+        "-f",
+        "--file",
+        default="docs/function-map/graph.json",
+        help="Path to graph.json",
+    )
+    diff_p.add_argument(
+        "-d", "--depth", type=int, default=3, help="Impact analysis depth"
+    )
+    diff_p.add_argument(
+        "--json", action="store_true", dest="json_output", help="Output as JSON"
+    )
+    diff_p.add_argument(
+        "-c",
+        "--config",
+        default="codebase-map.yaml",
+        help="Config file (for project root detection)",
+    )
+
     args = parser.parse_args(argv)
 
     if not args.command:
@@ -86,6 +114,8 @@ def main(argv: list[str] | None = None) -> int:
         return _cmd_summary(args)
     elif args.command == "search":
         return _cmd_search(args)
+    elif args.command == "diff":
+        return _cmd_diff(args)
 
     return 0
 
@@ -174,6 +204,45 @@ def _cmd_search(args: argparse.Namespace) -> int:
         print(f"  {node.name:30s} {ntype:10s} {layer:12s} {loc}")
     if len(results) > 50:
         print(f"  ... and {len(results) - 50} more")
+    return 0
+
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+def _cmd_diff(args: argparse.Namespace) -> int:
+    """Git diff integration — show changed + impacted nodes (CM-S2-01)."""
+    from codebase_map.graph.diff import DiffAnalyzer
+    from codebase_map.graph.query import QueryEngine
+
+    graph_path = Path(args.file)
+    if not graph_path.exists():
+        print(f"[ERROR] Graph file not found: {graph_path}")
+        print("Run 'codebase-map generate' first to create the graph.")
+        return 1
+
+    engine = QueryEngine.from_json(str(graph_path))
+
+    # Detect project root from config or graph file location
+    config_path = Path(args.config)
+    if config_path.exists():
+        project_root = config_path.parent
+    else:
+        # Fallback: assume graph is in docs/function-map/ under project root
+        project_root = graph_path.parent.parent.parent
+        if not (project_root / ".git").exists():
+            project_root = Path.cwd()
+
+    analyzer = DiffAnalyzer(engine.graph, project_root=project_root)
+    result = analyzer.analyze(ref=args.ref, depth=args.depth)
+
+    if not result.changed_files:
+        print(f"[OK] No changed Python files found for: {args.ref}")
+        return 0
+
+    if args.json_output:
+        print(result.to_json())
+    else:
+        print(result.to_text())
+
     return 0
 
 

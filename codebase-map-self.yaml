@@ -1,0 +1,19 @@
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# Self-test config — scan codebase-map's own source code
+project: "codebase-map"
+
+sources:
+  - path: "codebase_map"
+    language: python
+    base_module: "codebase_map"
+    exclude:
+      - "__pycache__"
+      - ".venv"
+
+output:
+  dir: "docs/function-map"
+  formats: [json, html]
+
+graph:
+  depth: 3
+  group_by: module
