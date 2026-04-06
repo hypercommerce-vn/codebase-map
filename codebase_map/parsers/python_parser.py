@@ -223,6 +223,16 @@ class PythonParser(BaseParser):
                     name = alias.asname or alias.name
                     import_map[name] = f"{mod}.{alias.name}" if mod else alias.name
 
+        # HC-AI | ticket: FDD-TOOL-CODEMAP
+        # CM-S2-06: Extract __init__ type hints for attribute chain resolution
+        init_type_maps: dict[str, dict[str, str]] = {}
+        for item in ast.iter_child_nodes(tree):
+            if isinstance(item, ast.ClassDef):
+                class_id = f"{module_id}.{item.name}"
+                attr_types = self._extract_init_type_hints(item, import_map)
+                if attr_types:
+                    init_type_maps[class_id] = attr_types
+
         # Parse top-level items
         for item in ast.iter_child_nodes(tree):
             if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -255,6 +265,10 @@ class PythonParser(BaseParser):
                                 edge_type=EdgeType.INHERITS,
                             )
                         )
+
+        # HC-AI | ticket: FDD-TOOL-CODEMAP
+        # CM-S2-06: Resolve self.attr.method() chains using __init__ type hints
+        self._resolve_attribute_chains(edges, init_type_maps, import_map)
 
         # Import edges (module-level)
         for alias_name, full_path in import_map.items():
@@ -444,3 +458,149 @@ class PythonParser(BaseParser):
                 edges.append(Edge(source=caller_id, target=target, edge_type=edge_type))
 
         return edges
+
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CM-S2-06: Extract __init__ type hints to build self.attr -> Type mapping
+    def _extract_init_type_hints(
+        self,
+        class_node: ast.ClassDef,
+        import_map: dict[str, str],
+    ) -> dict[str, str]:
+        """Extract type hints from __init__ to map self.attr -> resolved type.
+
+        Parses patterns like:
+            def __init__(self, repo: CustomerRepository):
+                self.repo = repo
+        Returns: {"repo": "app.modules.crm.repository.CustomerRepository"}
+        """
+        attr_types: dict[str, str] = {}
+
+        # Find __init__ method
+        init_method = None
+        for item in class_node.body:
+            if (
+                isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))
+                and item.name == "__init__"
+            ):
+                init_method = item
+                break
+
+        if not init_method:
+            return attr_types
+
+        # Step 1: Build param -> type annotation map from __init__ args
+        param_types: dict[str, str] = {}
+        for arg in init_method.args.args:
+            if arg.arg == "self" or not arg.annotation:
+                continue
+            type_str = ast.unparse(arg.annotation)
+            # Strip Optional[] wrapper
+            if type_str.startswith("Optional[") and type_str.endswith("]"):
+                type_str = type_str[9:-1]
+            # Strip | None union
+            if " | None" in type_str:
+                type_str = type_str.replace(" | None", "")
+            param_types[arg.arg] = type_str
+
+        # Step 2: Find self.attr = param assignments in __init__ body
+        for stmt in ast.walk(init_method):
+            if not isinstance(stmt, ast.Assign):
+                continue
+            # Check for self.attr = value pattern
+            for target in stmt.targets:
+                if (
+                    isinstance(target, ast.Attribute)
+                    and isinstance(target.value, ast.Name)
+                    and target.value.id == "self"
+                ):
+                    attr_name = target.attr
+                    # Check if value is a parameter with a known type
+                    if isinstance(stmt.value, ast.Name):
+                        param_name = stmt.value.id
+                        if param_name in param_types:
+                            type_name = param_types[param_name]
+                            # Resolve type via import_map
+                            if type_name in import_map:
+                                attr_types[attr_name] = import_map[type_name]
+                            else:
+                                attr_types[attr_name] = type_name
+
+        # Step 3: Also check class-level type annotations
+        for stmt in class_node.body:
+            if isinstance(stmt, ast.AnnAssign) and isinstance(stmt.target, ast.Name):
+                attr_name = stmt.target.id
+                if attr_name not in attr_types and stmt.annotation:
+                    type_str = ast.unparse(stmt.annotation)
+                    if type_str.startswith("Optional[") and type_str.endswith("]"):
+                        type_str = type_str[9:-1]
+                    if " | None" in type_str:
+                        type_str = type_str.replace(" | None", "")
+                    if type_str in import_map:
+                        attr_types[attr_name] = import_map[type_str]
+                    else:
+                        attr_types[attr_name] = type_str
+
+        return attr_types
+
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CM-S2-06: Resolve self.attr.method() chains using __init__ type hints
+    def _resolve_attribute_chains(
+        self,
+        edges: list[Edge],
+        init_type_maps: dict[str, dict[str, str]],
+        import_map: dict[str, str],
+    ) -> None:
+        """Resolve self.attr.method() edges to actual class.method targets.
+
+        Example: self.repo.list() in CustomerService
+        → Lookup init_type_maps["CustomerService"]["repo"]
+          = "app.modules.crm.repository.CustomerRepository"
+        → Resolve to "app.modules.crm.repository.CustomerRepository.list"
+        """
+        for edge in edges:
+            if not edge.target.startswith("self."):
+                continue
+
+            parts = edge.target.split(".")
+            # self.method() — only 2 parts, handled by builder._resolve_self_references
+            if len(parts) <= 2:
+                continue
+
+            # self.attr.method() — 3+ parts, need __init__ type resolution
+            attr_name = parts[1]
+            method_chain = ".".join(parts[2:])
+
+            # Find which class this caller belongs to
+            caller_class = self._find_caller_class(edge.source)
+            if not caller_class:
+                continue
+
+            # Look up attr type from __init__ hints
+            type_map = init_type_maps.get(caller_class, {})
+            if attr_name not in type_map:
+                continue
+
+            resolved_type = type_map[attr_name]
+            resolved_target = f"{resolved_type}.{method_chain}"
+
+            # Update edge with resolved target
+            edge.target = resolved_target
+            edge.metadata["resolved_from"] = f"self.{attr_name}.{method_chain}"
+            edge.metadata["resolved_via"] = "init_type_hint"
+
+    @staticmethod
+    def _find_caller_class(caller_id: str) -> str:
+        """Extract the parent class ID from a method's fully qualified ID.
+
+        e.g. "app.modules.crm.service.CustomerService.create"
+        → "app.modules.crm.service.CustomerService"
+        """
+        parts = caller_id.rsplit(".", 1)
+        if len(parts) < 2:
+            return ""
+        # The parent should be a class (starts with uppercase)
+        parent = parts[0]
+        class_name = parent.rsplit(".", 1)[-1]
+        if class_name and class_name[0].isupper():
+            return parent
+        return ""
