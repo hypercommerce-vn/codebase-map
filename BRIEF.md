@@ -8,9 +8,9 @@
 
 | Field | Value |
 |-------|-------|
-| **Version hiện tại** | v1.1 — CM-S1 ✅ COMPLETE (15/15 SP) |
-| **Sprint hiện tại** | CM-S1 (v1.1) — **✅ DONE** (5/5 Days, 15/15 SP, 10/10 tasks) |
-| **Sprint tiếp theo** | CM-S2 (v1.2) — ⏳ Planned |
+| **Version hiện tại** | v1.1 → v1.2 in progress |
+| **Sprint hiện tại** | CM-S2 (v1.2) — **🔄 Day 1** (3/18 SP, 1/11 tasks) |
+| **Sprint trước** | CM-S1 (v1.1) — ✅ DONE (15/15 SP, 10/10 tasks) |
 | **Repo** | https://github.com/hypercommerce-vn/codebase-map |
 | **Parent HC repo** | https://github.com/hypercommerce-vn/hypercommercesystem |
 | **HC config** | `codebase-map.yaml` trong HC repo root |
@@ -60,13 +60,18 @@
 
 ---
 
-## ⏳ SẮP TỚI — CM-S2 (v1.2) Sprint
+## 🔄 ĐANG LÀM — CM-S2 (v1.2) Sprint
 
-| Focus | SP | Status |
-|-------|----|--------|
-| Workflow: git diff, coverage, API catalog, /implement | 18 | ⏳ Planned |
+| Day | Tasks | SP | PR | Status |
+|-----|-------|----|-----|--------|
+| Day 1 | CM-S2-01 (git diff) | 3 | PR #9 | 🔄 Review (CTO 99/100) |
+| Day 2 | CM-S2-02 (incremental cache) | 3 | — | 📋 Todo |
+| Day 3 | CM-S2-06 (edge resolution) + CM-S2-03 (coverage) | 4 | — | 📋 Todo |
+| Day 4 | CM-S2-07 (API catalog) + CM-S2-04 + CM-S2-05 | 4 | — | 📋 Todo |
+| Day 5 | CM-S2-08 + CM-S2-09 + CM-S2-10 + CM-S2-11 | 4 | — | 📋 Todo |
+| **Total** | **11 tasks** | **18 SP** | | **🔄 Day 1** |
 
-**Chưa có design chi tiết cho CM-S2 — cần CEO approve design trước khi implement.**
+**Design CM-S2 approved** — `design-preview/codebase-map-CM-S2-design.html` (1820 lines, 11 sections).
 
 ---
 
@@ -83,6 +88,9 @@
 | 06/04/2026 | **AI Infrastructure Migration** — 7 agents, 5 commands, settings, 7 memory files | CEO |
 | 06/04/2026 | **Telegram Bot setup** — @CodebaseMap_Project_bot cho CI notify | CEO |
 | 06/04/2026 | **CM-S1 Sprint COMPLETE** — All 5 PRs merged, 15/15 SP, all review gates passed | CEO |
+| 06/04/2026 | **Board sync rule** — Rule #8: update board.html khi update BRIEF.md/task board | CEO |
+| 06/04/2026 | **CM-S2 Design approved** — 11 task mockups, PR #8 | CEO |
+| 06/04/2026 | **CM-S2 Sprint START** — Day 1: Git diff integration (CM-S2-01) | CEO |
 
 ---
 
@@ -90,7 +98,8 @@
 
 | Vấn đề | Priority |
 |--------|----------|
-| CM-S2 design chi tiết chưa tạo | 🟡 Next |
+| PR #8 (CM-S2 design) cần merge vào main | 🟡 Next |
+| PR #9 (CM-S2 Day 1) cần CEO approve + merge | 🟡 Active |
 | Wiki board ở HC repo cần update link repo mới | 🟢 Low |
 | CM-S3 design chi tiết chưa tạo | 🟢 Future |
 
@@ -103,6 +112,8 @@
 | `CLAUDE.md` | Rules + structure + development guide |
 | `specs/spec.md` | FDD spec đầy đủ 3 sprints |
 | `project/CM-S1-TASK-BOARD.md` | Task board sprint 1 |
+| `project/CM-S2-TASK-BOARD.md` | Task board sprint 2 |
+| `project/board.html` | Project Board HTML (sync mỗi update) |
 | `design-preview/codebase-map-v2-design.html` | Design tổng thể v2.0 |
 | `design-preview/codebase-map-CM-S1-design.html` | Design chi tiết CM-S1 |
 | `agents/README.md` | 7 AI agents overview |
@@ -121,4 +132,4 @@
 
 ---
 
-*BRIEF.md v1.1 — Codebase Map | 06/04/2026 | CM-S1 Sprint Complete ✅*
+*BRIEF.md v1.2 — Codebase Map | 06/04/2026 | CM-S2 Day 1 In Progress 🔄*

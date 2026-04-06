@@ -484,6 +484,9 @@ a:hover { text-decoration: underline; }
       <a class="nav-item" href="../design-preview/codebase-map-CM-S1-design.html" target="_blank">
         <span class="nav-item-icon">🎨</span> Design CM-S1
       </a>
+      <a class="nav-item" href="../design-preview/codebase-map-CM-S2-design.html" target="_blank">
+        <span class="nav-item-icon">🎨</span> Design CM-S2
+      </a>
       <a class="nav-item" href="../design-preview/codebase-map-v2-design.html" target="_blank">
         <span class="nav-item-icon">🎨</span> Design v2.0
       </a>
@@ -529,7 +532,7 @@ a:hover { text-decoration: underline; }
     <p>Function Dependency Graph — standalone module cho mọi dự án. CEO-approved 05/04/2026.</p>
     <div class="hero-badges">
       <span class="hero-badge">📊 29 tasks · 55 SP · 3 Sprints</span>
-      <span class="hero-badge">v1.0 ✅ Done (PR #82) · v1.1 ✅ Done · v1.2~v2.0 Planning</span>
+      <span class="hero-badge">v1.0 ✅ · v1.1 ✅ · v1.2 🔄 Day 1 · v2.0 ⏳</span>
       <span class="hero-badge">HC scan: 1,386 nodes · 8,285 edges · 7 domains</span>
     </div>
   </div>
@@ -557,9 +560,19 @@ a:hover { text-decoration: underline; }
         <td><span class="badge ceo">CEO ✅</span></td>
       </tr>
       <tr>
-        <td>Task Board (markdown)</td>
+        <td>Design CM-S2 (chi tiết)</td>
+        <td><code>design-preview/codebase-map-CM-S2-design.html</code></td>
+        <td><span class="badge ceo">CEO ✅</span></td>
+      </tr>
+      <tr>
+        <td>Task Board CM-S1</td>
         <td><code>project/CM-S1-TASK-BOARD.md</code></td>
         <td><span class="badge ceo">CEO ✅</span></td>
+      </tr>
+      <tr>
+        <td>Task Board CM-S2</td>
+        <td><code>project/CM-S2-TASK-BOARD.md</code></td>
+        <td><span class="badge active">🔄 Active</span></td>
       </tr>
       <tr>
         <td>v1.0 Source Code</td>
@@ -603,14 +616,14 @@ a:hover { text-decoration: underline; }
       <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
       <div class="progress-label">15/15 SP · 10 tasks · 5 PRs merged · 06/04/2026</div>
     </div>
-    <div class="sprint-card" style="border-left: 3px solid var(--c-amber);">
+    <div class="sprint-card" style="border-left: 3px solid #3b82f6;">
       <div class="sprint-card-header">
         <h3>CM-S2 · v1.2</h3>
-        <span class="badge planned">⏳ Planned</span>
+        <span class="badge active">🔄 Day 1</span>
       </div>
-      <p>Workflow: git diff, coverage, API catalog, /implement</p>
-      <div class="progress-bar"><div class="progress-fill gray" style="width:0%"></div></div>
-      <div class="progress-label">0/18 SP · Design chi tiết pending</div>
+      <p>Workflow: git diff, cache, coverage, API catalog, PR bot</p>
+      <div class="progress-bar"><div class="progress-fill" style="width:17%;background:#3b82f6;"></div></div>
+      <div class="progress-label">3/18 SP · 1/11 tasks · Day 1 In Progress</div>
     </div>
     <div class="sprint-card" style="border-left: 3px solid var(--text-muted);">
       <div class="sprint-card-header">
@@ -760,7 +773,28 @@ a:hover { text-decoration: underline; }
         <td>chore(docs): CM-S1 sprint complete — status update</td>
         <td><code>chore/cm-s1-sprint-complete</code></td>
         <td>—</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/7" target="_blank">#7</a></td>
+        <td>chore(project): add Project Board HTML — clone from HC Wiki</td>
+        <td><code>chore/project-board-html</code></td>
+        <td>—</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/8" target="_blank">#8</a></td>
+        <td>feat(design): CM-S2 design spec — 11 task mockups</td>
+        <td><code>feat/cm-s2-design</code></td>
+        <td>CEO ✅</td>
         <td><span class="badge open">🔄 Open</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/9" target="_blank">#9</a></td>
+        <td>feat(diff): git diff integration — CM-S2 Day 1</td>
+        <td><code>feat/cm-s2-day1</code></td>
+        <td>99/100</td>
+        <td><span class="badge open">🔄 Review</span></td>
       </tr>
     </tbody>
   </table>
@@ -823,26 +857,107 @@ a:hover { text-decoration: underline; }
       <div class="tl-date">06/04/2026</div>
       <div class="tl-content"><strong>CM-S1 Sprint COMPLETE</strong> — 15/15 SP, 10/10 tasks, 5 PRs merged. All review gates passed.</div>
     </div>
+    <div class="tl-item">
+      <div class="tl-date">06/04/2026</div>
+      <div class="tl-content"><strong>Board sync rule</strong> — Rule #8: update project/board.html khi update BRIEF.md/task board.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">06/04/2026</div>
+      <div class="tl-content"><strong>CM-S2 Design approved</strong> — 11 task mockups, <code>codebase-map-CM-S2-design.html</code> (1820 lines).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">06/04/2026</div>
+      <div class="tl-content"><strong>CM-S2 Sprint START</strong> — Day 1: Git diff integration (CM-S2-01, 3 SP). PR #9 submitted.</div>
+    </div>
   </div>
 
   <!-- CM-S2 Preview -->
-  <h2 id="cm-s2"><span class="h2-icon">⏳</span> CM-S2 · v1.2 — Workflow + Smart <span class="badge planned" style="font-size:12px;margin-left:8px;">0/18 SP PLANNED</span></h2>
+  <h2 id="cm-s2"><span class="h2-icon">🔄</span> CM-S2 · v1.2 — Workflow + Smart <span class="badge active" style="font-size:12px;margin-left:8px;">3/18 SP · Day 1</span></h2>
   <table>
     <thead>
-      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Status</th></tr>
+      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>PR</th><th>Review Gate</th><th>Status</th></tr>
     </thead>
     <tbody>
-      <tr><td><code>CM-S2-01</code></td><td>Git diff overlay — highlight changed functions</td><td>3</td><td><span class="badge planned">⏳ Planned</span></td></tr>
-      <tr><td><code>CM-S2-02</code></td><td>Test coverage heatmap — color nodes by coverage %</td><td>3</td><td><span class="badge planned">⏳ Planned</span></td></tr>
-      <tr><td><code>CM-S2-03</code></td><td>API catalog view — list all routes</td><td>2</td><td><span class="badge planned">⏳ Planned</span></td></tr>
-      <tr><td><code>CM-S2-04</code></td><td>/implement slash command — 7-step workflow</td><td>2</td><td><span class="badge planned">⏳ Planned</span></td></tr>
-      <tr><td><code>CM-S2-05</code></td><td>Smart summary — AI-powered function descriptions</td><td>3</td><td><span class="badge planned">⏳ Planned</span></td></tr>
-      <tr><td><code>CM-S2-06</code></td><td>Export: SVG, PNG, Mermaid, PlantUML</td><td>2</td><td><span class="badge planned">⏳ Planned</span></td></tr>
-      <tr><td><code>CM-S2-07</code></td><td>Config wizard — interactive YAML generator</td><td>1</td><td><span class="badge planned">⏳ Planned</span></td></tr>
-      <tr><td><code>CM-S2-08</code></td><td>Performance — Web Worker, virtual rendering</td><td>2</td><td><span class="badge planned">⏳ Planned</span></td></tr>
+      <tr>
+        <td><code>CM-S2-01</code></td>
+        <td>BE: Git diff integration — <code>codebase-map diff HEAD~1</code></td>
+        <td>3</td><td>Day 1</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/9" target="_blank">PR #9</a></td>
+        <td>CTO 99/100</td>
+        <td><span class="badge active">🔄 Review</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-02</code></td>
+        <td>BE: Incremental update — cache AST hash, re-parse only changed</td>
+        <td>3</td><td>Day 2</td>
+        <td>—</td><td>—</td>
+        <td><span class="badge planned">📋 Todo</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-06</code></td>
+        <td>BE: Edge resolution — resolve self.repo chain from __init__</td>
+        <td>2</td><td>Day 3</td>
+        <td>—</td><td>—</td>
+        <td><span class="badge planned">📋 Todo</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-03</code></td>
+        <td>BE+FE: Test coverage overlay — coverage bar in detail panel</td>
+        <td>2</td><td>Day 3</td>
+        <td>—</td><td>—</td>
+        <td><span class="badge planned">📋 Todo</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-07</code></td>
+        <td>BE+FE: API Catalog auto-gen — routes grouped by domain</td>
+        <td>2</td><td>Day 4</td>
+        <td>—</td><td>—</td>
+        <td><span class="badge planned">📋 Todo</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-04</code></td>
+        <td>Workflow: /implement integration — Step 2 auto-query impact</td>
+        <td>1</td><td>Day 4</td>
+        <td>—</td><td>—</td>
+        <td><span class="badge planned">📋 Todo</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-05</code></td>
+        <td>Workflow: /review-gate integration — impact graph in review</td>
+        <td>1</td><td>Day 4</td>
+        <td>—</td><td>—</td>
+        <td><span class="badge planned">📋 Todo</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-08</code></td>
+        <td>Metadata: FDD Spec linking — node → FDD ID in detail panel</td>
+        <td>1</td><td>Day 5</td>
+        <td>—</td><td>—</td>
+        <td><span class="badge planned">📋 Todo</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-09</code></td>
+        <td>DevOps: PR impact comment bot — CI auto-comment</td>
+        <td>1</td><td>Day 5</td>
+        <td>—</td><td>—</td>
+        <td><span class="badge planned">📋 Todo</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-10</code></td>
+        <td>Process: Sprint metric — impact per PR, alert > 50 nodes</td>
+        <td>1</td><td>Day 5</td>
+        <td>—</td><td>—</td>
+        <td><span class="badge planned">📋 Todo</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-11</code></td>
+        <td>DevOps: Staleness alert — graph > 7 days → Telegram notify</td>
+        <td>1</td><td>Day 5</td>
+        <td>—</td><td>—</td>
+        <td><span class="badge planned">📋 Todo</span></td>
+      </tr>
     </tbody>
   </table>
-  <p style="margin-top:8px;"><em>⚠️ Cần CEO approve design chi tiết CM-S2 trước khi implement.</em></p>
 
   <!-- CM-S3 Preview -->
   <h2 id="cm-s3"><span class="h2-icon">🔮</span> CM-S3 · v2.0 — Multi-View + AI <span class="badge planned" style="font-size:12px;margin-left:8px;">0/22 SP PLANNED</span></h2>
@@ -865,7 +980,37 @@ a:hover { text-decoration: underline; }
 
 <!-- ── PAGE: CM-S2 (sub-page) ── -->
 <div class="content-area article" id="page-s2" style="display:none;">
-  <p style="font-size:14px;color:var(--text-muted);">📋 Chi tiết CM-S2 sẽ được cập nhật khi CEO approve design.</p>
+  <p><a href="javascript:void(0)" onclick="showPage('board')">← Quay lại Board</a></p>
+
+  <h2><span class="h2-icon">🔄</span> CM-S2 · v1.2 — Workflow + Smart <span class="badge active" style="font-size:12px;margin-left:8px;">Day 1 In Progress</span></h2>
+  <p>Sprint Goal: Nâng cấp từ v1.1 (visual tool) lên v1.2 (workflow tool) — git diff, incremental cache, coverage overlay, API catalog, PR impact bot.</p>
+
+  <h3>Day Plan</h3>
+  <table>
+    <thead>
+      <tr><th>Day</th><th>SP</th><th>Tasks</th><th>Focus</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Day 1</td><td>3</td><td>CM-S2-01</td><td>Git diff integration</td><td><span class="badge active">🔄 In Progress</span></td></tr>
+      <tr><td>Day 2</td><td>3</td><td>CM-S2-02</td><td>Incremental cache</td><td><span class="badge planned">📋 Todo</span></td></tr>
+      <tr><td>Day 3</td><td>4</td><td>CM-S2-06, CM-S2-03</td><td>Edge resolution + Coverage</td><td><span class="badge planned">📋 Todo</span></td></tr>
+      <tr><td>Day 4</td><td>4</td><td>CM-S2-07, CM-S2-04, CM-S2-05</td><td>API catalog + Workflow</td><td><span class="badge planned">📋 Todo</span></td></tr>
+      <tr><td>Day 5</td><td>4</td><td>CM-S2-08~11</td><td>Metadata + DevOps</td><td><span class="badge planned">📋 Todo</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Acceptance Criteria</h3>
+  <div class="ac-grid">
+    <div class="ac-item" style="background:var(--c-blue-bg);color:var(--c-blue);"><span class="check">🔄</span> CM-AC-06: <code>diff HEAD~1</code> output correct</div>
+    <div class="ac-item" style="background:var(--bg-muted);color:var(--text-muted);"><span class="check">⏳</span> CM-AC-07: Coverage bar in detail panel</div>
+    <div class="ac-item" style="background:var(--bg-muted);color:var(--text-muted);"><span class="check">⏳</span> CM-AC-08: API Catalog tab with all routes</div>
+    <div class="ac-item" style="background:var(--bg-muted);color:var(--text-muted);"><span class="check">⏳</span> CM-AC-09: PR comment bot on CI</div>
+    <div class="ac-item" style="background:var(--bg-muted);color:var(--text-muted);"><span class="check">⏳</span> CM-AC-10: /implement + /review-gate integration</div>
+  </div>
+
+  <h3>Design Reference</h3>
+  <p><a href="../design-preview/codebase-map-CM-S2-design.html" target="_blank">design-preview/codebase-map-CM-S2-design.html</a> — 11 sections, CEO approved.</p>
+
   <p><a href="javascript:void(0)" onclick="showPage('board')">← Quay lại Board</a></p>
 </div>
 
@@ -881,7 +1026,7 @@ a:hover { text-decoration: underline; }
 <!-- Footer -->
 <div class="footer">
   <span>Codebase Map — Project Board · Hyper Commerce · CEO: Đoàn Đình Tỉnh</span>
-  <span>Updated: 06/04/2026 · v1.1 Sprint Complete ✅</span>
+  <span>Updated: 06/04/2026 · CM-S2 Day 1 In Progress 🔄</span>
 </div>
 
 <!-- ═══════════════════════════════════════
