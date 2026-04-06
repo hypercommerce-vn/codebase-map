@@ -9,7 +9,7 @@
 | Field | Value |
 |-------|-------|
 | **Version hiện tại** | v1.1 → v1.2 in progress |
-| **Sprint hiện tại** | CM-S2 (v1.2) — **🔄 Day 1 Done** (3/18 SP, 1/11 tasks) |
+| **Sprint hiện tại** | CM-S2 (v1.2) — **🔄 Day 2 Done** (6/18 SP, 2/11 tasks) |
 | **Sprint trước** | CM-S1 (v1.1) — ✅ DONE (15/15 SP, 10/10 tasks) |
 | **Repo** | https://github.com/hypercommerce-vn/codebase-map |
 | **Parent HC repo** | https://github.com/hypercommerce-vn/hypercommercesystem |
@@ -65,11 +65,11 @@
 | Day | Tasks | SP | PR | Status |
 |-----|-------|----|-----|--------|
 | Day 1 | CM-S2-01 (git diff) | 3 | PR #9 | ✅ Done (CTO 99/100, CEO merged) |
-| Day 2 | CM-S2-02 (incremental cache) | 3 | — | 📋 Todo |
+| Day 2 | CM-S2-02 (incremental cache) | 3 | PR #11 | ✅ Done (CTO 100/100, CEO merged) |
 | Day 3 | CM-S2-06 (edge resolution) + CM-S2-03 (coverage) | 4 | — | 📋 Todo |
 | Day 4 | CM-S2-07 (API catalog) + CM-S2-04 + CM-S2-05 | 4 | — | 📋 Todo |
 | Day 5 | CM-S2-08 + CM-S2-09 + CM-S2-10 + CM-S2-11 | 4 | — | 📋 Todo |
-| **Total** | **11 tasks** | **18 SP** | | **🔄 Day 1 Done** |
+| **Total** | **11 tasks** | **18 SP** | | **🔄 Day 2 Done** |
 
 **Design CM-S2 approved** — `design-preview/codebase-map-CM-S2-design.html` (1820 lines, 11 sections).
 
@@ -91,6 +91,7 @@
 | 06/04/2026 | **Board sync rule** — Rule #8: update board.html khi update BRIEF.md/task board | CEO |
 | 06/04/2026 | **CM-S2 Design approved** — 11 task mockups, PR #8 merged | CEO |
 | 06/04/2026 | **CM-S2 Sprint START** — Day 1: Git diff integration (CM-S2-01), PR #9 merged | CEO |
+| 06/04/2026 | **CM-S2 Day 2 Done** — Incremental cache (CM-S2-02), 80%+ faster builds, PR #11 merged, CTO 100/100 | CEO |
 
 ---
 
@@ -98,7 +99,7 @@
 
 | Vấn đề | Priority |
 |--------|----------|
-| CM-S2 Day 2 implement (incremental cache) | 🟡 Next |
+| CM-S2 Day 3 implement (edge resolution + coverage) | 🟡 Next |
 | Wiki board ở HC repo cần update link repo mới | 🟢 Low |
 | CM-S3 design chi tiết chưa tạo | 🟢 Future |
 
@@ -132,4 +133,4 @@
 
 ---
 
-*BRIEF.md v1.2 — Codebase Map | 06/04/2026 | CM-S2 Day 1 Done 🔄*
+*BRIEF.md v1.2 — Codebase Map | 06/04/2026 | CM-S2 Day 2 Done 🔄*
