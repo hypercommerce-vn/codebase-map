@@ -38,8 +38,12 @@ def export_html(graph: Graph, output_path: str | Path) -> Path:
 
 
 def _build_html(graph_json: str, project_name: str, d3_code: str = "") -> str:
-    """Build the complete HTML visualization page."""
-    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    """Build the complete HTML visualization page.
+
+    HC-AI | ticket: FDD-TOOL-CODEMAP
+    CM-S1 Day 2: top bar (CM-S1-10), sidebar tree (CM-S1-01),
+    empty state + accessibility (CM-S1-09).
+    """
     if d3_code:
         d3_script = f"<script>{d3_code}</script>"
     else:
@@ -51,87 +55,254 @@ def _build_html(graph_json: str, project_name: str, d3_code: str = "") -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Codebase Map — {project_name}</title>
 <style>
+/* HC-AI | ticket: FDD-TOOL-CODEMAP */
+:root {{
+  --hc-primary: #6366f1;
+  --bg-canvas: #0d1117;
+  --bg-surface: #161b22;
+  --bg-surface-hover: #1c2128;
+  --bg-elevated: #21262d;
+  --border: #30363d;
+  --border-focus: #58a6ff;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #484f58;
+}}
 * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #c9d1d9; overflow: hidden; }}
+body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg-canvas); color: var(--text-primary); overflow: hidden; }}
 
-#app {{ display: flex; height: 100vh; }}
-#sidebar {{ width: 360px; background: #161b22; border-right: 1px solid #30363d; display: flex; flex-direction: column; overflow: hidden; }}
+/* CM-S1-10: Top bar */
+#topbar {{
+  height: 48px; background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 16px; gap: 12px;
+}}
+#topbar .logo-icon {{
+  width: 28px; height: 28px; background: var(--hc-primary);
+  border-radius: 6px; display: flex; align-items: center;
+  justify-content: center; font-size: 14px; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+}}
+#topbar .logo-text {{ font-size: 14px; font-weight: 600; }}
+#topbar .logo-ver {{
+  font-size: 11px; color: var(--text-muted);
+  background: var(--bg-elevated); padding: 2px 6px; border-radius: 4px;
+}}
+.stat-badge {{
+  font-size: 11px; color: var(--text-secondary);
+  background: var(--bg-canvas); padding: 4px 10px;
+  border-radius: 12px; border: 1px solid var(--border);
+}}
+.stat-badge strong {{ color: var(--text-primary); }}
+#topbar .timestamp {{
+  font-size: 11px; color: var(--text-muted); margin-left: auto;
+}}
+
+/* Layout */
+#app {{ display: flex; flex-direction: column; height: 100vh; }}
+#main {{ display: flex; flex: 1; overflow: hidden; }}
+
+/* CM-S1-01: Sidebar */
+#sidebar {{
+  width: 340px; background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0;
+}}
 #graph-container {{ flex: 1; position: relative; }}
 
-.sidebar-header {{ padding: 16px; border-bottom: 1px solid #30363d; }}
-.sidebar-header h1 {{ font-size: 16px; color: #58a6ff; margin-bottom: 8px; }}
-.sidebar-header .stats {{ font-size: 12px; color: #8b949e; }}
+/* Search */
+.sidebar-search {{ padding: 12px; border-bottom: 1px solid var(--border); }}
+#search-box {{
+  width: 100%; padding: 8px 12px 8px 34px;
+  background: var(--bg-canvas); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text-primary); font-size: 13px;
+  outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238b949e' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 10px center;
+}}
+#search-box:focus {{ border-color: var(--border-focus); }}
+#search-result-count {{
+  font-size: 11px; color: var(--text-muted);
+  padding: 4px 12px; display: none;
+}}
 
-#search-box {{ width: 100%; padding: 8px 12px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 13px; margin-top: 8px; }}
-#search-box:focus {{ outline: none; border-color: #58a6ff; }}
+/* Layer filter chips */
+.filters {{
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+  display: flex; gap: 4px; flex-wrap: wrap;
+}}
+.chip {{
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; font-size: 11px; border-radius: 12px;
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text-secondary); cursor: pointer;
+}}
+.chip.active {{ background: var(--hc-primary); border-color: var(--hc-primary); color: #fff; }}
+.chip .dot {{ width: 6px; height: 6px; border-radius: 50%; }}
+.chip .count {{ font-size: 11px; opacity: .7; }}
 
-.filters {{ padding: 12px 16px; border-bottom: 1px solid #30363d; display: flex; gap: 6px; flex-wrap: wrap; }}
-.filter-btn {{ padding: 4px 10px; font-size: 11px; border-radius: 12px; border: 1px solid #30363d; background: transparent; color: #8b949e; cursor: pointer; }}
-.filter-btn.active {{ background: #1f6feb; border-color: #1f6feb; color: #fff; }}
+/* Domain tree */
+#domain-tree {{ flex: 1; overflow-y: auto; padding: 6px; }}
+.domain-header {{
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; border-radius: 6px; cursor: pointer;
+  font-size: 12px; font-weight: 600; color: var(--text-primary);
+}}
+.domain-header:hover {{ background: var(--bg-surface-hover); }}
+.domain-header .arrow {{
+  font-size: 11px; color: var(--text-muted);
+  width: 16px; text-align: center; transition: transform .15s;
+  display: inline-block; flex-shrink: 0;
+}}
+.domain-header .arrow.open {{ transform: rotate(90deg); }}
+.domain-header .domain-dot {{ width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }}
+.domain-header .domain-count {{
+  font-size: 11px; color: var(--text-muted); margin-left: auto;
+  background: var(--bg-canvas); padding: 1px 6px; border-radius: 8px;
+}}
+.domain-children {{ padding-left: 16px; display: none; }}
+.domain-children.open {{ display: block; }}
+.node-item {{
+  padding: 5px 8px; border-radius: 4px; cursor: pointer;
+  font-size: 12px; display: flex; align-items: center; gap: 6px;
+}}
+.node-item:hover {{ background: var(--bg-surface-hover); }}
+.node-item.selected {{
+  background: rgba(99,102,241,.15); border-left: 2px solid var(--hc-primary);
+}}
+.node-item .type-icon {{ font-size: 11px; width: 18px; text-align: center; flex-shrink: 0; }}
+.node-item .node-name {{ color: var(--text-primary); font-weight: 500; }}
+.node-item .node-layer {{ font-size: 11px; color: var(--text-muted); margin-left: auto; }}
+.method-item {{
+  font-size: 11px; padding: 3px 8px 3px 28px;
+  color: var(--text-secondary); cursor: pointer; border-radius: 4px;
+}}
+.method-item:hover {{ background: var(--bg-surface-hover); color: var(--text-primary); }}
+.method-item.selected {{ color: var(--hc-primary); font-weight: 600; }}
+.class-children {{ display: none; }}
+.class-children.open {{ display: block; }}
 
-#node-list {{ flex: 1; overflow-y: auto; padding: 8px; }}
-.node-item {{ padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-bottom: 2px; }}
-.node-item:hover {{ background: #1c2128; }}
-.node-item.selected {{ background: #1f6feb33; border-left: 3px solid #1f6feb; }}
-.node-item .name {{ font-weight: 600; color: #e6edf3; }}
-.node-item .meta {{ color: #8b949e; font-size: 11px; margin-top: 2px; }}
+/* CM-S1-09: Empty state */
+.empty-state {{
+  text-align: center; padding: 32px 16px;
+}}
+.empty-state .es-icon {{ font-size: 28px; margin-bottom: 6px; opacity: .5; }}
+.empty-state .es-title {{ font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }}
+.empty-state .es-hint {{ font-size: 11px; color: var(--text-muted); }}
 
-#detail-panel {{ position: absolute; top: 16px; right: 16px; width: 380px; background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; display: none; max-height: 80vh; overflow-y: auto; z-index: 10; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }}
-#detail-panel h3 {{ color: #58a6ff; margin-bottom: 8px; font-size: 14px; }}
+/* Detail panel */
+#detail-panel {{
+  position: absolute; top: 16px; right: 16px; width: 380px;
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 16px; display: none;
+  max-height: 80vh; overflow-y: auto; z-index: 10;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}}
+#detail-panel h3 {{ color: var(--border-focus); margin-bottom: 8px; font-size: 14px; }}
 #detail-panel .detail-row {{ margin-bottom: 6px; font-size: 12px; }}
-#detail-panel .detail-label {{ color: #8b949e; display: inline-block; width: 80px; }}
-#detail-panel .detail-value {{ color: #e6edf3; }}
-#detail-panel .section-title {{ color: #f0883e; font-size: 12px; font-weight: 600; margin-top: 12px; margin-bottom: 6px; border-top: 1px solid #30363d; padding-top: 8px; }}
-#detail-panel .dep-item {{ font-size: 11px; color: #c9d1d9; padding: 2px 0; cursor: pointer; }}
-#detail-panel .dep-item:hover {{ color: #58a6ff; }}
-#close-detail {{ position: absolute; top: 8px; right: 12px; background: none; border: none; color: #8b949e; cursor: pointer; font-size: 18px; }}
+#detail-panel .detail-label {{ color: var(--text-secondary); display: inline-block; width: 80px; }}
+#detail-panel .detail-value {{ color: var(--text-primary); }}
+#detail-panel .section-title {{
+  color: #f0883e; font-size: 12px; font-weight: 600;
+  margin-top: 12px; margin-bottom: 6px;
+  border-top: 1px solid var(--border); padding-top: 8px;
+}}
+#detail-panel .dep-item {{ font-size: 11px; color: var(--text-primary); padding: 2px 0; cursor: pointer; }}
+#detail-panel .dep-item:hover {{ color: var(--border-focus); }}
+#close-detail {{
+  position: absolute; top: 8px; right: 12px;
+  background: none; border: none; color: var(--text-secondary);
+  cursor: pointer; font-size: 18px;
+}}
 
-.legend {{ position: absolute; bottom: 16px; left: 376px; background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 12px; font-size: 11px; z-index: 5; }}
-.legend-item {{ display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }}
-.legend-dot {{ width: 10px; height: 10px; border-radius: 50%; }}
+/* Legend */
+.legend {{
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 14px;
+  display: flex; gap: 14px; font-size: 11px; z-index: 5;
+}}
+.legend-group {{ display: flex; align-items: center; gap: 8px; }}
+.legend-group-title {{
+  font-size: 11px; color: var(--text-muted);
+  text-transform: uppercase; font-weight: 600;
+}}
+.legend-item {{ display: flex; align-items: center; gap: 4px; color: var(--text-secondary); }}
+.legend-dot {{ width: 8px; height: 8px; border-radius: 50%; }}
+.legend-line {{ width: 16px; height: 2px; border-radius: 1px; }}
+.legend-line.dashed {{
+  background: repeating-linear-gradient(90deg, var(--text-muted) 0 4px, transparent 4px 7px);
+}}
 
+/* Graph */
 svg {{ width: 100%; height: 100%; }}
 .link {{ stroke-opacity: 0.3; }}
 .link.highlighted {{ stroke-opacity: 0.8; stroke-width: 2px; }}
 .node-circle {{ stroke-width: 1.5px; cursor: pointer; }}
 .node-circle:hover {{ stroke-width: 3px; }}
-.node-label {{ font-size: 10px; fill: #8b949e; pointer-events: none; }}
-.node-label.highlighted {{ fill: #e6edf3; font-weight: 600; }}
+.node-label {{ font-size: 11px; fill: var(--text-secondary); pointer-events: none; }}
+.node-label.highlighted {{ fill: var(--text-primary); font-weight: 600; }}
 </style>
 </head>
 <body>
+<!-- HC-AI | ticket: FDD-TOOL-CODEMAP -->
 <div id="app">
-  <div id="sidebar">
-    <div class="sidebar-header">
-      <h1>Codebase Map</h1>
-      <div class="stats" id="stats"></div>
-      <input type="text" id="search-box" placeholder="Search functions, classes...">
-    </div>
-    <div class="filters" id="filters"></div>
-    <div id="node-list"></div>
+  <!-- CM-S1-10: Top bar -->
+  <div id="topbar">
+    <div class="logo-icon">CM</div>
+    <span class="logo-text">Codebase Map</span>
+    <span class="logo-ver">v1.1</span>
+    <span class="stat-badge" id="stat-nodes"></span>
+    <span class="stat-badge" id="stat-edges"></span>
+    <span class="stat-badge" id="stat-domains"></span>
+    <span class="timestamp" id="timestamp"></span>
   </div>
-  <div id="graph-container">
-    <svg id="svg"></svg>
-    <div id="detail-panel">
-      <button id="close-detail">&times;</button>
-      <div id="detail-content"></div>
+
+  <div id="main">
+    <!-- CM-S1-01: Sidebar with domain tree -->
+    <div id="sidebar">
+      <div class="sidebar-search">
+        <input type="text" id="search-box" placeholder="Search functions, classes...">
+      </div>
+      <div class="filters" id="filters"></div>
+      <div id="search-result-count"></div>
+      <div id="domain-tree"></div>
     </div>
-    <div class="legend" id="legend"></div>
+
+    <div id="graph-container">
+      <svg id="svg"></svg>
+      <div id="detail-panel">
+        <button id="close-detail">&times;</button>
+        <div id="detail-content"></div>
+      </div>
+      <div class="legend" id="legend"></div>
+    </div>
   </div>
 </div>
 
 {d3_script}
 <script>
+// HC-AI | ticket: FDD-TOOL-CODEMAP
 const DATA = {graph_json};
 
-const COLORS = {{
+const LAYER_COLORS = {{
   route: '#f0883e', service: '#3fb950', repository: '#a371f7',
   model: '#f778ba', core: '#79c0ff', worker: '#d29922',
-  router: '#f0883e', util: '#8b949e', unknown: '#484f58'
+  router: '#f0883e', schema: '#f0883e', util: '#8b949e',
+  test: '#6b7280', unknown: '#484f58'
 }};
 const TYPE_COLORS = {{
   route: '#f0883e', function: '#79c0ff', method: '#3fb950',
   class: '#a371f7', model: '#f778ba', celery_task: '#d29922'
+}};
+const TYPE_ICONS = {{
+  class: '\\u25C6', route: '\\u25CF', method: '\\u0192',
+  function: '\\u0192', model: '\\u25C6', celery_task: '\\u25CF'
+}};
+const DOMAIN_COLORS = {{
+  crm: '#3fb950', cdp: '#a371f7', ecommerce: '#f0883e',
+  private_traffic: '#58a6ff', core: '#79c0ff', auth: '#d29922',
+  billing: '#f778ba'
 }};
 
 const nodes = DATA.nodes.map(n => ({{ ...n, id: n.id }}));
@@ -139,36 +310,238 @@ const edges = DATA.edges.filter(e =>
   nodes.some(n => n.id === e.source) && nodes.some(n => n.id === e.target)
 ).map(e => ({{ source: e.source, target: e.target, type: e.type }}));
 
-// Stats
-document.getElementById('stats').textContent =
-  `${{nodes.length}} nodes | ${{edges.length}} edges | ${{DATA.stats.by_domain ? Object.keys(DATA.stats.by_domain).length : 0}} domains`;
+// CM-S1-10: Top bar stats
+const domainCount = DATA.stats.by_domain ? Object.keys(DATA.stats.by_domain).length : 0;
+document.getElementById('stat-nodes').innerHTML = `<strong>${{nodes.length.toLocaleString()}}</strong> nodes`;
+document.getElementById('stat-edges').innerHTML = `<strong>${{edges.length.toLocaleString()}}</strong> edges`;
+document.getElementById('stat-domains').innerHTML = `<strong>${{domainCount}}</strong> domains`;
+document.getElementById('timestamp').textContent = `Generated: ${{DATA.generated_at || new Date().toLocaleString()}}`;
 
-// Filters
+// CM-S1-01: Layer filter chips
 const filterContainer = document.getElementById('filters');
 const layers = [...new Set(nodes.map(n => n.layer))].sort();
 let activeFilters = new Set(layers);
 
 layers.forEach(layer => {{
-  const btn = document.createElement('button');
-  btn.className = 'filter-btn active';
-  btn.textContent = layer;
-  btn.onclick = () => {{
-    btn.classList.toggle('active');
+  const chip = document.createElement('button');
+  chip.className = 'chip active';
+  const dotColor = LAYER_COLORS[layer] || '#484f58';
+  const count = nodes.filter(n => n.layer === layer).length;
+  chip.innerHTML = `<span class="dot" style="background:${{dotColor}}"></span>${{layer}} <span class="count">${{count}}</span>`;
+  chip.onclick = () => {{
+    chip.classList.toggle('active');
     if (activeFilters.has(layer)) activeFilters.delete(layer);
     else activeFilters.add(layer);
     updateVisibility();
   }};
-  filterContainer.appendChild(btn);
+  filterContainer.appendChild(chip);
 }});
 
-// Legend
-const legendEl = document.getElementById('legend');
-Object.entries(TYPE_COLORS).forEach(([type, color]) => {{
-  const item = document.createElement('div');
-  item.className = 'legend-item';
-  item.innerHTML = `<div class="legend-dot" style="background:${{color}}"></div>${{type}}`;
-  legendEl.appendChild(item);
+// CM-S1-01: Build domain tree data
+function buildDomainTree() {{
+  const tree = {{}};
+  nodes.forEach(n => {{
+    if (!tree[n.domain]) tree[n.domain] = {{ classes: {{}}, standalone: [] }};
+    if (n.type === 'class' || n.type === 'model') {{
+      if (!tree[n.domain].classes[n.id]) {{
+        tree[n.domain].classes[n.id] = {{ node: n, methods: [] }};
+      }}
+    }} else if (n.parent_class) {{
+      const parentId = nodes.find(p => p.name === n.parent_class && p.domain === n.domain);
+      const pid = parentId ? parentId.id : n.parent_class;
+      if (!tree[n.domain].classes[pid]) {{
+        tree[n.domain].classes[pid] = {{ node: parentId || null, methods: [] }};
+      }}
+      tree[n.domain].classes[pid].methods.push(n);
+    }} else {{
+      tree[n.domain].standalone.push(n);
+    }}
+  }});
+  return tree;
+}}
+
+// CM-S1-01: Render domain tree
+const domainTreeEl = document.getElementById('domain-tree');
+const searchBox = document.getElementById('search-box');
+const searchCountEl = document.getElementById('search-result-count');
+
+function renderDomainTree(filter = '') {{
+  const tree = buildDomainTree();
+  const lowerFilter = filter.toLowerCase();
+
+  // Sort domains by node count descending
+  const domainStats = DATA.stats.by_domain || {{}};
+  const sortedDomains = Object.keys(tree).sort((a, b) =>
+    (domainStats[b] || 0) - (domainStats[a] || 0)
+  );
+
+  let totalVisible = 0;
+  let html = '';
+
+  sortedDomains.forEach(domain => {{
+    const data = tree[domain];
+    const domainColor = DOMAIN_COLORS[domain] || '#484f58';
+    const allInDomain = [];
+
+    // Collect all nodes in domain for filtering
+    Object.values(data.classes).forEach(cls => {{
+      if (cls.node) allInDomain.push(cls.node);
+      cls.methods.forEach(m => allInDomain.push(m));
+    }});
+    data.standalone.forEach(n => allInDomain.push(n));
+
+    // Filter by active layers + search
+    const visible = allInDomain.filter(n =>
+      activeFilters.has(n.layer) &&
+      (lowerFilter === '' ||
+       n.name.toLowerCase().includes(lowerFilter) ||
+       n.id.toLowerCase().includes(lowerFilter))
+    );
+
+    if (visible.length === 0 && lowerFilter !== '') return;
+    totalVisible += visible.length;
+    const domainNodeCount = visible.length || allInDomain.filter(n => activeFilters.has(n.layer)).length;
+    const isSearchActive = lowerFilter !== '';
+
+    html += `<div class="domain-group">`;
+    html += `<div class="domain-header" data-domain="${{domain}}">`;
+    html += `<span class="arrow${{isSearchActive ? ' open' : ''}}">&#9654;</span>`;
+    html += `<span class="domain-dot" style="background:${{domainColor}}"></span>`;
+    html += `${{domain}}`;
+    html += `<span class="domain-count">${{domainNodeCount}}</span>`;
+    html += `</div>`;
+    html += `<div class="domain-children${{isSearchActive ? ' open' : ''}}">`;
+
+    // Classes with methods
+    const visibleClassIds = new Set(visible.map(n => n.id));
+    const visibleParents = new Set(visible.filter(n => n.parent_class).map(n => {{
+      const p = nodes.find(pp => pp.name === n.parent_class && pp.domain === domain);
+      return p ? p.id : n.parent_class;
+    }}));
+
+    Object.entries(data.classes).forEach(([cid, cls]) => {{
+      if (!cls.node) return;
+      const cn = cls.node;
+      if (!activeFilters.has(cn.layer)) return;
+      const classMatchesSearch = lowerFilter === '' ||
+        cn.name.toLowerCase().includes(lowerFilter) ||
+        cn.id.toLowerCase().includes(lowerFilter);
+      const hasMatchingMethods = cls.methods.some(m =>
+        activeFilters.has(m.layer) &&
+        (m.name.toLowerCase().includes(lowerFilter) || m.id.toLowerCase().includes(lowerFilter))
+      );
+      if (lowerFilter !== '' && !classMatchesSearch && !hasMatchingMethods) return;
+
+      const icon = TYPE_ICONS[cn.type] || '\\u0192';
+      const iconColor = TYPE_COLORS[cn.type] || '#484f58';
+      html += `<div class="node-item" data-id="${{cn.id}}" onclick="selectNodeById('${{cn.id}}')">`;
+      html += `<span class="type-icon" style="color:${{iconColor}}">${{icon}}</span>`;
+      html += `<span class="node-name">${{cn.name}}</span>`;
+      html += `<span class="node-layer">${{cn.layer}}</span>`;
+      html += `</div>`;
+
+      if (cls.methods.length > 0) {{
+        const methodsOpen = isSearchActive && hasMatchingMethods;
+        html += `<div class="class-children${{methodsOpen ? ' open' : ''}}" data-class="${{cn.id}}">`;
+        cls.methods.forEach(m => {{
+          if (!activeFilters.has(m.layer)) return;
+          if (lowerFilter !== '' && !m.name.toLowerCase().includes(lowerFilter) && !m.id.toLowerCase().includes(lowerFilter)) return;
+          html += `<div class="method-item" data-id="${{m.id}}" onclick="selectNodeById('${{m.id}}')">&#8627; ${{m.name}}</div>`;
+        }});
+        html += `</div>`;
+      }}
+    }});
+
+    // Standalone functions/routes
+    data.standalone.forEach(n => {{
+      if (!activeFilters.has(n.layer)) return;
+      if (lowerFilter !== '' && !n.name.toLowerCase().includes(lowerFilter) && !n.id.toLowerCase().includes(lowerFilter)) return;
+      const icon = TYPE_ICONS[n.type] || '\\u0192';
+      const iconColor = TYPE_COLORS[n.type] || '#484f58';
+      html += `<div class="node-item" data-id="${{n.id}}" onclick="selectNodeById('${{n.id}}')">`;
+      html += `<span class="type-icon" style="color:${{iconColor}}">${{icon}}</span>`;
+      html += `<span class="node-name">${{n.name}}</span>`;
+      html += `<span class="node-layer">${{n.layer}}</span>`;
+      html += `</div>`;
+    }});
+
+    html += `</div></div>`;
+  }});
+
+  // CM-S1-09: Empty state
+  if (lowerFilter !== '' && totalVisible === 0) {{
+    html = `<div class="empty-state">
+      <div class="es-icon">&#128269;</div>
+      <div class="es-title">No results found</div>
+      <div class="es-hint">Try searching by function name, class, or domain</div>
+    </div>`;
+    searchCountEl.style.display = 'none';
+  }} else if (lowerFilter !== '') {{
+    searchCountEl.textContent = `${{totalVisible}} results`;
+    searchCountEl.style.display = 'block';
+  }} else {{
+    searchCountEl.style.display = 'none';
+  }}
+
+  domainTreeEl.innerHTML = html;
+
+  // Attach domain toggle events
+  domainTreeEl.querySelectorAll('.domain-header').forEach(hdr => {{
+    hdr.addEventListener('click', () => {{
+      const arrow = hdr.querySelector('.arrow');
+      const children = hdr.nextElementSibling;
+      if (children) {{
+        arrow.classList.toggle('open');
+        children.classList.toggle('open');
+      }}
+    }});
+  }});
+
+  // Attach class toggle events
+  domainTreeEl.querySelectorAll('.node-item').forEach(item => {{
+    item.addEventListener('click', (e) => {{
+      const classChildren = item.nextElementSibling;
+      if (classChildren && classChildren.classList.contains('class-children')) {{
+        classChildren.classList.toggle('open');
+      }}
+    }});
+  }});
+}}
+
+searchBox.addEventListener('input', () => {{
+  renderDomainTree(searchBox.value);
+  updateGraphVisibility();
 }});
+
+function updateGraphVisibility() {{
+  nodeG.style('display', d => activeFilters.has(d.layer) ? null : 'none');
+  link.style('display', d => activeFilters.has(d.source.layer) && activeFilters.has(d.target.layer) ? null : 'none');
+}}
+
+function updateVisibility() {{
+  updateGraphVisibility();
+  renderDomainTree(searchBox.value);
+}}
+
+// Legend — dual groups (CM-S1-08 prep)
+const legendEl = document.getElementById('legend');
+legendEl.innerHTML = `
+  <div class="legend-group">
+    <span class="legend-group-title">Type</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#f0883e"></span>Route</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#a371f7"></span>Class</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#3fb950"></span>Method</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#79c0ff"></span>Func</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#f778ba"></span>Model</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#d29922"></span>Task</span>
+  </div>
+  <div class="legend-group">
+    <span class="legend-group-title">Edge</span>
+    <span class="legend-item"><span class="legend-line" style="background:var(--text-muted)"></span>calls</span>
+    <span class="legend-item"><span class="legend-line dashed"></span>imports</span>
+    <span class="legend-item"><span class="legend-line" style="background:#a371f7;height:3px"></span>inherits</span>
+  </div>
+`;
 
 // D3 Force Graph
 const svg = d3.select('#svg');
@@ -204,7 +577,7 @@ nodeG.append('circle')
   .attr('class', 'node-circle')
   .attr('r', d => d.type === 'class' || d.type === 'model' ? 8 : d.type === 'route' ? 7 : 5)
   .attr('fill', d => TYPE_COLORS[d.type] || '#484f58')
-  .attr('stroke', d => COLORS[d.layer] || '#484f58')
+  .attr('stroke', d => LAYER_COLORS[d.layer] || '#484f58')
   .on('click', (e, d) => selectNode(d));
 
 nodeG.append('text')
@@ -220,32 +593,6 @@ simulation.on('tick', () => {{
   nodeG.attr('transform', d => `translate(${{d.x}},${{d.y}})`);
 }});
 
-// Search
-const searchBox = document.getElementById('search-box');
-const nodeList = document.getElementById('node-list');
-
-function renderNodeList(filter = '') {{
-  const filtered = nodes.filter(n =>
-    activeFilters.has(n.layer) &&
-    (filter === '' || n.name.toLowerCase().includes(filter.toLowerCase()) || n.id.toLowerCase().includes(filter.toLowerCase()))
-  ).sort((a, b) => a.name.localeCompare(b.name));
-
-  nodeList.innerHTML = filtered.slice(0, 200).map(n =>
-    `<div class="node-item" data-id="${{n.id}}" onclick="selectNodeById('${{n.id}}')">
-      <div class="name" style="color:${{TYPE_COLORS[n.type] || '#c9d1d9'}}">${{n.name}}</div>
-      <div class="meta">${{n.layer}} | ${{n.domain}} | ${{n.type}}</div>
-    </div>`
-  ).join('');
-}}
-
-searchBox.addEventListener('input', () => renderNodeList(searchBox.value));
-
-function updateVisibility() {{
-  nodeG.style('display', d => activeFilters.has(d.layer) ? null : 'none');
-  link.style('display', d => activeFilters.has(d.source.layer) && activeFilters.has(d.target.layer) ? null : 'none');
-  renderNodeList(searchBox.value);
-}}
-
 // Node selection & detail
 let selectedNode = null;
 
@@ -257,7 +604,6 @@ window.selectNodeById = function(id) {{
 function selectNode(d) {{
   selectedNode = d;
 
-  // Highlight connections
   const connectedIds = new Set();
   connectedIds.add(d.id);
   edges.forEach(e => {{
@@ -282,7 +628,6 @@ function selectNode(d) {{
     return (sid === d.id || tid === d.id) ? 1 : 0.1;
   }});
 
-  // Show detail panel
   const deps = edges.filter(e => {{ const sid = typeof e.source === 'object' ? e.source.id : e.source; return sid === d.id; }});
   const dependents = edges.filter(e => {{ const tid = typeof e.target === 'object' ? e.target.id : e.target; return tid === d.id; }});
 
@@ -300,16 +645,32 @@ function selectNode(d) {{
     ${{d.return_type ? `<div class="detail-row"><span class="detail-label">Returns:</span><span class="detail-value">${{d.return_type}}</span></div>` : ''}}
     ${{d.docstring ? `<div class="detail-row"><span class="detail-label">Doc:</span><span class="detail-value">${{d.docstring.substring(0, 200)}}</span></div>` : ''}}
     <div class="section-title">Dependencies (${{deps.length}})</div>
-    ${{deps.map(e => {{ const tid = typeof e.target === 'object' ? e.target.id : e.target; const tname = tid.split('.').pop(); return `<div class="dep-item" onclick="selectNodeById('${{tid}}')">${{e.type}} -> ${{tname}}</div>`; }}).join('')}}
+    ${{deps.map(e => {{ const tid = typeof e.target === 'object' ? e.target.id : e.target; const tname = tid.split('.').pop(); return `<div class="dep-item" onclick="selectNodeById('${{tid}}')">${{e.type}} &#8594; ${{tname}}</div>`; }}).join('')}}
     <div class="section-title">Dependents (${{dependents.length}})</div>
-    ${{dependents.map(e => {{ const sid = typeof e.source === 'object' ? e.source.id : e.source; const sname = sid.split('.').pop(); return `<div class="dep-item" onclick="selectNodeById('${{sid}}')">${{e.type}} <- ${{sname}}</div>`; }}).join('')}}
+    ${{dependents.map(e => {{ const sid = typeof e.source === 'object' ? e.source.id : e.source; const sname = sid.split('.').pop(); return `<div class="dep-item" onclick="selectNodeById('${{sid}}')">${{e.type}} &#8592; ${{sname}}</div>`; }}).join('')}}
   `;
   panel.style.display = 'block';
 
   // Highlight in sidebar
-  document.querySelectorAll('.node-item').forEach(el => el.classList.remove('selected'));
-  const item = document.querySelector(`.node-item[data-id="${{d.id}}"]`);
-  if (item) {{ item.classList.add('selected'); item.scrollIntoView({{ block: 'nearest' }}); }}
+  domainTreeEl.querySelectorAll('.node-item, .method-item').forEach(el => {{
+    el.classList.remove('selected');
+  }});
+  const item = domainTreeEl.querySelector(`[data-id="${{d.id}}"]`);
+  if (item) {{
+    item.classList.add('selected');
+    item.scrollIntoView({{ block: 'nearest' }});
+    // Auto-expand parent domain + class
+    const domainGroup = item.closest('.domain-children');
+    if (domainGroup && !domainGroup.classList.contains('open')) {{
+      domainGroup.classList.add('open');
+      const arrow = domainGroup.previousElementSibling?.querySelector('.arrow');
+      if (arrow) arrow.classList.add('open');
+    }}
+    const classGroup = item.closest('.class-children');
+    if (classGroup && !classGroup.classList.contains('open')) {{
+      classGroup.classList.add('open');
+    }}
+  }}
 }}
 
 document.getElementById('close-detail').onclick = () => {{
@@ -317,6 +678,8 @@ document.getElementById('close-detail').onclick = () => {{
   nodeG.select('circle').attr('opacity', 1);
   nodeG.select('text').classed('highlighted', false);
   link.classed('highlighted', false).attr('stroke', '#30363d').attr('opacity', 1);
+  selectedNode = null;
+  domainTreeEl.querySelectorAll('.node-item, .method-item').forEach(el => el.classList.remove('selected'));
 }};
 
 // Double-click to zoom to node
@@ -329,7 +692,7 @@ nodeG.on('dblclick', (e, d) => {{
 }});
 
 // Initial render
-renderNodeList();
+renderDomainTree();
 
 // Fit to screen after simulation settles
 setTimeout(() => {{
