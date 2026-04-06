@@ -43,6 +43,7 @@ def _build_html(graph_json: str, project_name: str, d3_code: str = "") -> str:
     HC-AI | ticket: FDD-TOOL-CODEMAP
     CM-S1 Day 2: top bar (CM-S1-10), sidebar tree (CM-S1-01),
     empty state + accessibility (CM-S1-09).
+    CM-S1 Day 3: domain clustering (CM-S1-02).
     """
     if d3_code:
         d3_script = f"<script>{d3_code}</script>"
@@ -233,6 +234,10 @@ body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
 .legend-line.dashed {{
   background: repeating-linear-gradient(90deg, var(--text-muted) 0 4px, transparent 4px 7px);
 }}
+
+/* CM-S1-02: Domain cluster backgrounds */
+.cluster-bg {{ fill-opacity: 0.04; stroke-opacity: 0.15; stroke-width: 1; pointer-events: none; }}
+.cluster-label {{ font-size: 14px; font-weight: 700; fill-opacity: 0.3; pointer-events: none; }}
 
 /* Graph */
 svg {{ width: 100%; height: 100%; }}
@@ -553,11 +558,82 @@ const g = svg.append('g');
 const zoom = d3.zoom().scaleExtent([0.1, 8]).on('zoom', (e) => g.attr('transform', e.transform));
 svg.call(zoom);
 
+// HC-AI | ticket: FDD-TOOL-CODEMAP
+// CM-S1-02: Domain clustering — compute cluster centers
+const domains = [...new Set(nodes.map(n => n.domain))];
+const clusterCenters = {{}};
+const cols = Math.ceil(Math.sqrt(domains.length));
+domains.forEach((domain, i) => {{
+  const col = i % cols;
+  const row = Math.floor(i / cols);
+  const spacing = Math.max(width, height) / (cols + 1);
+  clusterCenters[domain] = {{
+    x: (col + 1) * spacing,
+    y: (row + 1) * spacing
+  }};
+}});
+
+// CM-S1-02: Custom clustering force
+function forceCluster(strength) {{
+  let nodeData;
+  function force(alpha) {{
+    for (const d of nodeData) {{
+      const center = clusterCenters[d.domain];
+      if (!center) continue;
+      d.vx += (center.x - d.x) * strength * alpha;
+      d.vy += (center.y - d.y) * strength * alpha;
+    }}
+  }}
+  force.initialize = (n) => {{ nodeData = n; }};
+  return force;
+}}
+
 const simulation = d3.forceSimulation(nodes)
   .force('link', d3.forceLink(edges).id(d => d.id).distance(80).strength(0.3))
   .force('charge', d3.forceManyBody().strength(-120))
   .force('center', d3.forceCenter(width / 2, height / 2))
-  .force('collision', d3.forceCollide().radius(20));
+  .force('collision', d3.forceCollide().radius(20))
+  .force('cluster', forceCluster(0.3));
+
+// CM-S1-02: Cluster background rects — drawn first (behind links/nodes)
+const clusterG = g.append('g').attr('class', 'clusters');
+const clusterPadding = 40;
+
+const clusterRects = clusterG.selectAll('g')
+  .data(domains).join('g');
+
+clusterRects.append('rect')
+  .attr('class', 'cluster-bg')
+  .attr('rx', 16).attr('ry', 16)
+  .attr('fill', d => DOMAIN_COLORS[d] || '#484f58')
+  .attr('stroke', d => DOMAIN_COLORS[d] || '#484f58');
+
+clusterRects.append('text')
+  .attr('class', 'cluster-label')
+  .attr('fill', d => DOMAIN_COLORS[d] || '#484f58')
+  .text(d => {{
+    const count = nodes.filter(n => n.domain === d).length;
+    return `${{d}} (${{count}})`;
+  }});
+
+function updateClusters() {{
+  clusterRects.each(function(domain) {{
+    const domainNodes = nodes.filter(n => n.domain === domain && n.x != null);
+    if (domainNodes.length === 0) return;
+    const xs = domainNodes.map(n => n.x);
+    const ys = domainNodes.map(n => n.y);
+    const x1 = Math.min(...xs) - clusterPadding;
+    const y1 = Math.min(...ys) - clusterPadding;
+    const x2 = Math.max(...xs) + clusterPadding;
+    const y2 = Math.max(...ys) + clusterPadding;
+    const sel = d3.select(this);
+    sel.select('rect')
+      .attr('x', x1).attr('y', y1)
+      .attr('width', x2 - x1).attr('height', y2 - y1);
+    sel.select('text')
+      .attr('x', x1 + 12).attr('y', y1 + 22);
+  }});
+}}
 
 const link = g.append('g').selectAll('line')
   .data(edges).join('line')
@@ -591,6 +667,7 @@ simulation.on('tick', () => {{
     .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
     .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
   nodeG.attr('transform', d => `translate(${{d.x}},${{d.y}})`);
+  updateClusters();
 }});
 
 // Node selection & detail
@@ -615,6 +692,15 @@ function selectNode(d) {{
 
   nodeG.select('circle').attr('opacity', n => connectedIds.has(n.id) ? 1 : 0.15);
   nodeG.select('text').classed('highlighted', n => connectedIds.has(n.id));
+
+  // CM-S1-02: Dim unrelated clusters
+  const connectedDomains = new Set();
+  connectedIds.forEach(id => {{
+    const n = nodes.find(nn => nn.id === id);
+    if (n) connectedDomains.add(n.domain);
+  }});
+  clusterRects.attr('opacity', dm => connectedDomains.has(dm) ? 1 : 0.15);
+
   link.classed('highlighted', e => {{
     const sid = typeof e.source === 'object' ? e.source.id : e.source;
     const tid = typeof e.target === 'object' ? e.target.id : e.target;
@@ -678,6 +764,7 @@ document.getElementById('close-detail').onclick = () => {{
   nodeG.select('circle').attr('opacity', 1);
   nodeG.select('text').classed('highlighted', false);
   link.classed('highlighted', false).attr('stroke', '#30363d').attr('opacity', 1);
+  clusterRects.attr('opacity', 1);
   selectedNode = null;
   domainTreeEl.querySelectorAll('.node-item, .method-item').forEach(el => el.classList.remove('selected'));
 }};

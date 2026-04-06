@@ -70,3 +70,38 @@ jobs:
           # Verify output exists and has content
           test -f test-output/graph.json
           python -c "import json; d=json.load(open('test-output/graph.json')); assert d['stats']['total_nodes'] > 10, f'Too few nodes: {d[\"stats\"][\"total_nodes\"]}'; print(f'Self-test OK: {d[\"stats\"][\"total_nodes\"]} nodes')"
+
+  # HC-AI | ticket: FDD-TOOL-CODEMAP
+  # Telegram notify CEO — CI pass/fail
+  notify:
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    if: always() && github.event_name == 'pull_request'
+    steps:
+      - name: Telegram — CI passed
+        if: needs.lint.result == 'success' && needs.test.result == 'success'
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -d parse_mode=Markdown \
+            -d text="✅ *CI PASSED* — Codebase Map
+          *PR:* #${{ github.event.pull_request.number }} — ${{ github.event.pull_request.title }}
+          *Branch:* \`${{ github.head_ref }}\`
+          *Author:* ${{ github.actor }}
+          *Status:* Lint ✅ | Test ✅
+          🔗 [Review PR](${{ github.event.pull_request.html_url }})"
+
+      - name: Telegram — CI failed
+        if: needs.lint.result == 'failure' || needs.test.result == 'failure'
+        run: |
+          LINT_STATUS=${{ needs.lint.result == 'success' && '✅' || '❌' }}
+          TEST_STATUS=${{ needs.test.result == 'success' && '✅' || '❌' }}
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -d parse_mode=Markdown \
+            -d text="❌ *CI FAILED* — Codebase Map
+          *PR:* #${{ github.event.pull_request.number }} — ${{ github.event.pull_request.title }}
+          *Branch:* \`${{ github.head_ref }}\`
+          *Author:* ${{ github.actor }}
+          *Status:* Lint ${LINT_STATUS} | Test ${TEST_STATUS}
+          🔗 [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
