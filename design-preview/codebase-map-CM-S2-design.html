@@ -1,0 +1,1820 @@
+<!-- HC-AI | ticket: FDD-TOOL-CODEMAP -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CM-S2 (v1.2) Design Spec — Codebase Map | Hyper Commerce</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — HC Codebase Map CM-S2 (v1.2)
+   Designer: HC Designer Agent | PO: HC Product Owner Agent
+   Date: 2026-04-06
+   Sprint: CM-S2 — Workflow + Smart (18 SP, 11 tasks)
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* HC Brand Colors */
+  --hc-primary: #6366f1;
+  --hc-primary-hover: #4f46e5;
+  --hc-primary-bg: #eef2ff;
+
+  /* Graph Theme - Dark */
+  --bg-canvas: #0d1117;
+  --bg-surface: #161b22;
+  --bg-surface-hover: #1c2128;
+  --bg-elevated: #21262d;
+  --border: #30363d;
+  --border-focus: #58a6ff;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #484f58;
+
+  /* Domain Colors */
+  --domain-crm: #3fb950;
+  --domain-cdp: #a371f7;
+  --domain-ecommerce: #f0883e;
+  --domain-private-traffic: #58a6ff;
+  --domain-core: #79c0ff;
+  --domain-auth: #d29922;
+  --domain-billing: #f778ba;
+
+  /* Node Type Colors */
+  --type-route: #f0883e;
+  --type-class: #a371f7;
+  --type-method: #3fb950;
+  --type-function: #79c0ff;
+  --type-model: #f778ba;
+  --type-celery: #d29922;
+
+  /* Layer Colors */
+  --layer-router: #f0883e;
+  --layer-service: #3fb950;
+  --layer-repository: #a371f7;
+  --layer-core: #79c0ff;
+  --layer-model: #f778ba;
+  --layer-worker: #d29922;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #111;
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ═══ DESIGN NAV BAR ═══ */
+.design-nav {
+  position: sticky; top: 0; z-index: 999;
+  background: var(--bg-surface);
+  border-bottom: 2px solid var(--hc-primary);
+  padding: 10px 24px;
+  display: flex; align-items: center; gap: 16px;
+  flex-wrap: wrap;
+}
+.design-nav .title { font-size: 15px; font-weight: 700; color: var(--hc-primary); white-space: nowrap; }
+.design-nav .subtitle { font-size: 12px; color: var(--text-muted); }
+.design-nav .nav-links { display: flex; gap: 4px; flex-wrap: wrap; margin-left: auto; }
+.nav-link {
+  padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border);
+  background: transparent; color: var(--text-secondary); font-size: 11px;
+  cursor: pointer; text-decoration: none; transition: all .15s; white-space: nowrap;
+}
+.nav-link:hover { border-color: var(--hc-primary); color: var(--text-primary); }
+.nav-link.active { background: var(--hc-primary); border-color: var(--hc-primary); color: #fff; }
+.back-link { color: var(--border-focus); text-decoration: none; font-size: 12px; }
+
+/* ═══ TOC SIDEBAR ═══ */
+.toc-sidebar {
+  position: fixed; left: 0; top: 52px;
+  width: 220px; height: calc(100vh - 52px - 50px);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto; z-index: 100;
+  padding: 16px 0;
+}
+.toc-title {
+  font-size: 10px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  padding: 0 16px 8px; border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+.toc-item {
+  display: block; padding: 6px 16px;
+  font-size: 11px; color: var(--text-secondary);
+  text-decoration: none; border-left: 2px solid transparent;
+  transition: all .15s;
+}
+.toc-item:hover { color: var(--text-primary); background: var(--bg-surface-hover); }
+.toc-item.active { color: var(--hc-primary); border-left-color: var(--hc-primary); background: rgba(99,102,241,.05); }
+.toc-sp { font-size: 9px; color: var(--text-muted); margin-left: 4px; }
+
+/* ═══ MAIN CONTENT ═══ */
+.main-content {
+  margin-left: 220px;
+  padding-bottom: 80px;
+}
+
+/* ═══ SECTION LAYOUT ═══ */
+.section {
+  max-width: 1200px; margin: 0 auto;
+  padding: 40px 24px; border-bottom: 1px solid var(--border);
+}
+.section-id {
+  font-size: 11px; color: var(--hc-primary); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
+}
+.sp-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 10px;
+  font-size: 10px; font-weight: 700; background: rgba(99,102,241,.15);
+  color: var(--hc-primary); margin-left: 8px;
+}
+.section h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.section .desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; max-width: 700px; }
+
+/* ═══ STATE GRID ═══ */
+.state-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; margin-top: 16px; }
+.state-card {
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+}
+.state-card .state-label {
+  padding: 8px 14px; background: var(--bg-elevated); border-bottom: 1px solid var(--border);
+  font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .5px;
+  display: flex; align-items: center; gap: 6px;
+}
+.state-card .state-label .dot { width: 6px; height: 6px; border-radius: 50%; }
+.state-card .state-body { padding: 16px; }
+
+/* ═══ PREVIEW CONTAINERS ═══ */
+.preview { background: var(--bg-canvas); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.preview-label { font-size: 10px; color: var(--text-muted); padding: 4px 8px; background: var(--bg-elevated); border-bottom: 1px solid var(--border); }
+
+/* ═══ ANNOTATION ═══ */
+.annotation { font-size: 11px; color: var(--hc-primary); background: rgba(99,102,241,.08); border: 1px dashed var(--hc-primary); border-radius: 6px; padding: 6px 10px; margin-top: 10px; }
+.annotation strong { color: var(--text-primary); }
+
+/* ═══ IMPL NOTES ═══ */
+.impl-notes {
+  margin-top: 16px; padding: 12px 16px;
+  background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px;
+}
+.impl-notes-title {
+  font-size: 10px; font-weight: 700; color: var(--domain-auth);
+  text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px;
+}
+.impl-notes ul { list-style: none; }
+.impl-notes li {
+  font-size: 12px; color: var(--text-secondary); padding: 2px 0;
+}
+.impl-notes li::before { content: ""; display: inline-block; width: 4px; height: 4px; background: var(--text-muted); border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+.impl-notes code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; color: var(--domain-cdp); background: var(--bg-canvas); padding: 1px 4px; border-radius: 3px; }
+
+/* ═══ SPEC TABLE ═══ */
+.spec-table { width: 100%; font-size: 12px; border-collapse: collapse; margin-bottom: 20px; }
+.spec-table th { text-align: left; color: var(--text-muted); padding: 6px 12px; border-bottom: 1px solid var(--border); font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: .5px; }
+.spec-table td { padding: 8px 12px; border-bottom: 1px solid rgba(48,54,61,.5); vertical-align: top; }
+.spec-table .token { font-family: 'SF Mono', monospace; font-size: 11px; color: var(--domain-cdp); }
+.spec-table .value { color: var(--text-primary); }
+
+/* ═══ TERMINAL MOCKUP ═══ */
+.terminal {
+  background: #0a0e14; border: 1px solid var(--border); border-radius: 8px;
+  overflow: hidden; font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 12px; line-height: 1.7;
+}
+.terminal-header {
+  padding: 8px 14px; background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.terminal-dots { display: flex; gap: 6px; }
+.terminal-dots span { width: 10px; height: 10px; border-radius: 50%; }
+.terminal-title { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+.terminal-body { padding: 14px 16px; overflow-x: auto; }
+.terminal-body .prompt { color: var(--domain-crm); }
+.terminal-body .cmd { color: var(--text-primary); font-weight: 600; }
+.terminal-body .comment { color: var(--text-muted); }
+.terminal-body .added { color: var(--domain-crm); }
+.terminal-body .modified { color: var(--domain-auth); }
+.terminal-body .removed { color: #ef4444; }
+.terminal-body .impact { color: var(--domain-ecommerce); }
+.terminal-body .dimmed { color: var(--text-muted); }
+.terminal-body .info { color: var(--border-focus); }
+.terminal-body .highlight { color: var(--hc-primary); }
+
+/* ═══ DIFF BADGE ═══ */
+.diff-badge {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+}
+.diff-badge .title { font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.diff-badge .diff-stat { display: flex; gap: 12px; font-size: 11px; }
+.diff-added { color: var(--domain-crm); }
+.diff-modified { color: var(--domain-auth); }
+.diff-removed { color: #ef4444; }
+.diff-impact { color: var(--domain-ecommerce); }
+
+/* ═══ TOPBAR COMPONENT ═══ */
+.topbar-preview {
+  height: 48px; background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 16px; gap: 12px;
+}
+.topbar-preview .logo-icon {
+  width: 28px; height: 28px; background: var(--hc-primary);
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: #fff;
+}
+.topbar-preview .logo-text { font-size: 14px; font-weight: 600; }
+.topbar-preview .logo-ver { font-size: 11px; color: var(--text-muted); background: var(--bg-elevated); padding: 2px 6px; border-radius: 4px; }
+.stat-badge { font-size: 11px; color: var(--text-secondary); background: var(--bg-canvas); padding: 4px 10px; border-radius: 12px; border: 1px solid var(--border); }
+.stat-badge strong { color: var(--text-primary); }
+
+/* ═══ GRAPH MOCKUP ═══ */
+.graph-mockup {
+  background: var(--bg-canvas); border: 1px solid var(--border); border-radius: 8px;
+  position: relative; overflow: hidden; min-height: 300px;
+}
+.graph-node {
+  position: absolute; width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid; cursor: pointer;
+}
+.graph-node.added { box-shadow: 0 0 0 3px rgba(63,185,80,.4); }
+.graph-node.modified { box-shadow: 0 0 0 3px rgba(210,153,34,.4); }
+.graph-node.removed { box-shadow: 0 0 0 3px rgba(239,68,68,.4); }
+.graph-node.impact { box-shadow: 0 0 8px 3px rgba(240,136,62,.3); animation: impactPulse 2s ease-in-out infinite; }
+.graph-label { position: absolute; font-size: 10px; color: var(--text-secondary); white-space: nowrap; }
+
+@keyframes impactPulse {
+  0%, 100% { box-shadow: 0 0 8px 3px rgba(240,136,62,.2); }
+  50% { box-shadow: 0 0 12px 5px rgba(240,136,62,.4); }
+}
+
+/* ═══ COVERAGE BAR ═══ */
+.coverage-bar { height: 6px; background: var(--bg-canvas); border-radius: 3px; overflow: hidden; }
+.coverage-fill { height: 100%; border-radius: 3px; transition: width .3s; }
+.coverage-fill.high { background: var(--domain-crm); }
+.coverage-fill.medium { background: var(--domain-auth); }
+.coverage-fill.low { background: #ef4444; }
+
+.coverage-row {
+  display: flex; align-items: center; gap: 10px; padding: 6px 0;
+  border-bottom: 1px solid rgba(48,54,61,.3);
+}
+.coverage-domain-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.coverage-domain-name { font-size: 12px; color: var(--text-primary); width: 120px; }
+.coverage-bar-wrap { flex: 1; }
+.coverage-pct { font-size: 11px; font-weight: 600; width: 40px; text-align: right; }
+
+/* ═══ WORKFLOW DIAGRAM ═══ */
+.workflow {
+  display: flex; align-items: center; gap: 0;
+  overflow-x: auto; padding: 20px 0;
+}
+.workflow-step {
+  padding: 14px 20px; background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: 10px;
+  text-align: center; min-width: 160px; position: relative;
+  transition: all .15s;
+}
+.workflow-step.active {
+  border-color: var(--hc-primary);
+  background: rgba(99,102,241,.08);
+  box-shadow: 0 0 12px rgba(99,102,241,.2);
+}
+.workflow-step .step-num { font-size: 10px; color: var(--text-muted); font-weight: 700; margin-bottom: 2px; }
+.workflow-step .step-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+.workflow-step .step-desc { font-size: 11px; color: var(--text-secondary); }
+.workflow-arrow {
+  font-size: 20px; color: var(--text-muted); padding: 0 8px; flex-shrink: 0;
+}
+
+/* ═══ RISK INDICATOR ═══ */
+.risk-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
+}
+.risk-low { background: rgba(63,185,80,.12); color: var(--domain-crm); }
+.risk-medium { background: rgba(210,153,34,.12); color: var(--domain-auth); }
+.risk-high { background: rgba(239,68,68,.12); color: #ef4444; }
+
+/* ═══ API CATALOG ═══ */
+.api-catalog { overflow-y: auto; padding: 16px; }
+.api-group { margin-bottom: 20px; }
+.api-group-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.api-endpoint {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color .15s;
+}
+.api-endpoint:hover { border-color: var(--text-muted); }
+.api-endpoint.expanded { border-color: var(--hc-primary); background: rgba(99,102,241,.04); }
+.http-method {
+  font-size: 10px; font-weight: 700;
+  padding: 2px 6px; border-radius: 4px;
+  min-width: 48px; text-align: center;
+}
+.http-GET { background: rgba(63,185,80,.15); color: var(--domain-crm); }
+.http-POST { background: rgba(88,166,255,.15); color: var(--domain-private-traffic); }
+.http-PATCH { background: rgba(210,153,34,.15); color: var(--domain-auth); }
+.http-DELETE { background: rgba(239,68,68,.15); color: #ef4444; }
+.api-path { color: var(--text-primary); font-family: 'SF Mono', monospace; font-size: 11px; }
+.api-auth { font-size: 10px; color: var(--text-muted); margin-left: auto; }
+.api-detail {
+  display: none; margin: 0 0 4px 0; padding: 12px 16px;
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px; border-top: none; font-size: 11px;
+}
+.api-detail.open { display: block; }
+.api-detail-label { color: var(--text-muted); font-size: 10px; text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
+.api-detail-row { display: flex; gap: 12px; margin-bottom: 8px; }
+.api-detail-col { flex: 1; }
+.api-param { padding: 3px 0; color: var(--text-secondary); font-family: 'SF Mono', monospace; }
+
+/* ═══ GITHUB COMMENT MOCKUP ═══ */
+.gh-comment {
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden; max-width: 700px;
+}
+.gh-comment-header {
+  padding: 10px 16px; background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px; font-size: 12px;
+}
+.gh-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--hc-primary); display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: #fff;
+}
+.gh-comment-body { padding: 16px; font-size: 13px; line-height: 1.7; }
+.gh-comment-body h4 { font-size: 14px; margin-bottom: 10px; }
+.gh-table { width: 100%; font-size: 12px; border-collapse: collapse; margin: 10px 0; }
+.gh-table th { text-align: left; padding: 6px 10px; border-bottom: 2px solid var(--border); color: var(--text-secondary); font-weight: 600; font-size: 11px; }
+.gh-table td { padding: 6px 10px; border-bottom: 1px solid rgba(48,54,61,.5); }
+.gh-table code { font-family: 'SF Mono', monospace; font-size: 11px; color: var(--domain-cdp); background: var(--bg-canvas); padding: 1px 4px; border-radius: 3px; }
+.gh-details { margin-top: 10px; }
+.gh-details summary { font-size: 12px; color: var(--border-focus); cursor: pointer; padding: 4px 0; }
+.gh-details summary:hover { text-decoration: underline; }
+
+/* ═══ METRIC CARD ═══ */
+.metric-card {
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; max-width: 400px;
+}
+.metric-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: .5px; margin-bottom: 12px; }
+.metric-value { font-size: 36px; font-weight: 700; color: var(--text-primary); }
+.metric-unit { font-size: 14px; color: var(--text-secondary); font-weight: 400; }
+.metric-threshold { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.metric-bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; margin-top: 16px; }
+.metric-bar {
+  flex: 1; border-radius: 3px 3px 0 0; min-width: 20px;
+  transition: height .3s; position: relative;
+}
+.metric-bar-label { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-size: 9px; color: var(--text-muted); white-space: nowrap; }
+.metric-bar.warn { background: rgba(239,68,68,.4); }
+.metric-bar.ok { background: rgba(99,102,241,.4); }
+
+/* ═══ GAUGE ═══ */
+.gauge-wrap { position: relative; width: 120px; height: 60px; margin: 0 auto 10px; overflow: hidden; }
+.gauge-bg { width: 120px; height: 60px; border-radius: 60px 60px 0 0; background: var(--bg-canvas); border: 6px solid var(--bg-elevated); border-bottom: none; }
+.gauge-fill {
+  position: absolute; bottom: 0; left: 0;
+  width: 120px; height: 60px;
+  border-radius: 60px 60px 0 0;
+  border: 6px solid var(--domain-crm); border-bottom: none;
+  clip-path: polygon(0% 100%, 0% 0%, 36% 0%, 50% 100%);
+}
+
+/* ═══ STALENESS INDICATOR ═══ */
+.staleness-normal { color: var(--text-muted); }
+.staleness-warning { color: var(--domain-auth); }
+.staleness-alert { color: #ef4444; animation: stalenessPulse 2s ease-in-out infinite; }
+@keyframes stalenessPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+
+/* ═══ TELEGRAM MOCKUP ═══ */
+.telegram-msg {
+  background: #1e2c3a; border-radius: 12px; padding: 12px 16px;
+  max-width: 400px; font-size: 13px; line-height: 1.6;
+  border: 1px solid rgba(88,166,255,.15);
+}
+.telegram-msg .bot-name { font-size: 12px; font-weight: 600; color: var(--border-focus); margin-bottom: 4px; }
+.telegram-msg .msg-time { font-size: 10px; color: var(--text-muted); text-align: right; margin-top: 4px; }
+
+/* ═══ COMPARISON PANEL ═══ */
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.compare-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.compare-header {
+  padding: 8px 14px; background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  font-size: 11px; font-weight: 600; color: var(--text-secondary);
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.compare-body { padding: 14px 16px; font-family: 'SF Mono', monospace; font-size: 12px; }
+
+/* ═══ RESOLUTION CHAIN ═══ */
+.resolve-chain {
+  display: flex; align-items: center; gap: 0; flex-wrap: wrap;
+  padding: 10px 0;
+}
+.resolve-step {
+  padding: 4px 10px; background: var(--bg-canvas);
+  border: 1px solid var(--border); border-radius: 6px;
+  font-size: 11px; font-family: 'SF Mono', monospace;
+  color: var(--text-secondary);
+}
+.resolve-step.final { border-color: var(--domain-crm); color: var(--domain-crm); }
+.resolve-arrow { padding: 0 6px; color: var(--text-muted); font-size: 14px; }
+
+/* ═══ DETAIL PANEL ROW ═══ */
+.detail-grid { display: grid; grid-template-columns: 80px 1fr; gap: 6px 12px; font-size: 12px; }
+.detail-label { color: var(--text-muted); }
+.detail-value { color: var(--text-primary); }
+.detail-value a { color: var(--border-focus); text-decoration: none; }
+.detail-value a:hover { text-decoration: underline; }
+
+/* ═══ BOTTOM NAV ═══ */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;
+  background: var(--bg-surface); border-top: 2px solid var(--hc-primary);
+  padding: 10px 24px; display: flex; align-items: center; gap: 12px;
+}
+.bottom-nav .label { font-size: 12px; font-weight: 700; color: var(--hc-primary); }
+.sprint-link {
+  padding: 6px 14px; border-radius: 6px; font-size: 12px;
+  text-decoration: none; font-weight: 600; transition: all .15s;
+}
+.sprint-link.active { background: var(--hc-primary); color: #fff; }
+.sprint-link.enabled { background: var(--bg-elevated); color: var(--text-secondary); border: 1px solid var(--border); }
+.sprint-link.enabled:hover { border-color: var(--hc-primary); color: var(--text-primary); }
+.sprint-link.disabled { background: var(--bg-elevated); color: var(--text-muted); cursor: not-allowed; }
+
+/* ═══ SEARCH/FILTER BAR ═══ */
+.search-box {
+  width: 100%; padding: 8px 12px 8px 34px;
+  background: var(--bg-canvas); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-primary); font-size: 13px; outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238b949e' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 10px center;
+}
+.search-box:focus { border-color: var(--border-focus); }
+
+/* ═══ CHIP ═══ */
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; font-size: 11px; border-radius: 12px;
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text-secondary); cursor: pointer;
+}
+.chip.active { background: var(--hc-primary); border-color: var(--hc-primary); color: #fff; }
+.chip .dot { width: 6px; height: 6px; border-radius: 50%; }
+
+/* ═══ COLLAPSIBLE ═══ */
+.collapsible-toggle {
+  cursor: pointer; user-select: none;
+  display: flex; align-items: center; gap: 6px;
+}
+.collapsible-content { display: none; }
+.collapsible-content.open { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ═══ DESIGN NAV ═══ -->
+<div class="design-nav">
+  <a href="codebase-map-v2-design.html" class="back-link">&#8592; v2.0 Overview</a>
+  <span class="title">CM-S2 (v1.2) — Design Spec</span>
+  <span class="subtitle">11 tasks &middot; 18 SP &middot; Workflow + Smart</span>
+  <div class="nav-links">
+    <a href="#cm-s2-01" class="nav-link active">01 Git Diff</a>
+    <a href="#cm-s2-02" class="nav-link">02 Cache</a>
+    <a href="#cm-s2-03" class="nav-link">03 Coverage</a>
+    <a href="#cm-s2-04" class="nav-link">04 /implement</a>
+    <a href="#cm-s2-05" class="nav-link">05 /review-gate</a>
+    <a href="#cm-s2-06" class="nav-link">06 Edge Fix</a>
+    <a href="#cm-s2-07" class="nav-link">07 API Catalog</a>
+    <a href="#cm-s2-08" class="nav-link">08 FDD Link</a>
+    <a href="#cm-s2-09" class="nav-link">09 PR Bot</a>
+    <a href="#cm-s2-10" class="nav-link">10 Metrics</a>
+    <a href="#cm-s2-11" class="nav-link">11 Staleness</a>
+  </div>
+</div>
+
+<!-- ═══ TOC SIDEBAR ═══ -->
+<div class="toc-sidebar" id="toc">
+  <div class="toc-title">Table of Contents</div>
+  <a href="#cm-s2-01" class="toc-item active">01 Git Diff Integration <span class="toc-sp">3 SP</span></a>
+  <a href="#cm-s2-02" class="toc-item">02 Incremental Cache <span class="toc-sp">3 SP</span></a>
+  <a href="#cm-s2-03" class="toc-item">03 Test Coverage Overlay <span class="toc-sp">2 SP</span></a>
+  <a href="#cm-s2-04" class="toc-item">04 /implement Integration <span class="toc-sp">1 SP</span></a>
+  <a href="#cm-s2-05" class="toc-item">05 /review-gate Integration <span class="toc-sp">1 SP</span></a>
+  <a href="#cm-s2-06" class="toc-item">06 Edge Resolution <span class="toc-sp">2 SP</span></a>
+  <a href="#cm-s2-07" class="toc-item">07 API Catalog <span class="toc-sp">2 SP</span></a>
+  <a href="#cm-s2-08" class="toc-item">08 FDD Spec Linking <span class="toc-sp">1 SP</span></a>
+  <a href="#cm-s2-09" class="toc-item">09 PR Impact Bot <span class="toc-sp">1 SP</span></a>
+  <a href="#cm-s2-10" class="toc-item">10 Sprint Metrics <span class="toc-sp">1 SP</span></a>
+  <a href="#cm-s2-11" class="toc-item">11 Staleness Alert <span class="toc-sp">1 SP</span></a>
+</div>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<div class="main-content">
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S2-01: GIT DIFF INTEGRATION (3 SP)
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s2-01">
+  <div class="section-id">CM-S2-01 <span class="sp-badge">3 SP</span></div>
+  <h2>Git Diff Integration</h2>
+  <p class="desc">CLI diff command + graph diff overlay. Show changed functions, impact zone, and PR metadata directly on the graph. Integrates with <code>git diff</code> to detect added/modified/removed nodes.</p>
+
+  <!-- CLI Output Mockup -->
+  <h3 style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">CLI Output Mockup</h3>
+  <div class="state-grid">
+    <div class="state-card" style="grid-column:1/-1;">
+      <div class="state-label"><span class="dot" style="background:var(--domain-crm)"></span> Terminal — codebase-map diff HEAD~1</div>
+      <div class="state-body" style="padding:0;">
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span style="background:#ff5f57"></span>
+              <span style="background:#febc2e"></span>
+              <span style="background:#28c840"></span>
+            </div>
+            <span class="terminal-title">Terminal</span>
+          </div>
+          <div class="terminal-body">
+            <div><span class="prompt">$</span> <span class="cmd">codebase-map diff HEAD~1</span></div>
+            <br>
+            <div><span class="info">Codebase Map v1.2 — Git Diff Analysis</span></div>
+            <div><span class="dimmed">Comparing:</span> <span class="highlight">HEAD~1</span> <span class="dimmed">(abc1234)</span> <span class="dimmed">..HEAD</span> <span class="highlight">(def5678)</span></div>
+            <br>
+            <div><span class="dimmed">Changed files:</span></div>
+            <div>&nbsp;&nbsp;<span class="added">+  crm/services/customer_service.py</span> <span class="dimmed">(+42 -8)</span></div>
+            <div>&nbsp;&nbsp;<span class="added">+  crm/services/tag_service.py</span> <span class="dimmed">(+185 -0) NEW</span></div>
+            <div>&nbsp;&nbsp;<span class="modified">~  crm/routers/customer_router.py</span> <span class="dimmed">(+12 -3)</span></div>
+            <div>&nbsp;&nbsp;<span class="removed">-  crm/utils/legacy_tags.py</span> <span class="dimmed">(+0 -67) DELETED</span></div>
+            <br>
+            <div><span class="dimmed">Changed functions:</span></div>
+            <div>&nbsp;&nbsp;<span class="added">+ CustomerService.add_bulk_tags</span> <span class="dimmed">— new method</span></div>
+            <div>&nbsp;&nbsp;<span class="added">+ TagService</span> <span class="dimmed">— new class (6 methods)</span></div>
+            <div>&nbsp;&nbsp;<span class="added">+ create_tag_endpoint</span> <span class="dimmed">— new route</span></div>
+            <div>&nbsp;&nbsp;<span class="modified">~ CustomerService.update</span> <span class="dimmed">— modified (added tag param)</span></div>
+            <div>&nbsp;&nbsp;<span class="modified">~ CustomerService.create</span> <span class="dimmed">— modified (added tag param)</span></div>
+            <div>&nbsp;&nbsp;<span class="modified">~ create_customer</span> <span class="dimmed">— modified route handler</span></div>
+            <div>&nbsp;&nbsp;<span class="modified">~ update_customer</span> <span class="dimmed">— modified route handler</span></div>
+            <div>&nbsp;&nbsp;<span class="modified">~ import_csv</span> <span class="dimmed">— modified (tag support)</span></div>
+            <div>&nbsp;&nbsp;<span class="removed">- format_legacy_tags</span> <span class="dimmed">— removed function</span></div>
+            <br>
+            <div><span class="impact">Impact zone (23 affected nodes):</span></div>
+            <div>&nbsp;&nbsp;<span class="impact">&#x25CF;</span> CustomerRepository.save <span class="dimmed">— called by modified CustomerService.create</span></div>
+            <div>&nbsp;&nbsp;<span class="impact">&#x25CF;</span> CustomerRepository.update <span class="dimmed">— called by modified CustomerService.update</span></div>
+            <div>&nbsp;&nbsp;<span class="impact">&#x25CF;</span> PipelineService.on_customer_update <span class="dimmed">— event subscriber</span></div>
+            <div>&nbsp;&nbsp;<span class="impact">&#x25CF;</span> CDPSegmentWorker.recalculate <span class="dimmed">— triggered by customer change</span></div>
+            <div>&nbsp;&nbsp;<span class="impact">&#x25CF;</span> <span class="dimmed">... 19 more nodes (use --verbose for full list)</span></div>
+            <br>
+            <div><span class="info">Summary:</span> <span class="added">+3 new</span> &middot; <span class="modified">~5 modified</span> &middot; <span class="removed">-1 removed</span> &middot; <span class="impact">23 impacted</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graph Diff Overlay -->
+  <h3 style="font-size:14px;color:var(--text-secondary);margin:24px 0 12px;">Graph Diff Overlay</h3>
+  <div class="state-grid">
+    <div class="state-card" style="grid-column:1/-1;">
+      <div class="state-label"><span class="dot" style="background:var(--hc-primary)"></span> Graph — PR Diff Mode Active</div>
+      <div class="state-body" style="padding:0;">
+        <div class="graph-mockup" style="height:360px;">
+          <!-- Diff badge top-left -->
+          <div class="diff-badge" style="position:absolute;top:12px;left:12px;z-index:10;">
+            <div class="title">PR #83 — feat(crm): add bulk tags</div>
+            <div class="diff-stat">
+              <span class="diff-added">+3 new</span>
+              <span class="diff-modified">~5 modified</span>
+              <span class="diff-removed">-1 removed</span>
+              <span style="color:var(--text-muted);">|</span>
+              <span class="diff-impact">Impact: 23 nodes</span>
+            </div>
+          </div>
+
+          <!-- Cluster background -->
+          <div style="position:absolute;top:50px;left:40px;width:480px;height:260px;border-radius:16px;background:rgba(63,185,80,.04);border:1px solid rgba(63,185,80,.1);">
+            <span style="position:absolute;top:8px;left:14px;font-size:12px;font-weight:700;color:var(--domain-crm);opacity:.3;">CRM</span>
+          </div>
+
+          <!-- Added nodes (green border) -->
+          <div class="graph-node added" style="top:90px;left:120px;background:var(--type-class);border-color:var(--layer-service);"></div>
+          <span class="graph-label" style="top:108px;left:110px;color:var(--domain-crm);font-weight:600;">TagService</span>
+          <div class="graph-node added" style="top:140px;left:80px;background:var(--type-method);border-color:var(--layer-service);"></div>
+          <span class="graph-label" style="top:158px;left:60px;color:var(--domain-crm);">add_bulk_tags</span>
+          <div class="graph-node added" style="top:140px;left:200px;background:var(--type-route);border-color:var(--layer-router);"></div>
+          <span class="graph-label" style="top:158px;left:180px;color:var(--domain-crm);">create_tag</span>
+
+          <!-- Modified nodes (yellow border) -->
+          <div class="graph-node modified" style="top:190px;left:280px;background:var(--type-class);border-color:var(--layer-service);"></div>
+          <span class="graph-label" style="top:208px;left:252px;color:var(--domain-auth);font-weight:600;">CustomerService</span>
+          <div class="graph-node modified" style="top:230px;left:240px;background:var(--type-method);border-color:var(--layer-service);"></div>
+          <span class="graph-label" style="top:248px;left:230px;color:var(--domain-auth);">.create</span>
+          <div class="graph-node modified" style="top:230px;left:340px;background:var(--type-method);border-color:var(--layer-service);"></div>
+          <span class="graph-label" style="top:248px;left:330px;color:var(--domain-auth);">.update</span>
+          <div class="graph-node modified" style="top:120px;left:350px;background:var(--type-route);border-color:var(--layer-router);"></div>
+          <span class="graph-label" style="top:138px;left:320px;color:var(--domain-auth);">create_customer</span>
+          <div class="graph-node modified" style="top:120px;left:440px;background:var(--type-route);border-color:var(--layer-router);"></div>
+          <span class="graph-label" style="top:138px;left:414px;color:var(--domain-auth);">import_csv</span>
+
+          <!-- Removed node (red border) -->
+          <div class="graph-node removed" style="top:80px;left:440px;background:var(--text-muted);border-color:#ef4444;opacity:.5;"></div>
+          <span class="graph-label" style="top:68px;left:410px;color:#ef4444;text-decoration:line-through;">legacy_tags</span>
+
+          <!-- Impact zone (orange glow) -->
+          <div class="graph-node impact" style="top:270px;left:180px;background:var(--type-class);border-color:var(--layer-repository);"></div>
+          <span class="graph-label" style="top:270px;left:200px;color:var(--domain-ecommerce);">CustomerRepo</span>
+          <div class="graph-node impact" style="top:270px;left:350px;background:var(--type-class);border-color:var(--layer-service);"></div>
+          <span class="graph-label" style="top:270px;left:370px;color:var(--domain-ecommerce);">PipelineService</span>
+          <div class="graph-node impact" style="top:270px;left:470px;background:var(--type-celery);border-color:var(--layer-worker);"></div>
+          <span class="graph-label" style="top:288px;left:448px;color:var(--domain-ecommerce);">CDPWorker</span>
+
+          <!-- Legend for diff colors -->
+          <div style="position:absolute;bottom:12px;left:12px;background:var(--bg-surface);border:1px solid var(--border);border-radius:6px;padding:6px 12px;display:flex;gap:14px;font-size:10px;">
+            <span style="color:var(--text-muted);font-weight:600;font-size:9px;">DIFF</span>
+            <span style="display:flex;align-items:center;gap:4px;color:var(--text-secondary);"><span style="width:8px;height:8px;border-radius:50%;border:2px solid var(--domain-crm);display:inline-block;"></span>Added</span>
+            <span style="display:flex;align-items:center;gap:4px;color:var(--text-secondary);"><span style="width:8px;height:8px;border-radius:50%;border:2px solid var(--domain-auth);display:inline-block;"></span>Modified</span>
+            <span style="display:flex;align-items:center;gap:4px;color:var(--text-secondary);"><span style="width:8px;height:8px;border-radius:50%;border:2px solid #ef4444;display:inline-block;"></span>Removed</span>
+            <span style="display:flex;align-items:center;gap:4px;color:var(--text-secondary);"><span style="width:8px;height:8px;border-radius:50%;box-shadow:0 0 6px 2px rgba(240,136,62,.5);display:inline-block;"></span>Impact</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation">
+    <strong>CSS classes:</strong> <code>.diff-badge</code>, <code>.diff-stat</code>, <code>.diff-added</code>, <code>.diff-modified</code>, <code>.diff-removed</code>, <code>.graph-node.added</code>, <code>.graph-node.modified</code>, <code>.graph-node.removed</code>, <code>.graph-node.impact</code>
+  </div>
+
+  <div class="impl-notes">
+    <div class="impl-notes-title">Implementation Notes</div>
+    <ul>
+      <li>CLI: <code>codebase-map diff &lt;ref&gt;</code> — uses <code>git diff --name-only</code> to get changed files</li>
+      <li>Re-parse only changed files, compare old/new AST to detect added/modified/removed nodes</li>
+      <li>Impact zone: BFS from changed nodes following outgoing edges (depth configurable, default 2)</li>
+      <li>Graph overlay: add CSS classes to SVG node groups based on diff status</li>
+      <li>Diff badge rendered as fixed-position overlay on graph canvas</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S2-02: INCREMENTAL UPDATE / CACHE (3 SP)
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s2-02">
+  <div class="section-id">CM-S2-02 <span class="sp-badge">3 SP</span></div>
+  <h2>Incremental Update / Cache</h2>
+  <p class="desc">Cache parsed AST per file using content hash. On re-generate, only re-parse changed files. Show performance indicator in topbar with cache stats.</p>
+
+  <div class="state-grid">
+    <!-- Incremental mode -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--domain-crm)"></span> Topbar — Incremental Mode</div>
+      <div class="state-body" style="padding:0;">
+        <div class="topbar-preview">
+          <div class="logo-icon">CM</div>
+          <span class="logo-text">Codebase Map</span>
+          <span class="logo-ver">v1.2</span>
+          <span class="stat-badge"><strong>1,386</strong> nodes</span>
+          <span class="stat-badge" style="border-color:rgba(63,185,80,.3);color:var(--domain-crm);">&#9889; Incremental: <strong>2/120</strong> files re-parsed (98% cached)</span>
+          <span style="font-size:11px;color:var(--text-muted);margin-left:auto;">Generated: 6 Apr 2026, 09:15 &middot; <span style="color:var(--domain-crm);">0.3s</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full parse mode -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--domain-auth)"></span> Topbar — Full Parse Mode</div>
+      <div class="state-body" style="padding:0;">
+        <div class="topbar-preview">
+          <div class="logo-icon">CM</div>
+          <span class="logo-text">Codebase Map</span>
+          <span class="logo-ver">v1.2</span>
+          <span class="stat-badge"><strong>1,386</strong> nodes</span>
+          <span class="stat-badge" style="border-color:rgba(210,153,34,.3);color:var(--domain-auth);">&#128260; Full parse: <strong>120</strong> files</span>
+          <span style="font-size:11px;color:var(--text-muted);margin-left:auto;">Generated: 6 Apr 2026, 09:15 &middot; <span style="color:var(--domain-auth);">4.2s</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cache tooltip panel -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--border-focus)"></span> Cache Stats Tooltip (Hover on Badge)</div>
+      <div class="state-body">
+        <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:14px;max-width:280px;">
+          <div style="font-size:11px;font-weight:600;color:var(--text-primary);margin-bottom:10px;">Cache Statistics</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:11px;">
+            <span style="color:var(--text-muted);">Total files</span><span style="color:var(--text-primary);">120</span>
+            <span style="color:var(--text-muted);">Cached</span><span style="color:var(--domain-crm);">118 (98%)</span>
+            <span style="color:var(--text-muted);">Re-parsed</span><span style="color:var(--domain-auth);">2</span>
+            <span style="color:var(--text-muted);">Cache size</span><span style="color:var(--text-primary);">2.1 MB</span>
+            <span style="color:var(--text-muted);">Cache path</span><span style="color:var(--domain-cdp);font-family:monospace;font-size:10px;">.codebase-map-cache/</span>
+          </div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;">
+            <div style="color:var(--text-muted);margin-bottom:4px;">Performance</div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="color:var(--text-secondary);">Full: <span style="color:var(--domain-auth);">4.2s</span></span>
+              <span style="color:var(--text-muted);">&#8594;</span>
+              <span style="color:var(--text-secondary);">Incremental: <span style="color:var(--domain-crm);">0.3s</span></span>
+              <span style="color:var(--domain-crm);font-weight:600;">14x faster</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation">
+    <strong>CSS classes:</strong> <code>.stat-badge</code> with green/yellow border tint. Tooltip uses <code>.bg-elevated</code> panel. Badge in topbar next to node/edge stats.
+  </div>
+
+  <div class="impl-notes">
+    <div class="impl-notes-title">Implementation Notes</div>
+    <ul>
+      <li>Cache file: <code>.codebase-map-cache/ast_cache.json</code> — keyed by <code>sha256(file_content)</code></li>
+      <li>On generate: check hash per file, skip parse if cached, merge cached nodes into graph</li>
+      <li>Cache invalidation: file content change, config change (force full re-parse with <code>--no-cache</code>)</li>
+      <li>Performance badge: computed during generate, stored in graph metadata</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S2-03: TEST COVERAGE OVERLAY (2 SP)
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s2-03">
+  <div class="section-id">CM-S2-03 <span class="sp-badge">2 SP</span></div>
+  <h2>Test Coverage Overlay</h2>
+  <p class="desc">Import coverage data from pytest-cov JSON. Show coverage bars in detail panel, colored dots in sidebar tree, and a coverage summary panel accessible from toolbar.</p>
+
+  <div class="state-grid">
+    <!-- Detail panel coverage -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--domain-crm)"></span> Detail Panel — Coverage Section</div>
+      <div class="state-body">
+        <div class="preview" style="width:360px;padding:14px;">
+          <div style="font-size:11px;font-weight:600;color:var(--type-route);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Coverage</div>
+          <div class="detail-grid">
+            <span class="detail-label">Coverage</span>
+            <span class="detail-value" style="display:flex;align-items:center;gap:8px;">
+              <span style="color:var(--domain-crm);font-weight:600;">92%</span>
+              <span style="flex:1;max-width:120px;"><div class="coverage-bar"><div class="coverage-fill high" style="width:92%"></div></div></span>
+            </span>
+            <span class="detail-label">Lines</span>
+            <span class="detail-value">46/50 covered</span>
+            <span class="detail-label">Branches</span>
+            <span class="detail-value">12/14 covered</span>
+            <span class="detail-label">Missing</span>
+            <span class="detail-value" style="font-family:monospace;font-size:11px;color:#ef4444;">L42, L48-50</span>
+          </div>
+        </div>
+        <div class="annotation"><strong>Colors:</strong> green (&gt;80%), yellow (50-80%), red (&lt;50%). Bar uses <code>.coverage-bar</code> + <code>.coverage-fill.high|medium|low</code>.</div>
+      </div>
+    </div>
+
+    <!-- Sidebar tree with coverage dots -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--type-method)"></span> Sidebar Tree — Coverage Dots</div>
+      <div class="state-body">
+        <div class="preview" style="width:320px;padding:8px;">
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;font-size:12px;font-weight:600;">
+            <span style="font-size:10px;color:var(--text-muted);width:16px;text-align:center;display:inline-block;transform:rotate(90deg);">&#9654;</span>
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--domain-crm);flex-shrink:0;"></span>
+            CRM
+            <span style="margin-left:auto;font-size:10px;color:var(--text-muted);background:var(--bg-canvas);padding:1px 6px;border-radius:8px;">268</span>
+          </div>
+          <div style="padding-left:16px;">
+            <div style="display:flex;align-items:center;gap:6px;padding:5px 8px;font-size:12px;cursor:pointer;border-radius:4px;">
+              <span style="font-size:10px;width:18px;text-align:center;color:var(--type-class);">&#9670;</span>
+              <span style="font-weight:500;">CustomerService</span>
+              <span style="width:6px;height:6px;border-radius:50%;background:var(--domain-crm);flex-shrink:0;margin-left:auto;" title="92%"></span>
+              <span style="font-size:10px;color:var(--text-muted);">service</span>
+            </div>
+            <div style="padding-left:20px;">
+              <div style="display:flex;align-items:center;gap:6px;font-size:11px;padding:3px 8px;color:var(--text-secondary);">
+                &#8627; create
+                <span style="width:5px;height:5px;border-radius:50%;background:var(--domain-crm);margin-left:auto;" title="100%"></span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:11px;padding:3px 8px;color:var(--text-secondary);">
+                &#8627; update
+                <span style="width:5px;height:5px;border-radius:50%;background:var(--domain-crm);margin-left:auto;" title="88%"></span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:11px;padding:3px 8px;color:var(--text-secondary);">
+                &#8627; delete
+                <span style="width:5px;height:5px;border-radius:50%;background:var(--domain-auth);margin-left:auto;" title="65%"></span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:11px;padding:3px 8px;color:var(--text-secondary);">
+                &#8627; import_csv
+                <span style="width:5px;height:5px;border-radius:50%;background:#ef4444;margin-left:auto;" title="30%"></span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;padding:5px 8px;font-size:12px;cursor:pointer;border-radius:4px;">
+              <span style="font-size:10px;width:18px;text-align:center;color:var(--type-class);">&#9670;</span>
+              <span style="font-weight:500;">PipelineService</span>
+              <span style="width:6px;height:6px;border-radius:50%;background:#ef4444;flex-shrink:0;margin-left:auto;" title="42%"></span>
+              <span style="font-size:10px;color:var(--text-muted);">service</span>
+            </div>
+          </div>
+        </div>
+        <div class="annotation">Small colored dot next to each function/class. Green &gt;80%, yellow 50-80%, red &lt;50%.</div>
+      </div>
+    </div>
+
+    <!-- Coverage summary panel -->
+    <div class="state-card" style="grid-column:1/-1;">
+      <div class="state-label"><span class="dot" style="background:var(--border-focus)"></span> Coverage Summary Panel (Toolbar Button)</div>
+      <div class="state-body">
+        <div class="preview" style="max-width:600px;padding:20px;">
+          <div style="font-size:16px;font-weight:700;margin-bottom:4px;">Test Coverage Summary</div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-bottom:16px;">From pytest-cov JSON &middot; Generated 6 Apr 2026</div>
+
+          <!-- Overall -->
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:14px;background:var(--bg-elevated);border-radius:10px;">
+            <div>
+              <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Overall Coverage</div>
+              <div style="font-size:32px;font-weight:700;color:var(--domain-auth);">73%</div>
+            </div>
+            <div style="flex:1;">
+              <div class="coverage-bar" style="height:8px;"><div class="coverage-fill medium" style="width:73%"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:4px;">
+                <span>0%</span><span>50%</span><span>80%</span><span>100%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- By domain -->
+          <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">By Domain</div>
+          <div class="coverage-row">
+            <span class="coverage-domain-dot" style="background:var(--domain-crm)"></span>
+            <span class="coverage-domain-name">CRM</span>
+            <div class="coverage-bar-wrap"><div class="coverage-bar"><div class="coverage-fill high" style="width:85%"></div></div></div>
+            <span class="coverage-pct" style="color:var(--domain-crm);">85%</span>
+          </div>
+          <div class="coverage-row">
+            <span class="coverage-domain-dot" style="background:var(--domain-private-traffic)"></span>
+            <span class="coverage-domain-name">Private Traffic</span>
+            <div class="coverage-bar-wrap"><div class="coverage-bar"><div class="coverage-fill medium" style="width:72%"></div></div></div>
+            <span class="coverage-pct" style="color:var(--domain-auth);">72%</span>
+          </div>
+          <div class="coverage-row">
+            <span class="coverage-domain-dot" style="background:var(--domain-cdp)"></span>
+            <span class="coverage-domain-name">CDP</span>
+            <div class="coverage-bar-wrap"><div class="coverage-bar"><div class="coverage-fill medium" style="width:68%"></div></div></div>
+            <span class="coverage-pct" style="color:var(--domain-auth);">68%</span>
+          </div>
+          <div class="coverage-row">
+            <span class="coverage-domain-dot" style="background:var(--domain-ecommerce)"></span>
+            <span class="coverage-domain-name">eCommerce</span>
+            <div class="coverage-bar-wrap"><div class="coverage-bar"><div class="coverage-fill medium" style="width:75%"></div></div></div>
+            <span class="coverage-pct" style="color:var(--domain-auth);">75%</span>
+          </div>
+          <div class="coverage-row">
+            <span class="coverage-domain-dot" style="background:var(--domain-billing)"></span>
+            <span class="coverage-domain-name">Billing</span>
+            <div class="coverage-bar-wrap"><div class="coverage-bar"><div class="coverage-fill low" style="width:42%"></div></div></div>
+            <span class="coverage-pct" style="color:#ef4444;">42%</span>
+          </div>
+          <div class="coverage-row" style="border-bottom:none;">
+            <span class="coverage-domain-dot" style="background:var(--domain-auth)"></span>
+            <span class="coverage-domain-name">Auth</span>
+            <div class="coverage-bar-wrap"><div class="coverage-bar"><div class="coverage-fill high" style="width:91%"></div></div></div>
+            <span class="coverage-pct" style="color:var(--domain-crm);">91%</span>
+          </div>
+
+          <!-- Uncovered functions -->
+          <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);">
+            <div style="font-size:11px;font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Uncovered Functions (0% coverage) &middot; 12 total</div>
+            <div style="font-size:11px;color:var(--text-secondary);padding:3px 0;font-family:monospace;">BillingService.retry_payment</div>
+            <div style="font-size:11px;color:var(--text-secondary);padding:3px 0;font-family:monospace;">BillingService.refund_order</div>
+            <div style="font-size:11px;color:var(--text-secondary);padding:3px 0;font-family:monospace;">CDPSegmentWorker.cleanup_stale</div>
+            <div style="font-size:11px;color:var(--text-muted);padding:3px 0;">... 9 more</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="impl-notes">
+    <div class="impl-notes-title">Implementation Notes</div>
+    <ul>
+      <li>Input: <code>coverage.json</code> from <code>pytest-cov --cov-report=json</code></li>
+      <li>Map coverage lines to AST function ranges to compute per-function coverage</li>
+      <li>Store coverage data in graph node metadata: <code>node.coverage = { pct, lines_covered, lines_total }</code></li>
+      <li>Legend: add coverage toggle chip to legend bar</li>
+      <li>Toolbar button: coverage icon opens summary panel overlay</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S2-04: /IMPLEMENT INTEGRATION (1 SP)
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s2-04">
+  <div class="section-id">CM-S2-04 <span class="sp-badge">1 SP</span></div>
+  <h2>/implement Integration</h2>
+  <p class="desc">Auto-query codebase map during <code>/implement</code> Step 2 to show impact zone of the feature being implemented. Reduces manual graph exploration.</p>
+
+  <div class="state-grid">
+    <!-- Workflow diagram -->
+    <div class="state-card" style="grid-column:1/-1;">
+      <div class="state-label"><span class="dot" style="background:var(--hc-primary)"></span> /implement Workflow with Auto-Query</div>
+      <div class="state-body" style="overflow-x:auto;">
+        <div class="workflow">
+          <div class="workflow-step">
+            <div class="step-num">Step 1</div>
+            <div class="step-title">Read Spec</div>
+            <div class="step-desc">Parse FDD spec + task board</div>
+          </div>
+          <div class="workflow-arrow">&#8594;</div>
+          <div class="workflow-step active">
+            <div class="step-num">Step 2</div>
+            <div class="step-title">Auto-Query Impact</div>
+            <div class="step-desc">Query codebase map for affected nodes</div>
+          </div>
+          <div class="workflow-arrow">&#8594;</div>
+          <div class="workflow-step">
+            <div class="step-num">Step 3</div>
+            <div class="step-title">Plan Changes</div>
+            <div class="step-desc">Identify files to modify</div>
+          </div>
+          <div class="workflow-arrow">&#8594;</div>
+          <div class="workflow-step">
+            <div class="step-num">Step 4</div>
+            <div class="step-title">Implement</div>
+            <div class="step-desc">Write code changes</div>
+          </div>
+          <div class="workflow-arrow">&#8594;</div>
+          <div class="workflow-step">
+            <div class="step-num">Step 5</div>
+            <div class="step-title">Verify</div>
+            <div class="step-desc">Lint + test + generate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auto-query terminal output -->
+    <div class="state-card" style="grid-column:1/-1;">
+      <div class="state-label"><span class="dot" style="background:var(--domain-crm)"></span> Auto-Query Output (Step 2)</div>
+      <div class="state-body" style="padding:0;">
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span style="background:#ff5f57"></span>
+              <span style="background:#febc2e"></span>
+              <span style="background:#28c840"></span>
+            </div>
+            <span class="terminal-title">/implement — Step 2</span>
+          </div>
+          <div class="terminal-body">
+            <div><span class="highlight">[/implement]</span> <span class="info">Step 2: Auto-querying codebase map...</span></div>
+            <div><span class="dimmed">Task:</span> FDD-CRM-015 — Add bulk tag management to customers</div>
+            <div><span class="dimmed">Query:</span> impact "CustomerService" "TagService" --depth 2</div>
+            <br>
+            <div><span class="info">Impact Zone (18 nodes):</span></div>
+            <div>&nbsp;&nbsp;<span class="added">&#x25CF;</span> CustomerService <span class="dimmed">— target (service layer)</span></div>
+            <div>&nbsp;&nbsp;<span class="added">&#x25CF;</span> CustomerRepository <span class="dimmed">— direct dependency</span></div>
+            <div>&nbsp;&nbsp;<span class="added">&#x25CF;</span> create_customer <span class="dimmed">— route → CustomerService.create</span></div>
+            <div>&nbsp;&nbsp;<span class="added">&#x25CF;</span> update_customer <span class="dimmed">— route → CustomerService.update</span></div>
+            <div>&nbsp;&nbsp;<span class="impact">&#x25CF;</span> PipelineService.on_customer_update <span class="dimmed">— event handler</span></div>
+            <div>&nbsp;&nbsp;<span class="impact">&#x25CF;</span> CDPSegmentWorker.recalculate <span class="dimmed">— async worker</span></div>
+            <div>&nbsp;&nbsp;<span class="dimmed">... 12 more</span></div>
+            <br>
+            <div><span class="highlight">[/implement]</span> <span class="info">Files to review before implementing:</span></div>
+            <div>&nbsp;&nbsp;crm/services/customer_service.py</div>
+            <div>&nbsp;&nbsp;crm/repositories/customer_repository.py</div>
+            <div>&nbsp;&nbsp;crm/routers/customer_router.py</div>
+            <div>&nbsp;&nbsp;crm/models/customer.py</div>
+            <div><span class="dimmed">Proceeding to Step 3...</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="impl-notes">
+    <div class="impl-notes-title">Implementation Notes</div>
+    <ul>
+      <li>Hook into <code>/implement</code> command Step 2 in <code>.claude/commands/implement.md</code></li>
+      <li>Auto-run: <code>codebase-map impact "TargetClass" -f graph.json --depth 2 --json</code></li>
+      <li>Parse JSON output to build file list for context loading</li>
+      <li>No UI changes needed — terminal output only</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S2-05: /REVIEW-GATE INTEGRATION (1 SP)
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s2-05">
+  <div class="section-id">CM-S2-05 <span class="sp-badge">1 SP</span></div>
+  <h2>/review-gate Integration</h2>
+  <p class="desc">Add impact analysis section to the review gate report. Shows affected node count, impact graph thumbnail, and risk level indicator.</p>
+
+  <div class="state-grid">
+    <div class="state-card" style="grid-column:1/-1;">
+      <div class="state-label"><span class="dot" style="background:var(--hc-primary)"></span> Review Gate Report — Impact Analysis Section</div>
+      <div class="state-body">
+        <div class="preview" style="max-width:600px;padding:16px;">
+          <!-- Report header -->
+          <div style="font-size:11px;font-weight:600;color:var(--type-route);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+            Impact Analysis <span style="font-size:10px;color:var(--text-muted);font-weight:400;">(auto-generated by codebase-map)</span>
+          </div>
+
+          <!-- Stats row -->
+          <div style="display:flex;gap:12px;margin-bottom:14px;">
+            <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:10px 16px;flex:1;text-align:center;">
+              <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Changed Nodes</div>
+              <div style="font-size:22px;font-weight:700;color:var(--text-primary);">8</div>
+            </div>
+            <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:10px 16px;flex:1;text-align:center;">
+              <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Impact Zone</div>
+              <div style="font-size:22px;font-weight:700;color:var(--domain-ecommerce);">23</div>
+            </div>
+            <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:10px 16px;flex:1;text-align:center;">
+              <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Risk Level</div>
+              <div style="margin-top:4px;"><span class="risk-badge risk-medium">&#9888; Medium</span></div>
+            </div>
+          </div>
+
+          <!-- Impact graph thumbnail -->
+          <div style="background:var(--bg-canvas);border:1px solid var(--border);border-radius:8px;height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:30px;left:60px;width:200px;height:60px;border-radius:8px;background:rgba(63,185,80,.04);border:1px solid rgba(63,185,80,.1);"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--type-class);position:absolute;top:50px;left:100px;box-shadow:0 0 0 2px rgba(210,153,34,.4);"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--type-method);position:absolute;top:50px;left:160px;box-shadow:0 0 0 2px rgba(63,185,80,.4);"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--type-route);position:absolute;top:70px;left:130px;box-shadow:0 0 6px 2px rgba(240,136,62,.3);"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--type-class);position:absolute;top:40px;left:200px;box-shadow:0 0 6px 2px rgba(240,136,62,.3);"></div>
+            <span style="position:absolute;bottom:6px;right:10px;font-size:10px;color:var(--text-muted);">click to open full graph</span>
+          </div>
+
+          <!-- Risk levels explanation -->
+          <div style="display:flex;gap:8px;font-size:11px;">
+            <span class="risk-badge risk-low">Low (&lt;10 nodes)</span>
+            <span class="risk-badge risk-medium">Medium (10-50 nodes)</span>
+            <span class="risk-badge risk-high">High (&gt;50 nodes)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="impl-notes">
+    <div class="impl-notes-title">Implementation Notes</div>
+    <ul>
+      <li>Hook into <code>/review-gate</code> command — add section after code review, before CEO sign-off</li>
+      <li>Auto-run: <code>codebase-map diff HEAD~1 --json</code> to get impact data</li>
+      <li>Risk levels: Low (&lt;10 impact nodes), Medium (10-50), High (&gt;50)</li>
+      <li>Graph thumbnail: small SVG render of impact subgraph (optional, can be static placeholder)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S2-06: EDGE RESOLUTION IMPROVEMENT (2 SP)
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s2-06">
+  <div class="section-id">CM-S2-06 <span class="sp-badge">2 SP</span></div>
+  <h2>Edge Resolution Improvement</h2>
+  <p class="desc">Improve Python parser to resolve <code>self.repo.method()</code> call chains through <code>__init__</code> type hints. Increases edge accuracy from ~94% to ~99%.</p>
+
+  <div class="state-grid">
+    <div class="state-card" style="grid-column:1/-1;">
+      <div class="state-label"><span class="dot" style="background:var(--domain-ecommerce)"></span> Before / After Comparison</div>
+      <div class="state-body">
+        <div class="compare-grid">
+          <div class="compare-card">
+            <div class="compare-header" style="color:#ef4444;">Before (v1.1)</div>
+            <div class="compare-body">
+              <div style="color:var(--text-secondary);margin-bottom:8px;">
+                <span style="color:var(--text-muted);"># Source code</span><br>
+                <span style="color:var(--domain-cdp);">class</span> <span style="color:var(--type-class);">CustomerService</span>:<br>
+                &nbsp;&nbsp;<span style="color:var(--domain-cdp);">def</span> <span style="color:var(--type-method);">__init__</span>(self, repo: CustomerRepository):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;self.repo = repo<br>
+                <br>
+                &nbsp;&nbsp;<span style="color:var(--domain-cdp);">def</span> <span style="color:var(--type-method);">create</span>(self, data):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;self.repo.save(data)<br>
+              </div>
+              <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:8px;">
+                <span style="color:var(--text-muted);font-size:10px;">Resolved edge:</span><br>
+                <span style="color:#ef4444;">self.repo.save</span> <span style="color:var(--text-muted);">&#8594;</span> <span style="color:#ef4444;">unknown.save</span> <span style="color:var(--text-muted);font-size:10px;">&#10007; unresolved</span>
+              </div>
+            </div>
+          </div>
+          <div class="compare-card">
+            <div class="compare-header" style="color:var(--domain-crm);">After (v1.2)</div>
+            <div class="compare-body">
+              <div style="color:var(--text-secondary);margin-bottom:8px;">
+                <span style="color:var(--text-muted);"># Same source code</span><br>
+                <span style="color:var(--domain-cdp);">class</span> <span style="color:var(--type-class);">CustomerService</span>:<br>
+                &nbsp;&nbsp;<span style="color:var(--domain-cdp);">def</span> <span style="color:var(--type-method);">__init__</span>(self, repo: <span style="color:var(--domain-crm);">CustomerRepository</span>):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;self.repo = repo<br>
+                <br>
+                &nbsp;&nbsp;<span style="color:var(--domain-cdp);">def</span> <span style="color:var(--type-method);">create</span>(self, data):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;self.repo.save(data)<br>
+              </div>
+              <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:8px;">
+                <span style="color:var(--text-muted);font-size:10px;">Resolved edge:</span><br>
+                <span style="color:var(--domain-crm);">self.repo.save</span> <span style="color:var(--text-muted);">&#8594;</span> <span style="color:var(--domain-crm);">CustomerRepository.save</span> <span style="color:var(--domain-crm);font-size:10px;">&#10003; resolved</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resolution chain -->
+    <div class="state-card" style="grid-column:1/-1;">
+      <div class="state-label"><span class="dot" style="background:var(--domain-cdp)"></span> Resolution Chain Visualization</div>
+      <div class="state-body">
+        <div class="resolve-chain">
+          <div class="resolve-step">self.repo</div>
+          <div class="resolve-arrow">&#8594;</div>
+          <div class="resolve-step">__init__(repo: CustomerRepository)</div>
+          <div class="resolve-arrow">&#8594;</div>
+          <div class="resolve-step final">CustomerRepository.save</div>
+        </div>
+
+        <!-- Accuracy badge -->
+        <div style="margin-top:16px;display:flex;align-items:center;gap:16px;">
+          <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:10px 16px;">
+            <span style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Parser Accuracy</span>
+            <div style="font-size:11px;margin-top:4px;">
+              <span style="color:#ef4444;text-decoration:line-through;">94%</span>
+              <span style="color:var(--text-muted);margin:0 6px;">&#8594;</span>
+              <span style="color:var(--domain-crm);font-weight:700;font-size:14px;">99%</span>
+            </div>
+          </div>
+          <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:10px 16px;">
+            <span style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Unresolved Edges</span>
+            <div style="font-size:11px;margin-top:4px;">
+              <span style="color:#ef4444;text-decoration:line-through;">497</span>
+              <span style="color:var(--text-muted);margin:0 6px;">&#8594;</span>
+              <span style="color:var(--domain-crm);font-weight:700;font-size:14px;">83</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="impl-notes">
+    <div class="impl-notes-title">Implementation Notes</div>
+    <ul>
+      <li>Parse <code>__init__</code> type annotations to build <code>self.attr -&gt; Type</code> mapping</li>
+      <li>Resolve <code>self.attr.method()</code> chains: look up attr type, find method on that class</li>
+      <li>Also handle: constructor injection, class-level type hints, <code>typing.Optional</code></li>
+      <li>Modify <code>python_parser.py</code>: add <code>_resolve_attribute_chain()</code> method</li>
+      <li>Store resolution metadata on edges: <code>edge.resolved = True/False</code></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S2-07: API CATALOG AUTO-GEN (2 SP)
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s2-07">
+  <div class="section-id">CM-S2-07 <span class="sp-badge">2 SP</span></div>
+  <h2>API Catalog Auto-gen</h2>
+  <p class="desc">Auto-generate API catalog from parsed route nodes. Full-page view tab showing all endpoints grouped by domain with HTTP method badges, auth info, and expandable details.</p>
+
+  <div class="state-grid">
+    <div class="state-card" style="grid-column:1/-1;">
+      <div class="state-label"><span class="dot" style="background:var(--type-route)"></span> API Catalog View — Full Page Mockup</div>
+      <div class="state-body" style="padding:0;">
+        <!-- Topbar with API Catalog tab active -->
+        <div class="topbar-preview">
+          <div class="logo-icon">CM</div>
+          <span class="logo-text">Codebase Map</span>
+          <span class="logo-ver">v1.2</span>
+          <div style="display:flex;gap:2px;background:var(--bg-canvas);border-radius:8px;padding:3px;margin-left:8px;">
+            <button style="padding:6px 14px;border-radius:6px;border:none;background:transparent;color:var(--text-secondary);font-size:12px;cursor:pointer;">Graph</button>
+            <button style="padding:6px 14px;border-radius:6px;border:none;background:var(--hc-primary);color:#fff;font-size:12px;font-weight:500;cursor:pointer;">API Catalog</button>
+            <button style="padding:6px 14px;border-radius:6px;border:none;background:transparent;color:var(--text-secondary);font-size:12px;cursor:pointer;">PR Diff</button>
+          </div>
+          <span class="stat-badge" style="margin-left:8px;"><strong>187</strong> endpoints</span>
+          <span style="font-size:11px;color:var(--text-muted);margin-left:auto;">Generated: 6 Apr 2026</span>
+        </div>
+
+        <!-- Search + filter bar -->
+        <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;">
+          <input type="text" class="search-box" placeholder="Search endpoints by path, method, domain..." style="max-width:400px;">
+          <div style="display:flex;gap:4px;">
+            <span class="chip active"><span class="dot" style="background:var(--domain-crm)"></span> All</span>
+            <span class="chip"><span class="dot" style="background:rgba(63,185,80,.6)"></span> GET</span>
+            <span class="chip"><span class="dot" style="background:rgba(88,166,255,.6)"></span> POST</span>
+            <span class="chip"><span class="dot" style="background:rgba(210,153,34,.6)"></span> PATCH</span>
+            <span class="chip"><span class="dot" style="background:rgba(239,68,68,.6)"></span> DELETE</span>
+          </div>
+        </div>
+
+        <!-- API list -->
+        <div class="api-catalog" style="max-height:500px;">
+          <!-- CRM group -->
+          <div class="api-group">
+            <div class="api-group-title">
+              <span style="width:10px;height:10px;border-radius:50%;background:var(--domain-crm);"></span>
+              CRM
+              <span style="font-size:11px;color:var(--text-muted);font-weight:400;">48 endpoints</span>
+            </div>
+            <div class="api-endpoint" onclick="this.classList.toggle('expanded');this.nextElementSibling.classList.toggle('open');">
+              <span class="http-method http-GET">GET</span>
+              <span class="api-path">/api/v1/customers</span>
+              <span class="api-auth">&#128274; JWT</span>
+            </div>
+            <div class="api-detail">
+              <div class="api-detail-row">
+                <div class="api-detail-col">
+                  <div class="api-detail-label">Query Parameters</div>
+                  <div class="api-param">page: int = 1</div>
+                  <div class="api-param">limit: int = 20</div>
+                  <div class="api-param">search: str = ""</div>
+                  <div class="api-param">domain: str = "all"</div>
+                </div>
+                <div class="api-detail-col">
+                  <div class="api-detail-label">Response</div>
+                  <div class="api-param">{ items: Customer[], total: int, page: int }</div>
+                  <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">Handler: list_customers (router)</div>
+                </div>
+              </div>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-POST">POST</span>
+              <span class="api-path">/api/v1/customers</span>
+              <span class="api-auth">&#128274; JWT + Admin</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-GET">GET</span>
+              <span class="api-path">/api/v1/customers/{id}</span>
+              <span class="api-auth">&#128274; JWT</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-PATCH">PATCH</span>
+              <span class="api-path">/api/v1/customers/{id}</span>
+              <span class="api-auth">&#128274; JWT + Admin</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-DELETE">DELETE</span>
+              <span class="api-path">/api/v1/customers/{id}</span>
+              <span class="api-auth">&#128274; JWT + Admin</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-POST">POST</span>
+              <span class="api-path">/api/v1/customers/{id}/tags</span>
+              <span class="api-auth">&#128274; JWT</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-POST">POST</span>
+              <span class="api-path">/api/v1/customers/import</span>
+              <span class="api-auth">&#128274; JWT + Admin</span>
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);padding:6px 12px;">... 41 more CRM endpoints</div>
+          </div>
+
+          <!-- CDP group -->
+          <div class="api-group">
+            <div class="api-group-title">
+              <span style="width:10px;height:10px;border-radius:50%;background:var(--domain-cdp);"></span>
+              CDP
+              <span style="font-size:11px;color:var(--text-muted);font-weight:400;">32 endpoints</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-GET">GET</span>
+              <span class="api-path">/api/v1/segments</span>
+              <span class="api-auth">&#128274; JWT</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-POST">POST</span>
+              <span class="api-path">/api/v1/segments</span>
+              <span class="api-auth">&#128274; JWT + Admin</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-GET">GET</span>
+              <span class="api-path">/api/v1/segments/{id}/members</span>
+              <span class="api-auth">&#128274; JWT</span>
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);padding:6px 12px;">... 29 more CDP endpoints</div>
+          </div>
+
+          <!-- eCommerce group -->
+          <div class="api-group">
+            <div class="api-group-title">
+              <span style="width:10px;height:10px;border-radius:50%;background:var(--domain-ecommerce);"></span>
+              eCommerce
+              <span style="font-size:11px;color:var(--text-muted);font-weight:400;">45 endpoints</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-GET">GET</span>
+              <span class="api-path">/api/v1/products</span>
+              <span class="api-auth">&#128274; Public</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-POST">POST</span>
+              <span class="api-path">/api/v1/orders</span>
+              <span class="api-auth">&#128274; JWT</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-GET">GET</span>
+              <span class="api-path">/api/v1/orders/{id}</span>
+              <span class="api-auth">&#128274; JWT</span>
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);padding:6px 12px;">... 42 more eCommerce endpoints</div>
+          </div>
+
+          <!-- Private Traffic group -->
+          <div class="api-group">
+            <div class="api-group-title">
+              <span style="width:10px;height:10px;border-radius:50%;background:var(--domain-private-traffic);"></span>
+              Private Traffic
+              <span style="font-size:11px;color:var(--text-muted);font-weight:400;">38 endpoints</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-GET">GET</span>
+              <span class="api-path">/api/v1/channels</span>
+              <span class="api-auth">&#128274; JWT</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="http-method http-POST">POST</span>
+              <span class="api-path">/api/v1/messages/send</span>
+              <span class="api-auth">&#128274; JWT + Admin</span>
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);padding:6px 12px;">... 36 more Private Traffic endpoints</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation">
+    <strong>CSS classes:</strong> <code>.api-catalog</code>, <code>.api-group</code>, <code>.api-endpoint</code>, <code>.http-method</code>, <code>.http-GET</code>, <code>.http-POST</code>, <code>.http-PATCH</code>, <code>.http-DELETE</code>, <code>.api-path</code>, <code>.api-auth</code>, <code>.api-detail</code>
+  </div>
+
+  <div class="impl-notes">
+    <div class="impl-notes-title">Implementation Notes</div>
+    <ul>
+      <li>Extract route metadata from parsed nodes: HTTP method, path, auth decorator</li>
+      <li>Group by domain (from YAML config domain mapping)</li>
+      <li>Expand details: parse function signature for params, parse return type annotation for response schema</li>
+      <li>New view tab in topbar — render API catalog HTML section, hide graph</li>
+      <li>Search: client-side filter on path, method, domain</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S2-08: FDD SPEC LINKING (1 SP)
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s2-08">
+  <div class="section-id">CM-S2-08 <span class="sp-badge">1 SP</span></div>
+  <h2>FDD Spec Linking</h2>
+  <p class="desc">Link graph nodes to FDD spec tickets via comment annotations in code. Show FDD ID in detail panel with clickable link.</p>
+
+  <div class="state-grid">
+    <!-- Detail panel with FDD -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--domain-crm)"></span> Detail Panel — FDD Row (Linked)</div>
+      <div class="state-body">
+        <div class="preview" style="width:360px;padding:14px;">
+          <div style="font-size:15px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;background:rgba(63,185,80,.15);color:var(--type-method);">METHOD</span>
+            CustomerService.create
+          </div>
+          <div class="detail-grid">
+            <span class="detail-label">Domain</span>
+            <span class="detail-value" style="display:flex;align-items:center;gap:4px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--domain-crm);"></span> CRM</span>
+            <span class="detail-label">Layer</span>
+            <span class="detail-value">Service</span>
+            <span class="detail-label">File</span>
+            <span class="detail-value"><a href="#">crm/services/customer_service.py:42</a></span>
+            <span class="detail-label">FDD</span>
+            <span class="detail-value">
+              <a href="#" style="display:inline-flex;align-items:center;gap:4px;">
+                <span style="background:rgba(99,102,241,.15);color:var(--hc-primary);padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;">FDD-CRM-001</span>
+              </a>
+              <span style="font-size:10px;color:var(--text-muted);margin-left:4px;" title="Customer CRUD Operations">Customer CRUD Operations</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unlinked state -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--text-muted)"></span> Detail Panel — FDD Row (Unlinked)</div>
+      <div class="state-body">
+        <div class="preview" style="width:360px;padding:14px;">
+          <div style="font-size:15px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;background:rgba(121,192,255,.15);color:var(--type-function);">FUNCTION</span>
+            validate_email
+          </div>
+          <div class="detail-grid">
+            <span class="detail-label">Domain</span>
+            <span class="detail-value" style="display:flex;align-items:center;gap:4px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--domain-core);"></span> Core</span>
+            <span class="detail-label">Layer</span>
+            <span class="detail-value">Core</span>
+            <span class="detail-label">File</span>
+            <span class="detail-value"><a href="#">core/validators.py:18</a></span>
+            <span class="detail-label">FDD</span>
+            <span class="detail-value" style="color:var(--text-muted);">&mdash; <span style="font-size:10px;">(unlinked)</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="impl-notes">
+    <div class="impl-notes-title">Implementation Notes</div>
+    <ul>
+      <li>Parse FDD annotations from code comments: <code># FDD: FDD-CRM-001</code> or <code># ticket: FDD-CRM-001</code></li>
+      <li>Store in node metadata: <code>node.fdd = "FDD-CRM-001"</code></li>
+      <li>FDD title from YAML config: <code>fdd_specs: { "FDD-CRM-001": "Customer CRUD Operations" }</code></li>
+      <li>Detail panel: new row in <code>.detail-grid</code></li>
+      <li>Link target: configurable in YAML (e.g., Jira URL template)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S2-09: PR IMPACT COMMENT BOT (1 SP)
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s2-09">
+  <div class="section-id">CM-S2-09 <span class="sp-badge">1 SP</span></div>
+  <h2>PR Impact Comment Bot</h2>
+  <p class="desc">GitHub Action that auto-comments on PRs with codebase map impact analysis. Shows changed functions, impact zone, and risk level in a clean GitHub comment.</p>
+
+  <div class="state-grid">
+    <div class="state-card" style="grid-column:1/-1;">
+      <div class="state-label"><span class="dot" style="background:var(--border-focus)"></span> GitHub PR Comment — Bot Output</div>
+      <div class="state-body">
+        <div class="gh-comment">
+          <div class="gh-comment-header">
+            <div class="gh-avatar">CM</div>
+            <div>
+              <span style="font-weight:600;">codebase-map</span>
+              <span style="font-size:10px;color:var(--text-muted);margin-left:4px;padding:1px 6px;border:1px solid var(--border);border-radius:10px;">bot</span>
+            </div>
+            <span style="color:var(--text-muted);margin-left:auto;font-size:11px;">commented 2 minutes ago</span>
+          </div>
+          <div class="gh-comment-body">
+            <h4>Codebase Map -- Impact Analysis</h4>
+
+            <div style="display:flex;gap:12px;margin-bottom:14px;">
+              <span class="stat-badge"><strong>8</strong> changed</span>
+              <span class="stat-badge" style="border-color:rgba(240,136,62,.3);"><strong style="color:var(--domain-ecommerce);">23</strong> impact zone</span>
+              <span class="risk-badge risk-medium">Medium Risk</span>
+            </div>
+
+            <table class="gh-table">
+              <thead>
+                <tr>
+                  <th>Changed Function</th>
+                  <th>Type</th>
+                  <th>Impact Zone</th>
+                  <th>Risk</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>CustomerService.add_bulk_tags</code></td>
+                  <td><span style="color:var(--domain-crm);">added</span></td>
+                  <td>5 nodes</td>
+                  <td><span class="risk-badge risk-low">Low</span></td>
+                </tr>
+                <tr>
+                  <td><code>TagService</code></td>
+                  <td><span style="color:var(--domain-crm);">added</span></td>
+                  <td>3 nodes</td>
+                  <td><span class="risk-badge risk-low">Low</span></td>
+                </tr>
+                <tr>
+                  <td><code>CustomerService.create</code></td>
+                  <td><span style="color:var(--domain-auth);">modified</span></td>
+                  <td>8 nodes</td>
+                  <td><span class="risk-badge risk-medium">Medium</span></td>
+                </tr>
+                <tr>
+                  <td><code>CustomerService.update</code></td>
+                  <td><span style="color:var(--domain-auth);">modified</span></td>
+                  <td>7 nodes</td>
+                  <td><span class="risk-badge risk-medium">Medium</span></td>
+                </tr>
+                <tr>
+                  <td><code>format_legacy_tags</code></td>
+                  <td><span style="color:#ef4444;">removed</span></td>
+                  <td>0 nodes</td>
+                  <td><span class="risk-badge risk-low">Low</span></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div style="font-size:12px;color:var(--text-secondary);margin:12px 0;padding:10px;background:var(--bg-elevated);border-radius:6px;">
+              <strong>Summary:</strong> This PR affects <strong>8 functions</strong> across CRM domain. Impact zone spans <strong>23 nodes</strong> including downstream services (PipelineService, CDPSegmentWorker).
+            </div>
+
+            <details class="gh-details">
+              <summary>View full impact graph (23 nodes)</summary>
+              <div style="padding:12px 0;font-size:11px;color:var(--text-secondary);font-family:monospace;">
+                <div>CustomerService.create &#8594; CustomerRepository.save &#8594; Customer (model)</div>
+                <div>CustomerService.update &#8594; CustomerRepository.update &#8594; Customer (model)</div>
+                <div>CustomerService.create &#8594; PipelineService.on_customer_update</div>
+                <div>PipelineService.on_customer_update &#8594; CDPSegmentWorker.recalculate</div>
+                <div style="color:var(--text-muted);">... 19 more edges</div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="impl-notes">
+    <div class="impl-notes-title">Implementation Notes</div>
+    <ul>
+      <li>GitHub Action: <code>.github/workflows/codebase-map-pr.yml</code> — triggers on <code>pull_request</code></li>
+      <li>Runs: <code>codebase-map diff $BASE..$HEAD --json</code></li>
+      <li>Formats output as Markdown table, posts via <code>gh pr comment</code></li>
+      <li>Updates existing comment (upsert) to avoid spam on force-push</li>
+      <li>Configurable risk thresholds in <code>codebase-map.yaml</code></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S2-10: SPRINT METRIC: IMPACT PER PR (1 SP)
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s2-10">
+  <div class="section-id">CM-S2-10 <span class="sp-badge">1 SP</span></div>
+  <h2>Sprint Metric: Impact per PR</h2>
+  <p class="desc">Track average PR impact over time. Dashboard card showing current average, threshold, and PR history bar chart. Warning when impact exceeds 50 nodes.</p>
+
+  <div class="state-grid">
+    <!-- Metric card -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--domain-crm)"></span> Metrics Dashboard Card — Normal</div>
+      <div class="state-body">
+        <div class="metric-card">
+          <div class="metric-title">Average PR Impact</div>
+          <div class="metric-value">18 <span class="metric-unit">nodes</span></div>
+          <div class="metric-threshold">Threshold: 50 nodes &middot; <span style="color:var(--domain-crm);">OK</span></div>
+
+          <!-- Bar chart -->
+          <div style="font-size:10px;color:var(--text-muted);margin-top:16px;margin-bottom:6px;">Last 10 PRs</div>
+          <div class="metric-bar-chart">
+            <div class="metric-bar ok" style="height:24%;">
+              <span class="metric-bar-label">#78</span>
+            </div>
+            <div class="metric-bar ok" style="height:15%;">
+              <span class="metric-bar-label">#79</span>
+            </div>
+            <div class="metric-bar ok" style="height:32%;">
+              <span class="metric-bar-label">#80</span>
+            </div>
+            <div class="metric-bar ok" style="height:8%;">
+              <span class="metric-bar-label">#81</span>
+            </div>
+            <div class="metric-bar ok" style="height:18%;">
+              <span class="metric-bar-label">#82</span>
+            </div>
+            <div class="metric-bar ok" style="height:46%;">
+              <span class="metric-bar-label">#83</span>
+            </div>
+            <div class="metric-bar ok" style="height:12%;">
+              <span class="metric-bar-label">#84</span>
+            </div>
+            <div class="metric-bar ok" style="height:28%;">
+              <span class="metric-bar-label">#85</span>
+            </div>
+            <div class="metric-bar ok" style="height:20%;">
+              <span class="metric-bar-label">#86</span>
+            </div>
+            <div class="metric-bar ok" style="height:36%;">
+              <span class="metric-bar-label">#87</span>
+            </div>
+          </div>
+          <!-- Threshold line -->
+          <div style="position:relative;margin-top:-30px;border-top:1px dashed #ef4444;opacity:.4;">
+            <span style="position:absolute;right:0;top:-14px;font-size:9px;color:#ef4444;">50</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Warning state -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:#ef4444"></span> Metrics Dashboard Card — Warning</div>
+      <div class="state-body">
+        <div class="metric-card" style="border-color:rgba(239,68,68,.3);">
+          <div class="metric-title">Average PR Impact</div>
+          <div class="metric-value" style="color:#ef4444;">62 <span class="metric-unit">nodes</span></div>
+          <div class="metric-threshold">Threshold: 50 nodes &middot; <span style="color:#ef4444;font-weight:600;">EXCEEDED</span></div>
+
+          <div style="margin-top:12px;padding:8px 12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:6px;font-size:11px;color:#ef4444;">
+            Average PR impact exceeds 50-node threshold. Consider breaking large PRs into smaller, focused changes.
+          </div>
+
+          <!-- Bar chart with warning bars -->
+          <div style="font-size:10px;color:var(--text-muted);margin-top:16px;margin-bottom:6px;">Last 10 PRs</div>
+          <div class="metric-bar-chart">
+            <div class="metric-bar ok" style="height:24%;"><span class="metric-bar-label">#78</span></div>
+            <div class="metric-bar warn" style="height:72%;"><span class="metric-bar-label">#79</span></div>
+            <div class="metric-bar ok" style="height:32%;"><span class="metric-bar-label">#80</span></div>
+            <div class="metric-bar warn" style="height:88%;"><span class="metric-bar-label">#81</span></div>
+            <div class="metric-bar ok" style="height:45%;"><span class="metric-bar-label">#82</span></div>
+            <div class="metric-bar warn" style="height:95%;"><span class="metric-bar-label">#83</span></div>
+            <div class="metric-bar ok" style="height:40%;"><span class="metric-bar-label">#84</span></div>
+            <div class="metric-bar warn" style="height:80%;"><span class="metric-bar-label">#85</span></div>
+            <div class="metric-bar ok" style="height:28%;"><span class="metric-bar-label">#86</span></div>
+            <div class="metric-bar warn" style="height:65%;"><span class="metric-bar-label">#87</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="impl-notes">
+    <div class="impl-notes-title">Implementation Notes</div>
+    <ul>
+      <li>Store PR impact history in <code>.codebase-map-cache/pr_metrics.json</code></li>
+      <li>Append on each <code>codebase-map diff</code> run with <code>--record-metric</code> flag</li>
+      <li>Metric card: rendered in HTML export as optional section</li>
+      <li>Warning threshold configurable in <code>codebase-map.yaml</code>: <code>metrics.impact_threshold: 50</code></li>
+      <li>Bar chart: pure CSS, no D3 needed (simple div heights)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CM-S2-11: STALENESS ALERT (1 SP)
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section" id="cm-s2-11">
+  <div class="section-id">CM-S2-11 <span class="sp-badge">1 SP</span></div>
+  <h2>Staleness Alert</h2>
+  <p class="desc">Visual indicator in topbar when the graph is outdated. Color changes based on age. Optional Telegram notification when graph is stale.</p>
+
+  <div class="state-grid">
+    <!-- Normal state -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--domain-crm)"></span> Topbar — Fresh (Normal)</div>
+      <div class="state-body" style="padding:0;">
+        <div class="topbar-preview">
+          <div class="logo-icon">CM</div>
+          <span class="logo-text">Codebase Map</span>
+          <span class="logo-ver">v1.2</span>
+          <span class="stat-badge"><strong>1,386</strong> nodes</span>
+          <span class="staleness-normal" style="font-size:11px;margin-left:auto;">Generated: 5 Apr 2026, 15:52</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Warning state -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--domain-auth)"></span> Topbar — Stale Warning (3-7 days)</div>
+      <div class="state-body" style="padding:0;">
+        <div class="topbar-preview">
+          <div class="logo-icon">CM</div>
+          <span class="logo-text">Codebase Map</span>
+          <span class="logo-ver">v1.2</span>
+          <span class="stat-badge"><strong>1,386</strong> nodes</span>
+          <span class="staleness-warning" style="font-size:11px;margin-left:auto;font-weight:600;">&#9888; Generated: 30 Mar 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert state -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:#ef4444"></span> Topbar — Stale Alert (&gt;7 days)</div>
+      <div class="state-body" style="padding:0;">
+        <div class="topbar-preview">
+          <div class="logo-icon">CM</div>
+          <span class="logo-text">Codebase Map</span>
+          <span class="logo-ver">v1.2</span>
+          <span class="stat-badge"><strong>1,386</strong> nodes</span>
+          <span class="staleness-alert" style="font-size:11px;margin-left:auto;font-weight:700;">&#128308; Generated: 25 Mar 2026 — STALE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Telegram notification -->
+    <div class="state-card">
+      <div class="state-label"><span class="dot" style="background:var(--border-focus)"></span> Telegram Notification Mockup</div>
+      <div class="state-body">
+        <div class="telegram-msg">
+          <div class="bot-name">Codebase Map Bot</div>
+          <div style="color:var(--text-primary);">
+            &#9888; <strong>Codebase Map is 8 days old.</strong><br>
+            <br>
+            Last generated: 25 Mar 2026<br>
+            Project: <strong>Hyper Commerce</strong><br>
+            Nodes: 1,386 &middot; Edges: 8,285<br>
+            <br>
+            Run <code style="background:var(--bg-canvas);padding:2px 6px;border-radius:3px;font-size:12px;">codebase-map generate</code> to update.
+          </div>
+          <div class="msg-time">09:00 AM</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation">
+    <strong>Staleness thresholds:</strong> Normal &lt;3 days (gray), Warning 3-7 days (yellow + warning icon), Alert &gt;7 days (red + pulse animation). CSS: <code>.staleness-normal</code>, <code>.staleness-warning</code>, <code>.staleness-alert</code>.
+  </div>
+
+  <div class="impl-notes">
+    <div class="impl-notes-title">Implementation Notes</div>
+    <ul>
+      <li>Compare <code>generated_at</code> timestamp in graph JSON with current date</li>
+      <li>Apply CSS class based on age: <code>staleness-normal</code>, <code>staleness-warning</code>, <code>staleness-alert</code></li>
+      <li>Telegram: optional webhook in YAML config: <code>notifications.telegram_webhook: "https://..."</code></li>
+      <li>Cron job suggestion: <code>codebase-map check-staleness --notify</code></li>
+      <li>Alert thresholds configurable in YAML: <code>staleness.warning_days: 3</code>, <code>staleness.alert_days: 7</code></li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- end .main-content -->
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<div class="bottom-nav">
+  <span class="label">SPRINT DESIGNS:</span>
+  <a href="codebase-map-CM-S1-design.html" class="sprint-link enabled">CM-S1 (v1.1) — UX</a>
+  <span class="sprint-link active">CM-S2 (v1.2) — Workflow + Smart</span>
+  <span class="sprint-link disabled">CM-S3 (v2.0) — Coming</span>
+  <a href="codebase-map-v2-design.html" class="sprint-link enabled" style="margin-left:auto;">v2.0 Overview</a>
+</div>
+
+<script>
+// HC-AI | ticket: FDD-TOOL-CODEMAP
+// Smooth scroll for nav links + TOC
+document.querySelectorAll('.nav-link, .toc-item').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    // Update active states
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.querySelectorAll('.toc-item').forEach(l => l.classList.remove('active'));
+    // Find matching nav-link and toc-item
+    const href = this.getAttribute('href');
+    document.querySelectorAll('[href="' + href + '"]').forEach(el => el.classList.add('active'));
+    // Scroll
+    const target = document.querySelector(href);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Intersection observer for TOC active state
+const sections = document.querySelectorAll('.section[id]');
+const tocItems = document.querySelectorAll('.toc-item');
+const navLinks = document.querySelectorAll('.nav-link');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      tocItems.forEach(item => {
+        item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+
+sections.forEach(section => observer.observe(section));
+
+// Chip toggle
+document.querySelectorAll('.chip').forEach(c => {
+  c.addEventListener('click', () => c.classList.toggle('active'));
+});
+
+// Collapsible API details
+document.querySelectorAll('.api-endpoint').forEach(ep => {
+  ep.addEventListener('click', function() {
+    const detail = this.nextElementSibling;
+    if (detail && detail.classList.contains('api-detail')) {
+      this.classList.toggle('expanded');
+      detail.classList.toggle('open');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
