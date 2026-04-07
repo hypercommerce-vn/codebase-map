@@ -274,6 +274,58 @@ body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
 .cluster-bg {{ fill-opacity: 0.04; stroke-opacity: 0.15; stroke-width: 1; pointer-events: none; }}
 .cluster-label {{ font-size: 14px; font-weight: 700; fill-opacity: 0.3; pointer-events: none; }}
 
+/* CM-S3-01: Multi-view tab bar */
+#tabbar {{
+  display: flex; gap: 2px; padding: 6px 12px; background: var(--bg-surface);
+  border-bottom: 1px solid var(--border); align-items: center;
+}}
+.view-tab {{
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); background: transparent; border: 1px solid transparent;
+  cursor: pointer;
+}}
+.view-tab:hover {{ background: var(--bg-elevated); color: var(--text-primary); }}
+.view-tab.active {{
+  background: var(--hc-primary); color: #fff; border-color: var(--hc-primary);
+}}
+.view-tab .count {{
+  background: rgba(255,255,255,.18); padding: 1px 6px;
+  border-radius: 10px; font-size: 10px;
+}}
+.view-tab.disabled {{ opacity: .45; cursor: not-allowed; }}
+.view-panel {{ display: none; flex: 1; position: relative; overflow: auto; }}
+.view-panel.active {{ display: flex; flex-direction: column; }}
+.view-placeholder {{
+  margin: auto; text-align: center; color: var(--text-muted); padding: 48px;
+}}
+.view-placeholder h2 {{
+  font-size: 18px; color: var(--text-secondary); margin-bottom: 8px;
+}}
+.view-placeholder code {{
+  background: var(--bg-elevated); padding: 2px 8px;
+  border-radius: 4px; font-size: 11px; color: var(--border-focus);
+}}
+
+/* CM-S3-05: Breadcrumb */
+#breadcrumb {{
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border); font-size: 12px;
+  min-height: 36px;
+}}
+#breadcrumb .crumb {{
+  color: var(--border-focus); cursor: pointer; padding: 2px 6px;
+  border-radius: 4px;
+}}
+#breadcrumb .crumb:hover {{ background: var(--bg-surface-hover); text-decoration: underline; }}
+#breadcrumb .crumb.current {{
+  color: var(--text-primary); font-weight: 600; cursor: default;
+}}
+#breadcrumb .crumb.current:hover {{ background: transparent; text-decoration: none; }}
+#breadcrumb .sep {{ color: var(--text-muted); font-size: 11px; }}
+#breadcrumb .empty-hint {{ color: var(--text-muted); font-style: italic; }}
+
 /* Graph */
 svg {{ width: 100%; height: 100%; }}
 .link {{ stroke-opacity: 0.3; }}
@@ -291,12 +343,33 @@ svg {{ width: 100%; height: 100%; }}
   <div id="topbar">
     <div class="logo-icon">CM</div>
     <span class="logo-text">Codebase Map</span>
-    <span class="logo-ver">v1.1</span>
+    <span class="logo-ver">v2.0</span>
     <span class="stat-badge" id="stat-nodes"></span>
     <span class="stat-badge" id="stat-edges"></span>
     <span class="stat-badge" id="stat-domains"></span>
     <span class="timestamp" id="timestamp"></span>
   </div>
+
+  <!-- CM-S3-01: Multi-view tab bar -->
+  <div id="tabbar" role="tablist" aria-label="Codebase Map views">
+    <button class="view-tab active" data-view="graph" role="tab" aria-selected="true">
+      &#x1f5fa;&#xfe0f; Graph <span class="count" id="tab-count-graph">0</span>
+    </button>
+    <button class="view-tab" data-view="executive" role="tab" aria-selected="false">
+      &#x1f4ca; Executive <span class="count" id="tab-count-exec">0</span>
+    </button>
+    <button class="view-tab" data-view="api" role="tab" aria-selected="false">
+      &#x1f50c; API Catalog <span class="count" id="tab-count-api">0</span>
+    </button>
+    <button class="view-tab" data-view="diff" role="tab" aria-selected="false">
+      &#x1f500; PR Diff <span class="count" id="tab-count-diff">—</span>
+    </button>
+  </div>
+
+  <!-- CM-S3-05: Breadcrumb -->
+  <nav id="breadcrumb" aria-label="Breadcrumb navigation">
+    <span class="empty-hint">All · click a node to drill down</span>
+  </nav>
 
   <div id="main">
     <!-- CM-S1-01: Sidebar with domain tree -->
@@ -309,7 +382,7 @@ svg {{ width: 100%; height: 100%; }}
       <div id="domain-tree"></div>
     </div>
 
-    <div id="graph-container">
+    <div id="graph-container" class="view-panel active" data-view="graph">
       <svg id="svg"></svg>
       <div id="detail-panel">
         <button id="close-detail">&times;</button>
@@ -332,6 +405,29 @@ svg {{ width: 100%; height: 100%; }}
       <div class="legend" id="legend"></div>
       <!-- CM-S1-06: Minimap -->
       <div id="minimap"><svg id="minimap-svg"></svg></div>
+    </div>
+
+    <!-- CM-S3-01: Placeholder panels for Day 3+ views -->
+    <div class="view-panel" data-view="executive">
+      <div class="view-placeholder">
+        <h2>&#x1f4ca; Executive View</h2>
+        <p>Domain health dashboard. Coming in CM-S3 Day 3.</p>
+        <p><code>#view=executive</code></p>
+      </div>
+    </div>
+    <div class="view-panel" data-view="api">
+      <div class="view-placeholder">
+        <h2>&#x1f50c; API Catalog</h2>
+        <p>Routes grouped by domain. Coming in CM-S3 Day 3+.</p>
+        <p><code>#view=api</code></p>
+      </div>
+    </div>
+    <div class="view-panel" data-view="diff">
+      <div class="view-placeholder">
+        <h2>&#x1f500; PR Diff View</h2>
+        <p>Color-coded change highlight. Coming in CM-S3 Day 4.</p>
+        <p><code>#view=diff&pr=42</code></p>
+      </div>
     </div>
   </div>
 </div>
@@ -372,6 +468,129 @@ document.getElementById('stat-nodes').innerHTML = `<strong>${{nodes.length.toLoc
 document.getElementById('stat-edges').innerHTML = `<strong>${{edges.length.toLocaleString()}}</strong> edges`;
 document.getElementById('stat-domains').innerHTML = `<strong>${{domainCount}}</strong> domains`;
 document.getElementById('timestamp').textContent = `Generated: ${{DATA.generated_at || new Date().toLocaleString()}}`;
+
+// HC-AI | ticket: FDD-TOOL-CODEMAP
+// CM-S3-01: Multi-view tab switcher with URL hash sync
+const VIEW_KEYS = ['graph', 'executive', 'api', 'diff'];
+const routeCount = nodes.filter(n => n.type === 'route').length;
+document.getElementById('tab-count-graph').textContent = nodes.length.toLocaleString();
+document.getElementById('tab-count-exec').textContent = domainCount;
+document.getElementById('tab-count-api').textContent = routeCount.toLocaleString();
+
+function parseHash() {{
+  const h = window.location.hash.replace(/^#/, '');
+  const params = new URLSearchParams(h.replace(/^&/, ''));
+  return {{
+    view: params.get('view') || 'graph',
+    path: params.get('path') || ''
+  }};
+}}
+function writeHash(state) {{
+  const params = new URLSearchParams();
+  if (state.view && state.view !== 'graph') params.set('view', state.view);
+  if (state.path) params.set('path', state.path);
+  const next = params.toString();
+  const target = next ? '#' + next : '#';
+  if (window.location.hash !== target) {{
+    history.replaceState(null, '', target);
+  }}
+}}
+function activateView(view) {{
+  if (!VIEW_KEYS.includes(view)) view = 'graph';
+  document.querySelectorAll('.view-tab').forEach(btn => {{
+    const isActive = btn.dataset.view === view;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  }});
+  document.querySelectorAll('.view-panel').forEach(panel => {{
+    panel.classList.toggle('active', panel.dataset.view === view);
+  }});
+  const state = parseHash();
+  state.view = view;
+  writeHash(state);
+}}
+document.querySelectorAll('.view-tab').forEach(btn => {{
+  btn.addEventListener('click', () => activateView(btn.dataset.view));
+}});
+// Keyboard 1/2/3/4 to switch tab (when not focused on input)
+document.addEventListener('keydown', (e) => {{
+  if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+  const idx = ['1','2','3','4'].indexOf(e.key);
+  if (idx >= 0) activateView(VIEW_KEYS[idx]);
+}});
+window.addEventListener('hashchange', () => {{
+  const s = parseHash();
+  activateView(s.view);
+  renderBreadcrumb(s.path);
+}});
+
+// CM-S3-05: Breadcrumb navigation
+const BREADCRUMB_EL = document.getElementById('breadcrumb');
+function buildCrumbsFromPath(pathStr) {{
+  // path format: "domain/module/Class/method"
+  if (!pathStr) return [];
+  return pathStr.split('/').filter(Boolean);
+}}
+function renderBreadcrumb(pathStr) {{
+  const parts = buildCrumbsFromPath(pathStr);
+  if (!parts.length) {{
+    BREADCRUMB_EL.innerHTML = '<span class="empty-hint">All · click a node to drill down</span>';
+    return;
+  }}
+  let html = '<span class="crumb" data-level="0">&#x1f3e0; All</span>';
+  parts.forEach((p, i) => {{
+    const isLast = i === parts.length - 1;
+    html += '<span class="sep">&rsaquo;</span>';
+    html += `<span class="crumb ${{isLast ? 'current' : ''}}" data-level="${{i+1}}">${{p}}</span>`;
+  }});
+  BREADCRUMB_EL.innerHTML = html;
+  BREADCRUMB_EL.querySelectorAll('.crumb').forEach(el => {{
+    el.addEventListener('click', () => {{
+      const lvl = parseInt(el.dataset.level || '0', 10);
+      const newPath = parts.slice(0, lvl).join('/');
+      const s = parseHash();
+      s.path = newPath;
+      writeHash(s);
+      renderBreadcrumb(newPath);
+    }});
+  }});
+}}
+function setBreadcrumbForNode(node) {{
+  if (!node) return;
+  const segs = [];
+  if (node.domain) segs.push(node.domain);
+  if (node.parent_class) {{
+    segs.push(node.parent_class.split('.').pop());
+    segs.push(node.name);
+  }} else {{
+    segs.push(node.name);
+  }}
+  const path = segs.join('/');
+  const s = parseHash();
+  s.path = path;
+  writeHash(s);
+  renderBreadcrumb(path);
+}}
+// Backspace = up one level (when not in input)
+document.addEventListener('keydown', (e) => {{
+  if (e.key !== 'Backspace') return;
+  if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+  const s = parseHash();
+  if (!s.path) return;
+  e.preventDefault();
+  const parts = buildCrumbsFromPath(s.path);
+  parts.pop();
+  s.path = parts.join('/');
+  writeHash(s);
+  renderBreadcrumb(s.path);
+}});
+
+// Apply initial state from URL
+{{
+  const init = parseHash();
+  activateView(init.view);
+  renderBreadcrumb(init.path);
+}}
 
 // CM-S1-01: Layer filter chips
 const filterContainer = document.getElementById('filters');
@@ -733,6 +952,8 @@ window.selectNodeById = function(id) {{
 
 function selectNode(d) {{
   selectedNode = d;
+  // CM-S3-05: sync breadcrumb to selected node
+  setBreadcrumbForNode(d);
 
   const connectedIds = new Set();
   connectedIds.add(d.id);
