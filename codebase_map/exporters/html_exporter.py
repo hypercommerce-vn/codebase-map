@@ -27,7 +27,20 @@ def export_html(graph: Graph, output_path: str | Path) -> Path:
     graph_data = json.dumps(graph.to_dict(), ensure_ascii=False)
     d3_code = _load_d3_bundle()
 
-    html = _build_html(graph_data, graph.project, d3_code)
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CM-S3-03: Bake pr_diff.json (if present) into HTML for offline PR Diff view
+    diff_path = path.parent / "pr_diff.json"
+    diff_data = "null"
+    if diff_path.exists():
+        try:
+            diff_data = json.dumps(
+                json.loads(diff_path.read_text(encoding="utf-8")),
+                ensure_ascii=False,
+            )
+        except (OSError, ValueError) as exc:
+            print(f"[WARN] Could not read pr_diff.json: {exc}")
+
+    html = _build_html(graph_data, graph.project, d3_code, diff_data)
 
     with open(path, "w", encoding="utf-8") as f:
         f.write(html)
@@ -37,7 +50,12 @@ def export_html(graph: Graph, output_path: str | Path) -> Path:
     return path
 
 
-def _build_html(graph_json: str, project_name: str, d3_code: str = "") -> str:
+def _build_html(
+    graph_json: str,
+    project_name: str,
+    d3_code: str = "",
+    diff_json: str = "null",
+) -> str:
     """Build the complete HTML visualization page.
 
     HC-AI | ticket: FDD-TOOL-CODEMAP
@@ -374,6 +392,68 @@ body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
 .dp-pill.yellow {{ background: rgba(210,153,34,.15); color: #d29922; }}
 .dp-pill.red {{ background: rgba(248,81,73,.15); color: #f85149; }}
 
+/* CM-S3-03: PR Diff view */
+.diff-wrap {{ padding: 24px 28px; max-width: 1200px; margin: 0 auto; width: 100%; }}
+.diff-wrap h2 {{ font-size: 20px; margin-bottom: 6px; }}
+.diff-wrap .subtitle {{ color: var(--text-muted); font-size: 13px; margin-bottom: 16px; }}
+.diff-banner {{
+  padding: 12px 16px; border-radius: 8px; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px; font-size: 13px;
+  border: 1px solid var(--border);
+}}
+.diff-banner.green {{ background: rgba(63,185,80,.10); border-color: #3fb950; }}
+.diff-banner.yellow {{ background: rgba(210,153,34,.10); border-color: #d29922; }}
+.diff-banner.red {{ background: rgba(248,81,73,.10); border-color: #f85149; }}
+.diff-banner .icon {{ font-size: 20px; }}
+.diff-banner .label {{ font-weight: 600; }}
+.diff-legend {{
+  display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 18px;
+  font-size: 11px; color: var(--text-secondary);
+}}
+.diff-legend span {{ display: inline-flex; align-items: center; gap: 5px; }}
+.diff-legend .swatch {{
+  width: 12px; height: 12px; border-radius: 3px; display: inline-block;
+}}
+.diff-section {{ margin-bottom: 18px; }}
+.diff-section h3 {{
+  font-size: 12px; text-transform: uppercase; letter-spacing: .5px;
+  color: var(--text-muted); margin-bottom: 8px;
+}}
+.diff-node {{
+  display: inline-block; padding: 4px 10px; margin: 3px;
+  border-radius: 4px; font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px; border: 1px solid var(--border); cursor: pointer;
+}}
+.diff-node:hover {{ filter: brightness(1.2); }}
+.diff-node.added    {{ background: rgba(63,185,80,.18); color:#3fb950; border-color:#3fb950; }}
+.diff-node.modified {{ background: rgba(210,153,34,.18); color:#d29922; border-color:#d29922; }}
+.diff-node.removed  {{ background: rgba(248,81,73,.18); color:#f85149; border-color:#f85149; text-decoration: line-through; }}
+.diff-node.impacted {{ background: rgba(88,166,255,.10); color:#58a6ff; border-color:#58a6ff; border-style: dashed; }}
+.diff-empty {{ color: var(--text-muted); font-size: 12px; padding: 24px 0; text-align: center; }}
+
+/* CM-S3-04: Flow filter chip */
+.flow-bar {{
+  display: flex; align-items: center; gap: 8px; padding: 6px 14px;
+  background: var(--bg-elevated); border-bottom: 1px solid var(--border);
+  font-size: 11px; flex-wrap: wrap;
+}}
+.flow-bar .lbl {{ color: var(--text-muted); }}
+.flow-chip {{
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 11px; cursor: pointer;
+  background: var(--bg-canvas); border: 1px solid var(--border);
+  color: var(--text-secondary); font-size: 11px;
+}}
+.flow-chip:hover {{ border-color: var(--border-focus); }}
+.flow-chip.active {{
+  background: rgba(88,166,255,.18); border-color: #58a6ff; color: #58a6ff;
+}}
+.flow-chip .count {{
+  font-size: 10px; color: var(--text-muted); padding: 0 4px;
+  background: var(--bg-elevated); border-radius: 8px;
+}}
+.flow-chip.active .count {{ color: #58a6ff; }}
+
 /* CM-S3-05: Breadcrumb */
 #breadcrumb {{
   display: flex; align-items: center; gap: 6px;
@@ -433,6 +513,12 @@ svg {{ width: 100%; height: 100%; }}
     </button>
   </div>
 
+  <!-- CM-S3-04: Business flow filter chips (hidden if no flows) -->
+  <div id="flow-bar" class="flow-bar" hidden>
+    <span class="lbl">&#x1f9ed; Flows:</span>
+    <div id="flow-chips"></div>
+  </div>
+
   <!-- CM-S3-05: Breadcrumb -->
   <nav id="breadcrumb" aria-label="Breadcrumb navigation">
     <span class="empty-hint">All · click a node to drill down</span>
@@ -489,11 +575,19 @@ svg {{ width: 100%; height: 100%; }}
         <p><code>#view=api</code></p>
       </div>
     </div>
+    <!-- CM-S3-03: PR Diff view -->
     <div class="view-panel" data-view="diff">
-      <div class="view-placeholder">
+      <div class="diff-wrap">
         <h2>&#x1f500; PR Diff View</h2>
-        <p>Color-coded change highlight. Coming in CM-S3 Day 4.</p>
-        <p><code>#view=diff&pr=42</code></p>
+        <div class="subtitle">Color-coded change impact for the current PR. Source: <code>pr_diff.json</code> generated by <code>codebase-map diff</code>.</div>
+        <div id="diff-banner-host"></div>
+        <div class="diff-legend">
+          <span><i class="swatch" style="background:#3fb950"></i>Added</span>
+          <span><i class="swatch" style="background:#d29922"></i>Modified</span>
+          <span><i class="swatch" style="background:#f85149"></i>Removed</span>
+          <span><i class="swatch" style="background:#58a6ff;border:1px dashed #58a6ff"></i>Impacted (2-hop)</span>
+        </div>
+        <div id="diff-content"></div>
       </div>
     </div>
   </div>
@@ -503,6 +597,8 @@ svg {{ width: 100%; height: 100%; }}
 <script>
 // HC-AI | ticket: FDD-TOOL-CODEMAP
 const DATA = {graph_json};
+// CM-S3-03: PR Diff data baked at export time (or null)
+const DIFF_DATA = {diff_json};
 
 const LAYER_COLORS = {{
   route: '#f0883e', service: '#3fb950', repository: '#a371f7',
@@ -704,12 +800,121 @@ function renderExecutiveView() {{
   }});
 }}
 
+// HC-AI | ticket: FDD-TOOL-CODEMAP
+// CM-S3-03: PR Diff view renderer
+function renderPRDiffView() {{
+  const host = document.getElementById('diff-content');
+  const banner = document.getElementById('diff-banner-host');
+  const tabCount = document.getElementById('tab-count-diff');
+  if (!host) return;
+  if (!DIFF_DATA || typeof DIFF_DATA !== 'object') {{
+    host.innerHTML = '<div class="diff-empty">No <code>pr_diff.json</code> found in output dir. Run <code>codebase-map diff main --json &gt; docs/function-map/pr_diff.json</code> then re-export.</div>';
+    if (tabCount) tabCount.textContent = '—';
+    return;
+  }}
+  const added    = DIFF_DATA.added    || [];
+  const modified = DIFF_DATA.modified || DIFF_DATA.changed_nodes || [];
+  const removed  = DIFF_DATA.removed  || [];
+  const impacted = DIFF_DATA.impacted || DIFF_DATA.impacted_nodes || [];
+  const total = added.length + modified.length + removed.length + impacted.length;
+  if (tabCount) tabCount.textContent = total.toString();
+
+  // Risk banner — based on impacted count (CM-S2-10 thresholds)
+  let risk = 'green', icon = '🟢', label = 'Low risk';
+  if (impacted.length > 50) {{ risk = 'red'; icon = '🔴'; label = 'High risk'; }}
+  else if (impacted.length >= 10) {{ risk = 'yellow'; icon = '🟡'; label = 'Medium risk'; }}
+  banner.innerHTML = `
+    <div class="diff-banner ${{risk}}">
+      <span class="icon">${{icon}}</span>
+      <span class="label">${{label}}</span>
+      <span>${{added.length}} added · ${{modified.length}} modified · ${{removed.length}} removed · ${{impacted.length}} impacted</span>
+    </div>
+  `;
+
+  function nodeChip(n, cls) {{
+    const id = (typeof n === 'string') ? n : (n.id || n.name || '?');
+    const label = (typeof n === 'string') ? n : (n.name || n.id || '?');
+    return `<span class="diff-node ${{cls}}" data-node="${{id}}" title="${{id}}">${{label}}</span>`;
+  }}
+  function section(title, items, cls) {{
+    if (!items.length) return '';
+    return `<div class="diff-section"><h3>${{title}} (${{items.length}})</h3>${{items.map(n => nodeChip(n, cls)).join('')}}</div>`;
+  }}
+  host.innerHTML = [
+    section('Added', added, 'added'),
+    section('Modified', modified, 'modified'),
+    section('Removed', removed, 'removed'),
+    section('Impacted (2-hop)', impacted, 'impacted'),
+  ].join('') || '<div class="diff-empty">Diff is empty — no changes detected.</div>';
+
+  // Click → jump to graph view + select node
+  host.querySelectorAll('.diff-node').forEach(el => {{
+    el.addEventListener('click', () => {{
+      const id = el.dataset.node;
+      activateView('graph');
+      const target = nodes.find(n => n.id === id || n.name === id);
+      if (target && typeof selectNode === 'function') selectNode(target);
+    }});
+  }});
+}}
+
+// HC-AI | ticket: FDD-TOOL-CODEMAP
+// CM-S3-04: Business Flow filter
+let activeFlow = null;
+function renderFlowBar() {{
+  const bar = document.getElementById('flow-bar');
+  const host = document.getElementById('flow-chips');
+  if (!bar || !host) return;
+  const counts = {{}};
+  nodes.forEach(n => {{
+    const fs = (n.metadata && n.metadata.flows) || [];
+    fs.forEach(f => {{ counts[f] = (counts[f] || 0) + 1; }});
+  }});
+  const flows = Object.keys(counts).sort();
+  if (!flows.length) {{ bar.hidden = true; return; }}
+  bar.hidden = false;
+  host.innerHTML = flows.map(f =>
+    `<span class="flow-chip" data-flow="${{f}}">${{f}} <span class="count">${{counts[f]}}</span></span>`
+  ).join('');
+  host.querySelectorAll('.flow-chip').forEach(chip => {{
+    chip.addEventListener('click', () => {{
+      const f = chip.dataset.flow;
+      if (activeFlow === f) {{
+        activeFlow = null;
+        chip.classList.remove('active');
+      }} else {{
+        host.querySelectorAll('.flow-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeFlow = f;
+      }}
+      applyFlowHighlight();
+    }});
+  }});
+}}
+function applyFlowHighlight() {{
+  // Dim non-flow nodes in graph
+  const svg = document.getElementById('svg');
+  if (!svg) return;
+  svg.querySelectorAll('.node-circle').forEach(c => {{
+    const id = c.getAttribute('data-id');
+    if (!activeFlow) {{
+      c.style.opacity = '';
+      return;
+    }}
+    const n = nodes.find(x => x.id === id);
+    const fs = (n && n.metadata && n.metadata.flows) || [];
+    c.style.opacity = fs.includes(activeFlow) ? '1' : '0.15';
+  }});
+}}
+
 // Apply initial state from URL
 {{
   const init = parseHash();
   activateView(init.view);
   renderBreadcrumb(init.path);
   renderExecutiveView();
+  renderPRDiffView();
+  renderFlowBar();
 }}
 
 // CM-S1-01: Layer filter chips
@@ -1043,6 +1248,7 @@ const nodeG = g.append('g').selectAll('g')
 
 nodeG.append('circle')
   .attr('class', 'node-circle')
+  .attr('data-id', d => d.id)
   .attr('r', d => d.type === 'class' || d.type === 'model' ? 8 : d.type === 'route' ? 7 : 5)
   .attr('fill', d => TYPE_COLORS[d.type] || '#484f58')
   .attr('stroke', d => LAYER_COLORS[d.layer] || '#484f58')

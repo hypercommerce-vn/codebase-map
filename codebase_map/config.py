@@ -36,6 +36,9 @@ class Config:
     output: OutputConfig = field(default_factory=OutputConfig)
     graph: GraphConfig = field(default_factory=GraphConfig)
     project_root: Path = field(default_factory=lambda: Path.cwd())
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CM-S3-04: Business flows mapping {flow_name: [glob/regex patterns]}
+    flows: dict[str, list[str]] = field(default_factory=dict)
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> Config:
@@ -69,12 +72,23 @@ class Config:
             group_by=graph_raw.get("group_by", "module"),
         )
 
+        # HC-AI | ticket: FDD-TOOL-CODEMAP
+        # CM-S3-04: Parse flows section — {name: [patterns]}
+        flows_raw = raw.get("flows", {}) or {}
+        flows: dict[str, list[str]] = {}
+        for fname, patterns in flows_raw.items():
+            if isinstance(patterns, list):
+                flows[str(fname)] = [str(p) for p in patterns]
+            elif isinstance(patterns, str):
+                flows[str(fname)] = [patterns]
+
         return cls(
             project=raw.get("project", "my-project"),
             sources=sources,
             output=output,
             graph=graph,
             project_root=config_path.parent,
+            flows=flows,
         )
 
     @classmethod

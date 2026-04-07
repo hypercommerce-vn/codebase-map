@@ -38,6 +38,34 @@ def _find_fdd_for_node(fdd_by_line: dict[int, str], line_start: int) -> str:
     return ""
 
 
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# CM-S3-04: Business flow tagging — parse `# flow: name1, name2` comments
+_FLOW_PATTERN = re.compile(r"#[^\n]*?flow\s*:\s*([A-Za-z0-9_,\-\s]+)", re.IGNORECASE)
+
+
+def _extract_flow_annotations(source: str) -> dict[int, list[str]]:
+    """Scan source for `# flow: name` comments. Returns {line_no: [flows]}."""
+    result: dict[int, list[str]] = {}
+    for idx, line in enumerate(source.splitlines(), start=1):
+        m = _FLOW_PATTERN.search(line)
+        if m:
+            flows = [f.strip() for f in m.group(1).split(",") if f.strip()]
+            if flows:
+                result[idx] = flows
+    return result
+
+
+def _find_flows_for_node(
+    flows_by_line: dict[int, list[str]], line_start: int
+) -> list[str]:
+    """Find nearest flow annotation within 5 lines above (or on) the def line."""
+    for offset in range(0, 6):
+        cand = flows_by_line.get(line_start - offset)
+        if cand:
+            return cand
+    return []
+
+
 def _get_docstring(node: ast.AST) -> str:
     """Extract docstring from a function/class/module node."""
     try:
@@ -304,6 +332,16 @@ class PythonParser(BaseParser):
                 fdd_id = _find_fdd_for_node(fdd_by_line, node_obj.line_start)
                 if fdd_id:
                     node_obj.metadata["fdd"] = fdd_id
+
+        # HC-AI | ticket: FDD-TOOL-CODEMAP
+        # CM-S3-04: Business flow comment annotations
+        flows_by_line = _extract_flow_annotations(source)
+        if flows_by_line:
+            for node_obj in nodes:
+                flows = _find_flows_for_node(flows_by_line, node_obj.line_start)
+                if flows:
+                    existing = node_obj.metadata.get("flows", [])
+                    node_obj.metadata["flows"] = sorted(set(existing) | set(flows))
 
         # Import edges (module-level)
         for alias_name, full_path in import_map.items():
