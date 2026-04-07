@@ -1,0 +1,698 @@
+<!-- HC-AI | ticket: FDD-TOOL-CODEMAP -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CM-S3 (v2.0) Design Spec — Codebase Map | Hyper Commerce</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — HC Codebase Map CM-S3 (v2.0)
+   Designer: HC Designer Agent | PO: HC Product Owner Agent
+   Date: 2026-04-07
+   Sprint: CM-S3 — Multi-view + TypeScript + Responsive (22 SP, 8 tasks)
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --hc-primary: #6366f1;
+  --hc-primary-hover: #4f46e5;
+  --hc-primary-bg: #eef2ff;
+  --bg-canvas: #0d1117;
+  --bg-surface: #161b22;
+  --bg-surface-hover: #1c2128;
+  --bg-elevated: #21262d;
+  --border: #30363d;
+  --border-focus: #58a6ff;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #484f58;
+  --domain-crm: #3fb950;
+  --domain-cdp: #a371f7;
+  --domain-ecommerce: #f0883e;
+  --domain-private-traffic: #58a6ff;
+  --domain-core: #79c0ff;
+  --domain-auth: #d29922;
+  --domain-billing: #f778ba;
+  --type-route: #f0883e;
+  --type-class: #a371f7;
+  --type-method: #3fb950;
+  --type-function: #79c0ff;
+  --diff-added: #3fb950;
+  --diff-modified: #d29922;
+  --diff-removed: #f85149;
+  --diff-impacted: #58a6ff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #111;
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.design-nav {
+  position: sticky; top: 0; z-index: 999;
+  background: var(--bg-surface);
+  border-bottom: 2px solid var(--hc-primary);
+  padding: 10px 24px;
+  display: flex; align-items: center; gap: 16px;
+  flex-wrap: wrap;
+}
+.design-nav .title { font-size: 15px; font-weight: 700; color: var(--hc-primary); }
+.design-nav .subtitle { font-size: 12px; color: var(--text-muted); }
+.design-nav .nav-links { display: flex; gap: 4px; flex-wrap: wrap; margin-left: auto; }
+.nav-link {
+  padding: 6px 10px; border-radius: 6px; background: var(--bg-elevated);
+  color: var(--text-secondary); font-size: 12px; text-decoration: none;
+  border: 1px solid var(--border); transition: all 0.15s;
+}
+.nav-link:hover { background: var(--hc-primary); color: white; border-color: var(--hc-primary); }
+
+.container { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
+.sprint-header {
+  background: linear-gradient(135deg, var(--hc-primary) 0%, #8b5cf6 100%);
+  padding: 32px; border-radius: 12px; margin-bottom: 40px;
+}
+.sprint-header h1 { font-size: 28px; margin-bottom: 8px; }
+.sprint-header .tagline { opacity: 0.9; font-size: 15px; }
+.sprint-meta { display: flex; gap: 24px; margin-top: 16px; flex-wrap: wrap; }
+.sprint-meta .meta { background: rgba(255,255,255,0.15); padding: 8px 14px; border-radius: 6px; font-size: 13px; }
+
+.section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 32px;
+}
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  padding-bottom: 16px; margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.section-header .id {
+  background: var(--hc-primary); color: white;
+  padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;
+}
+.section-header h2 { font-size: 20px; flex: 1; }
+.section-header .sp { color: var(--text-muted); font-size: 12px; }
+.section-header .badge {
+  padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
+  background: var(--bg-elevated); border: 1px solid var(--border);
+}
+.badge.be { color: var(--domain-cdp); border-color: var(--domain-cdp); }
+.badge.fe { color: var(--domain-ecommerce); border-color: var(--domain-ecommerce); }
+.badge.both { color: var(--domain-crm); border-color: var(--domain-crm); }
+
+.intent { color: var(--text-secondary); margin-bottom: 20px; font-size: 14px; }
+.mockup {
+  background: var(--bg-canvas);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 16px 0;
+  position: relative;
+}
+.mockup-label {
+  position: absolute; top: -10px; left: 16px;
+  background: var(--hc-primary); color: white;
+  padding: 2px 10px; border-radius: 4px; font-size: 11px; font-weight: 600;
+}
+
+table.spec { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+table.spec th, table.spec td {
+  padding: 10px 12px; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+table.spec th { background: var(--bg-elevated); color: var(--text-secondary); font-weight: 600; }
+table.spec code { background: var(--bg-canvas); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--border-focus); }
+
+.tab-bar {
+  display: flex; gap: 2px; background: var(--bg-surface); padding: 4px;
+  border-radius: 8px; border: 1px solid var(--border);
+}
+.tab {
+  padding: 10px 18px; border-radius: 6px; font-size: 13px; font-weight: 600;
+  cursor: pointer; color: var(--text-secondary);
+  display: flex; align-items: center; gap: 8px;
+}
+.tab.active { background: var(--hc-primary); color: white; }
+.tab .count {
+  background: rgba(255,255,255,0.2); padding: 1px 6px;
+  border-radius: 10px; font-size: 11px;
+}
+
+.domain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+.domain-box {
+  background: var(--bg-elevated); border: 2px solid; border-radius: 10px;
+  padding: 16px; cursor: pointer; transition: all 0.15s;
+}
+.domain-box:hover { transform: translateY(-2px); }
+.domain-box h3 { font-size: 15px; margin-bottom: 6px; }
+.domain-box .stats { display: flex; gap: 12px; font-size: 11px; color: var(--text-secondary); }
+.domain-box .stats span { display: flex; align-items: center; gap: 4px; }
+.domain-box .bar {
+  height: 4px; background: var(--border); border-radius: 2px;
+  margin-top: 10px; overflow: hidden;
+}
+.domain-box .bar-fill { height: 100%; background: currentColor; }
+
+.diff-node {
+  display: inline-block; padding: 6px 12px; border-radius: 6px;
+  border: 2px solid; background: var(--bg-elevated);
+  font-size: 12px; font-family: monospace; margin: 4px;
+}
+.diff-node.added { border-color: var(--diff-added); color: var(--diff-added); box-shadow: 0 0 8px rgba(63,185,80,0.3); }
+.diff-node.modified { border-color: var(--diff-modified); color: var(--diff-modified); }
+.diff-node.removed { border-color: var(--diff-removed); color: var(--diff-removed); text-decoration: line-through; }
+.diff-node.impacted { border-color: var(--diff-impacted); color: var(--diff-impacted); border-style: dashed; }
+
+.flow-diagram {
+  background: var(--bg-canvas); border: 1px dashed var(--border);
+  border-radius: 8px; padding: 24px; text-align: center;
+  font-family: monospace; white-space: pre; font-size: 12px;
+  color: var(--text-secondary); overflow-x: auto;
+}
+
+.breadcrumb {
+  display: flex; align-items: center; gap: 6px; font-size: 13px;
+  background: var(--bg-elevated); padding: 10px 14px; border-radius: 6px;
+}
+.breadcrumb .crumb { color: var(--border-focus); cursor: pointer; }
+.breadcrumb .crumb:hover { text-decoration: underline; }
+.breadcrumb .sep { color: var(--text-muted); }
+.breadcrumb .current { color: var(--text-primary); font-weight: 600; }
+
+.panel {
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: 8px; padding: 16px; margin: 12px 0;
+}
+.panel-title {
+  font-size: 13px; font-weight: 700; color: var(--hc-primary);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
+}
+.kv { display: grid; grid-template-columns: 140px 1fr; gap: 8px; font-size: 13px; }
+.kv .k { color: var(--text-muted); }
+.kv .v { color: var(--text-primary); font-family: monospace; font-size: 12px; }
+
+.device-row { display: flex; gap: 20px; margin-top: 16px; flex-wrap: wrap; align-items: flex-start; }
+.device {
+  background: var(--bg-canvas); border: 2px solid var(--border);
+  border-radius: 12px; padding: 12px; text-align: center;
+}
+.device.mobile { width: 180px; }
+.device.tablet { width: 260px; }
+.device.desktop { width: 340px; }
+.device .screen {
+  background: var(--bg-elevated); border-radius: 6px;
+  margin-top: 8px; padding: 10px; font-size: 10px;
+  color: var(--text-secondary); min-height: 160px;
+}
+.device .label { font-size: 11px; color: var(--text-muted); }
+
+.flow-tag {
+  display: inline-block; padding: 3px 10px; border-radius: 12px;
+  font-size: 11px; font-weight: 600; margin: 2px;
+  background: rgba(99,102,241,0.15); color: var(--hc-primary);
+  border: 1px solid var(--hc-primary);
+}
+
+ul.req { list-style: none; padding: 0; }
+ul.req li {
+  padding: 8px 0 8px 24px; position: relative;
+  color: var(--text-secondary); font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+ul.req li:before {
+  content: "✓"; position: absolute; left: 0; top: 8px;
+  color: var(--domain-crm); font-weight: 700;
+}
+ul.req li strong { color: var(--text-primary); }
+</style>
+</head>
+<body>
+
+<div class="design-nav">
+  <div class="title">CM-S3 Design Spec</div>
+  <div class="subtitle">v2.0 · 22 SP · 8 tasks · Multi-view + TypeScript + Responsive</div>
+  <div class="nav-links">
+    <a class="nav-link" href="#cm-s3-01">01 Multi-view</a>
+    <a class="nav-link" href="#cm-s3-02">02 Executive</a>
+    <a class="nav-link" href="#cm-s3-03">03 PR Diff</a>
+    <a class="nav-link" href="#cm-s3-04">04 Business Flow</a>
+    <a class="nav-link" href="#cm-s3-05">05 Breadcrumb</a>
+    <a class="nav-link" href="#cm-s3-06">06 TypeScript</a>
+    <a class="nav-link" href="#cm-s3-07">07 Detail Panel v2</a>
+    <a class="nav-link" href="#cm-s3-08">08 Responsive</a>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="sprint-header">
+  <h1>CM-S3 (v2.0) — Multi-view + TypeScript + Responsive</h1>
+  <div class="tagline">Từ workflow tool → stakeholder tool. Developer, Product, Executive đều dùng được.</div>
+  <div class="sprint-meta">
+    <div class="meta">📦 22 SP</div>
+    <div class="meta">🎯 8 Tasks</div>
+    <div class="meta">📅 5 Days</div>
+    <div class="meta">🎨 7 UI Mockups + 1 BE Architecture</div>
+  </div>
+</div>
+
+<!-- ═════════════════════ SECTION 1: CM-S3-01 ═════════════════════ -->
+<div class="section" id="cm-s3-01">
+  <div class="section-header">
+    <span class="id">CM-S3-01</span>
+    <h2>Multi-view Mode — 4 tab switcher</h2>
+    <span class="sp">3 SP</span>
+    <span class="badge fe">FE</span>
+  </div>
+  <p class="intent">
+    Chuyển từ single graph view → 4 chế độ xem cho 4 persona: Developer (Graph),
+    Executive (Domain boxes), Product (API Catalog), Reviewer (PR Diff).
+    Tab state lưu trong URL hash để share được.
+  </p>
+
+  <div class="mockup">
+    <div class="mockup-label">Mockup 01 — Top tab bar</div>
+    <div class="tab-bar">
+      <div class="tab active">🗺️ Graph View <span class="count">1,386</span></div>
+      <div class="tab">📊 Executive <span class="count">7</span></div>
+      <div class="tab">🔌 API Catalog <span class="count">234</span></div>
+      <div class="tab">🔀 PR Diff <span class="count">PR #42</span></div>
+    </div>
+    <p style="margin-top:16px; color:var(--text-secondary); font-size:12px;">
+      Tab active highlight purple · count badge per view · URL = <code>#view=executive</code>
+    </p>
+  </div>
+
+  <table class="spec">
+    <tr><th>View</th><th>Persona</th><th>Primary action</th><th>URL hash</th></tr>
+    <tr><td>Graph</td><td>Developer</td><td>Explore call graph</td><td><code>#view=graph</code></td></tr>
+    <tr><td>Executive</td><td>CEO / PM</td><td>Domain health overview</td><td><code>#view=executive</code></td></tr>
+    <tr><td>API Catalog</td><td>Product / Integrator</td><td>Browse endpoints</td><td><code>#view=api</code></td></tr>
+    <tr><td>PR Diff</td><td>Reviewer</td><td>Review change impact</td><td><code>#view=diff&pr=42</code></td></tr>
+  </table>
+
+  <ul class="req">
+    <li><strong>Keyboard:</strong> <code>1/2/3/4</code> switch tab · <code>?</code> show shortcuts</li>
+    <li><strong>State persistence:</strong> tab + filters saved to <code>localStorage</code></li>
+    <li><strong>Empty state</strong> khi view chưa có data (vd: PR Diff không có PR)</li>
+  </ul>
+</div>
+
+<!-- ═════════════════════ SECTION 2: CM-S3-02 ═════════════════════ -->
+<div class="section" id="cm-s3-02">
+  <div class="section-header">
+    <span class="id">CM-S3-02</span>
+    <h2>Executive View — Domain health dashboard</h2>
+    <span class="sp">3 SP</span>
+    <span class="badge fe">FE</span>
+  </div>
+  <p class="intent">
+    Non-technical view cho CEO/PM. Mỗi domain = 1 box với route count, node count,
+    test coverage, complexity score. Click → zoom vào Graph view của domain đó.
+  </p>
+
+  <div class="mockup">
+    <div class="mockup-label">Mockup 02 — Domain grid</div>
+    <div class="domain-grid">
+      <div class="domain-box" style="border-color: var(--domain-crm); color: var(--domain-crm);">
+        <h3>🧑 CRM</h3>
+        <div class="stats">
+          <span>📍 312 nodes</span><span>🔌 48 routes</span><span>🧪 82%</span>
+        </div>
+        <div class="bar"><div class="bar-fill" style="width:82%"></div></div>
+      </div>
+      <div class="domain-box" style="border-color: var(--domain-cdp); color: var(--domain-cdp);">
+        <h3>📊 CDP</h3>
+        <div class="stats">
+          <span>📍 245 nodes</span><span>🔌 31 routes</span><span>🧪 68%</span>
+        </div>
+        <div class="bar"><div class="bar-fill" style="width:68%"></div></div>
+      </div>
+      <div class="domain-box" style="border-color: var(--domain-ecommerce); color: var(--domain-ecommerce);">
+        <h3>🛒 E-commerce</h3>
+        <div class="stats">
+          <span>📍 298 nodes</span><span>🔌 52 routes</span><span>🧪 75%</span>
+        </div>
+        <div class="bar"><div class="bar-fill" style="width:75%"></div></div>
+      </div>
+      <div class="domain-box" style="border-color: var(--domain-private-traffic); color: var(--domain-private-traffic);">
+        <h3>📨 Private Traffic</h3>
+        <div class="stats">
+          <span>📍 187 nodes</span><span>🔌 29 routes</span><span>🧪 54%</span>
+        </div>
+        <div class="bar"><div class="bar-fill" style="width:54%"></div></div>
+      </div>
+      <div class="domain-box" style="border-color: var(--domain-auth); color: var(--domain-auth);">
+        <h3>🔐 Auth</h3>
+        <div class="stats">
+          <span>📍 98 nodes</span><span>🔌 14 routes</span><span>🧪 91%</span>
+        </div>
+        <div class="bar"><div class="bar-fill" style="width:91%"></div></div>
+      </div>
+      <div class="domain-box" style="border-color: var(--domain-billing); color: var(--domain-billing);">
+        <h3>💳 Billing</h3>
+        <div class="stats">
+          <span>📍 124 nodes</span><span>🔌 22 routes</span><span>🧪 88%</span>
+        </div>
+        <div class="bar"><div class="bar-fill" style="width:88%"></div></div>
+      </div>
+    </div>
+    <p style="margin-top:20px; color:var(--text-secondary); font-size:12px;">
+      Coverage bar: red &lt;60% · yellow 60-80% · green ≥80% · Click domain → Graph view filtered
+    </p>
+  </div>
+
+  <ul class="req">
+    <li><strong>Metrics per domain:</strong> nodes · routes · coverage % · avg complexity · last updated</li>
+    <li><strong>Sort:</strong> by name / size / coverage / health score</li>
+    <li><strong>Health score:</strong> weighted (coverage 40% + complexity 30% + churn 30%)</li>
+  </ul>
+</div>
+
+<!-- ═════════════════════ SECTION 3: CM-S3-03 ═════════════════════ -->
+<div class="section" id="cm-s3-03">
+  <div class="section-header">
+    <span class="id">CM-S3-03</span>
+    <h2>PR Diff View — Color-coded change highlight</h2>
+    <span class="sp">3 SP</span>
+    <span class="badge fe">FE</span>
+  </div>
+  <p class="intent">
+    Reviewer persona: highlight changed nodes (green=added, yellow=modified, red=removed,
+    dashed blue=impacted). Consume output của <code>codebase-map diff</code> từ CM-S2-01.
+  </p>
+
+  <div class="mockup">
+    <div class="mockup-label">Mockup 03 — Diff legend + node highlighting</div>
+    <div style="padding: 10px 0;">
+      <span class="diff-node added">+ CustomerService.bulk_tag()</span>
+      <span class="diff-node added">+ BulkTagSchema</span>
+      <span class="diff-node modified">~ CustomerRepository.update()</span>
+      <span class="diff-node modified">~ customer_router.update_customer</span>
+      <span class="diff-node removed">- legacy_tag_helper()</span>
+      <span class="diff-node impacted">⟿ PipelineService.on_update</span>
+      <span class="diff-node impacted">⟿ CDPSegment.recalculate</span>
+      <span class="diff-node impacted">⟿ NotifyWorker.send_update</span>
+    </div>
+    <table class="spec">
+      <tr><th>Color</th><th>Meaning</th><th>Source</th></tr>
+      <tr><td>🟢 Green glow</td><td>Added node</td><td><code>diff.added</code></td></tr>
+      <tr><td>🟡 Yellow</td><td>Modified (body changed)</td><td><code>diff.modified</code></td></tr>
+      <tr><td>🔴 Red strike</td><td>Removed node</td><td><code>diff.removed</code></td></tr>
+      <tr><td>🔵 Blue dashed</td><td>Impacted (2-hop neighbor)</td><td><code>diff.impacted</code></td></tr>
+    </table>
+  </div>
+
+  <ul class="req">
+    <li><strong>PR selector:</strong> dropdown load PR list via <code>gh api</code></li>
+    <li><strong>Risk banner:</strong> top banner 🟢/🟡/🔴 dựa trên impact zone (CM-S2-10 threshold)</li>
+    <li><strong>Filter:</strong> "Only changed" / "Changed + 1-hop" / "Full graph dimmed"</li>
+  </ul>
+</div>
+
+<!-- ═════════════════════ SECTION 4: CM-S3-04 ═════════════════════ -->
+<div class="section" id="cm-s3-04">
+  <div class="section-header">
+    <span class="id">CM-S3-04</span>
+    <h2>Business Flow Mapping — User journey tags</h2>
+    <span class="sp">3 SP</span>
+    <span class="badge both">BE + FE</span>
+  </div>
+  <p class="intent">
+    Tag nodes với business flow (vd: "Signup", "Checkout", "Bulk import") qua
+    YAML config hoặc decorator. Render flow diagram từ tagged nodes.
+  </p>
+
+  <div class="mockup">
+    <div class="mockup-label">Mockup 04 — Flow tag cloud + diagram</div>
+    <div style="margin: 12px 0;">
+      <span class="flow-tag">🛒 Checkout (12 nodes)</span>
+      <span class="flow-tag">👤 Signup (8 nodes)</span>
+      <span class="flow-tag">📥 Bulk Import (15 nodes)</span>
+      <span class="flow-tag">💰 Refund (6 nodes)</span>
+      <span class="flow-tag">📧 Campaign (22 nodes)</span>
+      <span class="flow-tag">🔄 Sync CRM→CDP (9 nodes)</span>
+    </div>
+    <div class="flow-diagram">
+[Checkout Flow]
+
+  POST /cart/checkout
+        ↓
+  CheckoutService.validate()
+        ↓
+  PaymentGateway.charge() ──→ BillingService.invoice()
+        ↓                              ↓
+  OrderRepository.create()       NotifyWorker.send_receipt()
+        ↓
+  InventoryService.reserve()
+        ↓
+  on_order_placed → [CDPSegment, PipelineTrigger, WarehouseWorker]
+    </div>
+  </div>
+
+  <table class="spec">
+    <tr><th>Source</th><th>Format</th><th>Example</th></tr>
+    <tr><td>YAML config</td><td><code>flows.yaml</code></td><td><code>checkout: [CheckoutService.*, PaymentGateway.charge]</code></td></tr>
+    <tr><td>Decorator</td><td>Python</td><td><code>@flow("checkout")</code></td></tr>
+    <tr><td>Comment</td><td>inline</td><td><code># flow: checkout</code></td></tr>
+  </table>
+</div>
+
+<!-- ═════════════════════ SECTION 5: CM-S3-05 ═════════════════════ -->
+<div class="section" id="cm-s3-05">
+  <div class="section-header">
+    <span class="id">CM-S3-05</span>
+    <h2>Breadcrumb Navigation — Drill-down trail</h2>
+    <span class="sp">2 SP</span>
+    <span class="badge fe">FE</span>
+  </div>
+  <p class="intent">
+    Khi user drill từ Domain → Module → Class → Method, hiện breadcrumb trail
+    để quay lại level cao hơn nhanh. Sync với URL hash.
+  </p>
+
+  <div class="mockup">
+    <div class="mockup-label">Mockup 05 — Breadcrumb bar</div>
+    <div class="breadcrumb">
+      <span class="crumb">🏠 All</span>
+      <span class="sep">›</span>
+      <span class="crumb">CRM</span>
+      <span class="sep">›</span>
+      <span class="crumb">services</span>
+      <span class="sep">›</span>
+      <span class="crumb">CustomerService</span>
+      <span class="sep">›</span>
+      <span class="current">bulk_tag()</span>
+    </div>
+    <p style="margin-top: 16px; color: var(--text-secondary); font-size: 12px;">
+      Click any crumb → zoom out to that level · Keyboard: <code>Backspace</code> = up 1 level
+    </p>
+  </div>
+
+  <ul class="req">
+    <li><strong>5 levels max:</strong> All → Domain → Module → Class → Method</li>
+    <li><strong>URL sync:</strong> <code>#view=graph&path=crm/services/CustomerService/bulk_tag</code></li>
+    <li><strong>Truncation:</strong> nếu path quá dài, middle crumbs collapse thành <code>...</code></li>
+  </ul>
+</div>
+
+<!-- ═════════════════════ SECTION 6: CM-S3-06 ═════════════════════ -->
+<div class="section" id="cm-s3-06">
+  <div class="section-header">
+    <span class="id">CM-S3-06</span>
+    <h2>TypeScript Parser — Architecture (BE)</h2>
+    <span class="sp">5 SP</span>
+    <span class="badge be">BE only</span>
+  </div>
+  <p class="intent">
+    Parser thứ 2 sau Python. Dùng <code>tree-sitter-typescript</code> (WASM) để
+    extract functions/classes/methods/imports/routes từ .ts/.tsx files. Không có UI mới —
+    output merge vào cùng Graph model để Graph View hiển thị được.
+  </p>
+
+  <div class="mockup">
+    <div class="mockup-label">Mockup 06 — Parser architecture</div>
+    <div class="flow-diagram">
+codebase_map/parsers/
+├── base.py                  ← BaseParser (unchanged)
+├── python_parser.py         ← Existing (v1.0)
+└── typescript_parser.py     ← NEW (CM-S3-06)
+         │
+         ▼
+  tree-sitter-typescript (WASM bundled)
+         │
+         ▼
+  Extract:
+    • FunctionDeclaration       → NodeType.FUNCTION
+    • ClassDeclaration          → NodeType.CLASS
+    • MethodDefinition          → NodeType.METHOD
+    • ImportDeclaration         → Edge(IMPORT)
+    • CallExpression            → Edge(CALL)
+    • Decorators @Controller    → NodeType.ROUTE
+         │
+         ▼
+  Same Node/Edge dataclasses
+         │
+         ▼
+  GraphBuilder merges Python + TypeScript
+    </div>
+  </div>
+
+  <table class="spec">
+    <tr><th>File ext</th><th>Parser</th><th>Framework detect</th></tr>
+    <tr><td>.py</td><td>python_parser (AST)</td><td>FastAPI / Flask / Django / Celery</td></tr>
+    <tr><td>.ts, .tsx</td><td>typescript_parser (tree-sitter)</td><td>NestJS / Express / Next.js API routes</td></tr>
+    <tr><td>.js, .jsx</td><td>typescript_parser (permissive mode)</td><td>Express / Next.js</td></tr>
+  </table>
+
+  <ul class="req">
+    <li><strong>Parity test:</strong> parse HC frontend (if TS) → ≥95% functions captured</li>
+    <li><strong>Performance:</strong> 10k LOC TS file &lt; 2s</li>
+    <li><strong>Offline:</strong> tree-sitter WASM bundled, no npm/node runtime required</li>
+    <li><strong>Graceful fallback:</strong> syntax error → skip file + warning, không crash</li>
+  </ul>
+</div>
+
+<!-- ═════════════════════ SECTION 7: CM-S3-07 ═════════════════════ -->
+<div class="section" id="cm-s3-07">
+  <div class="section-header">
+    <span class="id">CM-S3-07</span>
+    <h2>Detail Panel v2 — Visual hierarchy redesign</h2>
+    <span class="sp">2 SP</span>
+    <span class="badge fe">FE</span>
+  </div>
+  <p class="intent">
+    Detail panel hiện tại (v1.1) chỉ là plain key-value list. v2 tổ chức theo
+    5 block: Identity · Signature · Relationships · Quality · Metadata.
+  </p>
+
+  <div class="mockup">
+    <div class="mockup-label">Mockup 07 — Detail panel 5 blocks</div>
+
+    <div class="panel">
+      <div class="panel-title">① Identity</div>
+      <div class="kv">
+        <span class="k">Name</span><span class="v">CustomerService.bulk_tag</span>
+        <span class="k">Type</span><span class="v">method</span>
+        <span class="k">Layer</span><span class="v">service</span>
+        <span class="k">Domain</span><span class="v" style="color: var(--domain-crm);">CRM</span>
+        <span class="k">Location</span><span class="v">crm/services/customer_service.py:142</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">② Signature</div>
+      <div class="kv">
+        <span class="k">Params</span><span class="v">customer_ids: List[int], tags: List[str]</span>
+        <span class="k">Returns</span><span class="v">BulkTagResult</span>
+        <span class="k">Async</span><span class="v">No</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">③ Relationships</div>
+      <div class="kv">
+        <span class="k">Called by</span><span class="v">3 routes, 1 worker</span>
+        <span class="k">Calls</span><span class="v">5 methods (CustomerRepository, TagValidator)</span>
+        <span class="k">Impact zone</span><span class="v">18 nodes</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">④ Quality</div>
+      <div class="kv">
+        <span class="k">Test coverage</span><span class="v" style="color: var(--domain-crm);">84% 🟢</span>
+        <span class="k">Complexity</span><span class="v">7 (medium)</span>
+        <span class="k">LOC</span><span class="v">42 lines</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">⑤ Metadata</div>
+      <div class="kv">
+        <span class="k">FDD</span><span class="v">FDD-CRM-015</span>
+        <span class="k">Flows</span><span class="v">Bulk Import, Campaign</span>
+        <span class="k">Last changed</span><span class="v">2026-04-05 (PR #13)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ SECTION 8: CM-S3-08 ═════════════════════ -->
+<div class="section" id="cm-s3-08">
+  <div class="section-header">
+    <span class="id">CM-S3-08</span>
+    <h2>Responsive Sidebar — Mobile / Tablet / Desktop</h2>
+    <span class="sp">1 SP</span>
+    <span class="badge fe">FE</span>
+  </div>
+  <p class="intent">
+    Sidebar tree + toolbar adapt theo viewport. Mobile: drawer overlay. Tablet: collapsible.
+    Desktop: full sidebar. Breakpoint 768px và 1024px.
+  </p>
+
+  <div class="mockup">
+    <div class="mockup-label">Mockup 08 — 3 breakpoints</div>
+    <div class="device-row">
+      <div class="device mobile">
+        <div class="label">Mobile &lt; 768px</div>
+        <div class="screen">
+          ☰ Top bar<br>
+          ─────────<br>
+          Graph canvas<br>
+          (full width)<br>
+          ─────────<br>
+          Tap ☰ → drawer<br>
+          overlay sidebar
+        </div>
+      </div>
+      <div class="device tablet">
+        <div class="label">Tablet 768–1024px</div>
+        <div class="screen">
+          Top bar<br>
+          ──────────────<br>
+          [◀] │ Graph<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;│<br>
+          Sidebar collapse<br>
+          to 48px rail,<br>
+          expand on hover
+        </div>
+      </div>
+      <div class="device desktop">
+        <div class="label">Desktop ≥ 1024px</div>
+        <div class="screen">
+          Top bar<br>
+          ────────────────────<br>
+          Sidebar │ Graph │ Detail<br>
+          (260px) │ flex  │ (320px)<br>
+          <br>
+          Full 3-column layout
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ul class="req">
+    <li><strong>Breakpoints:</strong> &lt;768px mobile · 768–1024px tablet · ≥1024px desktop</li>
+    <li><strong>Touch:</strong> pinch zoom, swipe to close drawer</li>
+    <li><strong>Detail panel:</strong> mobile = bottom sheet, tablet/desktop = right sidebar</li>
+  </ul>
+</div>
+
+<!-- ═════════════════════ FOOTER ═════════════════════ -->
+<div class="section" style="text-align: center; background: transparent; border: none;">
+  <p style="color: var(--text-muted); font-size: 12px;">
+    CM-S3 Design Spec v1.0 · Codebase Map v2.0 · Created 2026-04-07<br>
+    Designer: HC Designer Agent · PO: HC Product Owner Agent<br>
+    Awaiting CEO approval · 8 sections · 22 SP · 5 Days
+  </p>
+</div>
+
+</div>
+</body>
+</html>
