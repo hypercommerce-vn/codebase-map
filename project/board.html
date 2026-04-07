@@ -1129,6 +1129,55 @@ a:hover { text-decoration: underline; }
 </div>
 
 <!-- ═══════════════════════════════════════
+     POST-CM-S3 BACKLOG — Minor issues to fix later
+     CEO request 07/04/2026
+═══════════════════════════════════════ -->
+<div class="card" style="margin-top:24px;">
+  <h2 style="margin-bottom:8px;">🪲 Post-CM-S3 Minor Backlog</h2>
+  <p style="color:var(--text-muted); font-size:13px; margin-bottom:14px;">
+    Các minor issue phát hiện trong review-gate nhưng không block merge.
+    Sẽ xử lý sau khi CM-S3 hoàn thành (đầu CM-S4 hoặc polish sprint).
+  </p>
+  <table style="width:100%; border-collapse:collapse; font-size:13px;">
+    <thead>
+      <tr style="background:var(--bg-muted);">
+        <th style="text-align:left; padding:10px; border-bottom:1px solid var(--border);">ID</th>
+        <th style="text-align:left; padding:10px; border-bottom:1px solid var(--border);">Source</th>
+        <th style="text-align:left; padding:10px; border-bottom:1px solid var(--border);">Issue</th>
+        <th style="text-align:left; padding:10px; border-bottom:1px solid var(--border);">Dim</th>
+        <th style="text-align:left; padding:10px; border-bottom:1px solid var(--border);">Severity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><code>POST-CM-S3-01</code></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);">PR #25 (Day 2)</td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><strong>Breadcrumb spacing</strong> chưa pixel-perfect với design Section #cm-s3-05 (sep <code>›</code> + crumb padding hơi lệch)</td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);">Designer D</td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);">🟢 Low</td>
+      </tr>
+      <tr>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><code>POST-CM-S3-02</code></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);">PR #25 (Day 2)</td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><strong>View placeholder duplicate markup</strong> — 3 panels (executive/api/diff) lặp <code>.view-placeholder</code>. Refactor sang template/builder khi Day 3+ fill content.</td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);">CTO B</td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);">🟢 Low</td>
+      </tr>
+      <tr>
+        <td style="padding:10px;"><code>POST-CM-S3-03</code></td>
+        <td style="padding:10px;">PR #25 (Day 2)</td>
+        <td style="padding:10px;"><strong>Domain fallback cho breadcrumb</strong> — nếu node không có <code>domain</code> (rare), <code>setBreadcrumbForNode</code> thiếu sentinel. Add <code>node.domain || 'unknown'</code>.</td>
+        <td style="padding:10px;">CTO A</td>
+        <td style="padding:10px;">🟢 Low (edge)</td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="margin-top:14px; padding:12px 14px; background:var(--bg-muted); border-left:3px solid var(--hc-primary); border-radius:6px; font-size:12px; color:var(--text-secondary);">
+    <strong>Plan:</strong> Sau khi CM-S3 Sprint COMPLETE (Day 5), tạo task <code>CM-S4-POLISH-01</code> gom 3 issue trên + bất kỳ minor nào phát hiện trong Day 3/4/5 review-gate. Estimate: 1 SP.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
      REVIEW GATE — TÀI LIỆU THAM CHIẾU
      CEO request 07/04/2026
 ═══════════════════════════════════════ -->
