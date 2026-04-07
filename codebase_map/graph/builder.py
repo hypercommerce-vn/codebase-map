@@ -61,6 +61,9 @@ class GraphBuilder:
 
         self._resolve_self_references()
         self._deduplicate_edges()
+        # HC-AI | ticket: FDD-TOOL-CODEMAP
+        # CM-S3-04: Apply YAML-defined business flow patterns
+        self._apply_flow_patterns()
 
         # Save updated cache
         if self.use_cache:
@@ -172,6 +175,22 @@ class GraphBuilder:
                     resolved = f"{caller.parent_class}.{method_name}"
                     if resolved in self.graph.nodes:
                         edge.target = resolved
+
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CM-S3-04: Match nodes against config.flows patterns (fnmatch on node id)
+    def _apply_flow_patterns(self) -> None:
+        if not self.config.flows:
+            return
+        import fnmatch
+
+        for flow_name, patterns in self.config.flows.items():
+            for node in self.graph.nodes.values():
+                for pat in patterns:
+                    if fnmatch.fnmatch(node.id, pat) or fnmatch.fnmatch(node.name, pat):
+                        existing = node.metadata.get("flows", [])
+                        if flow_name not in existing:
+                            node.metadata["flows"] = existing + [flow_name]
+                        break
 
     def _deduplicate_edges(self) -> None:
         """Remove duplicate edges."""
