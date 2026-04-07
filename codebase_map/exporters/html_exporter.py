@@ -128,8 +128,45 @@ body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
   width: 340px; background: var(--bg-surface);
   border-right: 1px solid var(--border);
   display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0;
+  transition: transform .25s ease, width .25s ease;
 }}
 #graph-container {{ flex: 1; position: relative; }}
+
+/* CM-S3-08: Responsive sidebar — drawer toggle button */
+#sidebar-toggle {{
+  display: none; position: fixed; top: 8px; left: 8px; z-index: 30;
+  width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg-elevated); color: var(--text-primary);
+  font-size: 18px; cursor: pointer; align-items: center; justify-content: center;
+}}
+#sidebar-toggle:hover {{ border-color: var(--border-focus); }}
+#sidebar-overlay {{
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55);
+  z-index: 19;
+}}
+#sidebar-overlay.active {{ display: block; }}
+
+/* Tablet: collapsible (1024px), Mobile: drawer overlay (768px) */
+@media (max-width: 1024px) {{
+  #sidebar {{ width: 280px; }}
+}}
+@media (max-width: 768px) {{
+  #sidebar-toggle {{ display: inline-flex; }}
+  #topbar {{ padding-left: 52px; }}
+  #sidebar {{
+    position: fixed; top: 0; left: 0; bottom: 0; width: 84vw; max-width: 320px;
+    z-index: 25; transform: translateX(-105%);
+    box-shadow: 4px 0 24px rgba(0,0,0,.5);
+  }}
+  #sidebar.open {{ transform: translateX(0); }}
+  #tabbar {{ flex-wrap: wrap; }}
+  .view-tab {{ padding: 8px 10px; font-size: 11px; }}
+  .view-tab .count {{ font-size: 9px; }}
+  .executive-wrap, .diff-wrap {{ padding: 14px 12px; }}
+  #detail-panel {{ width: 92vw !important; max-width: 360px; }}
+  #minimap {{ display: none !important; }}
+  #toolbar {{ left: 50% !important; transform: translateX(-50%); }}
+}}
 
 /* Search */
 .sidebar-search {{ padding: 12px; border-bottom: 1px solid var(--border); }}
@@ -485,6 +522,10 @@ svg {{ width: 100%; height: 100%; }}
 </head>
 <body>
 <!-- HC-AI | ticket: FDD-TOOL-CODEMAP -->
+<!-- CM-S3-08: Responsive drawer toggle (mobile only) -->
+<button id="sidebar-toggle" aria-label="Toggle sidebar">&#9776;</button>
+<div id="sidebar-overlay"></div>
+
 <div id="app">
   <!-- CM-S1-10: Top bar -->
   <div id="topbar">
@@ -906,6 +947,29 @@ function applyFlowHighlight() {{
     c.style.opacity = fs.includes(activeFlow) ? '1' : '0.15';
   }});
 }}
+
+// HC-AI | ticket: FDD-TOOL-CODEMAP
+// CM-S3-08: Responsive sidebar drawer toggle
+(() => {{
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('sidebar-toggle');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (!sidebar || !toggle || !overlay) return;
+  function close() {{ sidebar.classList.remove('open'); overlay.classList.remove('active'); }}
+  function open() {{ sidebar.classList.add('open'); overlay.classList.add('active'); }}
+  toggle.addEventListener('click', () => {{
+    sidebar.classList.contains('open') ? close() : open();
+  }});
+  overlay.addEventListener('click', close);
+  // Auto-close on node selection (mobile)
+  sidebar.addEventListener('click', (e) => {{
+    if (window.innerWidth <= 768 && e.target.closest('.node-item, .method-item')) close();
+  }});
+  // ESC to close
+  document.addEventListener('keydown', (e) => {{
+    if (e.key === 'Escape' && sidebar.classList.contains('open')) close();
+  }});
+}})();
 
 // Apply initial state from URL
 {{
