@@ -33,9 +33,49 @@ Checklist đọc spec:
 
 ---
 
-### Bước 2 — Explore Codebase
+### Bước 2 — Auto-Query Impact + Explore Codebase
 
-Trước khi viết code, khám phá patterns hiện có:
+> **CM-S2-04: Tự động query codebase map trước khi implement.**
+> Giảm thời gian tìm file thủ công, bảo đảm không miss impact zone.
+
+**Bước 2.1 — Auto-query impact zone:**
+
+```bash
+# Chạy codebase-map impact cho target class/function của feature
+codebase-map impact "TargetClass" -f docs/function-map/graph.json --depth 2 --json
+```
+
+Claude parse JSON output để:
+- Đếm số nodes trong impact zone
+- Phân loại: target, direct dependency, route handler, event handler, async worker
+- Build danh sách files cần đọc trước khi implement
+- Cảnh báo nếu impact > 50 nodes (high risk change)
+
+**Expected terminal output:**
+```
+[/implement] Step 2: Auto-querying codebase map...
+Task: FDD-CRM-015 — Add bulk tag management to customers
+Query: impact "CustomerService" --depth 2
+
+Impact Zone (18 nodes):
+  • CustomerService — target (service layer)
+  • CustomerRepository — direct dependency
+  • create_customer — route → CustomerService.create
+  • update_customer — route → CustomerService.update
+  • PipelineService.on_customer_update — event handler
+  • CDPSegmentWorker.recalculate — async worker
+  ... 12 more
+
+[/implement] Files to review before implementing:
+  crm/services/customer_service.py
+  crm/repositories/customer_repository.py
+  crm/routers/customer_router.py
+  crm/models/customer.py
+
+Proceeding to Step 3...
+```
+
+**Bước 2.2 — Explore patterns hiện có:**
 
 ```bash
 # Xem parser pattern
@@ -52,6 +92,8 @@ cat codebase_map/exporters/json_exporter.py
 ```
 
 Mục tiêu: code mới phải follow đúng pattern đã có, không tự sáng tạo.
+
+**Rule:** Nếu graph.json chưa tồn tại hoặc > 24h cũ → chạy `codebase-map generate` trước.
 
 ---
 
