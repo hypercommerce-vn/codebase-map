@@ -143,6 +143,9 @@
 | 07/04/2026 | **CM-S3 Day 4 Done** — CM-S3-03 PR Diff + CM-S3-04 Business Flow, PR #29 merged, Mode 2: 95.0/100 | CEO |
 | 07/04/2026 | **CM-S3 Day 5 Done** — PR #30 merged | CEO |
 | 07/04/2026 | **CM-S3 Sprint COMPLETE 🎉** — 22/22 SP · 8/8 tasks · v2.0 shipped | CEO |
+| 07/04/2026 | **FullTest Pre-Delivery PASS** — 6 agents (PM/CTO/BA/Tester/Designer/PO), GO FOR DELIVERY, 0 blockers, 4 minor items deferred | PM |
+| 07/04/2026 | **v2.0.0 Released** — Tag pushed, GitHub release published, customer onboarding 1-pager `docs/ONBOARDING.md` | CEO |
+| 07/04/2026 | **POST-CM-S3 Hotfix Sprint scheduled** — 4 issues #32-#35, ~3 SP, target v2.0.1 | PM |
 
 ---
 
