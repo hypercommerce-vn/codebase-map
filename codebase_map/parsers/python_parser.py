@@ -6,10 +6,36 @@ Extracts functions, classes, methods, imports, decorators.
 from __future__ import annotations
 
 import ast
+import re
 from pathlib import Path
 
 from codebase_map.graph.models import Edge, EdgeType, LayerType, Node, NodeType
 from codebase_map.parsers.base import BaseParser
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# CM-S2-08: FDD spec linking — parse `# FDD: FDD-XXX-NNN` or `# ticket: FDD-XXX-NNN`
+_FDD_PATTERN = re.compile(
+    r"#[^\n]*?(?:FDD|ticket)\s*:\s*(FDD-[A-Z]+-[A-Z0-9]+)", re.IGNORECASE
+)
+
+
+def _extract_fdd_annotations(source: str) -> dict[int, str]:
+    """Scan source for FDD comment annotations. Returns {line_no: fdd_id}."""
+    result: dict[int, str] = {}
+    for idx, line in enumerate(source.splitlines(), start=1):
+        match = _FDD_PATTERN.search(line)
+        if match:
+            result[idx] = match.group(1).upper()
+    return result
+
+
+def _find_fdd_for_node(fdd_by_line: dict[int, str], line_start: int) -> str:
+    """Find nearest FDD annotation within 5 lines above (or on) the def line."""
+    for offset in range(0, 6):
+        candidate = fdd_by_line.get(line_start - offset)
+        if candidate:
+            return candidate
+    return ""
 
 
 def _get_docstring(node: ast.AST) -> str:
@@ -269,6 +295,15 @@ class PythonParser(BaseParser):
         # HC-AI | ticket: FDD-TOOL-CODEMAP
         # CM-S2-06: Resolve self.attr.method() chains using __init__ type hints
         self._resolve_attribute_chains(edges, init_type_maps, import_map)
+
+        # HC-AI | ticket: FDD-TOOL-CODEMAP
+        # CM-S2-08: Extract FDD spec annotations from comments
+        fdd_by_line = _extract_fdd_annotations(source)
+        if fdd_by_line:
+            for node_obj in nodes:
+                fdd_id = _find_fdd_for_node(fdd_by_line, node_obj.line_start)
+                if fdd_id:
+                    node_obj.metadata["fdd"] = fdd_id
 
         # Import edges (module-level)
         for alias_name, full_path in import_map.items():

@@ -104,6 +104,20 @@ def main(argv: list[str] | None = None) -> int:
         default="codebase-map.yaml",
         help="Config file (for project root detection)",
     )
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CM-S2-10: Sprint metric recording
+    diff_p.add_argument(
+        "--record-metric",
+        default="",
+        metavar="PR_NUMBER",
+        help="Record this diff as PR impact metric (CM-S2-10)",
+    )
+    diff_p.add_argument(
+        "--metric-threshold",
+        type=int,
+        default=50,
+        help="Impact threshold for high risk classification",
+    )
 
     # HC-AI | ticket: FDD-TOOL-CODEMAP
     # api-catalog — generate API catalog (CM-S2-07)
@@ -151,6 +165,32 @@ def main(argv: list[str] | None = None) -> int:
         "--json", action="store_true", dest="json_output", help="Output as JSON"
     )
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # check-staleness — graph age alert (CM-S2-11)
+    stale_p = sub.add_parser(
+        "check-staleness", help="Check if graph.json is stale (CM-S2-11)"
+    )
+    stale_p.add_argument(
+        "-f",
+        "--file",
+        default="docs/function-map/graph.json",
+        help="Path to graph.json",
+    )
+    stale_p.add_argument(
+        "--warn-days", type=int, default=3, help="Warning threshold in days"
+    )
+    stale_p.add_argument(
+        "--alert-days", type=int, default=7, help="Alert threshold in days"
+    )
+    stale_p.add_argument(
+        "--notify",
+        action="store_true",
+        help="Send Telegram notification on alert (uses env vars)",
+    )
+    stale_p.add_argument(
+        "--json", action="store_true", dest="json_output", help="Output as JSON"
+    )
+
     args = parser.parse_args(argv)
 
     if not args.command:
@@ -173,6 +213,8 @@ def main(argv: list[str] | None = None) -> int:
         return _cmd_coverage(args)
     elif args.command == "api-catalog":
         return _cmd_api_catalog(args)
+    elif args.command == "check-staleness":
+        return _cmd_check_staleness(args)
 
     return 0
 
@@ -314,6 +356,27 @@ def _cmd_diff(args: argparse.Namespace) -> int:
     else:
         print(result.to_text())
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CM-S2-10: Record sprint metric if requested
+    if getattr(args, "record_metric", ""):
+        from codebase_map.graph.metrics import MetricStore
+
+        cache_dir = project_root / ".codebase-map-cache"
+        store = MetricStore.load(cache_dir, threshold=args.metric_threshold)
+        metric = store.record(
+            pr_number=args.record_metric,
+            ref=args.ref,
+            changed_files=len(result.changed_files),
+            changed_nodes=len(result.changed_nodes),
+            impact_zone=len(result.impacted_nodes),
+        )
+        store.save()
+        print(
+            f"\n[METRIC] PR #{metric.pr_number} recorded: "
+            f"impact={metric.impact_zone} risk={metric.risk} "
+            f"(threshold={store.threshold})"
+        )
+
     return 0
 
 
@@ -396,6 +459,112 @@ def _cmd_api_catalog(args: argparse.Namespace) -> int:
     else:
         print(output)
 
+    return 0
+
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+def _cmd_check_staleness(args: argparse.Namespace) -> int:
+    """Staleness alert — warn if graph.json is too old (CM-S2-11)."""
+    import json as json_mod
+    import os
+    from datetime import datetime, timezone
+    from urllib import error as urllib_error
+    from urllib import request as urllib_request
+
+    graph_path = Path(args.file)
+    if not graph_path.exists():
+        print(f"[ERROR] Graph file not found: {graph_path}")
+        return 1
+
+    try:
+        data = json_mod.loads(graph_path.read_text(encoding="utf-8"))
+    except (OSError, json_mod.JSONDecodeError) as e:
+        print(f"[ERROR] Cannot read graph: {e}")
+        return 1
+
+    generated_at = data.get("generated_at", "")
+    project = data.get("project", "unknown")
+    n_nodes = len(data.get("nodes", []))
+    n_edges = len(data.get("edges", []))
+
+    if not generated_at:
+        print("[ERROR] graph.json missing 'generated_at' field")
+        return 1
+
+    try:
+        gen_dt = datetime.fromisoformat(generated_at.replace("Z", "+00:00"))
+    except ValueError:
+        print(f"[ERROR] Invalid generated_at: {generated_at}")
+        return 1
+
+    now = datetime.now(timezone.utc)
+    if gen_dt.tzinfo is None:
+        gen_dt = gen_dt.replace(tzinfo=timezone.utc)
+    days_elapsed = (now - gen_dt).days
+
+    if days_elapsed >= args.alert_days:
+        status = "alert"
+        icon = "🔴"
+    elif days_elapsed >= args.warn_days:
+        status = "warning"
+        icon = "🟡"
+    else:
+        status = "fresh"
+        icon = "🟢"
+
+    payload = {
+        "project": project,
+        "generated_at": generated_at,
+        "days_elapsed": days_elapsed,
+        "status": status,
+        "warn_days": args.warn_days,
+        "alert_days": args.alert_days,
+        "nodes": n_nodes,
+        "edges": n_edges,
+    }
+
+    if args.json_output:
+        print(json_mod.dumps(payload, indent=2))
+    else:
+        print(f"{icon} Codebase Map Staleness — {project}")
+        print(f"  Generated: {generated_at}")
+        print(f"  Age: {days_elapsed} days ({status})")
+        print(f"  Stats: {n_nodes} nodes · {n_edges} edges")
+        print(f"  Thresholds: warn={args.warn_days}d · alert={args.alert_days}d")
+
+    # Telegram notification on alert
+    if args.notify and status == "alert":
+        token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+        chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
+        if token and chat_id:
+            text = (
+                f"🔴 *Codebase Map Stale*\n"
+                f"Project: `{project}`\n"
+                f"Age: *{days_elapsed} days* (alert ≥ {args.alert_days})\n"
+                f"Generated: {generated_at}\n"
+                f"Stats: {n_nodes} nodes · {n_edges} edges\n"
+                f"Run `codebase-map generate` to refresh."
+            )
+            url = f"https://api.telegram.org/bot{token}/sendMessage"
+            body = json_mod.dumps(
+                {"chat_id": chat_id, "text": text, "parse_mode": "Markdown"}
+            ).encode()
+            req = urllib_request.Request(
+                url, data=body, headers={"Content-Type": "application/json"}
+            )
+            try:
+                urllib_request.urlopen(req, timeout=10)
+                print("[NOTIFY] Telegram alert sent")
+            except urllib_error.URLError as e:
+                print(f"[NOTIFY] Telegram failed: {e}")
+        else:
+            print("[NOTIFY] TELEGRAM_BOT_TOKEN/CHAT_ID not set, skipping")
+
+    # Exit code: 0 fresh, 1 warning, 2 alert
+    if status == "alert":
+        return 2
+    if status == "warning":
+        return 1
     return 0
 
 
