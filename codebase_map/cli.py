@@ -106,6 +106,33 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # api-catalog — generate API catalog (CM-S2-07)
+    api_p = sub.add_parser(
+        "api-catalog", help="Extract API routes and generate catalog"
+    )
+    api_p.add_argument(
+        "-f",
+        "--file",
+        default="docs/function-map/graph.json",
+        help="Path to graph.json",
+    )
+    api_p.add_argument(
+        "-o",
+        "--output",
+        default="",
+        help="Output file (default: print to stdout)",
+    )
+    api_p.add_argument(
+        "--format",
+        choices=["text", "json", "html"],
+        default="text",
+        help="Output format",
+    )
+    api_p.add_argument("--method", default="", help="Filter by HTTP method")
+    api_p.add_argument("--domain", default="", help="Filter by domain")
+    api_p.add_argument("--path", default="", help="Filter by path substring")
+
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
     # coverage — test coverage overlay (CM-S2-03)
     cov_p = sub.add_parser("coverage", help="Overlay test coverage on graph nodes")
     cov_p.add_argument(
@@ -144,6 +171,8 @@ def main(argv: list[str] | None = None) -> int:
         return _cmd_diff(args)
     elif args.command == "coverage":
         return _cmd_coverage(args)
+    elif args.command == "api-catalog":
+        return _cmd_api_catalog(args)
 
     return 0
 
@@ -317,6 +346,55 @@ def _cmd_coverage(args: argparse.Namespace) -> int:
         print(json_mod.dumps(stats, indent=2))
     else:
         print(overlay.summary_text(engine.graph))
+
+    return 0
+
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+def _cmd_api_catalog(args: argparse.Namespace) -> int:
+    """Generate API catalog from graph routes (CM-S2-07)."""
+    from codebase_map.graph.api_catalog import APICatalog
+    from codebase_map.graph.query import QueryEngine
+
+    graph_path = Path(args.file)
+    if not graph_path.exists():
+        print(f"[ERROR] Graph file not found: {graph_path}")
+        print("Run 'codebase-map generate' first to create the graph.")
+        return 1
+
+    engine = QueryEngine.from_json(str(graph_path))
+    catalog = APICatalog.from_graph(engine.graph)
+
+    # Apply filters by rebuilding endpoint list
+    if args.method or args.domain or args.path:
+        filtered = catalog.filter(
+            method=args.method, domain=args.domain, path_contains=args.path
+        )
+        catalog.endpoints = filtered
+        catalog.by_domain = {}
+        catalog.by_method = {}
+        for ep in filtered:
+            catalog.by_domain.setdefault(ep.domain, []).append(ep)
+            catalog.by_method.setdefault(ep.http_method, []).append(ep)
+
+    # Render
+    if args.format == "json":
+        output = catalog.to_json()
+    elif args.format == "html":
+        output = catalog.to_html()
+    else:
+        output = catalog.to_text()
+
+    if args.output:
+        out_path = Path(args.output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(output, encoding="utf-8")
+        print(
+            f"[OK] API catalog exported: {out_path} "
+            f"({catalog.total_endpoints} endpoints)"
+        )
+    else:
+        print(output)
 
     return 0
 
