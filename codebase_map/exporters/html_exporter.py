@@ -307,6 +307,73 @@ body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
   border-radius: 4px; font-size: 11px; color: var(--border-focus);
 }}
 
+/* CM-S3-02: Executive view domain grid */
+.executive-wrap {{
+  padding: 24px 28px; max-width: 1200px; margin: 0 auto; width: 100%;
+}}
+.executive-wrap h2 {{
+  font-size: 20px; margin-bottom: 6px; color: var(--text-primary);
+}}
+.executive-wrap .subtitle {{
+  color: var(--text-muted); font-size: 13px; margin-bottom: 20px;
+}}
+.exec-grid {{
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}}
+.exec-card {{
+  background: var(--bg-elevated); border: 2px solid var(--border);
+  border-radius: 10px; padding: 16px; cursor: pointer;
+  transition: transform .15s, border-color .15s;
+}}
+.exec-card:hover {{ transform: translateY(-2px); }}
+.exec-card h3 {{
+  font-size: 15px; margin-bottom: 8px; display: flex;
+  align-items: center; gap: 8px;
+}}
+.exec-card h3 .dot {{
+  width: 10px; height: 10px; border-radius: 50%;
+}}
+.exec-card .stats {{
+  display: flex; gap: 12px; font-size: 11px; color: var(--text-secondary);
+  flex-wrap: wrap;
+}}
+.exec-card .stats span {{ display: inline-flex; align-items: center; gap: 4px; }}
+.exec-card .health-bar {{
+  height: 5px; background: var(--border); border-radius: 3px;
+  margin-top: 12px; overflow: hidden;
+}}
+.exec-card .health-fill {{ height: 100%; transition: width .3s; }}
+.exec-card .health-label {{
+  font-size: 11px; margin-top: 6px; color: var(--text-muted);
+  display: flex; justify-content: space-between;
+}}
+
+/* CM-S3-07: Detail Panel v2 — 5 blocks */
+.dp-block {{
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
+}}
+.dp-block-title {{
+  font-size: 11px; font-weight: 700; color: var(--hc-primary);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+}}
+.dp-kv {{ display: grid; grid-template-columns: 90px 1fr; gap: 6px 10px; font-size: 12px; }}
+.dp-kv .k {{ color: var(--text-muted); }}
+.dp-kv .v {{ color: var(--text-primary); word-break: break-word; }}
+.dp-kv .v code {{
+  background: var(--bg-canvas); padding: 1px 6px;
+  border-radius: 4px; font-size: 11px; color: var(--border-focus);
+}}
+.dp-pill {{
+  display: inline-block; padding: 2px 8px; border-radius: 10px;
+  font-size: 10px; font-weight: 600;
+}}
+.dp-pill.green {{ background: rgba(63,185,80,.15); color: #3fb950; }}
+.dp-pill.yellow {{ background: rgba(210,153,34,.15); color: #d29922; }}
+.dp-pill.red {{ background: rgba(248,81,73,.15); color: #f85149; }}
+
 /* CM-S3-05: Breadcrumb */
 #breadcrumb {{
   display: flex; align-items: center; gap: 6px;
@@ -409,10 +476,10 @@ svg {{ width: 100%; height: 100%; }}
 
     <!-- CM-S3-01: Placeholder panels for Day 3+ views -->
     <div class="view-panel" data-view="executive">
-      <div class="view-placeholder">
-        <h2>&#x1f4ca; Executive View</h2>
-        <p>Domain health dashboard. Coming in CM-S3 Day 3.</p>
-        <p><code>#view=executive</code></p>
+      <div class="executive-wrap">
+        <h2>&#x1f4ca; Executive View — Domain Health</h2>
+        <div class="subtitle">High-level overview cho CEO/PM. Click vào domain card để zoom Graph view.</div>
+        <div class="exec-grid" id="exec-grid"></div>
       </div>
     </div>
     <div class="view-panel" data-view="api">
@@ -585,11 +652,64 @@ document.addEventListener('keydown', (e) => {{
   renderBreadcrumb(s.path);
 }});
 
+// HC-AI | ticket: FDD-TOOL-CODEMAP
+// CM-S3-02: Executive view — domain health dashboard
+function renderExecutiveView() {{
+  const grid = document.getElementById('exec-grid');
+  if (!grid) return;
+  // Aggregate per domain
+  const byDomain = {{}};
+  nodes.forEach(n => {{
+    const d = n.domain || 'unknown';
+    if (!byDomain[d]) {{
+      byDomain[d] = {{ name: d, nodes: 0, routes: 0, classes: 0, methods: 0, layers: new Set() }};
+    }}
+    byDomain[d].nodes++;
+    if (n.type === 'route') byDomain[d].routes++;
+    if (n.type === 'class') byDomain[d].classes++;
+    if (n.type === 'method') byDomain[d].methods++;
+    byDomain[d].layers.add(n.layer);
+  }});
+  const sorted = Object.values(byDomain).sort((a, b) => b.nodes - a.nodes);
+  grid.innerHTML = sorted.map(d => {{
+    const color = DOMAIN_COLORS[d.name] || '#8b949e';
+    // Health proxy: layer diversity (more layers = better separation of concerns)
+    const layerCount = d.layers.size;
+    const healthPct = Math.min(100, layerCount * 14);
+    let healthColor = '#3fb950';
+    if (healthPct < 40) healthColor = '#f85149';
+    else if (healthPct < 70) healthColor = '#d29922';
+    return `
+      <div class="exec-card" style="border-color:${{color}}" data-domain="${{d.name}}">
+        <h3><span class="dot" style="background:${{color}}"></span>${{d.name}}</h3>
+        <div class="stats">
+          <span>&#x1f4cd; ${{d.nodes}} nodes</span>
+          <span>&#x1f50c; ${{d.routes}} routes</span>
+          <span>&#x1f9e9; ${{d.classes}} cls</span>
+          <span>&#x192; ${{d.methods}} fn</span>
+        </div>
+        <div class="health-bar"><div class="health-fill" style="width:${{healthPct}}%;background:${{healthColor}}"></div></div>
+        <div class="health-label"><span>Layer diversity</span><span>${{layerCount}} layers</span></div>
+      </div>
+    `;
+  }}).join('');
+  grid.querySelectorAll('.exec-card').forEach(card => {{
+    card.addEventListener('click', () => {{
+      const dom = card.dataset.domain;
+      // Switch to graph view + filter by clicking the domain in sidebar
+      activateView('graph');
+      const hdr = document.querySelector(`.domain-header[data-domain="${{dom}}"]`);
+      if (hdr) hdr.click();
+    }});
+  }});
+}}
+
 // Apply initial state from URL
 {{
   const init = parseHash();
   activateView(init.view);
   renderBreadcrumb(init.path);
+  renderExecutiveView();
 }}
 
 // CM-S1-01: Layer filter chips
@@ -993,21 +1113,76 @@ function selectNode(d) {{
 
   const panel = document.getElementById('detail-panel');
   const content = document.getElementById('detail-content');
+  // HC-AI | ticket: FDD-TOOL-CODEMAP
+  // CM-S3-07: Detail Panel v2 — 5 blocks (Identity / Signature / Relationships / Quality / Metadata)
+  const meta = d.metadata || {{}};
+  const cov = meta.coverage;
+  const covPct = (cov && cov.percent != null) ? Math.round(cov.percent) : null;
+  let covPill = '';
+  if (covPct != null) {{
+    const cls = covPct >= 80 ? 'green' : covPct >= 60 ? 'yellow' : 'red';
+    covPill = `<span class="dp-pill ${{cls}}">${{covPct}}%</span>`;
+  }}
+  const impactCount = (typeof d.id === 'string')
+    ? edges.filter(e => {{
+        const sid = typeof e.source === 'object' ? e.source.id : e.source;
+        const tid = typeof e.target === 'object' ? e.target.id : e.target;
+        return sid === d.id || tid === d.id;
+      }}).length
+    : 0;
   content.innerHTML = `
-    <h3>${{d.name}}</h3>
-    <div class="detail-row"><span class="detail-label">Type:</span><span class="detail-value" style="color:${{TYPE_COLORS[d.type]}}">${{d.type}}</span></div>
-    <div class="detail-row"><span class="detail-label">Layer:</span><span class="detail-value">${{d.layer}}</span></div>
-    <div class="detail-row"><span class="detail-label">Domain:</span><span class="detail-value">${{d.domain}}</span></div>
-    <div class="detail-row"><span class="detail-label">File:</span><span class="detail-value">${{d.file}}:${{d.line_start}}</span></div>
-    ${{d.parent_class ? `<div class="detail-row"><span class="detail-label">Class:</span><span class="detail-value">${{d.parent_class}}</span></div>` : ''}}
-    ${{d.decorators && d.decorators.length ? `<div class="detail-row"><span class="detail-label">Deco:</span><span class="detail-value">${{d.decorators.join(', ')}}</span></div>` : ''}}
-    ${{d.params && d.params.length ? `<div class="detail-row"><span class="detail-label">Params:</span><span class="detail-value">${{d.params.join(', ')}}</span></div>` : ''}}
-    ${{d.return_type ? `<div class="detail-row"><span class="detail-label">Returns:</span><span class="detail-value">${{d.return_type}}</span></div>` : ''}}
-    ${{d.docstring ? `<div class="detail-row"><span class="detail-label">Doc:</span><span class="detail-value">${{d.docstring.substring(0, 200)}}</span></div>` : ''}}
-    <div class="section-title">Dependencies (${{deps.length}})</div>
-    ${{deps.map(e => {{ const tid = typeof e.target === 'object' ? e.target.id : e.target; const tname = tid.split('.').pop(); return `<div class="dep-item" onclick="selectNodeById('${{tid}}')">${{e.type}} &#8594; ${{tname}}</div>`; }}).join('')}}
-    <div class="section-title">Dependents (${{dependents.length}})</div>
-    ${{dependents.map(e => {{ const sid = typeof e.source === 'object' ? e.source.id : e.source; const sname = sid.split('.').pop(); return `<div class="dep-item" onclick="selectNodeById('${{sid}}')">${{e.type}} &#8592; ${{sname}}</div>`; }}).join('')}}
+    <h3 style="color:${{TYPE_COLORS[d.type] || 'var(--text-primary)'}}">${{d.name}}</h3>
+
+    <div class="dp-block">
+      <div class="dp-block-title">&#x2460; Identity</div>
+      <div class="dp-kv">
+        <span class="k">Name</span><span class="v"><code>${{d.name}}</code></span>
+        <span class="k">Type</span><span class="v" style="color:${{TYPE_COLORS[d.type]}}">${{d.type}}</span>
+        <span class="k">Layer</span><span class="v">${{d.layer}}</span>
+        <span class="k">Domain</span><span class="v" style="color:${{DOMAIN_COLORS[d.domain] || 'inherit'}}">${{d.domain || '—'}}</span>
+        <span class="k">Location</span><span class="v"><code>${{d.file}}:${{d.line_start}}</code></span>
+      </div>
+    </div>
+
+    <div class="dp-block">
+      <div class="dp-block-title">&#x2461; Signature</div>
+      <div class="dp-kv">
+        <span class="k">Params</span><span class="v">${{(d.params && d.params.length) ? d.params.join(', ') : '<em style="color:var(--text-muted)">none</em>'}}</span>
+        <span class="k">Returns</span><span class="v">${{d.return_type || '<em style="color:var(--text-muted)">—</em>'}}</span>
+        ${{d.parent_class ? `<span class="k">Parent</span><span class="v"><code>${{d.parent_class}}</code></span>` : ''}}
+        ${{d.decorators && d.decorators.length ? `<span class="k">Decorators</span><span class="v">${{d.decorators.map(x => '<code>@' + x + '</code>').join(' ')}}</span>` : ''}}
+      </div>
+    </div>
+
+    <div class="dp-block">
+      <div class="dp-block-title">&#x2462; Relationships</div>
+      <div class="dp-kv">
+        <span class="k">Calls</span><span class="v">${{deps.length}} dependencies</span>
+        <span class="k">Called by</span><span class="v">${{dependents.length}} dependents</span>
+        <span class="k">Impact</span><span class="v">${{impactCount}} edges</span>
+      </div>
+      ${{deps.length ? `<div style="margin-top:8px; font-size:11px; color:var(--text-muted);">&#x2192; ${{deps.slice(0,5).map(e => {{ const tid = typeof e.target === 'object' ? e.target.id : e.target; const tname = tid.split('.').pop(); return `<span class="dep-item" style="display:inline-block; padding:1px 6px;" onclick="selectNodeById('${{tid}}')">${{tname}}</span>`; }}).join(' ')}}</div>` : ''}}
+      ${{dependents.length ? `<div style="margin-top:4px; font-size:11px; color:var(--text-muted);">&#x2190; ${{dependents.slice(0,5).map(e => {{ const sid = typeof e.source === 'object' ? e.source.id : e.source; const sname = sid.split('.').pop(); return `<span class="dep-item" style="display:inline-block; padding:1px 6px;" onclick="selectNodeById('${{sid}}')">${{sname}}</span>`; }}).join(' ')}}</div>` : ''}}
+    </div>
+
+    <div class="dp-block">
+      <div class="dp-block-title">&#x2463; Quality</div>
+      <div class="dp-kv">
+        <span class="k">Coverage</span><span class="v">${{covPill || '<em style="color:var(--text-muted)">N/A</em>'}}</span>
+        <span class="k">LOC</span><span class="v">${{d.line_end && d.line_start ? (d.line_end - d.line_start + 1) + ' lines' : '—'}}</span>
+        <span class="k">Docstring</span><span class="v">${{d.docstring ? 'yes' : '<em style="color:var(--text-muted)">none</em>'}}</span>
+      </div>
+      ${{d.docstring ? `<div style="margin-top:8px; font-size:11px; color:var(--text-secondary); font-style:italic;">${{d.docstring.substring(0, 180)}}${{d.docstring.length > 180 ? '…' : ''}}</div>` : ''}}
+    </div>
+
+    <div class="dp-block">
+      <div class="dp-block-title">&#x2464; Metadata</div>
+      <div class="dp-kv">
+        ${{meta.fdd ? `<span class="k">FDD</span><span class="v"><code>${{meta.fdd}}</code></span>` : '<span class="k">FDD</span><span class="v"><em style="color:var(--text-muted)">unlinked</em></span>'}}
+        ${{meta.language ? `<span class="k">Language</span><span class="v">${{meta.language}}</span>` : ''}}
+        ${{meta.flows && meta.flows.length ? `<span class="k">Flows</span><span class="v">${{meta.flows.join(', ')}}</span>` : ''}}
+      </div>
+    </div>
   `;
   panel.style.display = 'block';
 
