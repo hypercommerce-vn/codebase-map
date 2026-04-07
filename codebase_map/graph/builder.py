@@ -11,13 +11,18 @@ from codebase_map.graph.cache import BuildCache, CacheStats
 from codebase_map.graph.models import Edge, Graph
 from codebase_map.parsers.base import BaseParser
 from codebase_map.parsers.python_parser import PythonParser
+from codebase_map.parsers.typescript_parser import TypeScriptParser
 
 
 class GraphBuilder:
     """Build a complete function dependency graph from config."""
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CM-S3-06: Register TypeScript parser alongside Python
     PARSERS: dict[str, type[BaseParser]] = {
         "python": PythonParser,
+        "typescript": TypeScriptParser,
+        "javascript": TypeScriptParser,
     }
 
     def __init__(self, config: Config, use_cache: bool = True) -> None:
