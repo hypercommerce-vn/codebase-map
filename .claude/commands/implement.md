@@ -159,6 +159,40 @@ grep -r "\/Users\/" codebase_map/ --include="*.py"
 
 ---
 
+### Bước 5.5 — Local Pre-flight Review Gate (BẮT BUỘC từ CM-S3)
+
+> **CEO Decision 07/04/2026:** Chạy `/review-gate --local` TRƯỚC khi commit/push.
+> Mục tiêu: bắt >80% issues sớm, giảm force-push, tiết kiệm CI minutes + CEO review time.
+
+```bash
+/review-gate --local
+```
+
+Claude thực hiện (đọc chi tiết ở `.claude/commands/review-gate.md` — Mode 1):
+
+1. **Lint gate** — black + isort + flake8 (BẮT BUỘC PASS)
+2. **Self-test generate** — `python -m codebase_map generate -c codebase-map-self.yaml`
+3. **Impact analysis local** — `codebase-map diff main --json`
+4. **CTO 5D scoring** — Claude tự chấm trên `git diff main..HEAD`
+5. **Tester edge cases cơ bản** — 3-5 case chính
+6. **Designer 5D local** — chỉ nếu có HTML changes, render + so với `design-preview/`
+
+**Verdict gate:**
+
+| Score | Action |
+|-------|--------|
+| ≥ 90 | ✅ GO → Bước 6 (Full Verification) → Bước 7 (Commit + PR) |
+| 80–89 | ⚠️ Note → fix nhanh hoặc ghi vào PR body, cho phép push |
+| < 80 | ❌ BLOCK → fix → re-run `/review-gate --local` |
+| CTO Dim C < 20/25 | ❌ AUTO BLOCK — parser accuracy phải fix |
+| Impact zone > 50 | ⚠️ WARN — cân nhắc split PR |
+
+**Report lưu:** `docs/reviews/ReviewGate_Local_{branch}_{date}.md`
+
+**Rule:** Local Pre-flight KHÔNG thay thế Remote Full (Mode 2). Sau khi push + CI pass, vẫn phải chạy `/review-gate PR #XX` trước CEO review.
+
+---
+
 ### Bước 6 — Full Verification
 
 ```bash
@@ -214,4 +248,4 @@ gh pr create --title "feat: [mô tả ngắn]" --body "..."
 
 ---
 
-*implement.md v1.0 | Codebase Map | Adapted from HC v1.0 | 06/04/2026*
+*implement.md v1.1 | Codebase Map | Added Bước 5.5 Local Pre-flight | CEO Decision 07/04/2026*
