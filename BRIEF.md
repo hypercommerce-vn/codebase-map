@@ -8,9 +8,10 @@
 
 | Field | Value |
 |-------|-------|
-| **Version hiện tại** | v1.1 → v1.2 in progress |
-| **Sprint hiện tại** | CM-S2 (v1.2) — **🔄 Day 4 Done** (14/18 SP, 7/11 tasks) |
-| **Sprint trước** | CM-S1 (v1.1) — ✅ DONE (15/15 SP, 10/10 tasks) |
+| **Version hiện tại** | v1.2 ✅ → v2.0 in planning |
+| **Sprint hiện tại** | CM-S3 (v2.0) — ⏳ Kickoff (design + task board phase) |
+| **Sprint trước** | CM-S2 (v1.2) — ✅ DONE (18/18 SP, 11/11 tasks, 5 feature PRs) |
+| **Sprint trước nữa** | CM-S1 (v1.1) — ✅ DONE (15/15 SP, 10/10 tasks) |
 | **Repo** | https://github.com/hypercommerce-vn/codebase-map |
 | **Parent HC repo** | https://github.com/hypercommerce-vn/hypercommercesystem |
 | **HC config** | `codebase-map.yaml` trong HC repo root |
@@ -60,18 +61,45 @@
 
 ---
 
-## 🔄 ĐANG LÀM — CM-S2 (v1.2) Sprint
+### v1.2 — CM-S2 Sprint ✅ COMPLETE (07/04/2026)
 
-| Day | Tasks | SP | PR | Status |
-|-----|-------|----|-----|--------|
-| Day 1 | CM-S2-01 (git diff) | 3 | PR #9 | ✅ Done (CTO 99/100, CEO merged) |
-| Day 2 | CM-S2-02 (incremental cache) | 3 | PR #11 | ✅ Done (CTO 100/100, CEO merged) |
-| Day 3 | CM-S2-06 (edge resolution) + CM-S2-03 (coverage) | 4 | PR #13 | ✅ Done (CTO 99/100, CEO merged) |
-| Day 4 | CM-S2-07 (API catalog) + CM-S2-04 (/implement) + CM-S2-05 (/review-gate) | 4 | PR #15 | ✅ Done (CTO 99/100, CEO merged) |
-| Day 5 | CM-S2-08 + CM-S2-09 + CM-S2-10 + CM-S2-11 | 4 | — | 📋 Todo |
-| **Total** | **11 tasks** | **18 SP** | | **🔄 Day 4 Done** |
+| Day | Tasks | SP | PR | Review Gate | Status |
+|-----|-------|----|-----|-------------|--------|
+| Day 1 | CM-S2-01 (git diff) | 3 | PR #9 | CTO 99/100 SHIPIT | ✅ Done |
+| Day 2 | CM-S2-02 (incremental cache) | 3 | PR #11 | CTO 100/100 SHIPIT | ✅ Done |
+| Day 3 | CM-S2-06 (edge resolution) + CM-S2-03 (coverage) | 4 | PR #13 | CTO 99/100 SHIPIT | ✅ Done |
+| Day 4 | CM-S2-07 (API catalog) + CM-S2-04 (/implement) + CM-S2-05 (/review-gate) | 4 | PR #15 | CTO 99/100 SHIPIT | ✅ Done |
+| Day 5 | CM-S2-08 (FDD) + CM-S2-09 (PR bot) + CM-S2-10 (metric) + CM-S2-11 (staleness) | 4 | PR #17 | CEO merged | ✅ Done |
+| **Total** | **11 tasks** | **18/18 SP** | **5 feature + 4 chore PRs** | **All passed** | **✅ Sprint Done** |
+
+**Key deliverables v1.2:**
+- Git diff integration — `codebase-map diff HEAD~1` changed + impacted nodes
+- Incremental build cache — SHA-256 per-file, 80%+ faster rebuilds
+- Edge resolution — `self.attr.method()` chain via `__init__` type hints
+- Test coverage overlay — pytest-cov JSON mapped to node line ranges
+- API catalog — route extraction, HTTP method + path + auth detection
+- Workflow integration — `/implement` + `/review-gate` auto-query impact
+- FDD spec linking — `# FDD: FDD-XXX` comment parsing → `node.metadata.fdd`
+- PR Impact Comment Bot — auto-post markdown risk analysis to every PR
+- Sprint metric store — `.codebase-map-cache/pr_metrics.json`
+- Staleness alert — `check-staleness --notify` + Telegram webhook
+- 2-tier Review Gate workflow — local pre-flight + remote full
 
 **Design CM-S2 approved** — `design-preview/codebase-map-CM-S2-design.html` (1820 lines, 11 sections).
+
+---
+
+## 🔄 ĐANG LÀM — CM-S3 (v2.0) Sprint Kickoff
+
+| Phase | Task | Owner | Status |
+|-------|------|-------|--------|
+| 1 | CM-S2 Sprint COMPLETE board sync | PM | 🔄 In progress |
+| 2 | CM-S3 design HTML (8 mockup sections) | Designer | 📋 Todo |
+| 3 | CM-S3 task board + Day plan | PM + CTO | 📋 Todo |
+| 4 | CEO review + approve | CEO | ⏳ Waiting |
+| 5 | Day 1 kickoff with 2-tier Review Gate | Tech Lead | ⏳ Waiting |
+
+**CM-S3 scope:** 8 tasks, 22 SP, target v2.0 (Multi-view + TypeScript parser + Responsive).
 
 ---
 
@@ -95,6 +123,8 @@
 | 06/04/2026 | **CM-S2 Day 3 Done** — Edge resolution (CM-S2-06) + Coverage overlay (CM-S2-03), PR #13 merged, CTO 99/100 | CEO |
 | 07/04/2026 | **CM-S2 Day 4 Done** — API Catalog (CM-S2-07) + /implement (CM-S2-04) + /review-gate (CM-S2-05), PR #15 merged, CTO 99/100 | CEO |
 | 07/04/2026 | **2-tier Review Gate approved** — `/review-gate --local` Pre-flight TRƯỚC push + Remote Full SAU push. Áp dụng từ CM-S3. Mục tiêu giảm force-push + tiết kiệm CI/CEO review time | CEO |
+| 07/04/2026 | **CM-S2 Sprint COMPLETE** 🎉 — 18/18 SP, 11/11 tasks, 5 feature PRs merged (#9, #11, #13, #15, #17) + bot fix #19 + 2-tier workflow #20. v1.2 shipped | CEO |
+| 07/04/2026 | **CM-S3 Kickoff** — 3 agents (PM + CTO + Designer) phân công tạo design + task board trước khi code | CEO |
 
 ---
 
@@ -102,9 +132,10 @@
 
 | Vấn đề | Priority |
 |--------|----------|
-| CM-S2 Day 5 implement (FDD linking + PR bot + metric + staleness) | 🟡 Next |
+| CM-S3 design HTML (8 mockup sections) — Designer drafting | 🔴 Blocker Day 1 |
+| CM-S3 task board + Day plan | 🔴 Blocker Day 1 |
+| CEO approve CM-S3 design + task board | 🟡 Next |
 | Wiki board ở HC repo cần update link repo mới | 🟢 Low |
-| CM-S3 design chi tiết chưa tạo | 🟢 Future |
 
 ---
 
@@ -137,4 +168,4 @@
 
 ---
 
-*BRIEF.md v1.4 — Codebase Map | 07/04/2026 | CM-S2 Day 4 Done · 2-tier Review Gate approved 🔄*
+*BRIEF.md v1.5 — Codebase Map | 07/04/2026 | CM-S2 Sprint COMPLETE 🎉 · CM-S3 Kickoff ⏳*

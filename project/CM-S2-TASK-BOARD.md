@@ -47,10 +47,10 @@ Tiếp Day sau
 | CM-S2-07 | FDD-TOOL-CODEMAP | BE+FE: API Catalog auto-gen — extract routes → tab view | 2 | CM-S2-design #cm-s2-07 | Day 4 | PR #15 | CTO 99/100 SHIPIT | ✅ Done |
 | CM-S2-04 | FDD-TOOL-CODEMAP | Workflow: Tích hợp /implement — Step 2 auto-query impact | 1 | CM-S2-design #cm-s2-04 | Day 4 | PR #15 | CTO 99/100 SHIPIT | ✅ Done |
 | CM-S2-05 | FDD-TOOL-CODEMAP | Workflow: Tích hợp /review-gate — impact graph trong review | 1 | CM-S2-design #cm-s2-05 | Day 4 | PR #15 | CTO 99/100 SHIPIT | ✅ Done |
-| CM-S2-08 | FDD-TOOL-CODEMAP | Metadata: FDD Spec linking — node → FDD ID in detail panel | 1 | CM-S2-design #cm-s2-08 | Day 5 | — | — | 📋 Todo |
-| CM-S2-09 | FDD-TOOL-CODEMAP | DevOps: PR impact comment bot — CI comment impact vào PR | 1 | CM-S2-design #cm-s2-09 | Day 5 | — | — | 📋 Todo |
-| CM-S2-10 | FDD-TOOL-CODEMAP | Process: Sprint metric — track impact per PR, alert > 50 nodes | 1 | CM-S2-design #cm-s2-10 | Day 5 | — | — | 📋 Todo |
-| CM-S2-11 | FDD-TOOL-CODEMAP | DevOps: Staleness alert — graph > 7 days → Telegram notify | 1 | CM-S2-design #cm-s2-11 | Day 5 | — | — | 📋 Todo |
+| CM-S2-08 | FDD-TOOL-CODEMAP | Metadata: FDD Spec linking — node → FDD ID in detail panel | 1 | CM-S2-design #cm-s2-08 | Day 5 | PR #17 | CEO merged | ✅ Done |
+| CM-S2-09 | FDD-TOOL-CODEMAP | DevOps: PR impact comment bot — CI comment impact vào PR | 1 | CM-S2-design #cm-s2-09 | Day 5 | PR #17 (+#19 fix) | CEO merged | ✅ Done |
+| CM-S2-10 | FDD-TOOL-CODEMAP | Process: Sprint metric — track impact per PR, alert > 50 nodes | 1 | CM-S2-design #cm-s2-10 | Day 5 | PR #17 | CEO merged | ✅ Done |
+| CM-S2-11 | FDD-TOOL-CODEMAP | DevOps: Staleness alert — graph > 7 days → Telegram notify | 1 | CM-S2-design #cm-s2-11 | Day 5 | PR #17 | CEO merged | ✅ Done |
 
 ---
 
@@ -75,8 +75,8 @@ Tiếp Day sau
 | Day 2 | 3 | CM-S2-02 | PR #11 | CTO 100/100 SHIPIT | ✅ Done |
 | Day 3 | 4 | CM-S2-06, CM-S2-03 | PR #13 | CTO 99/100 SHIPIT | ✅ Done |
 | Day 4 | 4 | CM-S2-07, CM-S2-04, CM-S2-05 | PR #15 | CTO 99/100 SHIPIT | ✅ Done |
-| Day 5 | 4 | CM-S2-08, CM-S2-09, CM-S2-10, CM-S2-11 | — | — | 📋 Todo |
-| **Total** | **18** | **11 tasks** | **4 PRs merged** | | **🔄 7/11 Done (14/18 SP)** |
+| Day 5 | 4 | CM-S2-08, CM-S2-09, CM-S2-10, CM-S2-11 | PR #17 | CEO merged | ✅ Done |
+| **Total** | **18** | **11 tasks** | **5 feature + 4 chore PRs** | | **✅ 11/11 Done (18/18 SP) — SPRINT COMPLETE 🎉** |
 
 ---
 
