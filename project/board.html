@@ -1128,13 +1128,84 @@ a:hover { text-decoration: underline; }
   <p><a href="javascript:void(0)" onclick="showPage('board')">← Quay lại Board</a></p>
 </div>
 
+<!-- ═══════════════════════════════════════
+     REVIEW GATE — TÀI LIỆU THAM CHIẾU
+     CEO request 07/04/2026
+═══════════════════════════════════════ -->
+<div class="card" style="margin-top:24px;">
+  <h2 style="margin-bottom:8px;">📚 Tài liệu tham chiếu khi Review Gate</h2>
+  <p style="color:var(--text-muted); font-size:13px; margin-bottom:14px;">
+    Mỗi tầng review gate (Tester · CTO · Designer) phải đối chiếu với các nguồn chuẩn dưới đây.
+    Không tự ý chấm điểm bằng cảm tính.
+  </p>
+  <table style="width:100%; border-collapse:collapse; font-size:13px;">
+    <thead>
+      <tr style="background:var(--bg-muted);">
+        <th style="text-align:left; padding:10px; border-bottom:1px solid var(--border);">Loại tài liệu</th>
+        <th style="text-align:left; padding:10px; border-bottom:1px solid var(--border);">File</th>
+        <th style="text-align:left; padding:10px; border-bottom:1px solid var(--border);">Dùng cho tầng</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><strong>Quy trình review</strong></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><code>.claude/commands/review-gate.md</code></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);">Toàn bộ — định nghĩa Mode 1/2, scoring matrix, verdict gate</td>
+      </tr>
+      <tr>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><strong>FDD spec (chức năng)</strong></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><code>specs/spec.md</code> (section sprint hiện tại)</td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);">BA + Tester verify acceptance criteria</td>
+      </tr>
+      <tr>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><strong>Task board (scope + SP)</strong></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><code>project/CM-S{N}-TASK-BOARD.md</code></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);">PM verify SP + AC + Day plan</td>
+      </tr>
+      <tr>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><strong>Design HTML chi tiết</strong></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><code>design-preview/codebase-map-CM-S{N}-design.html</code></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><strong>Designer 5D</strong> — pixel/layout/interaction/color match</td>
+      </tr>
+      <tr>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><strong>Design tổng thể v2.0</strong></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><code>design-preview/codebase-map-v2-design.html</code></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);">Designer baseline — color tokens, typography</td>
+      </tr>
+      <tr>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><strong>Code style + rules</strong></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><code>CLAUDE.md</code> Critical Rules + <code>setup.cfg</code></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);">CTO Dim E (lint, comments, conventions)</td>
+      </tr>
+      <tr>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><strong>Output thực tế</strong></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><code>docs/function-map/index.html</code> (sau self-test)</td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);">Tester functional + Designer visual (browser render + screenshot)</td>
+      </tr>
+      <tr>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><strong>Impact analysis</strong></td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);"><code>codebase-map diff main --json</code> output</td>
+        <td style="padding:10px; border-bottom:1px solid var(--border);">CTO Dim B + auto-inserted Section trong report (CM-S2-05)</td>
+      </tr>
+      <tr>
+        <td style="padding:10px;"><strong>Review reports cũ</strong></td>
+        <td style="padding:10px;"><code>docs/reviews/ReviewGate_*.md</code></td>
+        <td style="padding:10px;">Tham chiếu tiền lệ — score baseline, lessons learned</td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="margin-top:14px; padding:12px 14px; background:var(--bg-muted); border-left:3px solid var(--hc-primary); border-radius:6px; font-size:12px; color:var(--text-secondary);">
+    <strong>Rule #9 (CEO 07/04/2026):</strong> Mỗi review gate report PHẢI ghi rõ tài liệu tham chiếu nào đã được dùng để chấm điểm cho từng dimension. Không có tham chiếu = không được tính score.
+  </div>
+</div>
+
 </div><!-- /main -->
 </div><!-- /shell -->
 
 <!-- Footer -->
 <div class="footer">
   <span>Codebase Map — Project Board · Hyper Commerce · CEO: Đoàn Đình Tỉnh</span>
-  <span>Updated: 07/04/2026 · CM-S2 Sprint COMPLETE 🎉 · CM-S3 Kickoff ⏳</span>
+  <span>Updated: 07/04/2026 · CM-S3 Day 2 in review · Review Gate references added</span>
 </div>
 
 <!-- ═══════════════════════════════════════
