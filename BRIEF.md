@@ -94,6 +94,7 @@
 | 06/04/2026 | **CM-S2 Day 2 Done** — Incremental cache (CM-S2-02), 80%+ faster builds, PR #11 merged, CTO 100/100 | CEO |
 | 06/04/2026 | **CM-S2 Day 3 Done** — Edge resolution (CM-S2-06) + Coverage overlay (CM-S2-03), PR #13 merged, CTO 99/100 | CEO |
 | 07/04/2026 | **CM-S2 Day 4 Done** — API Catalog (CM-S2-07) + /implement (CM-S2-04) + /review-gate (CM-S2-05), PR #15 merged, CTO 99/100 | CEO |
+| 07/04/2026 | **2-tier Review Gate approved** — `/review-gate --local` Pre-flight TRƯỚC push + Remote Full SAU push. Áp dụng từ CM-S3. Mục tiêu giảm force-push + tiết kiệm CI/CEO review time | CEO |
 
 ---
 
@@ -132,7 +133,8 @@
 3. **No Design = No Implementation**
 4. **Lint gate:** `black + isort + flake8` trước commit
 5. **Comment:** `# HC-AI | ticket: FDD-TOOL-CODEMAP`
+6. **2-tier Review Gate (từ CM-S3):** `/review-gate --local` TRƯỚC `git push` (Pre-flight) → `/review-gate PR #XX` SAU khi push + CI pass (Remote Full) → CEO review. Local block nếu CTO local < 80 hoặc Dim C < 20/25.
 
 ---
 
-*BRIEF.md v1.3 — Codebase Map | 07/04/2026 | CM-S2 Day 4 Done 🔄*
+*BRIEF.md v1.4 — Codebase Map | 07/04/2026 | CM-S2 Day 4 Done · 2-tier Review Gate approved 🔄*
