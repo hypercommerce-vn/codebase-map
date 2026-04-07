@@ -13,9 +13,70 @@
 
 Khi PM hoặc bất kỳ agent nào gõ `/review-gate PR #XX` hoặc `/review-gate` (auto-detect current branch PR).
 
+**Hai chế độ chạy (CEO Decision 07/04/2026 — áp dụng từ CM-S3):**
+
+| Mode | Command | Khi chạy | Mục đích |
+|------|---------|----------|----------|
+| **Local Pre-flight** | `/review-gate --local` | **TRƯỚC** `git push` / `gh pr create` | Bắt lỗi sớm, giảm số lần force-push |
+| **Remote Full** | `/review-gate PR #XX` | **SAU** khi push + CI pass | Full 3-tier, chính thức gate CEO |
+
+> **BẮT BUỘC cả hai** cho mọi feature PR từ CM-S3 trở đi. Bug fix nhỏ có thể chỉ chạy Remote Full.
+
 ---
 
-## QUY TRÌNH THỰC HIỆN — 6 BƯỚC
+## MODE 1: LOCAL PRE-FLIGHT (`/review-gate --local`)
+
+> Chạy trước khi commit/push. Rút gọn 3-tier, chấm bằng dữ liệu local.
+> Mục tiêu: **catch >80% issues trước khi tiêu tốn CI minutes + CEO review time**.
+
+### Scope checks
+
+| Tầng | Local Pre-flight | Remote Full |
+|------|------------------|-------------|
+| **Lint** (black/isort/flake8) | ✅ BẮT BUỘC | ✅ |
+| **Self-test generate** | ✅ BẮT BUỘC | ✅ |
+| **CTO 5D scoring** | ✅ Claude tự chấm trên diff | ✅ |
+| **Tester edge cases** | ✅ Basic (3-5 case chính) | ✅ Full matrix |
+| **Designer 5D** | ⚠️ Chỉ render HTML local, so với design-preview/ | ✅ + CI artifact |
+| **CI status (Py 3.10/3.11/3.12)** | ❌ Skip | ✅ |
+| **PR impact bot (CM-S2-09)** | ❌ Chưa có PR | ✅ |
+| **Impact Analysis local** | ✅ `codebase-map diff main` | ✅ |
+
+### Quy trình Local Pre-flight
+
+```bash
+# 1. Lint gate
+black --check codebase_map/ && isort --check codebase_map/ && flake8 codebase_map/
+
+# 2. Self-test generate
+python -m codebase_map generate -c codebase-map-self.yaml
+python -m codebase_map summary -f docs/function-map/graph.json
+
+# 3. Impact analysis (cần graph.json trên main trước đó)
+python -m codebase_map diff main -f docs/function-map/graph.json --json > /tmp/local-impact.json
+
+# 4. CTO 5D scoring — Claude tự chấm dựa trên git diff
+git diff main..HEAD --stat
+git diff main..HEAD
+```
+
+### Verdict Local Pre-flight
+
+| Điều kiện | Verdict | Action |
+|-----------|---------|--------|
+| Lint FAIL | ❌ **BLOCK** | Fix → re-run `/review-gate --local` |
+| Self-test FAIL | ❌ **BLOCK** | Fix → re-run |
+| CTO score local ≥ 90 | ✅ **GO** | `git push` → `gh pr create` → `/review-gate PR #XX` (Mode 2) |
+| CTO score local 80–89 | ⚠️ **NOTE** | Fix nhanh hoặc note vào PR body, cho phép push |
+| CTO score local < 80 | ❌ **BLOCK** | Fix trước khi push |
+| CTO Dim C < 20/25 | ❌ **AUTO BLOCK** | Parser accuracy — phải fix |
+| Impact zone > 50 | ⚠️ **WARN** | Cân nhắc split PR trước khi push |
+
+**Report lưu:** `docs/reviews/ReviewGate_Local_{branch}_{date}.md`
+
+---
+
+## MODE 2: REMOTE FULL — QUY TRÌNH THỰC HIỆN 6 BƯỚC
 
 ### Bước 1: Xác định PR scope
 
@@ -211,7 +272,8 @@ Nếu PR không có HTML changes: Final Score = CTO Score (Designer skip)
 4. **CTO Dim C AUTO BLOCK** — parser accuracy non-negotiable
 5. **Song song** — CTO + Designer review cùng lúc (sau Tester PASS)
 6. **Report lưu** — `docs/reviews/ReviewGate_PR{XX}_Round{N}_{date}.md`
+7. **2-tier mandatory từ CM-S3** — Local Pre-flight TRƯỚC push, Remote Full SAU push (CEO Decision 07/04/2026)
 
 ---
 
-*review-gate.md v1.0 | Codebase Map | Adapted from HC v2.0 | CEO Decision 06/04/2026*
+*review-gate.md v1.1 | Codebase Map | Added --local pre-flight mode | CEO Decision 07/04/2026*
