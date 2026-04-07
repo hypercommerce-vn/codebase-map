@@ -89,17 +89,28 @@
 
 ---
 
-## 🔄 ĐANG LÀM — CM-S3 (v2.0) Sprint Kickoff
+## ✅ CM-S3 (v2.0) Sprint COMPLETE 🎉 — 22/22 SP · 8/8 tasks
 
-| Phase | Task | Owner | Status |
-|-------|------|-------|--------|
-| 1 | CM-S2 Sprint COMPLETE board sync | PM | 🔄 In progress |
-| 2 | CM-S3 design HTML (8 mockup sections) | Designer | 📋 Todo |
-| 3 | CM-S3 task board + Day plan | PM + CTO | 📋 Todo |
-| 4 | CEO review + approve | CEO | ⏳ Waiting |
-| 5 | Day 1 kickoff with 2-tier Review Gate | Tech Lead | ⏳ Waiting |
+| Day | Tasks | SP | PR | Status |
+|-----|-------|----|----|--------|
+| Day 1 | CM-S3-06 TS parser | 5 | #24 ✅ merged | Done |
+| Day 2 | CM-S3-01 Multi-view + CM-S3-05 Breadcrumb | 5 | #25 ✅ merged | Done |
+| — | Board refs table (Rule #9) | — | #26 ✅ merged | Done |
+| — | Post-CM-S3 Minor Backlog | — | #27 ✅ merged | Done |
+| Day 3 | CM-S3-02 Executive view + CM-S3-07 Detail Panel v2 | 5 | #28 ✅ merged | Done (95.6/100) |
+| Day 4 | CM-S3-03 PR Diff + CM-S3-04 Business Flow | 6 | #29 ✅ merged | Done (95.0/100) |
+| Day 5 | CM-S3-08 Responsive sidebar (sprint close) | 1 | #30 ✅ merged | Done (96.6/100) |
 
-**CM-S3 scope:** 8 tasks, 22 SP, target v2.0 (Multi-view + TypeScript parser + Responsive).
+**CM-S3 COMPLETE — v2.0 ships:** TS parser · Multi-view · Executive · Detail Panel v2 · PR Diff · Business Flow · Breadcrumb · Responsive.
+**5 feature PRs merged:** #24 #25 #28 #29 #30 (+ chore #26 #27).
+**Avg final score:** ~95.7/100.
+
+### Last Review Gate — PR #28 Round 1 (Mode 2 Remote Full)
+- Tester ✅ PASS · CTO 96/100 · Designer 95/100 (mcp__Claude_Preview verified)
+- Impact 🟢 Low (3 changed → 5 zone)
+- Final **95.6/100 → SHIPIT + NOTE**
+- Report: `docs/reviews/ReviewGate_PR28_Round1_2026-04-07.md`
+- Notes: health bar = layer-diversity proxy (real coverage deferred POST-CM-S3); Detail Panel v2 graceful-degrade missing fields.
 
 ---
 
@@ -125,6 +136,13 @@
 | 07/04/2026 | **2-tier Review Gate approved** — `/review-gate --local` Pre-flight TRƯỚC push + Remote Full SAU push. Áp dụng từ CM-S3. Mục tiêu giảm force-push + tiết kiệm CI/CEO review time | CEO |
 | 07/04/2026 | **CM-S2 Sprint COMPLETE** 🎉 — 18/18 SP, 11/11 tasks, 5 feature PRs merged (#9, #11, #13, #15, #17) + bot fix #19 + 2-tier workflow #20. v1.2 shipped | CEO |
 | 07/04/2026 | **CM-S3 Kickoff** — 3 agents (PM + CTO + Designer) phân công tạo design + task board trước khi code | CEO |
+| 07/04/2026 | **CM-S3 Day 1 Done** — CM-S3-06 TS parser, PR #24 merged | CEO |
+| 07/04/2026 | **CM-S3 Day 2 Done** — CM-S3-01 Multi-view + CM-S3-05 Breadcrumb, PR #25 merged + PR #26 refs table + PR #27 minor backlog | CEO |
+| 07/04/2026 | **Rule #9** — Mọi review report phải cite tài liệu tham chiếu per dimension | CEO |
+| 07/04/2026 | **CM-S3 Day 3 Done** — PR #28 merged | CEO |
+| 07/04/2026 | **CM-S3 Day 4 Done** — CM-S3-03 PR Diff + CM-S3-04 Business Flow, PR #29 merged, Mode 2: 95.0/100 | CEO |
+| 07/04/2026 | **CM-S3 Day 5 Done** — PR #30 merged | CEO |
+| 07/04/2026 | **CM-S3 Sprint COMPLETE 🎉** — 22/22 SP · 8/8 tasks · v2.0 shipped | CEO |
 
 ---
 
