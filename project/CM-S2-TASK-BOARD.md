@@ -42,8 +42,8 @@ Tiếp Day sau
 |---------|---------|------|----|-----------|-----|-----|-------------|--------|
 | CM-S2-01 | FDD-TOOL-CODEMAP | BE: Git diff integration — `codebase-map diff HEAD~1` changed + impacted nodes | 3 | CM-S2-design #cm-s2-01 | Day 1 | PR #9 | CTO 99/100 SHIPIT | ✅ Done |
 | CM-S2-02 | FDD-TOOL-CODEMAP | BE: Incremental update — cache AST hash, re-parse only changed files | 3 | CM-S2-design #cm-s2-02 | Day 2 | PR #11 | CTO 100/100 SHIPIT | ✅ Done |
-| CM-S2-06 | FDD-TOOL-CODEMAP | BE: Edge resolution — resolve self.repo chain từ __init__ | 2 | CM-S2-design #cm-s2-06 | Day 3 | — | — | 📋 Todo |
-| CM-S2-03 | FDD-TOOL-CODEMAP | BE+FE: Test coverage overlay — map test → source, coverage bar | 2 | CM-S2-design #cm-s2-03 | Day 3 | — | — | 📋 Todo |
+| CM-S2-06 | FDD-TOOL-CODEMAP | BE: Edge resolution — resolve self.repo chain từ __init__ | 2 | CM-S2-design #cm-s2-06 | Day 3 | PR #13 | CTO 99/100 SHIPIT | ✅ Done |
+| CM-S2-03 | FDD-TOOL-CODEMAP | BE+FE: Test coverage overlay — map test → source, coverage bar | 2 | CM-S2-design #cm-s2-03 | Day 3 | PR #13 | CTO 99/100 SHIPIT | ✅ Done |
 | CM-S2-07 | FDD-TOOL-CODEMAP | BE+FE: API Catalog auto-gen — extract routes → tab view | 2 | CM-S2-design #cm-s2-07 | Day 4 | — | — | 📋 Todo |
 | CM-S2-04 | FDD-TOOL-CODEMAP | Workflow: Tích hợp /implement — Step 2 auto-query impact | 1 | CM-S2-design #cm-s2-04 | Day 4 | — | — | 📋 Todo |
 | CM-S2-05 | FDD-TOOL-CODEMAP | Workflow: Tích hợp /review-gate — impact graph trong review | 1 | CM-S2-design #cm-s2-05 | Day 4 | — | — | 📋 Todo |
@@ -73,10 +73,10 @@ Tiếp Day sau
 |-----|-----|-------|-----|-------------|--------|
 | Day 1 | 3 | CM-S2-01 | PR #9 | CTO 99/100 SHIPIT | ✅ Done |
 | Day 2 | 3 | CM-S2-02 | PR #11 | CTO 100/100 SHIPIT | ✅ Done |
-| Day 3 | 4 | CM-S2-06, CM-S2-03 | — | — | 📋 Todo |
+| Day 3 | 4 | CM-S2-06, CM-S2-03 | PR #13 | CTO 99/100 SHIPIT | ✅ Done |
 | Day 4 | 4 | CM-S2-07, CM-S2-04, CM-S2-05 | — | — | 📋 Todo |
 | Day 5 | 4 | CM-S2-08, CM-S2-09, CM-S2-10, CM-S2-11 | — | — | 📋 Todo |
-| **Total** | **18** | **11 tasks** | **2 PRs merged** | | **🔄 2/11 Done (6/18 SP)** |
+| **Total** | **18** | **11 tasks** | **3 PRs merged** | | **🔄 4/11 Done (10/18 SP)** |
 
 ---
 
