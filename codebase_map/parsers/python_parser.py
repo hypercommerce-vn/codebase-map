@@ -140,7 +140,9 @@ def _detect_layer(file_path: str) -> LayerType:
         return LayerType.SCHEMA
 
     # Model layer (SQLAlchemy ORM)
-    if "/models/" in path_lower or fname == "model.py":
+    # HC-AI | ticket: CM-HOTFIX-V2.0.1 (POST-CM-S3-02)
+    # Added plural "models.py" to catch HC zns/models.py and similar.
+    if "/models/" in path_lower or fname in ("model.py", "models.py"):
         return LayerType.MODEL
 
     # Test layer
@@ -156,6 +158,27 @@ def _detect_layer(file_path: str) -> LayerType:
     # Worker layer (Celery tasks)
     if "/workers/" in path_lower or "tasks.py" in fname:
         return LayerType.WORKER
+
+    # HC-AI | ticket: CM-HOTFIX-V2.0.1 (POST-CM-S3-02)
+    # Service-like directories: AI agents, adapters, integrations, clients.
+    if (
+        "/agent/" in path_lower
+        or "/agents/" in path_lower
+        or "/adapters/" in path_lower
+        or "/integrations/" in path_lower
+        or "/clients/" in path_lower
+        or "/handlers/" in path_lower
+    ):
+        return LayerType.SERVICE
+
+    # HC-AI | ticket: CM-HOTFIX-V2.0.1 (POST-CM-S3-02)
+    # Router-like directories beyond router.py naming.
+    if (
+        "/endpoints/" in path_lower
+        or "/webhooks/" in path_lower
+        or "/api/" in path_lower
+    ):
+        return LayerType.ROUTER
 
     # Util layer — broad catch for helper/utility patterns
     _util_patterns = (
@@ -187,6 +210,48 @@ def _detect_layer(file_path: str) -> LayerType:
 
     # Main entry point
     if fname == "main.py" or fname == "__init__.py":
+        return LayerType.UTIL
+
+    # HC-AI | ticket: CM-HOTFIX-V2.0.1 (POST-CM-S3-02)
+    # Additional common Python conventions.
+    if (
+        "/parsers/" in path_lower
+        or "parser.py" in fname
+        or "/graph/" in path_lower
+        or "/exporters/" in path_lower
+        or "exporter.py" in fname
+        or "/commands/" in path_lower
+        or "/queries/" in path_lower
+        or "/dto/" in path_lower
+        or "/middleware" in path_lower
+        or "/validators/" in path_lower
+        or "/licensing/" in path_lower
+    ):
+        return LayerType.UTIL
+    if (
+        "/cli" in path_lower
+        or fname == "cli.py"
+        or fname == "__main__.py"
+        or fname == "config.py"
+        or "/dependencies/" in path_lower
+        or "/config/" in path_lower
+    ):
+        return LayerType.CORE
+    if (
+        "/exceptions/" in path_lower
+        or "exceptions.py" in fname
+        or "errors.py" in fname
+        or "/events/" in path_lower
+        or "/entities/" in path_lower
+        or "/domain/" in path_lower
+        or "constants.py" in fname
+        or "enums.py" in fname
+    ):
+        return LayerType.CORE
+
+    # Last-resort fallback: any .py file → UTIL rather than UNKNOWN.
+    # Keeps the graph actionable; refine with more specific rules above.
+    if fname.endswith(".py"):
         return LayerType.UTIL
 
     return LayerType.UNKNOWN

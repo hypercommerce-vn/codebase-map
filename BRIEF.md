@@ -8,10 +8,11 @@
 
 | Field | Value |
 |-------|-------|
-| **Version hiện tại** | v1.2 ✅ → v2.0 in planning |
-| **Sprint hiện tại** | CM-S3 (v2.0) — ⏳ Kickoff (design + task board phase) |
-| **Sprint trước** | CM-S2 (v1.2) — ✅ DONE (18/18 SP, 11/11 tasks, 5 feature PRs) |
-| **Sprint trước nữa** | CM-S1 (v1.1) — ✅ DONE (15/15 SP, 10/10 tasks) |
+| **Version hiện tại** | v2.0.0 ✅ delivered → v2.0.1 hotfix ACTIVE |
+| **Sprint hiện tại** | CM-HOTFIX v2.0.1 — 🔥 ACTIVE · Day 1 ready to kickoff (awaiting CEO approve) |
+| **Sprint trước** | CM-S3 (v2.0) — ✅ DELIVERED (22/22 SP, 8/8 tasks, v2.0.0 released) |
+| **Sprint trước nữa** | CM-S2 (v1.2) — ✅ DONE (18/18 SP, 11/11 tasks, 5 feature PRs) |
+| **Sprint đầu tiên** | CM-S1 (v1.1) — ✅ DONE (15/15 SP, 10/10 tasks) |
 | **Repo** | https://github.com/hypercommerce-vn/codebase-map |
 | **Parent HC repo** | https://github.com/hypercommerce-vn/hypercommercesystem |
 | **HC config** | `codebase-map.yaml` trong HC repo root |
@@ -89,6 +90,32 @@
 
 ---
 
+## 🔥 Hotfix Sprint v2.0.1 — ACTIVE (Day 1 ready)
+
+**Goal:** Ship `v2.0.1` hotfix release — fix 4 post-delivery polish items. Priority: reduce HC unknown-layer ratio from ~11% (173/1565) to **<5%**, and eliminate manual 2-step PR Diff bake.
+
+**Scope (3 SP · 2 Days · 2 PRs):**
+- **Day 1 → PR #1:** POST-CM-S3-02 (unknown layer classifier, 0.5 SP) + POST-CM-S3-03 (API Catalog empty state, 0.5 SP)
+- **Day 2 → PR #2:** POST-CM-S3-01 (Executive real coverage hook, 1 SP) + POST-CM-S3-04 (`generate --diff` flag, 1 SP) → tag v2.0.1 → release
+
+**Task board:** `project/CM-HOTFIX-V2.0.1-TASK-BOARD.md`
+**Source backlog:** `project/POST-CM-S3-HOTFIX-PLAN.md` (issues #32–#35)
+**HC verification:** baseline layer snapshot BEFORE classifier fix, post-fix diff MUST show <5% unknown — else block release.
+**Status:** Plan drafted · awaiting CEO `approve Day 1 start`.
+
+---
+
+## 🚚 v2.0.0 DELIVERED (07/04/2026)
+
+**Latest:** PR #36 merged (onboarding 1-pager + FullTest report + hotfix plan). CEO đã được hướng dẫn cách dùng tool cho HC repo (8-bước cheatsheet). Hotfix sprint v2.0.1 plan đã sẵn sàng.
+
+**Hotfix backlog (issues #32–#35):** POST-CM-S3-01 coverage hook · -02 self-build fix · -03 API empty state · -04 `generate --diff` flag. Plan: `project/POST-CM-S3-HOTFIX-PLAN.md`.
+
+**Customer doc:** `docs/ONBOARDING.md` (install · YAML · CLI · CI · mobile).
+**Release:** https://github.com/hypercommerce-vn/codebase-map/releases/tag/v2.0.0
+
+---
+
 ## ✅ CM-S3 (v2.0) Sprint COMPLETE 🎉 — 22/22 SP · 8/8 tasks
 
 | Day | Tasks | SP | PR | Status |
@@ -146,6 +173,7 @@
 | 07/04/2026 | **FullTest Pre-Delivery PASS** — 6 agents (PM/CTO/BA/Tester/Designer/PO), GO FOR DELIVERY, 0 blockers, 4 minor items deferred | PM |
 | 07/04/2026 | **v2.0.0 Released** — Tag pushed, GitHub release published, customer onboarding 1-pager `docs/ONBOARDING.md` | CEO |
 | 07/04/2026 | **POST-CM-S3 Hotfix Sprint scheduled** — 4 issues #32-#35, ~3 SP, target v2.0.1 | PM |
+| 08/04/2026 | **Hotfix v2.0.1 Sprint kickoff plan** — task board `project/CM-HOTFIX-V2.0.1-TASK-BOARD.md` drafted, Day 1/Day 2 split, HC <5% unknown target, awaiting CEO approve Day 1 start | PM |
 
 ---
 
@@ -153,9 +181,9 @@
 
 | Vấn đề | Priority |
 |--------|----------|
-| CM-S3 design HTML (8 mockup sections) — Designer drafting | 🔴 Blocker Day 1 |
-| CM-S3 task board + Day plan | 🔴 Blocker Day 1 |
-| CEO approve CM-S3 design + task board | 🟡 Next |
+| CEO approve hotfix v2.0.1 Day 1 start | 🔴 Blocker |
+| HC layer baseline snapshot trước khi chạy classifier fix | 🟡 Day 1 AM prerequisite |
+| Coverage file format discovery (xml vs json) cho POST-CM-S3-01 | 🟡 Day 2 |
 | Wiki board ở HC repo cần update link repo mới | 🟢 Low |
 
 ---
