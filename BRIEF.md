@@ -101,7 +101,15 @@
 **Task board:** `project/CM-HOTFIX-V2.0.1-TASK-BOARD.md`
 **Source backlog:** `project/POST-CM-S3-HOTFIX-PLAN.md` (issues #32–#35)
 **HC verification:** baseline layer snapshot BEFORE classifier fix, post-fix diff MUST show <5% unknown — else block release.
-**Status:** Plan drafted · awaiting CEO `approve Day 1 start`.
+**Status:** Day 1 COMMITTED · PR #38 in-review · awaiting review-gate + CEO approve.
+
+**Day 1 results (2026-04-08):**
+- PR: https://github.com/hypercommerce-vn/codebase-map/pull/38
+- HC unknown: 173/1565 (11.1%) → 0/1565 (0.00%) ✅ PASS <5% gate
+- Self-build: 154 nodes, 0 unknown ✅
+- Files: TS + Py classifier, HTML exporter API catalog, baseline doc
+- Lint gate: PASS (black + isort + flake8)
+- Next: review-gate (Tester + CTO + Designer) → CEO approve → merge → Day 2 kickoff
 
 ---
 
