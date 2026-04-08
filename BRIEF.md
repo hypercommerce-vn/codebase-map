@@ -96,7 +96,7 @@
 
 **Scope (3 SP + 3 polish · 2 Days · 2 PRs):**
 - **Day 1 → PR #38 ✅ MERGED:** POST-CM-S3-02 (unknown layer classifier, 0.5 SP) + POST-CM-S3-03 (API Catalog empty state, 0.5 SP) — Final 90.20 SHIPIT+NOTE
-- **Day 2 → PR #2 🟡 ACTIVE:** POST-CM-S3-01 (Executive real coverage hook, 1 SP) + POST-CM-S3-04 (`generate --diff` flag, 1 SP) + POLISH-01/02/03 bundled → tag v2.0.1 → release
+- **Day 2 → PR #39 🟡 ACTIVE:** POST-CM-S3-01 (Executive real coverage hook, 1 SP) + POST-CM-S3-04 (`generate --diff` flag, 1 SP) + POLISH-01/02/03 bundled → tag v2.0.1 → release
 
 **Task board:** `project/CM-HOTFIX-V2.0.1-TASK-BOARD.md`
 **Source backlog:** `project/POST-CM-S3-HOTFIX-PLAN.md` (issues #32–#35)
@@ -117,7 +117,8 @@
 - POLISH-03: `aria-hidden="true"` on API Catalog empty-state emoji icon
 - HC re-verify: 1565 nodes · 0 unknown · no regression
 - Lint gate: PASS (black + isort + flake8)
-- Next: push hotfix/v2.0.1-day2 → PR #2 → review-gate Mode 2 → CEO approve → tag v2.0.1 → release
+- PR: https://github.com/hypercommerce-vn/codebase-map/pull/39
+- Next: review-gate Mode 2 → CEO approve → merge → tag v2.0.1 → release
 
 ---
 
