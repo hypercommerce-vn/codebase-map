@@ -1,6 +1,7 @@
 # CM-HOTFIX v2.0.1 — Task Board
 
 **Sprint:** Hotfix v2.0.1
+**Status:** ✅ COMPLETE (closed 2026-04-08)
 **Created:** 2026-04-08
 **Owner:** PM (orchestrator) · Tech Lead (implementer) · Designer (CM-03 visual) · Tester + CTO + Designer (review gate)
 **Approver:** CEO
@@ -53,7 +54,7 @@ Ship `v2.0.1` hotfix release to address 4 post-delivery polish items surfaced by
 **Review report:** `docs/reviews/ReviewGate_PR38_Round1_2026-04-08.md`
 **Polish carried to Day 2:** POLISH-01 (TS hooks precedence) · POLISH-02 (API domain escape) · POLISH-03 (empty-state aria-hidden)
 
-### Day 2 — Coverage Hook + Diff Flag + Polish Bundle → PR #2 → Release — 🟡 ACTIVE (2026-04-08)
+### Day 2 — Coverage Hook + Diff Flag + Polish Bundle → PR #39 → Release — ✅ DONE (2026-04-08)
 
 | Slot | Task | Owner | Output | Status |
 |------|------|-------|--------|--------|
@@ -65,8 +66,8 @@ Ship `v2.0.1` hotfix release to address 4 post-delivery polish items surfaced by
 | PM 2 | POST-CM-S3-04 — Auto-bake `pr_diff.json` in output dir | Tech Lead | Unified 1-command flow verified (26 changed on self-build) | ✅ |
 | PM 3 | Local Pre-flight lint gate | PM | black/isort/flake8 PASS | ✅ |
 | PM 4 | HC regression — no-cache rebuild, verify 1565 nodes/0 unknown | PM | 1565 nodes, 0 unknown confirmed | ✅ |
-| EOD | Push PR #39 → review gate Mode 2 → CEO approve → merge | PM + CEO | [PR #39](https://github.com/hypercommerce-vn/codebase-map/pull/39) opened | 🟡 |
-| Post | Tag `v2.0.1` + GitHub release + notify HC | CEO | — | ⏳ |
+| EOD | Push PR #39 → review gate Mode 2 → CEO approve → merge | PM + CEO | PR #39 MERGED, Final 96.60 SHIPIT | ✅ |
+| Post | Tag `v2.0.1` + GitHub release + notify HC | CEO | tag `v2.0.1` pushed, [release published](https://github.com/hypercommerce-vn/codebase-map/releases/tag/v2.0.1), HC notification draft ready | ✅ |
 
 **Slip buffer:** If Day 2 overflows, POST-CM-S3-01 (coverage hook) ships in v2.0.1 and POST-CM-S3-04 defers to v2.0.2. POST-CM-S3-04 has higher user value — re-sequence if risk emerges at Day 2 AM checkpoint.
 
@@ -168,4 +169,23 @@ Standard 2-tier per Critical Rule #6 (from CM-S3).
 
 ---
 
-*CM-HOTFIX v2.0.1 Task Board · Created by PM · 2026-04-08 · Awaiting CEO kickoff approval*
+## 9. Final Summary — Sprint Closed (08/04/2026)
+
+| Metric | Value |
+|--------|-------|
+| **Status** | ✅ COMPLETE |
+| **Items shipped** | 8 (POST-CM-S3-01/02/03/04 + POLISH-01/02/03 + release) |
+| **Story points** | 3 SP (planned 3 SP) |
+| **Days** | 2 (Day 1 + Day 2) |
+| **PRs** | 2 (PR #38 + PR #39) — both merged |
+| **Day 1 review-gate** | 90.20 SHIPIT+NOTE |
+| **Day 2 review-gate** | 96.60 SHIPIT |
+| **Avg review score** | 93.40 |
+| **HC verify** | unknown 173/1565 (11.1%) → **0/1565 (0.00%)** ✅ exceeded <5% target |
+| **Tag** | `v2.0.1` pushed 08/04/2026 |
+| **Release** | https://github.com/hypercommerce-vn/codebase-map/releases/tag/v2.0.1 |
+| **Downstream unblocked** | KMP M0 docs PR #40 |
+
+---
+
+*CM-HOTFIX v2.0.1 Task Board · Closed by PM · 2026-04-08 · Sprint COMPLETE 🎉*

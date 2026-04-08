@@ -1,15 +1,19 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 1.3 | Cập nhật: 08/04/2026 (Hotfix Day 2 ACTIVE)
+> Version: 1.4 | Cập nhật: 08/04/2026 (v2.0.1 SHIPPED)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
+**v2.0.1 SHIPPED · KMP M0 unblocked · awaiting CEO direction**
+
 | Field | Value |
 |-------|-------|
-| **Version hiện tại** | v2.0.0 ✅ delivered → v2.0.1 hotfix ACTIVE |
-| **Sprint hiện tại** | CM-HOTFIX v2.0.1 — 🔥 ACTIVE · Day 1 ✅ DONE (PR #38 merged) · Day 2 🟡 IN PROGRESS |
+| **Version hiện tại** | v2.0.1 ✅ SHIPPED (08/04/2026) — tag `v2.0.1` pushed, GitHub release published |
+| **Sprint hiện tại** | — (idle, awaiting CEO direction) |
+| **Sprint vừa xong** | CM-HOTFIX v2.0.1 — ✅ CLOSED · Day 1 PR #38 ✅ MERGED · Day 2 PR #39 ✅ MERGED · tag v2.0.1 pushed |
+| **KMP M0** | ✅ UNBLOCKED — PR #40 (docs) ready for content review (was blocked-by hotfix v2.0.1) |
 | **Sprint trước** | CM-S3 (v2.0) — ✅ DELIVERED (22/22 SP, 8/8 tasks, v2.0.0 released) |
 | **Sprint trước nữa** | CM-S2 (v1.2) — ✅ DONE (18/18 SP, 11/11 tasks, 5 feature PRs) |
 | **Sprint đầu tiên** | CM-S1 (v1.1) — ✅ DONE (15/15 SP, 10/10 tasks) |
@@ -90,7 +94,22 @@
 
 ---
 
-## 🔥 Hotfix Sprint v2.0.1 — ACTIVE (Day 2 in progress)
+## ✅ Hotfix Sprint v2.0.1 — CLOSED (08/04/2026)
+
+**Result:** Both PRs merged, tag pushed, GitHub release published, HC verified.
+
+| Day | Tasks | PR | Review Gate | Status |
+|-----|-------|----|-------------|--------|
+| Day 1 | POST-CM-S3-02 (classifier) + POST-CM-S3-03 (API empty state) | [#38](https://github.com/hypercommerce-vn/codebase-map/pull/38) | 90.20 SHIPIT+NOTE | ✅ MERGED |
+| Day 2 | POST-CM-S3-01 (coverage hook) + POST-CM-S3-04 (`generate --diff`) + POLISH-01/02/03 | [#39](https://github.com/hypercommerce-vn/codebase-map/pull/39) | 96.60 SHIPIT | ✅ MERGED |
+
+**Tag:** `v2.0.1` · **Release:** https://github.com/hypercommerce-vn/codebase-map/releases/tag/v2.0.1
+**HC verified:** unknown layer 173/1565 (11.1%) → 0/1565 (0.00%) ✅
+**Total:** 8 items (4 POST + 3 POLISH + release) · 3 SP · 2 Days · 2 PRs
+
+---
+
+## 🗄️ Hotfix Sprint v2.0.1 — Original scope (archive)
 
 **Goal:** Ship `v2.0.1` hotfix release — fix 4 post-delivery polish items + 3 review-gate polish. Priority: real coverage hook + unified `generate --diff` workflow.
 
@@ -193,6 +212,8 @@
 | 08/04/2026 | **Hotfix v2.0.1 Sprint kickoff plan** — task board `project/CM-HOTFIX-V2.0.1-TASK-BOARD.md` drafted, Day 1/Day 2 split, HC <5% unknown target, awaiting CEO approve Day 1 start | PM |
 | 08/04/2026 | **Hotfix Day 1 MERGED** — PR #38 merged, HC unknown 173→0, review Final 90.20 SHIPIT+NOTE. 3 polish items (TS hooks precedence, API domain escape, empty-state aria-hidden) carried into Day 2 | CEO |
 | 08/04/2026 | **Hotfix Day 2 KICKOFF** — POST-CM-S3-01 coverage hook + POST-CM-S3-04 `generate --diff` flag + POLISH-01/02/03 bundled, branch `hotfix/v2.0.1-day2`, PR #2 in-progress | PM |
+| 08/04/2026 | **Hotfix Day 2 MERGED** — PR #39 merged, review gate Final 96.60 SHIPIT | CEO |
+| 08/04/2026 | **v2.0.1 SHIPPED** — tag `v2.0.1` pushed, GitHub release published, KMP M0 unblocked | CEO |
 
 ---
 
@@ -200,8 +221,7 @@
 
 | Vấn đề | Priority |
 |--------|----------|
-| Day 2 PR #2 review-gate Mode 2 + CEO approve | 🔴 Blocker |
-| Tag v2.0.1 + GitHub release sau merge | 🟡 After Day 2 |
+| KMP PR #40 (docs M0) — content review (now unblocked) | 🟡 Next |
 | Wiki board ở HC repo cần update link repo mới | 🟢 Low |
 
 ---
