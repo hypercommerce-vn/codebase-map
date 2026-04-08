@@ -351,22 +351,120 @@ class TypeScriptParser(BaseParser):
                 return known
         return base_module or "core"
 
+    # HC-AI | ticket: CM-HOTFIX-V2.0.1 (POST-CM-S3-02)
     def _infer_layer(self, file_path: Path) -> LayerType:
+        """Infer layer for a TS/JS file.
+
+        POST-CM-S3-02: broadened to handle React frontend conventions so
+        that typical page/component/hook files no longer fall through to
+        UNKNOWN. HC baseline had 171/173 unknowns from React code — this
+        maps them to the closest existing layer.
+        """
         s = file_path.as_posix().lower()
-        if "/test" in s or s.endswith(".test.ts") or s.endswith(".spec.ts"):
+        fname = s.rsplit("/", 1)[-1] if "/" in s else s
+
+        # Tests first (most specific)
+        if (
+            "/test" in s
+            or "/__tests__" in s
+            or s.endswith(".test.ts")
+            or s.endswith(".test.tsx")
+            or s.endswith(".spec.ts")
+            or s.endswith(".spec.tsx")
+        ):
             return LayerType.TEST
-        if "controller" in s or "/routes" in s or "/router" in s:
+
+        # Router: NestJS/Express controllers + React pages (UI routing)
+        if (
+            "controller" in fname
+            or "/routes" in s
+            or "/router" in s
+            or "/pages/" in s
+            or fname.endswith("page.tsx")
+            or fname.endswith("page.jsx")
+            or fname.endswith("page.ts")
+            or fname.endswith("route.ts")
+            or fname.endswith("route.tsx")
+        ):
             return LayerType.ROUTER
-        if "service" in s:
-            return LayerType.SERVICE
-        if "repository" in s or "/repo" in s:
+
+        # Repository
+        if "repository" in fname or "/repositories/" in s or "/repo/" in s:
             return LayerType.REPOSITORY
-        if "model" in s or "entity" in s or "schema" in s:
+
+        # Schema — Zod / DTO / validation
+        if (
+            "schema" in fname
+            or "/schemas/" in s
+            or "/dto/" in s
+            or fname.endswith(".dto.ts")
+        ):
+            return LayerType.SCHEMA
+
+        # Model / entity — ORM layer
+        if (
+            "/models/" in s
+            or "/entities/" in s
+            or fname == "model.ts"
+            or fname == "models.ts"
+            or fname.endswith(".entity.ts")
+            or fname.endswith(".model.ts")
+        ):
             return LayerType.MODEL
-        if "worker" in s or "queue" in s or "job" in s:
+
+        # Worker — background jobs / queues
+        if (
+            "/workers/" in s
+            or "/jobs/" in s
+            or "/queue" in s
+            or fname.endswith(".worker.ts")
+            or fname.endswith(".job.ts")
+        ):
             return LayerType.WORKER
-        if "util" in s or "helper" in s:
+
+        # Service: business logic, API clients, state stores, hooks
+        if (
+            "service" in fname
+            or "/services/" in s
+            or "/api/" in s
+            or "/hooks/" in s
+            or fname.startswith("use")
+            and (fname.endswith(".ts") or fname.endswith(".tsx"))
+            or "/store/" in s
+            or "/stores/" in s
+            or fname.endswith(".slice.ts")
+            or fname.endswith(".client.ts")
+            or fname == "client.ts"
+        ):
+            return LayerType.SERVICE
+
+        # Util: shared UI components, helpers, modals, dialogs, utils
+        if (
+            "util" in s
+            or "helper" in s
+            or "/components/" in s
+            or "/shared/" in s
+            or "/widgets/" in s
+            or "/common/" in s
+            or fname.endswith("modal.tsx")
+            or fname.endswith("dialog.tsx")
+            or fname.endswith("drawer.tsx")
+            or fname.endswith("dashboard.tsx")
+        ):
             return LayerType.UTIL
+
+        # Core
+        if "/core/" in s or "/config" in s or "/constants" in s:
+            return LayerType.CORE
+
+        # Fallback: React .tsx/.jsx files → UTIL (UI component),
+        # plain .ts/.js → SERVICE (business logic default).
+        # Better than UNKNOWN; keeps graph actionable.
+        if fname.endswith(".tsx") or fname.endswith(".jsx"):
+            return LayerType.UTIL
+        if fname.endswith(".ts") or fname.endswith(".js"):
+            return LayerType.SERVICE
+
         return LayerType.UNKNOWN
 
     def _classify_func(self, decorators: list[str]) -> NodeType:

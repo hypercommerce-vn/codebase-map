@@ -240,6 +240,23 @@ body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
 .class-children {{ display: none; }}
 .class-children.open {{ display: block; }}
 
+/* HC-AI | ticket: CM-HOTFIX-V2.0.1 (POST-CM-S3-03) — API Catalog empty & list */
+.api-catalog-wrap {{ padding: 24px 32px; max-width: 960px; }}
+.api-catalog-wrap h2 {{ margin: 0 0 4px 0; font-size: 20px; }}
+.api-catalog-wrap .subtitle {{ color: var(--text-muted); font-size: 12px; margin-bottom: 18px; }}
+.api-empty {{
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 48px 24px; border: 1px dashed var(--border); border-radius: 10px;
+  background: var(--bg-secondary); color: var(--text-secondary); text-align: center;
+}}
+.api-empty .es-icon {{ font-size: 40px; margin-bottom: 10px; opacity: .55; }}
+.api-empty .es-title {{ font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }}
+.api-empty .es-hint {{ font-size: 12px; line-height: 1.6; max-width: 480px; }}
+.api-empty code {{ background: var(--bg-tertiary); padding: 1px 5px; border-radius: 3px; font-size: 11px; }}
+.api-domain {{ margin-bottom: 18px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }}
+.api-domain .hdr {{ padding: 8px 12px; background: var(--bg-tertiary); font-weight: 600; font-size: 12px; display: flex; justify-content: space-between; }}
+.api-domain .route {{ padding: 6px 12px; font-size: 12px; border-top: 1px solid var(--border); font-family: ui-monospace, monospace; color: var(--text-secondary); }}
+
 /* CM-S1-09: Empty state */
 .empty-state {{
   text-align: center; padding: 32px 16px;
@@ -609,11 +626,12 @@ svg {{ width: 100%; height: 100%; }}
         <div class="exec-grid" id="exec-grid"></div>
       </div>
     </div>
+    <!-- HC-AI | ticket: CM-HOTFIX-V2.0.1 (POST-CM-S3-03) -->
     <div class="view-panel" data-view="api">
-      <div class="view-placeholder">
+      <div class="api-catalog-wrap" id="api-catalog-wrap">
         <h2>&#x1f50c; API Catalog</h2>
-        <p>Routes grouped by domain. Coming in CM-S3 Day 3+.</p>
-        <p><code>#view=api</code></p>
+        <div class="subtitle">HTTP routes grouped by domain. Source: nodes with <code>type === "route"</code>.</div>
+        <div id="api-catalog-host"></div>
       </div>
     </div>
     <!-- CM-S3-03: PR Diff view -->
@@ -680,6 +698,46 @@ const routeCount = nodes.filter(n => n.type === 'route').length;
 document.getElementById('tab-count-graph').textContent = nodes.length.toLocaleString();
 document.getElementById('tab-count-exec').textContent = domainCount;
 document.getElementById('tab-count-api').textContent = routeCount.toLocaleString();
+
+// HC-AI | ticket: CM-HOTFIX-V2.0.1 (POST-CM-S3-03)
+// Render API Catalog view. When no routes detected (common for Python-only
+// scripts / library-style repos / frontend-only projects), show a friendly
+// empty state that explains *why* and hints at config tweaks.
+function renderApiCatalog() {{
+  const host = document.getElementById('api-catalog-host');
+  if (!host) return;
+  const routes = nodes.filter(n => n.type === 'route');
+  if (routes.length === 0) {{
+    host.innerHTML = `
+      <div class="api-empty" role="status">
+        <div class="es-icon">&#x1f50c;</div>
+        <div class="es-title">No HTTP routes detected in this project</div>
+        <div class="es-hint">
+          Codebase Map found <strong>${{nodes.length.toLocaleString()}}</strong> nodes but none are tagged as routes.
+          This is expected for Python library / CLI / worker repos, or if route decorators live outside the scanned paths.<br><br>
+          Tips: make sure your <code>codebase-map.yaml</code> <code>include</code> list covers your router/controller directories,
+          and that your framework's route decorators (FastAPI <code>@router.get</code>, NestJS <code>@Controller</code>, Express <code>app.get</code>) match the parser.<br><br>
+          See <code>docs/ONBOARDING.md</code> for configuration examples.
+        </div>
+      </div>`;
+    return;
+  }}
+  // Group by domain
+  const byDomain = {{}};
+  for (const r of routes) {{
+    const d = r.domain || 'core';
+    (byDomain[d] = byDomain[d] || []).push(r);
+  }}
+  const parts = [];
+  for (const d of Object.keys(byDomain).sort()) {{
+    const list = byDomain[d];
+    parts.push(`<div class="api-domain"><div class="hdr"><span>${{d}}</span><span>${{list.length}} routes</span></div>` +
+      list.map(r => `<div class="route">${{(r.name || r.id || '').replace(/</g,'&lt;')}}</div>`).join('') +
+      `</div>`);
+  }}
+  host.innerHTML = parts.join('');
+}}
+renderApiCatalog();
 
 function parseHash() {{
   const h = window.location.hash.replace(/^#/, '');
