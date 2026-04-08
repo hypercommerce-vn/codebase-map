@@ -422,14 +422,19 @@ class TypeScriptParser(BaseParser):
         ):
             return LayerType.WORKER
 
-        # Service: business logic, API clients, state stores, hooks
+        # HC-AI | ticket: CM-HOTFIX-V2.0.1 (POLISH-01)
+        # Service: business logic, API clients, state stores, hooks.
+        # Explicit parentheses around the "useXxx" hook rule to keep
+        # `and`/`or` precedence unambiguous (flagged in PR #38 review).
         if (
             "service" in fname
             or "/services/" in s
             or "/api/" in s
             or "/hooks/" in s
-            or fname.startswith("use")
-            and (fname.endswith(".ts") or fname.endswith(".tsx"))
+            or (
+                fname.startswith("use")
+                and (fname.endswith(".ts") or fname.endswith(".tsx"))
+            )
             or "/store/" in s
             or "/stores/" in s
             or fname.endswith(".slice.ts")
