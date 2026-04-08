@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 1.2 | Cập nhật: 06/04/2026
+> Version: 1.3 | Cập nhật: 08/04/2026 (Hotfix Day 2 ACTIVE)
 
 ---
 
@@ -9,7 +9,7 @@
 | Field | Value |
 |-------|-------|
 | **Version hiện tại** | v2.0.0 ✅ delivered → v2.0.1 hotfix ACTIVE |
-| **Sprint hiện tại** | CM-HOTFIX v2.0.1 — 🔥 ACTIVE · Day 1 ready to kickoff (awaiting CEO approve) |
+| **Sprint hiện tại** | CM-HOTFIX v2.0.1 — 🔥 ACTIVE · Day 1 ✅ DONE (PR #38 merged) · Day 2 🟡 IN PROGRESS |
 | **Sprint trước** | CM-S3 (v2.0) — ✅ DELIVERED (22/22 SP, 8/8 tasks, v2.0.0 released) |
 | **Sprint trước nữa** | CM-S2 (v1.2) — ✅ DONE (18/18 SP, 11/11 tasks, 5 feature PRs) |
 | **Sprint đầu tiên** | CM-S1 (v1.1) — ✅ DONE (15/15 SP, 10/10 tasks) |
@@ -90,26 +90,34 @@
 
 ---
 
-## 🔥 Hotfix Sprint v2.0.1 — ACTIVE (Day 1 ready)
+## 🔥 Hotfix Sprint v2.0.1 — ACTIVE (Day 2 in progress)
 
-**Goal:** Ship `v2.0.1` hotfix release — fix 4 post-delivery polish items. Priority: reduce HC unknown-layer ratio from ~11% (173/1565) to **<5%**, and eliminate manual 2-step PR Diff bake.
+**Goal:** Ship `v2.0.1` hotfix release — fix 4 post-delivery polish items + 3 review-gate polish. Priority: real coverage hook + unified `generate --diff` workflow.
 
-**Scope (3 SP · 2 Days · 2 PRs):**
-- **Day 1 → PR #1:** POST-CM-S3-02 (unknown layer classifier, 0.5 SP) + POST-CM-S3-03 (API Catalog empty state, 0.5 SP)
-- **Day 2 → PR #2:** POST-CM-S3-01 (Executive real coverage hook, 1 SP) + POST-CM-S3-04 (`generate --diff` flag, 1 SP) → tag v2.0.1 → release
+**Scope (3 SP + 3 polish · 2 Days · 2 PRs):**
+- **Day 1 → PR #38 ✅ MERGED:** POST-CM-S3-02 (unknown layer classifier, 0.5 SP) + POST-CM-S3-03 (API Catalog empty state, 0.5 SP) — Final 90.20 SHIPIT+NOTE
+- **Day 2 → PR #2 🟡 ACTIVE:** POST-CM-S3-01 (Executive real coverage hook, 1 SP) + POST-CM-S3-04 (`generate --diff` flag, 1 SP) + POLISH-01/02/03 bundled → tag v2.0.1 → release
 
 **Task board:** `project/CM-HOTFIX-V2.0.1-TASK-BOARD.md`
 **Source backlog:** `project/POST-CM-S3-HOTFIX-PLAN.md` (issues #32–#35)
-**HC verification:** baseline layer snapshot BEFORE classifier fix, post-fix diff MUST show <5% unknown — else block release.
-**Status:** Day 1 COMMITTED · PR #38 in-review · awaiting review-gate + CEO approve.
+**Day 1 review:** `docs/reviews/ReviewGate_PR38_Round1_2026-04-08.md` (Final 90.20)
 
-**Day 1 results (2026-04-08):**
-- PR: https://github.com/hypercommerce-vn/codebase-map/pull/38
+**Day 1 results (2026-04-08) — ✅ DONE:**
+- PR: https://github.com/hypercommerce-vn/codebase-map/pull/38 (MERGED)
 - HC unknown: 173/1565 (11.1%) → 0/1565 (0.00%) ✅ PASS <5% gate
 - Self-build: 154 nodes, 0 unknown ✅
 - Files: TS + Py classifier, HTML exporter API catalog, baseline doc
+- Review gate Final: 90.20 SHIPIT+NOTE → 3 polish items carried into Day 2
+
+**Day 2 scope (2026-04-08) — 🟡 ACTIVE:**
+- POST-CM-S3-01: Real coverage hooked into Executive health bar (aggregates `metadata.coverage.percent` per domain; falls back to layer-diversity proxy when no coverage data)
+- POST-CM-S3-04: `generate --diff <ref>` flag bakes `pr_diff.json` in one command
+- POLISH-01: TS parser hooks rule — explicit parentheses for `and`/`or` precedence
+- POLISH-02: API domain header HTML-escaped via new `htmlEscape()` helper
+- POLISH-03: `aria-hidden="true"` on API Catalog empty-state emoji icon
+- HC re-verify: 1565 nodes · 0 unknown · no regression
 - Lint gate: PASS (black + isort + flake8)
-- Next: review-gate (Tester + CTO + Designer) → CEO approve → merge → Day 2 kickoff
+- Next: push hotfix/v2.0.1-day2 → PR #2 → review-gate Mode 2 → CEO approve → tag v2.0.1 → release
 
 ---
 
@@ -182,6 +190,8 @@
 | 07/04/2026 | **v2.0.0 Released** — Tag pushed, GitHub release published, customer onboarding 1-pager `docs/ONBOARDING.md` | CEO |
 | 07/04/2026 | **POST-CM-S3 Hotfix Sprint scheduled** — 4 issues #32-#35, ~3 SP, target v2.0.1 | PM |
 | 08/04/2026 | **Hotfix v2.0.1 Sprint kickoff plan** — task board `project/CM-HOTFIX-V2.0.1-TASK-BOARD.md` drafted, Day 1/Day 2 split, HC <5% unknown target, awaiting CEO approve Day 1 start | PM |
+| 08/04/2026 | **Hotfix Day 1 MERGED** — PR #38 merged, HC unknown 173→0, review Final 90.20 SHIPIT+NOTE. 3 polish items (TS hooks precedence, API domain escape, empty-state aria-hidden) carried into Day 2 | CEO |
+| 08/04/2026 | **Hotfix Day 2 KICKOFF** — POST-CM-S3-01 coverage hook + POST-CM-S3-04 `generate --diff` flag + POLISH-01/02/03 bundled, branch `hotfix/v2.0.1-day2`, PR #2 in-progress | PM |
 
 ---
 
@@ -189,9 +199,8 @@
 
 | Vấn đề | Priority |
 |--------|----------|
-| CEO approve hotfix v2.0.1 Day 1 start | 🔴 Blocker |
-| HC layer baseline snapshot trước khi chạy classifier fix | 🟡 Day 1 AM prerequisite |
-| Coverage file format discovery (xml vs json) cho POST-CM-S3-01 | 🟡 Day 2 |
+| Day 2 PR #2 review-gate Mode 2 + CEO approve | 🔴 Blocker |
+| Tag v2.0.1 + GitHub release sau merge | 🟡 After Day 2 |
 | Wiki board ở HC repo cần update link repo mới | 🟢 Low |
 
 ---

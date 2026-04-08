@@ -47,18 +47,26 @@ Ship `v2.0.1` hotfix release to address 4 post-delivery polish items surfaced by
 | PM 1 | POST-CM-S3-03 — API Catalog empty state copy + icon | Designer | Copy + icon + dashed card | ✅ |
 | PM 2 | POST-CM-S3-03 — TL implement in HTML exporter | Tech Lead | `renderApiCatalog()` + CSS | ✅ |
 | PM 3 | Local Pre-flight lint gate | PM | black/isort/flake8 PASS | ✅ |
-| EOD | Push PR #1 → Review gate → CEO approve | PM + CEO | PR #1 pushed, awaiting review | ⏳ |
+| EOD | Push PR #38 → Review gate → CEO approve → merge | PM + CEO | PR #38 merged, Final 90.20 SHIPIT+NOTE | ✅ |
 
-### Day 2 — Coverage Hook + Diff Flag → PR #2 → Release
+**PR #38:** https://github.com/hypercommerce-vn/codebase-map/pull/38 (MERGED 2026-04-08)
+**Review report:** `docs/reviews/ReviewGate_PR38_Round1_2026-04-08.md`
+**Polish carried to Day 2:** POLISH-01 (TS hooks precedence) · POLISH-02 (API domain escape) · POLISH-03 (empty-state aria-hidden)
 
-| Slot | Task | Owner | Output |
-|------|------|-------|--------|
-| AM 1 | POST-CM-S3-01 — Load real coverage from cache | Tech Lead | Coverage loader |
-| AM 2 | POST-CM-S3-01 — Wire into Executive health bar | Tech Lead | Updated executive view |
-| PM 1 | POST-CM-S3-04 — Add `--diff <ref>` CLI flag | Tech Lead | CLI arg + wiring |
-| PM 2 | POST-CM-S3-04 — Auto-bake `pr_diff.json` during generate | Tech Lead | Unified 1-command flow |
-| PM 3 | Local Pre-flight + Mode 2 Remote Full | PM + review gate | Review report |
-| EOD | PR #2 merged → tag `v2.0.1` → GitHub release → notify HC | CEO | Release published |
+### Day 2 — Coverage Hook + Diff Flag + Polish Bundle → PR #2 → Release — 🟡 ACTIVE (2026-04-08)
+
+| Slot | Task | Owner | Output | Status |
+|------|------|-------|--------|--------|
+| AM 1 | POLISH-01 — TS hooks `and`/`or` precedence parentheses | Tech Lead | Explicit parens in `typescript_parser.py` | ✅ |
+| AM 2 | POLISH-02 — HTML-escape API domain header | Tech Lead | `htmlEscape()` helper + usage | ✅ |
+| AM 3 | POLISH-03 — `aria-hidden="true"` on empty-state emoji | Tech Lead | `html_exporter.py` a11y fix | ✅ |
+| AM 4 | POST-CM-S3-01 — Real coverage aggregation + Executive health bar | Tech Lead | Prefers `metadata.coverage.percent`, proxy fallback | ✅ |
+| PM 1 | POST-CM-S3-04 — `generate --diff <ref>` CLI flag | Tech Lead | `--diff` + `--diff-depth` args | ✅ |
+| PM 2 | POST-CM-S3-04 — Auto-bake `pr_diff.json` in output dir | Tech Lead | Unified 1-command flow verified (26 changed on self-build) | ✅ |
+| PM 3 | Local Pre-flight lint gate | PM | black/isort/flake8 PASS | ✅ |
+| PM 4 | HC regression — no-cache rebuild, verify 1565 nodes/0 unknown | PM | 1565 nodes, 0 unknown confirmed | ✅ |
+| EOD | Push PR #2 → review gate Mode 2 → CEO approve → merge | PM + CEO | PR #2 opened | 🟡 |
+| Post | Tag `v2.0.1` + GitHub release + notify HC | CEO | — | ⏳ |
 
 **Slip buffer:** If Day 2 overflows, POST-CM-S3-01 (coverage hook) ships in v2.0.1 and POST-CM-S3-04 defers to v2.0.2. POST-CM-S3-04 has higher user value — re-sequence if risk emerges at Day 2 AM checkpoint.
 
