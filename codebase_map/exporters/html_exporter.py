@@ -699,6 +699,20 @@ document.getElementById('tab-count-graph').textContent = nodes.length.toLocaleSt
 document.getElementById('tab-count-exec').textContent = domainCount;
 document.getElementById('tab-count-api').textContent = routeCount.toLocaleString();
 
+// HC-AI | ticket: CM-HOTFIX-V2.0.1 (POLISH-02)
+// Minimal HTML escaper used to sanitize domain/route labels before
+// embedding in API Catalog markup. Domains come from a controlled
+// classifier set today, but we escape defensively to prevent any
+// future source from injecting markup into the header.
+function htmlEscape(s) {{
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}}
+
 // HC-AI | ticket: CM-HOTFIX-V2.0.1 (POST-CM-S3-03)
 // Render API Catalog view. When no routes detected (common for Python-only
 // scripts / library-style repos / frontend-only projects), show a friendly
@@ -710,7 +724,7 @@ function renderApiCatalog() {{
   if (routes.length === 0) {{
     host.innerHTML = `
       <div class="api-empty" role="status">
-        <div class="es-icon">&#x1f50c;</div>
+        <div class="es-icon" aria-hidden="true">&#x1f50c;</div>
         <div class="es-title">No HTTP routes detected in this project</div>
         <div class="es-hint">
           Codebase Map found <strong>${{nodes.length.toLocaleString()}}</strong> nodes but none are tagged as routes.
@@ -731,8 +745,8 @@ function renderApiCatalog() {{
   const parts = [];
   for (const d of Object.keys(byDomain).sort()) {{
     const list = byDomain[d];
-    parts.push(`<div class="api-domain"><div class="hdr"><span>${{d}}</span><span>${{list.length}} routes</span></div>` +
-      list.map(r => `<div class="route">${{(r.name || r.id || '').replace(/</g,'&lt;')}}</div>`).join('') +
+    parts.push(`<div class="api-domain"><div class="hdr"><span>${{htmlEscape(d)}}</span><span>${{list.length}} routes</span></div>` +
+      list.map(r => `<div class="route">${{htmlEscape(r.name || r.id || '')}}</div>`).join('') +
       `</div>`);
   }}
   host.innerHTML = parts.join('');
@@ -848,35 +862,63 @@ document.addEventListener('keydown', (e) => {{
 }});
 
 // HC-AI | ticket: FDD-TOOL-CODEMAP
-// CM-S3-02: Executive view — domain health dashboard
+// HC-AI | ticket: CM-HOTFIX-V2.0.1 (POST-CM-S3-01)
+// CM-S3-02: Executive view — domain health dashboard.
+// Health bar now prefers REAL coverage (from `codebase-map coverage` baked
+// into `metadata.coverage` on each node); falls back to layer-diversity
+// proxy only when no node in the graph carries coverage data.
 function renderExecutiveView() {{
   const grid = document.getElementById('exec-grid');
   if (!grid) return;
+  // Detect if any node has real coverage data
+  const hasCoverage = nodes.some(n => n.metadata && n.metadata.coverage
+    && typeof n.metadata.coverage.percent === 'number');
   // Aggregate per domain
   const byDomain = {{}};
   nodes.forEach(n => {{
     const d = n.domain || 'unknown';
     if (!byDomain[d]) {{
-      byDomain[d] = {{ name: d, nodes: 0, routes: 0, classes: 0, methods: 0, layers: new Set() }};
+      byDomain[d] = {{
+        name: d, nodes: 0, routes: 0, classes: 0, methods: 0,
+        layers: new Set(),
+        covSum: 0, covCount: 0,
+      }};
     }}
     byDomain[d].nodes++;
     if (n.type === 'route') byDomain[d].routes++;
     if (n.type === 'class') byDomain[d].classes++;
     if (n.type === 'method') byDomain[d].methods++;
     byDomain[d].layers.add(n.layer);
+    const cov = n.metadata && n.metadata.coverage;
+    if (cov && typeof cov.percent === 'number') {{
+      byDomain[d].covSum += cov.percent;
+      byDomain[d].covCount++;
+    }}
   }});
   const sorted = Object.values(byDomain).sort((a, b) => b.nodes - a.nodes);
   grid.innerHTML = sorted.map(d => {{
     const color = DOMAIN_COLORS[d.name] || '#8b949e';
-    // Health proxy: layer diversity (more layers = better separation of concerns)
     const layerCount = d.layers.size;
-    const healthPct = Math.min(100, layerCount * 14);
+    let healthPct, healthLabel, healthTitle;
+    if (hasCoverage && d.covCount > 0) {{
+      healthPct = Math.round(d.covSum / d.covCount);
+      healthLabel = 'Test coverage';
+      healthTitle = `Real coverage from pytest-cov: ${{d.covCount}}/${{d.nodes}} nodes covered`;
+    }} else {{
+      // Fallback: layer-diversity proxy (v2.0 behaviour)
+      healthPct = Math.min(100, layerCount * 14);
+      healthLabel = hasCoverage ? 'Layer diversity (no cov data)' : 'Layer diversity';
+      healthTitle = 'Proxy metric — run `codebase-map coverage` for real test-coverage health';
+    }}
     let healthColor = '#3fb950';
     if (healthPct < 40) healthColor = '#f85149';
     else if (healthPct < 70) healthColor = '#d29922';
+    const rightLabel = (hasCoverage && d.covCount > 0)
+      ? `${{healthPct}}%`
+      : `${{layerCount}} layers`;
     return `
-      <div class="exec-card" style="border-color:${{color}}" data-domain="${{d.name}}">
-        <h3><span class="dot" style="background:${{color}}"></span>${{d.name}}</h3>
+      <div class="exec-card" style="border-color:${{color}}" data-domain="${{htmlEscape(d.name)}}" title="${{htmlEscape(healthTitle)}}">
+        <h3><span class="dot" style="background:${{color}}"></span>${{htmlEscape(d.name)}}</h3>
         <div class="stats">
           <span>&#x1f4cd; ${{d.nodes}} nodes</span>
           <span>&#x1f50c; ${{d.routes}} routes</span>
@@ -884,7 +926,7 @@ function renderExecutiveView() {{
           <span>&#x192; ${{d.methods}} fn</span>
         </div>
         <div class="health-bar"><div class="health-fill" style="width:${{healthPct}}%;background:${{healthColor}}"></div></div>
-        <div class="health-label"><span>Layer diversity</span><span>${{layerCount}} layers</span></div>
+        <div class="health-label"><span>${{healthLabel}}</span><span>${{rightLabel}}</span></div>
       </div>
     `;
   }}).join('');

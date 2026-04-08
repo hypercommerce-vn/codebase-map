@@ -35,6 +35,26 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Disable incremental cache, force full re-parse",
     )
+    # HC-AI | ticket: CM-HOTFIX-V2.0.1 (POST-CM-S3-04)
+    # Unified one-command flow: after generating graph.json, also emit
+    # pr_diff.json vs the given git ref so the HTML PR Diff view is baked
+    # in automatically. Previously required a separate `codebase-map diff`
+    # invocation piped into pr_diff.json.
+    gen.add_argument(
+        "--diff",
+        default="",
+        metavar="REF",
+        help=(
+            "Also bake a PR Diff view against this git ref (e.g. 'main'). "
+            "Writes pr_diff.json next to graph.json and auto-loads it in HTML."
+        ),
+    )
+    gen.add_argument(
+        "--diff-depth",
+        type=int,
+        default=3,
+        help="Impact analysis depth for --diff (default: 3)",
+    )
 
     # query
     q = sub.add_parser("query", help="Query a function/class by name")
@@ -243,6 +263,31 @@ def _cmd_generate(args: argparse.Namespace) -> int:
 
     if "json" in config.output.formats:
         export_json(graph, output_dir / "graph.json")
+
+    # HC-AI | ticket: CM-HOTFIX-V2.0.1 (POST-CM-S3-04)
+    # When --diff <ref> is supplied, run the diff analyzer now and write
+    # pr_diff.json into the output dir. export_html() will auto-bake it
+    # into the PR Diff view on the next line, so users get a single-command
+    # workflow instead of the previous 2-step dance.
+    diff_ref = getattr(args, "diff", "") or ""
+    if diff_ref:
+        try:
+            from codebase_map.graph.diff import DiffAnalyzer
+
+            analyzer = DiffAnalyzer(graph, project_root=config.project_root)
+            diff_result = analyzer.analyze(
+                ref=diff_ref, depth=getattr(args, "diff_depth", 3)
+            )
+            diff_path = output_dir / "pr_diff.json"
+            diff_path.write_text(diff_result.to_json(indent=2), encoding="utf-8")
+            print(
+                f"[OK] PR Diff baked: {diff_path} "
+                f"(vs {diff_ref} — {len(diff_result.changed_nodes)} changed, "
+                f"{len(diff_result.impacted_nodes)} impacted)"
+            )
+        except Exception as exc:  # noqa: BLE001
+            print(f"[WARN] --diff {diff_ref} failed: {exc}")
+            print("       HTML will render without PR Diff view.")
 
     if "html" in config.output.formats:
         export_html(graph, output_dir / "index.html")
