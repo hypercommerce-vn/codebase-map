@@ -17,7 +17,7 @@ Build KMP Core skeleton (abstract base + runtime + CI gate) + Hello vertical (50
 | Field | Value |
 |-------|-------|
 | **Sprint code** | CM-MEM-M0 |
-| **Status** | 🔥 **ACTIVE** — Day 1 ✅ MERGED (PR #44) · Day 2 ✅ MERGED (PR #45, 99/100) · Day 3 🟡 IN REVIEW · 6.5/8 SP (81%) · 09/04/2026 |
+| **Status** | 🔥 **ACTIVE** — Day 1 ✅ (PR #44, 99) · Day 2 ✅ (PR #45, 99) · Day 3 ✅ (PR #47, 100) · Day 4 🟢 READY · 6.5/8 SP (81%) · 09/04/2026 |
 | **Start date** | 2026-04-09 (Day 1, T4) — pending CEO "Approve Day 1 start" |
 | **Target end** | 2026-04-15 (Day 5, T3) — 5 working days, nghỉ T7-CN |
 | **Duration** | 1 tuần |
@@ -36,8 +36,8 @@ Build KMP Core skeleton (abstract base + runtime + CI gate) + Hello vertical (50
 | 1 | KMP-M0-01 | Tạo package `knowledge_memory/core/` skeleton (mọi `__init__.py`, abstract base files rỗng) | 1 | D1 | ✅ Done (PR #44) | `python -c "import knowledge_memory.core"` pass |
 | 2 | KMP-M0-02 | Implement `BaseVault`, `BaseLearner`, `BaseParser`, `Pattern`, `Evidence` dataclass | 2 | D1-2 | ✅ Done (PR #44 + PR #45) | mypy strict pass; type hints đầy đủ |
 | 3 | KMP-M0-03 | Implement `core/learners/runtime.py` orchestrator | 1 | D2 | ✅ Done (PR #45, 99/100) | Unit test với mock learner pass (12 new tests) |
-| 4 | KMP-M0-04 | Setup import-linter CI rule (Core ↛ Vertical) | 0.5 | D3 | 🟡 In Review | `.importlinter` config + CI step; lint-imports PASS clean, FAIL on deliberate violation |
-| 5 | KMP-M0-05 | Build `verticals/hello/` reference ≤ 50 LOC + `verticals/hello/README.md` | 1 | D3-4 | 🟡 In Progress (D3 skeleton) | HelloLearner + HelloParser done; 15 tests green; README + e2e Day 4 |
+| 4 | KMP-M0-04 | Setup import-linter CI rule (Core ↛ Vertical) | 0.5 | D3 | ✅ Done (PR #47) | `.importlinter` config + CI step; lint-imports PASS clean, FAIL on deliberate violation |
+| 5 | KMP-M0-05 | Build `verticals/hello/` reference ≤ 50 LOC + `verticals/hello/README.md` | 1 | D3-4 | 🟡 D3 ✅ (PR #47), D4 pending | HelloLearner + HelloParser done; 15 tests green; README + e2e Day 4 |
 | 6 | **KMP-M0-07** *(CEO add)* | Viết `docs/vault-format-spec.md` (≤ 5 trang) — public spec | 1 | D4 | ⏳ Todo | Đủ để dev ngoài tự build vault tương thích |
 | 7 | **KMP-M0-08** *(CEO add)* | Add `LICENSE` (MIT) root + `LICENSE-PRO` template + CI lint check | 0.5 | D5 | ⏳ Todo | CI fail nếu thiếu LICENSE |
 | 8 | KMP-M0-06 | CTO architecture review + sign-off | 0.5 | D5 | ⏳ Todo | Review ≤ 1 ngày, ≥ 15/20 điểm |

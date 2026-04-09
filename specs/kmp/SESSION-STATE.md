@@ -1,5 +1,5 @@
 # SESSION-STATE.md — KMP Pivot Execution
-> Version: 4.0 | Cập nhật: 09/04/2026 (post-PR #47 merge) | Owner: @PM
+> Version: 4.1 | Cập nhật: 09/04/2026 (post-PR #49 merge — repo PRIVATE) | Owner: @PM
 
 ---
 
@@ -94,6 +94,7 @@
 - **Design files location:** `design-preview/kmp-*.html` (approved PR #42)
 - **Ground truth for abstraction:** `specs/kmp/architecture.md` — always reconcile new code against it
 - **PR review scores:** Day 1: 99, Day 2: 99, Day 3: **100** — maintain bar
+- **Repo visibility:** PRIVATE (changed 09/04, PR #49 merged — SSH install URLs)
 - **Commit tag convention:** `# HC-AI | ticket: KMP-M0-XX` on AI-generated blocks
 - **Lint gate:** `black --check . && isort --check . && flake8` + `lint-imports` (import-linter)
 - **Datetime rule:** always use `datetime.now(timezone.utc)` (never `utcnow()`) — enforced Day 2
@@ -109,4 +110,4 @@
 
 ---
 
-*SESSION-STATE.md v4.0 — KMP M0 Day 3 MERGED · @PM · 09/04/2026*
+*SESSION-STATE.md v4.1 — KMP M0 Day 3 MERGED · Repo PRIVATE · @PM · 09/04/2026*
