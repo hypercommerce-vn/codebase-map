@@ -26,7 +26,7 @@ dev = [
 codebase-map = "codebase_map.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["codebase_map*"]
+include = ["codebase_map*", "knowledge_memory*"]
 
 [tool.black]
 target-version = ["py310"]
