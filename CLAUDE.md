@@ -32,11 +32,11 @@ Gắn vào bất kỳ Python/TypeScript project nào qua YAML config.
 
 | Field | Value |
 |-------|-------|
-| **Repo** | https://github.com/hypercommerce-vn/codebase-map |
+| **Repo** | https://github.com/hypercommerce-vn/codebase-map (**PRIVATE**) |
 | **Parent project** | Hyper Commerce (HC) — nhưng repo độc lập |
 | **HC config** | `codebase-map.yaml` trong HC repo root |
 | **Tech** | Python 3.10+ · AST · D3.js (bundled) · PyYAML |
-| **Install** | `pip install git+https://github.com/hypercommerce-vn/codebase-map.git` |
+| **Install** | `pipx install "git+ssh://git@github.com/hypercommerce-vn/codebase-map.git"` (private — cần SSH key hoặc PAT) |
 
 ---
 

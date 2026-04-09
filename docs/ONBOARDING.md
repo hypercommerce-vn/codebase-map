@@ -1,12 +1,20 @@
 # Codebase Map — Customer Onboarding (1-pager)
 
 > **Standalone function dependency graph generator.** Plug into bất kỳ Python/TypeScript project nào qua YAML config. Output: interactive HTML + JSON. **100% offline · zero CDN.**
+>
+> **⚠️ Private repo** — cần quyền truy cập GitHub (SSH key hoặc Personal Access Token) để install. Liên hệ admin nếu chưa có access.
 
 ---
 
 ## 1. Install (30 giây)
 
 **Yêu cầu:** Python **3.10+**. Không cần Node, không cần build step.
+
+**⚠️ Repo private** — chọn 1 trong 2 cách xác thực:
+- **SSH** (khuyến nghị nếu đã setup): dùng URL `git+ssh://git@github.com/hypercommerce-vn/codebase-map.git@v2.0.1`
+- **HTTPS + PAT**: dùng URL `git+https://<YOUR_GITHUB_PAT>@github.com/hypercommerce-vn/codebase-map.git@v2.0.1`
+
+Tạo PAT tại: GitHub → Settings → Developer settings → Personal access tokens → Fine-grained → repo scope `contents: read`.
 
 ### 🥇 Cách 1 — `pipx` (khuyến nghị, sạch nhất cho CLI tool)
 
@@ -17,7 +25,12 @@ brew install pipx
 pipx ensurepath
 # Mở terminal mới (hoặc: source ~/.zshrc)
 
-pipx install git+https://github.com/hypercommerce-vn/codebase-map.git@v2.0.0
+# SSH (nếu đã có SSH key add vào GitHub):
+pipx install "git+ssh://git@github.com/hypercommerce-vn/codebase-map.git@v2.0.1"
+
+# Hoặc HTTPS (thay <PAT> bằng token thực):
+# pipx install "git+https://<PAT>@github.com/hypercommerce-vn/codebase-map.git@v2.0.1"
+
 codebase-map --help
 ```
 
@@ -28,7 +41,7 @@ cd /path/to/your-project
 python3.12 -m venv .venv-codemap
 source .venv-codemap/bin/activate
 pip install --upgrade pip
-pip install git+https://github.com/hypercommerce-vn/codebase-map.git@v2.0.0
+pip install "git+ssh://git@github.com/hypercommerce-vn/codebase-map.git@v2.0.1"
 codebase-map --help
 ```
 
@@ -38,7 +51,7 @@ codebase-map --help
 
 ```bash
 python3 -m pip install --upgrade pip
-python3 -m pip install git+https://github.com/hypercommerce-vn/codebase-map.git@v2.0.0
+python3 -m pip install "git+ssh://git@github.com/hypercommerce-vn/codebase-map.git@v2.0.1"
 ```
 
 > Trên macOS Python từ Homebrew, lệnh này có thể bị PEP 668 chặn — chuyển sang Cách 1.
@@ -134,7 +147,7 @@ Tự responsive. Mobile (<768px): hamburger drawer. Tablet (<1024px): sidebar co
 ```yaml
 - name: Generate codebase map
   run: |
-    pip install git+https://github.com/hypercommerce-vn/codebase-map.git@v2.0.0
+    pip install git+ssh://git@github.com/hypercommerce-vn/codebase-map.git@v2.0.1
     codebase-map generate -c codebase-map.yaml
     codebase-map diff origin/main -f docs/function-map/graph.json --json \
       > docs/function-map/pr_diff.json
@@ -170,7 +183,7 @@ End-to-end 8 bước để dùng Codebase Map cho HC repo.
 ### Bước 1 — Cài đặt (1 lần)
 ```bash
 brew install pipx && pipx ensurepath
-pipx install git+https://github.com/hypercommerce-vn/codebase-map.git@v2.0.0
+pipx install git+ssh://git@github.com/hypercommerce-vn/codebase-map.git@v2.0.1
 codebase-map --help
 ```
 
@@ -272,7 +285,7 @@ jobs:
         with: { fetch-depth: 0 }
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
-      - run: pip install git+https://github.com/hypercommerce-vn/codebase-map.git@v2.0.0
+      - run: pip install git+ssh://git@github.com/hypercommerce-vn/codebase-map.git@v2.0.1
       - name: Generate map + diff
         run: |
           codebase-map generate -c codebase-map.yaml
@@ -316,7 +329,7 @@ class CustomerService:
 ```bash
 python3 -m pip uninstall -y UNKNOWN
 python3 -m pip install --upgrade pip   # hoặc dùng pipx (Cách 1 trên)
-pipx install git+https://github.com/hypercommerce-vn/codebase-map.git@v2.0.0
+pipx install git+ssh://git@github.com/hypercommerce-vn/codebase-map.git@v2.0.1
 ```
 
 ### ❌ `zsh: command not found: pip`
@@ -331,7 +344,7 @@ pipx install git+https://github.com/hypercommerce-vn/codebase-map.git@v2.0.0
 ```bash
 brew install python@3.12          # hoặc python@3.11
 brew install pipx && pipx ensurepath
-pipx install --python python3.12 git+https://github.com/hypercommerce-vn/codebase-map.git@v2.0.0
+pipx install --python python3.12 git+ssh://git@github.com/hypercommerce-vn/codebase-map.git@v2.0.1
 ```
 
 > Cài Python 3.12 song song **không ảnh hưởng** Python 3.9 hệ thống — Homebrew để ở `/opt/homebrew/bin/python3.12`. Project cũ vẫn dùng `python3` = 3.9 như cũ.
@@ -390,8 +403,47 @@ codebase-map generate -c codebase-map.yaml
 
 - **Repo:** https://github.com/hypercommerce-vn/codebase-map
 - **Issues:** https://github.com/hypercommerce-vn/codebase-map/issues
-- **Release notes:** https://github.com/hypercommerce-vn/codebase-map/releases/tag/v2.0.0
+- **Release notes:** https://github.com/hypercommerce-vn/codebase-map/releases/tag/v2.0.1
 
 ---
 
-*Codebase Map v2.0 · Hyper Commerce · 2026*
+### ❌ `Permission denied` / `Repository not found` khi install
+**Nguyên nhân:** Repo `codebase-map` là **private**. Cần SSH key hoặc GitHub PAT để access.
+
+**Fix (SSH — khuyến nghị):**
+```bash
+# Kiểm tra SSH key đã add vào GitHub chưa:
+ssh -T git@github.com
+# Nếu thấy "Hi <username>!" → OK, dùng URL ssh:// để install
+pipx install "git+ssh://git@github.com/hypercommerce-vn/codebase-map.git@v2.0.1"
+```
+
+**Fix (HTTPS + PAT):**
+```bash
+# Tạo PAT tại: GitHub → Settings → Developer settings → Fine-grained tokens
+# Scope: repo "contents: read" cho hypercommerce-vn/codebase-map
+pipx install "git+https://<YOUR_PAT>@github.com/hypercommerce-vn/codebase-map.git@v2.0.1"
+```
+
+### ❌ CI `pip install` fail trên GitHub Actions (private repo)
+**Fix:** Thêm deploy key hoặc PAT vào CI:
+```yaml
+- name: Install codebase-map (private repo)
+  env:
+    GH_PAT: ${{ secrets.CODEMAP_PAT }}
+  run: pip install "git+https://${GH_PAT}@github.com/hypercommerce-vn/codebase-map.git@v2.0.1"
+```
+> Tạo secret `CODEMAP_PAT` trong HC repo Settings → Secrets → Actions.
+
+---
+
+## 9. Need help?
+
+- **Repo (private):** https://github.com/hypercommerce-vn/codebase-map
+- **Issues:** https://github.com/hypercommerce-vn/codebase-map/issues
+- **Release notes:** https://github.com/hypercommerce-vn/codebase-map/releases/tag/v2.0.1
+- **Access:** Liên hệ admin nếu chưa có collaborator access
+
+---
+
+*Codebase Map v2.0.1 · Hyper Commerce · 2026 · Private repo*
