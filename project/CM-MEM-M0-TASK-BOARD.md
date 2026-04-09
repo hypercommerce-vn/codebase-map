@@ -17,7 +17,7 @@ Build KMP Core skeleton (abstract base + runtime + CI gate) + Hello vertical (50
 | Field | Value |
 |-------|-------|
 | **Sprint code** | CM-MEM-M0 |
-| **Status** | 🔥 **ACTIVE** — Day 1 IN REVIEW (PR pending) · 09/04/2026 |
+| **Status** | 🔥 **ACTIVE** — Day 1 ✅ MERGED (PR #44) · Day 2 🔄 IN REVIEW · 09/04/2026 |
 | **Start date** | 2026-04-09 (Day 1, T4) — pending CEO "Approve Day 1 start" |
 | **Target end** | 2026-04-15 (Day 5, T3) — 5 working days, nghỉ T7-CN |
 | **Duration** | 1 tuần |
@@ -33,9 +33,9 @@ Build KMP Core skeleton (abstract base + runtime + CI gate) + Hello vertical (50
 
 | # | ID | Task | SP | Day | Status | Acceptance |
 |---|----|------|:--:|:---:|:------:|------------|
-| 1 | KMP-M0-01 | Tạo package `knowledge_memory/core/` skeleton (mọi `__init__.py`, abstract base files rỗng) | 1 | D1 | 🔄 In Review | `python -c "import knowledge_memory.core"` pass |
-| 2 | KMP-M0-02 | Implement `BaseVault`, `BaseLearner`, `BaseParser`, `Pattern`, `Evidence` dataclass | 2 | D1-2 | 🔄 In Review (partial: Pattern + Evidence + BaseVault ✅; BaseLearner + BaseParser → D2) | mypy strict pass; type hints đầy đủ |
-| 3 | KMP-M0-03 | Implement `core/learners/runtime.py` orchestrator | 1 | D2 | ⏳ Todo | Unit test với mock learner pass |
+| 1 | KMP-M0-01 | Tạo package `knowledge_memory/core/` skeleton (mọi `__init__.py`, abstract base files rỗng) | 1 | D1 | ✅ Done (PR #44) | `python -c "import knowledge_memory.core"` pass |
+| 2 | KMP-M0-02 | Implement `BaseVault`, `BaseLearner`, `BaseParser`, `Pattern`, `Evidence` dataclass | 2 | D1-2 | 🔄 In Review (Pattern/Evidence/BaseVault merged in PR #44; BaseLearner + BaseParser in Day 2 PR) | mypy strict pass; type hints đầy đủ |
+| 3 | KMP-M0-03 | Implement `core/learners/runtime.py` orchestrator | 1 | D2 | 🔄 In Review (Day 2 PR) | Unit test với mock learner pass |
 | 4 | KMP-M0-04 | Setup import-linter CI rule (Core ↛ Vertical) | 0.5 | D3 | ⏳ Todo | CI fail khi cố ý vi phạm (test commit) |
 | 5 | KMP-M0-05 | Build `verticals/hello/` reference ≤ 50 LOC + `verticals/hello/README.md` | 1 | D3-4 | ⏳ Todo | Hello vertical chạy end-to-end, sinh patterns.md; README ≤ 5 phút đọc |
 | 6 | **KMP-M0-07** *(CEO add)* | Viết `docs/vault-format-spec.md` (≤ 5 trang) — public spec | 1 | D4 | ⏳ Todo | Đủ để dev ngoài tự build vault tương thích |

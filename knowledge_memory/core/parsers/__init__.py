@@ -6,6 +6,7 @@ which is the raw input unit every learner consumes.
 
 # HC-AI | ticket: KMP-M0-02
 
+from knowledge_memory.core.parsers.base import BaseParser
 from knowledge_memory.core.parsers.evidence import Evidence
 
-__all__ = ["Evidence"]
+__all__ = ["BaseParser", "Evidence"]

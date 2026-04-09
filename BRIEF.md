@@ -6,9 +6,9 @@
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**KMP Sprint M0 Day 1 IN REVIEW · v2.0.1 shipped · designs approved**
+**KMP Sprint M0 Day 2 PR in review · Day 1 merged · v2.0.1 shipped**
 
-Day 1 implemented: core skeleton (9 sub-packages) + Pattern/Evidence dataclasses + BaseVault abstract. Branch `feat/kmp-m0-01-core-skeleton`, PR pending. Tests 16/16 passed, lint PASS.
+Day 1 (PR #44) merged → skeleton + Pattern/Evidence/BaseVault. Day 2 shipped on branch `feat/kmp-m0-day2-learner-parser-runtime`: BaseLearner + BaseParser abstracts + LearnerRuntime orchestrator + datetime polish fix. Tests 28/28 passed, lint PASS, self-build clean. Sprint progress **5/8 SP**.
 
 | Field | Value |
 |-------|-------|

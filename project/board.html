@@ -534,7 +534,7 @@ a:hover { text-decoration: underline; }
       <span class="hero-badge">📊 29 tasks · 55 SP · 3 Sprints</span>
       <span class="hero-badge">v1.0 ✅ · v1.1 ✅ · v1.2 ✅ · v2.0.0 ✅ · v2.0.1 ✅ SHIPPED</span>
       <span class="hero-badge">🏷️ v2.0.1 · 08/04/2026</span>
-      <span class="hero-badge" style="background:#f97316;color:#fff;">🔥 KMP M0 ACTIVE · Day 1 IN REVIEW (3/8 SP)</span>
+      <span class="hero-badge" style="background:#f97316;color:#fff;">🔥 KMP M0 ACTIVE · Day 2 IN REVIEW (5/8 SP)</span>
       <span class="hero-badge">HC scan: 1,386 nodes · 8,285 edges · 7 domains</span>
     </div>
   </div>
@@ -659,14 +659,15 @@ a:hover { text-decoration: underline; }
         <span class="badge active">🔥 ACTIVE</span>
       </div>
       <p>KMP Core skeleton: package + abstract base + LearnerRuntime + import-linter CI + Hello vertical (≤50 LOC) + vault-format-spec + LICENSE</p>
-      <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#f97316"></div></div>
-      <div class="progress-label">0/8 SP · 0/8 tasks · D1=09/04 → D5=15/04 · 5 PRs planned · awaiting CEO Day 1 start</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:62%;background:#f97316"></div></div>
+      <div class="progress-label">5/8 SP · Day 1 ✅ <a href="https://github.com/hypercommerce-vn/codebase-map/pull/44" target="_blank">PR #44</a> MERGED · Day 2 🔄 IN REVIEW (BaseLearner + BaseParser + LearnerRuntime) · D3-D5 pending</div>
       <div style="margin-top:10px; padding:8px 10px; background:var(--bg-muted); border-radius:6px; font-size:11px; color:var(--text-muted);">
-        <strong style="color:var(--text);">Day 1 (09/04) preview:</strong>
+        <strong style="color:var(--text);">Day 2 (09/04) shipped:</strong>
         <ul style="margin:4px 0 0 16px; padding:0;">
-          <li><code>KMP-M0-01</code> — Package skeleton <code>knowledge_memory/core/</code> (1 SP)</li>
-          <li><code>KMP-M0-02</code> start — Abstract base (BaseVault, BaseLearner, BaseParser, Pattern, Evidence) (2 SP)</li>
-          <li>Designs: <code>kmp-v2-design.html</code> + <code>kmp-M0-design.html</code> (PR #42 ✅)</li>
+          <li><code>KMP-M0-02</code> finish — BaseLearner + BaseParser abstracts (1 SP)</li>
+          <li><code>KMP-M0-03</code> — LearnerRuntime orchestrator with register/run (1 SP)</li>
+          <li>Day 1 polish: <code>datetime.utcnow()</code> → timezone-aware <code>datetime.now(timezone.utc)</code></li>
+          <li>Tests: 28/28 green (16 Day 1 + 12 new) · lint PASS · self-build clean</li>
         </ul>
       </div>
     </div>
