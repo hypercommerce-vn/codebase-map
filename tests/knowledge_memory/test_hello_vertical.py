@@ -1,12 +1,13 @@
 # HC-AI | ticket: KMP-M0-05
-"""Smoke tests for the Hello vertical — Day 3 integration tests."""
+"""Smoke + e2e tests for the Hello vertical — Day 3 unit + Day 4 runtime."""
 
 from pathlib import Path
-from typing import Iterator
+from typing import Iterator, List, Optional
 
 import pytest
 
 from knowledge_memory.core.learners.pattern import Pattern
+from knowledge_memory.core.learners.runtime import LearnerRuntime
 from knowledge_memory.core.parsers.evidence import Evidence
 from knowledge_memory.core.vault.base import BaseVault
 from knowledge_memory.verticals.hello import VERTICAL_NAME
@@ -21,8 +22,9 @@ class _StubVault(BaseVault):
 
     VERTICAL_NAME = "hello_test"
 
-    def __init__(self, evidences: list[Evidence]) -> None:
-        self._evidences = evidences
+    def __init__(self, evidences: Optional[List[Evidence]] = None) -> None:
+        self._evidences = evidences or []
+        self._committed: List[Pattern] = []
 
     def init(self, root: Path, force: bool = False) -> None:
         pass  # pragma: no cover
@@ -35,6 +37,10 @@ class _StubVault(BaseVault):
 
     def schema_extension_sql(self) -> str:
         return ""  # pragma: no cover
+
+    def commit_pattern(self, pattern: Pattern) -> None:
+        """Record committed patterns for assertion."""
+        self._committed.append(pattern)
 
 
 @pytest.fixture()
@@ -189,3 +195,105 @@ class TestHelloVertical:
         assert len(patterns) >= 1
         assert all(isinstance(p, Pattern) for p in patterns)
         assert all(p.confidence >= 50.0 for p in patterns)
+
+
+# -- E2E via LearnerRuntime (Day 4) -----------------------------------------
+
+
+class TestHelloE2E:
+    """Full pipeline: LearnerRuntime + HelloLearner + HelloParser + StubVault."""
+
+    def test_runtime_full_pipeline(self, sample_txt: Path) -> None:
+        """LearnerRuntime.run() with Hello components produces patterns."""
+        # HC-AI | ticket: KMP-M0-05
+        parser = HelloParser()
+        evidences = list(parser.parse(sample_txt))
+        vault = _StubVault(evidences)
+
+        runtime = LearnerRuntime()
+        runtime.register_learner(HelloLearner())
+        runtime.register_parser(parser)
+
+        patterns = runtime.run(vault)
+
+        assert len(patterns) >= 1
+        assert all(isinstance(p, Pattern) for p in patterns)
+        assert all(p.confidence >= 50.0 for p in patterns)
+        # "hello" appears 3 times → confidence = 60.0
+        hello_patterns = [p for p in patterns if "hello" in p.name]
+        assert len(hello_patterns) == 1
+        assert hello_patterns[0].confidence == 60.0
+
+    def test_runtime_commits_to_vault(self, sample_txt: Path) -> None:
+        """LearnerRuntime.run() calls vault.commit_pattern for each emitted."""
+        parser = HelloParser()
+        evidences = list(parser.parse(sample_txt))
+        vault = _StubVault(evidences)
+
+        runtime = LearnerRuntime(vault=vault, learners=[HelloLearner()])
+        patterns = runtime.run()
+
+        assert len(vault._committed) == len(patterns)
+        assert len(vault._committed) >= 1
+
+    def test_runtime_sets_vertical_name(self, sample_txt: Path) -> None:
+        """LearnerRuntime sets pattern.vertical from vault.VERTICAL_NAME."""
+        parser = HelloParser()
+        evidences = list(parser.parse(sample_txt))
+        vault = _StubVault(evidences)
+
+        runtime = LearnerRuntime()
+        runtime.register_learner(HelloLearner())
+        patterns = runtime.run(vault)
+
+        for p in patterns:
+            assert p.vertical == "hello_test"
+
+    def test_runtime_empty_corpus_no_patterns(self) -> None:
+        """LearnerRuntime with empty vault yields no patterns."""
+        vault = _StubVault([])
+        runtime = LearnerRuntime(vault=vault, learners=[HelloLearner()])
+        patterns = runtime.run()
+        assert patterns == []
+
+    def test_runtime_confidence_filter(self) -> None:
+        """Only patterns above MIN_CONFIDENCE are emitted."""
+        # Single evidence → one word "x" → confidence = 20.0 < 50.0
+        vault = _StubVault([Evidence(source="a.txt", data={"text": "x"})])
+        runtime = LearnerRuntime(vault=vault, learners=[HelloLearner()])
+        patterns = runtime.run()
+        assert patterns == []
+
+    def test_runtime_multi_word_corpus(self, tmp_path: Path) -> None:
+        """Corpus with repeated words produces correct pattern names."""
+        txt = tmp_path / "words.txt"
+        txt.write_text(
+            "alpha beta\nalpha gamma\nalpha delta\n" "beta gamma\nbeta delta\n"
+        )
+        parser = HelloParser()
+        evidences = list(parser.parse(txt))
+        vault = _StubVault(evidences)
+
+        runtime = LearnerRuntime()
+        runtime.register_learner(HelloLearner())
+        patterns = runtime.run(vault)
+
+        names = {p.name for p in patterns}
+        # "alpha" appears 3× → conf 60, "beta" 3× → conf 60,
+        # "gamma" 2× → conf 40 (below 50), "delta" 2× → conf 40 (below 50)
+        assert "frequent_word::alpha" in names
+        assert "frequent_word::beta" in names
+        assert "frequent_word::gamma" not in names
+        assert "frequent_word::delta" not in names
+
+    def test_parser_describe(self) -> None:
+        """HelloParser.describe() returns expected metadata."""
+        desc = HelloParser().describe()
+        assert desc["name"] == "hello_txt"
+        assert ".txt" in desc["extensions"]
+
+    def test_learner_describe(self) -> None:
+        """HelloLearner.describe() returns expected metadata."""
+        desc = HelloLearner().describe()
+        assert desc["name"] == "hello.word_count"
+        assert desc["category"] == "stats"

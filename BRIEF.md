@@ -6,9 +6,9 @@
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**KMP Sprint M0 Day 4 READY · 6.5/8 SP shipped · 43/43 tests green · v2.0.1 shipped**
+**KMP Sprint M0 Day 4 IN REVIEW · 8/8 SP coded · 51/51 tests green · v2.0.1 shipped**
 
-Day 1 (PR #44) + Day 2 (PR #45) + Day 3 (PR #47) all merged. import-linter CI gate enforces Core ↛ Vertical. HelloLearner + HelloParser skeleton shipped (<50 LOC each). Tests 43/43 green, lint + import-linter PASS. Sprint progress **6.5/8 SP (81%)**. Day 4 scope: KMP-M0-05 finish + KMP-M0-07 vault-format-spec.md — awaiting CEO "Day 4 start".
+Day 1 (PR #44) + Day 2 (PR #45) + Day 3 (PR #47) all merged. Day 4 PR submitted: KMP-M0-05 finish (Hello README + 8 e2e tests via LearnerRuntime) + KMP-M0-07 (vault-format-spec.md, 8 sections). Tests 51/51 green (43 prev + 8 new e2e), lint + import-linter PASS. Sprint progress **8/8 SP (100%)** — awaiting review-gate + CEO merge. Day 5: LICENSE + CTO sign-off.
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
