@@ -1,25 +1,51 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 1.4 | Cập nhật: 08/04/2026 (v2.0.1 SHIPPED)
+> Version: 1.6 | Cập nhật: 09/04/2026 (KMP Sprint M0 kickoff)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**v2.0.1 SHIPPED · KMP M0 unblocked · awaiting CEO direction**
+**KMP Sprint M0 Day 1 READY · v2.0.1 shipped · designs approved**
 
 | Field | Value |
 |-------|-------|
 | **Version hiện tại** | v2.0.1 ✅ SHIPPED (08/04/2026) — tag `v2.0.1` pushed, GitHub release published |
-| **Sprint hiện tại** | — (idle, awaiting CEO direction) |
-| **Sprint vừa xong** | CM-HOTFIX v2.0.1 — ✅ CLOSED · Day 1 PR #38 ✅ MERGED · Day 2 PR #39 ✅ MERGED · tag v2.0.1 pushed |
-| **KMP M0** | ✅ UNBLOCKED — PR #40 (docs) ready for content review (was blocked-by hotfix v2.0.1) |
+| **Sprint hiện tại** | 🔥 **KMP CM-MEM-M0** — ACTIVE, Day 1 ready (kickoff plan published 09/04/2026) |
+| **KMP Sprint M0** | 8 tasks · 8 SP · 5 Days (D1=09/04 → D5=15/04) · awaiting CEO "Approve Day 1 start" |
+| **Sprint vừa xong** | CM-HOTFIX v2.0.1 — ✅ CLOSED · PR #38 + PR #39 merged · tag v2.0.1 pushed |
+| **Designs approved** | `design-preview/kmp-v2-design.html` + `kmp-M0-design.html` (PR #42 merged 09/04) |
 | **Sprint trước** | CM-S3 (v2.0) — ✅ DELIVERED (22/22 SP, 8/8 tasks, v2.0.0 released) |
 | **Sprint trước nữa** | CM-S2 (v1.2) — ✅ DONE (18/18 SP, 11/11 tasks, 5 feature PRs) |
 | **Sprint đầu tiên** | CM-S1 (v1.1) — ✅ DONE (15/15 SP, 10/10 tasks) |
 | **Repo** | https://github.com/hypercommerce-vn/codebase-map |
 | **Parent HC repo** | https://github.com/hypercommerce-vn/hypercommercesystem |
 | **HC config** | `codebase-map.yaml` trong HC repo root |
+
+---
+
+## 🔥 KMP SPRINT M0 — ACTIVE (kickoff 09/04/2026)
+
+**Goal:** Build KMP Core skeleton (abstract base + runtime + CI gate) + Hello vertical (≤50 LOC reference) để chứng minh abstraction stable trước M1 (Codebase Vault).
+
+**Scope:** 8 tasks · 8 SP · 5 Days · 5 PRs (1 PR / Day mandatory)
+
+| Day | Date | Tasks | PR |
+|-----|------|-------|-----|
+| D1 | 09/04 (T4) | KMP-M0-01 (skeleton) + KMP-M0-02 start (abstract base) | PR #1 |
+| D2 | 10/04 (T5) | KMP-M0-02 finish + KMP-M0-03 (runtime orchestrator) | PR #2 |
+| D3 | 13/04 (T2) | KMP-M0-04 (import-linter CI) + KMP-M0-05 start (hello vertical) | PR #3 |
+| D4 | 14/04 (T3) | KMP-M0-05 finish + KMP-M0-07 (vault-format-spec.md) | PR #4 |
+| D5 | 15/04 (T4) | KMP-M0-08 (LICENSE) + KMP-M0-06 (CTO sign-off) | PR #5 |
+
+**Owner:** @TechLead · **Reviewers:** @CTO + @Tester + @Designer (D4 spec) · **Branch base:** `main`
+**Task board:** `project/CM-MEM-M0-TASK-BOARD.md`
+**Day 1 checklist:** `project/KMP-M0-DAY1-CHECKLIST.md`
+**Specs:** `specs/kmp/architecture.md` · `specs/kmp/fdd-v2.md` · `specs/kmp/user-stories-m0-m1.md`
+**Designs:** `design-preview/kmp-v2-design.html` · `design-preview/kmp-M0-design.html`
+
+**Dependencies:** ✅ none — v2.0.1 shipped, designs approved, specs locked.
+**Day 1 ready state:** ✅ branch base clean · ✅ specs locked · ✅ designs available · ⏳ awaiting CEO "Approve Day 1 start"
 
 ---
 
@@ -221,7 +247,7 @@
 
 | Vấn đề | Priority |
 |--------|----------|
-| KMP PR #40 (docs M0) — content review (now unblocked) | 🟡 Next |
+| KMP Sprint M0 Day 1 — awaiting CEO "Approve Day 1 start" | 🔥 Active |
 | Wiki board ở HC repo cần update link repo mới | 🟢 Low |
 
 ---
