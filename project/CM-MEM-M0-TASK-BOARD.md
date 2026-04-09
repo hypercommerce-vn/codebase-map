@@ -17,8 +17,10 @@ Build KMP Core skeleton (abstract base + runtime + CI gate) + Hello vertical (50
 | Field | Value |
 |-------|-------|
 | **Sprint code** | CM-MEM-M0 |
-| **Status** | 🟡 **READY — BLOCKED by CM-HOTFIX v2.0.1 Phase 1** (CEO directive 08/04) |
-| **Duration** | 1 tuần (D1 start = `hotfix_done + 1`, TBD) |
+| **Status** | 🔥 **ACTIVE** — kickoff plan ready (v2.0.1 SHIPPED · designs PR #42 merged · 09/04/2026) |
+| **Start date** | 2026-04-09 (Day 1, T4) — pending CEO "Approve Day 1 start" |
+| **Target end** | 2026-04-15 (Day 5, T3) — 5 working days, nghỉ T7-CN |
+| **Duration** | 1 tuần |
 | **Story Points** | 8 SP *(updated từ 6 — CEO bổ sung KMP-M0-07, KMP-M0-08)* |
 | **Owner** | @TechLead (1 người) |
 | **Reviewer** | @CTO (architecture) + @Tester (acceptance) |
@@ -48,11 +50,11 @@ Build KMP Core skeleton (abstract base + runtime + CI gate) + Hello vertical (50
 
 | Day | Date | Tasks | PR | Reviewer |
 |-----|------|-------|----|----|
-| **D1** | 08/04 (T3) | KMP-M0-01 + KMP-M0-02 (start) | PR #1 | CTO |
-| **D2** | 09/04 (T4) | KMP-M0-02 (finish) + KMP-M0-03 | PR #2 | CTO |
-| **D3** | 10/04 (T5) | KMP-M0-04 + KMP-M0-05 (start) | PR #3 | CTO |
-| **D4** | 11/04 (T6) | KMP-M0-05 (finish) + KMP-M0-07 | PR #4 | CTO + Designer (review spec) |
-| **D5** | 14/04 (T2) | KMP-M0-08 + KMP-M0-06 (review-gate) | PR #5 + sign-off | CTO + Tester + CEO |
+| **D1** | 09/04 (T4) | KMP-M0-01 + KMP-M0-02 (start) — package skeleton + abstract base | PR #1 | CTO |
+| **D2** | 10/04 (T5) | KMP-M0-02 (finish) + KMP-M0-03 — runtime orchestrator | PR #2 | CTO |
+| **D3** | 13/04 (T2) | KMP-M0-04 + KMP-M0-05 (start) — import-linter CI + hello vertical | PR #3 | CTO |
+| **D4** | 14/04 (T3) | KMP-M0-05 (finish) + KMP-M0-07 — vault-format-spec.md | PR #4 | CTO + Designer (review spec) |
+| **D5** | 15/04 (T4) | KMP-M0-08 + KMP-M0-06 — LICENSE + sign-off review-gate | PR #5 + sign-off | CTO + Tester + CEO |
 
 *Nghỉ T7-CN. Review-gate 3 tầng (Tester → CTO → Designer) trước CEO approve.*
 
