@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 1.9 | Cập nhật: 09/04/2026 (KMP M0 Day 3 MERGED — checkpoint)
+> Version: 2.0 | Cập nhật: 09/04/2026 (PR #49 private repo docs merged)
 
 ---
 
@@ -37,6 +37,7 @@ Day 1 (PR #44) + Day 2 (PR #45) + Day 3 (PR #47) all merged. import-linter CI ga
 | #45 | feat(kmp): M0 Day 2 — BaseLearner + BaseParser + LearnerRuntime | 99 | ✅ merged |
 | #46 | chore(state): session checkpoint 08/04 | — | 🟡 pending |
 | #47 | feat(kmp): M0 Day 3 — import-linter CI + Hello vertical | 100 | ✅ merged |
+| #49 | chore(docs): update install URLs + auth guide for private repo | — | ✅ merged |
 
 ### ▶️ Next actions (pending CEO command)
 
@@ -53,7 +54,7 @@ Day 1 (PR #44) + Day 2 (PR #45) + Day 3 (PR #47) all merged. import-linter CI ga
 | **Sprint trước** | CM-S3 (v2.0) — ✅ DELIVERED (22/22 SP, 8/8 tasks, v2.0.0 released) |
 | **Sprint trước nữa** | CM-S2 (v1.2) — ✅ DONE (18/18 SP, 11/11 tasks, 5 feature PRs) |
 | **Sprint đầu tiên** | CM-S1 (v1.1) — ✅ DONE (15/15 SP, 10/10 tasks) |
-| **Repo** | https://github.com/hypercommerce-vn/codebase-map |
+| **Repo** | https://github.com/hypercommerce-vn/codebase-map **(PRIVATE)** |
 | **Parent HC repo** | https://github.com/hypercommerce-vn/hypercommercesystem |
 | **HC config** | `codebase-map.yaml` trong HC repo root |
 
@@ -280,6 +281,7 @@ Day 1 (PR #44) + Day 2 (PR #45) + Day 3 (PR #47) all merged. import-linter CI ga
 | 08/04/2026 | **KMP M0 Day 1 MERGED** — PR #44: skeleton + Pattern/Evidence/BaseVault (3 SP, 99/100 SHIPIT) | CEO |
 | 08/04/2026 | **KMP M0 Day 2 MERGED** — PR #45: BaseLearner + BaseParser + LearnerRuntime + datetime polish (2 SP, 99/100 SHIPIT). Sprint 5/8 SP (62%) | CEO |
 | 09/04/2026 | **KMP M0 Day 3 MERGED** — PR #47: import-linter CI gate + HelloLearner + HelloParser (1.5 SP, 100/100 SHIPIT). Sprint 6.5/8 SP (81%) | CEO |
+| 09/04/2026 | **Repo PRIVATE** — chuyển public → private, PR #49 cập nhật SSH URLs + auth guide + ONBOARDING.md | CEO |
 
 ---
 
@@ -321,4 +323,4 @@ Day 1 (PR #44) + Day 2 (PR #45) + Day 3 (PR #47) all merged. import-linter CI ga
 
 ---
 
-*BRIEF.md v1.9 — Codebase Map | 09/04/2026 | KMP Sprint M0 Day 3 MERGED · 6.5/8 SP (81%) · Day 4 READY*
+*BRIEF.md v2.0 — Codebase Map | 09/04/2026 | Repo PRIVATE · PR #49 merged · KMP M0 Day 4 READY*
