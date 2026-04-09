@@ -1,109 +1,97 @@
 # SESSION-STATE.md — KMP Pivot Execution
-> Version: 2.0 | Cập nhật: 08/04/2026 | Owner: @PM
+> Version: 3.0 | Cập nhật: 08/04/2026 (post-PR #45 merge) | Owner: @PM
 
 ---
 
-## 🎯 QUYẾT ĐỊNH HIỆN TẠI
+## 🎯 CURRENT STATE — KMP Sprint M0
 
-**CEO confirm:** Đi thẳng **Phương án B+** — rebuild Codebase Memory như vertical đầu tiên của Knowledge Memory Platform (KMP). Định vị Hyper Commerce = "Knowledge OS company VN".
-
-**Lý do chọn B+ (không phải A — Addendum nhỏ):**
-- Codebase Memory chưa bắt đầu code → không có sunk cost cần bảo vệ
-- Làm đúng kiến trúc platform từ đầu rẻ hơn refactor sau
-- Mở đường cho 8 vertical tương lai (Legal, Research, Sales, Curriculum, ...)
-
----
-
-## ✅ DELIVERABLES ĐÃ SHIP (B+ Execution)
-
-| # | File | Owner | Status |
-|---|------|-------|--------|
-| 1 | `specs/kmp-architecture.md` | @CTO | ✅ Done |
-| 2 | `specs/memory-fdd-v2.md` | @CTO + @BA | ✅ Done |
-| 3 | `specs/memory-m0-m1-user-stories.md` | @BA | ✅ Done |
-| 4 | `specs/jd-knowledge-os-platform-engineer.md` | @BA + @PO | ✅ Done |
-| 5 | `BRIEF.md` (KMP Pivot section) | @PM | ✅ Done |
-| 6 | `specs/SESSION-STATE.md` (file này) | @PM | ✅ Done |
+| Field | Value |
+|-------|-------|
+| **Sprint** | CM-MEM-M0 (KMP Core skeleton + Hello vertical) |
+| **Status** | 🔥 ACTIVE — Day 3 READY |
+| **Progress** | **5/8 SP (62%)** · 28/28 tests green · lint PASS |
+| **Day 1** | ✅ MERGED — PR #44 (99/100 SHIPIT) |
+| **Day 2** | ✅ MERGED — PR #45 (99/100 SHIPIT) |
+| **Day 3** | 🟢 READY — pending CEO "Day 3 start" command |
+| **Day 4** | ⏳ pending |
+| **Day 5** | ⏳ pending |
+| **Blockers** | none |
 
 ---
 
-## 📐 KIẾN TRÚC KMP (tóm tắt)
+## ✅ SHIPPED FILES (Days 1-2)
 
-**Package layout:**
-```
-knowledge_memory/
-  core/        # vault, learners, parsers, ai, mcp, licensing, cli, telemetry
-  verticals/
-    codebase/  # vertical đầu tiên (port từ Codebase Map)
-    hello/     # 50 LOC reference vertical (M0 acceptance test)
-  tools/       # generate_license, lint_imports, benchmark
-```
+**Core skeleton (`knowledge_memory/core/`):**
+- `__init__.py` (package root)
+- `vault/__init__.py`, `vault/base.py` — `BaseVault` abstract (Day 1, PR #44)
+- `learners/__init__.py`, `learners/pattern.py` — `Pattern` dataclass (Day 1, timezone-aware fix Day 2)
+- `learners/base.py` — `BaseLearner` abstract (Day 2, PR #45)
+- `learners/runtime.py` — `LearnerRuntime` orchestrator with register/run (Day 2, PR #45)
+- `parsers/__init__.py`, `parsers/evidence.py` — `Evidence` dataclass (Day 1)
+- `parsers/base.py` — `BaseParser` abstract (Day 2, PR #45)
+- Empty stubs: `ai/`, `cli/`, `config/`, `licensing/`, `mcp/`, `telemetry/`
 
-**6 Core Services:** Vault · Learner Runtime · AI Gateway · MCP Hub · Licensing · CLI Framework
-**Abstract base classes:** BaseVault · BaseLearner · BaseParser · LLMProvider · BaseMCPTool · BaseCLI
-**Dependency rule:** Core ↛ Vertical (enforced by import-linter)
+**Tests (`tests/knowledge_memory/`):**
+- `test_core_skeleton.py` (Day 1, 16 tests — Pattern, Evidence, BaseVault, imports)
+- `test_base_learner.py` (Day 2)
+- `test_base_parser.py` (Day 2)
+- `test_learner_runtime.py` (Day 2, register + run_all mock tests)
+- Total: **28/28 green**
 
----
-
-## 🗓️ ROADMAP 9 TUẦN (99 SP)
-
-| Sprint | Tuần | Focus | SP | Owner chính |
-|--------|------|-------|----|----|
-| M0 | 1 | KMP Core skeleton + Hello vertical | 6 | TechLead |
-| M1 | 2-3 | Codebase Vault + Quick Win Mode | 26 | TechLead |
-| M2 | 4-5 | Ask + MCP + Multi-LLM | 28 | TechLead + Contractor |
-| M3 | 6-7 | Onboarding + Insights | 21 | Contractor + Designer |
-| M4 | 8-9 | Drift + License + Launch | 18 | TechLead + Contractor |
+**Abstract classes ready for M1:**
+- `BaseVault` · `BaseLearner` · `BaseParser` · `Pattern` · `Evidence` · `LearnerRuntime`
 
 ---
 
-## 🚧 PENDING / NEXT ACTIONS
+## 🗓️ NEXT DAY SCOPE (Day 3)
 
-1. ✅ **CEO** đã APPROVE `kmp-architecture.md` (5/5 decisions duyệt 08/04/2026) — section 9.bis
-2. ✅ **PM** đã tạo task board `project/CM-MEM-M0-TASK-BOARD.md` (8 SP, 1 tuần)
-3. 🟡 **Sprint M0 READY but BLOCKED** — CEO chỉ đạo (08/04): hoàn thành CM-HOTFIX v2.0.1 Phase 1 trước. TechLead tập trung 100% hotfix, M0 Day 1 shift sang `hotfix_done + 1`.
-4. ⏳ **CEO** đăng JD `jd-knowledge-os-platform-engineer.md` (parallel với M0)
-5. ⏳ **BA** trả lời 3 open questions ở cuối `memory-m0-m1-user-stories.md`
-6. ⏳ **CTO** chuẩn bị viết `docs/vault-format-spec.md` cho KMP-M0-07 (Day 4)
-
-**Sprint M0 mới:** 8 SP / 1 tuần (CEO bổ sung 2 task: KMP-M0-07 vault-format-spec + KMP-M0-08 LICENSE files).
+**Tasks:** KMP-M0-04 (import-linter CI, 0.5 SP) + KMP-M0-05 start (Hello vertical skeleton, 1 SP)
+**Branch (proposed):** `feat/kmp-m0-day3-importlinter-hello`
+**Acceptance:**
+- import-linter config added + CI job runs + fails on deliberate violation
+- `verticals/hello/` scaffold with `__init__.py`, placeholder learner/parser (<50 LOC target tracked daily)
 
 ---
 
-## 🔁 RESUME PROTOCOL (lần session sau)
+## 📐 ARCHITECTURE GROUND TRUTH
 
-1. Đọc `CLAUDE.md` (orchestrator)
-2. Đọc `BRIEF.md` — section "KMP PIVOT (08/04/2026)"
-3. Đọc file này (`specs/SESSION-STATE.md`)
-4. Đọc file spec liên quan: `kmp-architecture.md` → `memory-fdd-v2.md` → `memory-m0-m1-user-stories.md`
-5. Tiếp tục từ Pending actions
+- **Spec:** `specs/kmp/architecture.md` (CEO-approved section 9.bis, 5/5 decisions)
+- **FDD v2:** `specs/kmp/fdd-v2.md`
+- **User stories:** `specs/kmp/user-stories-m0-m1.md`
+- **Designs:** `design-preview/kmp-v2-design.html` + `design-preview/kmp-M0-design.html` (PR #42)
+- **Task board:** `project/CM-MEM-M0-TASK-BOARD.md`
+- **Dependency rule:** Core ↛ Vertical (to be enforced by import-linter in Day 3)
+
+---
+
+## 🔁 RESUME PROTOCOL (next session)
+
+1. Read `CLAUDE.md` (orchestrator)
+2. Read `BRIEF.md` — "TRẠNG THÁI HIỆN TẠI" section
+3. Read this file (`specs/kmp/SESSION-STATE.md`)
+4. Read `docs/sessions/session-checkpoint-2026-04-08.md` for full session context
+5. Check `specs/kmp/architecture.md` when implementing abstract contracts
+6. Wait for CEO "Day 3 start" command before coding
+7. Follow PR-per-Day + review-gate 3-tầng protocol
+
+---
+
+## 🧩 CONTEXT NOTES FOR FUTURE SESSIONS
+
+- **Design files location:** `design-preview/kmp-*.html` (approved PR #42)
+- **Ground truth for abstraction:** `specs/kmp/architecture.md` — always reconcile new code against it
+- **PR review pattern:** Day 1 and Day 2 both scored 99/100 SHIPIT (Tester+CTO+Designer) — maintain bar
+- **Commit tag convention:** `# HC-AI | ticket: KMP-M0-XX` on AI-generated blocks
+- **Lint gate:** `black --check . && isort --check . && flake8 && mypy --strict`
+- **Datetime rule:** always use `datetime.now(timezone.utc)` (never `utcnow()`) — enforced Day 2 polish
+- **CEO rhythm:** approve PR → PM saves state → wait for explicit "Day N start" before next Day
 
 ---
 
 ## 📞 LIÊN HỆ
 
 - **CEO/PO:** Đoàn Đình Tỉnh — hypercdp@gmail.com
-- **JD apply:** `[KMP Engineer] - <Tên>` → hypercdp@gmail.com
 
 ---
 
-## 🧠 CONVERSATION CONTEXT SNAPSHOT (08/04/2026)
-
-**Last user request:** "claude save current state and context of this session"
-
-**Đã làm trong session này:**
-- CEO confirm B+ → @team thực thi 6 deliverables (xem bảng trên)
-- Tất cả file đã ship + present cho CEO qua cowork card
-- BRIEF.md đã thêm section "KMP PIVOT (08/04/2026)"
-
-**Trạng thái TodoWrite cuối session:** 6/6 steps completed.
-
-**Mood/định hướng CEO:** quyết liệt pivot sang Knowledge OS company, không tiếc sunk cost, ưu tiên kiến trúc đúng từ đầu.
-
-**Câu nói chốt của CEO:** "CEO confirm đi thẳng B+ hãy phối hợp cùng nhau @team (CTO + PM + BA + PO) để thực thi như kế hoạch các em đã trao đổi với anh nhé"
-
-**Khi resume:** đọc file này → hỏi CEO đã review `kmp-architecture.md` chưa, đã duyệt 5 open decisions chưa, đã đăng JD chưa. Nếu rồi → kickoff Sprint M0.
-
----
-
-*SESSION-STATE.md v2.0 — KMP Pivot · @PM · 08/04/2026*
+*SESSION-STATE.md v3.0 — KMP M0 Day 2 MERGED · @PM · 08/04/2026*
