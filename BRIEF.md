@@ -1,24 +1,18 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 1.7 | Cập nhật: 08/04/2026 (KMP M0 Day 2 MERGED — checkpoint)
+> Version: 1.8 | Cập nhật: 09/04/2026 (KMP M0 Day 3 PR in review)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**KMP Sprint M0 Day 3 READY · 5/8 SP shipped · 28/28 tests green · v2.0.1 shipped**
+**KMP Sprint M0 Day 3 IN REVIEW · 6.5/8 SP shipped · 43/43 tests green · v2.0.1 shipped**
 
-Day 1 (PR #44) + Day 2 (PR #45) both merged — skeleton + Pattern/Evidence/BaseVault + BaseLearner + BaseParser + LearnerRuntime orchestrator + datetime timezone-aware polish. Tests 28/28 green, lint PASS, self-build clean. Sprint progress **5/8 SP (62%)**. Day 3 scope: KMP-M0-04 import-linter CI + KMP-M0-05 hello vertical start — awaiting CEO "Day 3 start" command.
+Day 1 (PR #44) + Day 2 (PR #45) merged. Day 3 PR in review: KMP-M0-04 import-linter CI gate (`.importlinter` config + CI step, Core never imports Vertical enforced) + KMP-M0-05 start (HelloLearner + HelloParser skeleton, <50 LOC each). Tests 43/43 green (28 prev + 15 new), lint PASS, import-linter PASS, self-build 154 nodes clean. Sprint progress **6.5/8 SP (81%)**.
 
-### 🗓️ Hôm nay (08/04/2026) — Session timeline
+### 🗓️ Hôm nay (09/04/2026) — Session timeline
 
-1. **HC customer delivery verification** — re-run codebase-map trên HC, tuning YAML (flows + layer classifier feedback), unknown layer 11.1% → 0%.
-2. **Hotfix v2.0.1 full lifecycle** — kickoff → Day 1 (PR #38) → Day 2 (PR #39) → tag `v2.0.1` → GitHub Release → HC notification draft → chore #41 close-sprint.
-3. **KMP Phase 2 docs** — PR #40 merged (architecture + fdd-v2 + user stories + JD).
-4. **KMP Phase 2 designs** — 2 design files, review combined 82/100 (PO+CTO+BA), revised v2 với 4 fixes → PR #42 merged.
-5. **KMP Sprint M0 kickoff** — chore PR #43 merged (task board + Day 1 checklist + board sync).
-6. **KMP M0 Day 1** — PR #44 (KMP-M0-01 skeleton + Pattern/Evidence/BaseVault, 3 SP, 99/100 SHIPIT) — MERGED.
-7. **KMP M0 Day 2** — PR #45 (KMP-M0-02 finish + KMP-M0-03 runtime + datetime polish, 2 SP, 99/100 SHIPIT) — JUST MERGED.
+1. **KMP M0 Day 3** — import-linter CI gate (KMP-M0-04) + Hello vertical skeleton (KMP-M0-05 start), 1.5 SP, PR in review.
 
 ### 📦 PRs merged today (9 PRs)
 
@@ -36,8 +30,8 @@ Day 1 (PR #44) + Day 2 (PR #45) both merged — skeleton + Pattern/Evidence/Base
 
 ### ▶️ Next actions (pending CEO command)
 
-- **Day 3** — KMP-M0-04 import-linter CI + KMP-M0-05 hello vertical start (1.5 SP) — READY, awaiting CEO "Day 3 start"
-- **Day 4** — KMP-M0-05 finish + KMP-M0-07 vault-format-spec.md (2 SP) — pending
+- **Day 3 PR** — review-gate + CEO approve needed
+- **Day 4** — KMP-M0-05 finish (tests + README + e2e) + KMP-M0-07 vault-format-spec.md (2 SP) — pending
 - **Day 5** — KMP-M0-08 LICENSE + KMP-M0-06 CTO sign-off (1 SP) — pending
 
 | Field | Value |
@@ -283,7 +277,7 @@ Day 1 (PR #44) + Day 2 (PR #45) both merged — skeleton + Pattern/Evidence/Base
 
 | Vấn đề | Priority |
 |--------|----------|
-| KMP Sprint M0 Day 3 — awaiting CEO "Day 3 start" command (5/8 SP shipped) | 🔥 Active |
+| KMP Sprint M0 Day 3 PR in review — awaiting review-gate + CEO approve (6.5/8 SP) | 🔥 Active |
 | Wiki board ở HC repo cần update link repo mới | 🟢 Low |
 
 ---
@@ -317,4 +311,4 @@ Day 1 (PR #44) + Day 2 (PR #45) both merged — skeleton + Pattern/Evidence/Base
 
 ---
 
-*BRIEF.md v1.7 — Codebase Map | 08/04/2026 | KMP Sprint M0 Day 2 MERGED · 5/8 SP · Day 3 READY*
+*BRIEF.md v1.8 — Codebase Map | 09/04/2026 | KMP Sprint M0 Day 3 IN REVIEW · 6.5/8 SP (81%)*
