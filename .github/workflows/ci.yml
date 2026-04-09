@@ -19,16 +19,26 @@ jobs:
           python-version: "3.11"
 
       - name: Install lint tools
-        run: pip install "black==24.10.0" "isort==5.13.2" flake8
+        run: pip install "black==24.10.0" "isort==5.13.2" flake8 "import-linter>=2.0"
+
+      - name: Install project (for import-linter)
+        run: pip install -e ".[dev]"
 
       - name: Lint — black
-        run: black --check --target-version py310 codebase_map/
+        run: black --check --target-version py310 codebase_map/ knowledge_memory/
 
       - name: Lint — isort
-        run: isort --check --profile black codebase_map/
+        run: isort --check --profile black codebase_map/ knowledge_memory/
 
       - name: Lint — flake8
         run: flake8 codebase_map/ --exclude=codebase_map/exporters/d3.v7.min.js
+
+      - name: Lint — flake8 (knowledge_memory)
+        run: flake8 knowledge_memory/
+
+      # HC-AI | ticket: KMP-M0-04
+      - name: Lint — import-linter (Core never imports Vertical)
+        run: lint-imports
 
   test:
     runs-on: ubuntu-latest

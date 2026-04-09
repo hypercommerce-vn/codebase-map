@@ -1,0 +1,15 @@
+# HC-AI | ticket: KMP-M0-04
+# Import-linter configuration — enforce Core -> Vertical dependency rule
+# See architecture.md section 6: "Dependency Rule Enforcement"
+
+[importlinter]
+root_packages =
+    knowledge_memory
+
+[importlinter:contract:core-purity]
+name = Core never imports Vertical
+type = forbidden
+source_modules =
+    knowledge_memory.core
+forbidden_modules =
+    knowledge_memory.verticals
