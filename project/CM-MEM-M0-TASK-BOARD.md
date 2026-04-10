@@ -17,7 +17,7 @@ Build KMP Core skeleton (abstract base + runtime + CI gate) + Hello vertical (50
 | Field | Value |
 |-------|-------|
 | **Sprint code** | CM-MEM-M0 |
-| **Status** | 🔥 **ACTIVE** — Day 1 ✅ (PR #44, 99) · Day 2 ✅ (PR #45, 99) · Day 3 ✅ (PR #47, 100) · Day 4 🟡 PR IN REVIEW · 8/8 SP (100%) · 10/04/2026 |
+| **Status** | ✅ **COMPLETE** — Day 1 ✅ (PR #44, 99) · Day 2 ✅ (PR #45, 99) · Day 3 ✅ (PR #47, 100) · Day 4 ✅ (PR #51, 92) · Day 5 ✅ (PR #53) · 8/8 SP (100%) · 10/04/2026 |
 | **Start date** | 2026-04-09 (Day 1, T4) — pending CEO "Approve Day 1 start" |
 | **Target end** | 2026-04-15 (Day 5, T3) — 5 working days, nghỉ T7-CN |
 | **Duration** | 1 tuần |
@@ -39,8 +39,8 @@ Build KMP Core skeleton (abstract base + runtime + CI gate) + Hello vertical (50
 | 4 | KMP-M0-04 | Setup import-linter CI rule (Core ↛ Vertical) | 0.5 | D3 | ✅ Done (PR #47) | `.importlinter` config + CI step; lint-imports PASS clean, FAIL on deliberate violation |
 | 5 | KMP-M0-05 | Build `verticals/hello/` reference ≤ 50 LOC + `verticals/hello/README.md` | 1 | D3-4 | ✅ Done (PR #47 + Day 4 PR) | HelloLearner + HelloParser + README + 8 e2e tests via LearnerRuntime |
 | 6 | **KMP-M0-07** *(CEO add)* | Viết `docs/vault-format-spec.md` (≤ 5 trang) — public spec | 1 | D4 | ✅ Done (Day 4 PR) | 8 sections: layout, core schema, vertical schema, config, snapshot, patterns.md, compat |
-| 7 | **KMP-M0-08** *(CEO add)* | Add `LICENSE` (MIT) root + `LICENSE-PRO` template + CI lint check | 0.5 | D5 | ⏳ Todo | CI fail nếu thiếu LICENSE |
-| 8 | KMP-M0-06 | CTO architecture review + sign-off | 0.5 | D5 | ⏳ Todo | Review ≤ 1 ngày, ≥ 15/20 điểm |
+| 7 | **KMP-M0-08** *(CEO add)* | Add `LICENSE` (MIT) root + `LICENSE-PRO` template + CI lint check | 0.5 | D5 | ✅ Done (Day 5 PR) | CI fail nếu thiếu LICENSE |
+| 8 | KMP-M0-06 | CTO architecture review + sign-off | 0.5 | D5 | ✅ Done (20/20 PASS) | Review ≤ 1 ngày, ≥ 15/20 điểm |
 
 **Total: 8 SP**
 
