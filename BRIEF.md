@@ -6,9 +6,9 @@
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**KMP Sprint M0 Day 4 IN REVIEW · 8/8 SP coded · 51/51 tests green · v2.0.1 shipped**
+**KMP Sprint M0 COMPLETE · 8/8 SP · 51/51 tests green · 5 Days · 5 PRs · CTO 20/20 · v2.0.1 shipped**
 
-Day 1 (PR #44) + Day 2 (PR #45) + Day 3 (PR #47) all merged. Day 4 PR submitted: KMP-M0-05 finish (Hello README + 8 e2e tests via LearnerRuntime) + KMP-M0-07 (vault-format-spec.md, 8 sections). Tests 51/51 green (43 prev + 8 new e2e), lint + import-linter PASS. Sprint progress **8/8 SP (100%)** — awaiting review-gate + CEO merge. Day 5: LICENSE + CTO sign-off.
+Days 1-5 all merged. Day 5: LICENSE (MIT + PRO) + CI check + CTO architecture sign-off 20/20 PASS. Sprint M0 **8/8 SP (100%)** DONE. All 8 tasks complete. Ready for M1 design phase.
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
@@ -38,11 +38,13 @@ Day 1 (PR #44) + Day 2 (PR #45) + Day 3 (PR #47) all merged. Day 4 PR submitted:
 | #46 | chore(state): session checkpoint 08/04 | — | 🟡 pending |
 | #47 | feat(kmp): M0 Day 3 — import-linter CI + Hello vertical | 100 | ✅ merged |
 | #49 | chore(docs): update install URLs + auth guide for private repo | — | ✅ merged |
+| #51 | feat(kmp): M0 Day 4 — Hello finish + vault-format-spec | 92 | ✅ merged |
+| #52 | chore(project): board separation KMP/CM | — | ✅ merged |
 
-### ▶️ Next actions (pending CEO command)
+### ▶️ Next actions
 
-- **Day 4** — KMP-M0-05 finish (Hello vertical README + e2e tests) + KMP-M0-07 vault-format-spec.md (1.5 SP) — READY
-- **Day 5** — KMP-M0-08 LICENSE + KMP-M0-06 CTO sign-off (0.5 SP) — pending
+- **M0 COMPLETE** — all 8 tasks done, CTO sign-off 20/20 PASS
+- **Next:** M1 design phase → CEO approve → M1 Sprint kickoff
 
 | Field | Value |
 |-------|-------|
@@ -289,7 +291,7 @@ Day 1 (PR #44) + Day 2 (PR #45) + Day 3 (PR #47) all merged. Day 4 PR submitted:
 
 | Vấn đề | Priority |
 |--------|----------|
-| KMP Sprint M0 Day 4 — awaiting CEO "Day 4 start" (6.5/8 SP, 81%) | 🔥 Active |
+| KMP M1 design phase — cần design trước khi code (Rule #5) | 🔥 Next |
 | Wiki board ở HC repo cần update link repo mới | 🟢 Low |
 
 ---
@@ -323,4 +325,4 @@ Day 1 (PR #44) + Day 2 (PR #45) + Day 3 (PR #47) all merged. Day 4 PR submitted:
 
 ---
 
-*BRIEF.md v2.0 — Codebase Map | 09/04/2026 | Repo PRIVATE · PR #49 merged · KMP M0 Day 4 READY*
+*BRIEF.md v2.1 — Codebase Map | 10/04/2026 | Repo PRIVATE · KMP M0 COMPLETE · CTO 20/20*

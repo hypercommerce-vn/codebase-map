@@ -1,0 +1,35 @@
+# Hyper Commerce — Proprietary License (Pro Features)
+
+Copyright (c) 2026 Hyper Commerce Vietnam. All rights reserved.
+
+## Scope
+
+This license applies to all files and directories explicitly marked as
+"Pro" or "Proprietary" within this repository, including but not limited to:
+
+- `knowledge_memory/pro/` (future)
+- Any module with `# LICENSE: PRO` header comment
+- Features gated behind Pro configuration flags
+
+## Terms
+
+1. **No Redistribution.** You may not copy, distribute, sublicense, or sell
+   any Pro-licensed code without prior written consent from Hyper Commerce.
+
+2. **Internal Use Only.** Pro features are licensed for internal use by
+   authorized Hyper Commerce customers and partners.
+
+3. **No Reverse Engineering.** You may not decompile, disassemble, or
+   reverse-engineer Pro-licensed components.
+
+4. **Core Remains MIT.** All code NOT marked as Pro is licensed under the
+   MIT License (see `LICENSE` file). The Pro license does not restrict
+   the MIT-licensed Core in any way.
+
+## Contact
+
+For licensing inquiries: hypercdp@gmail.com
+
+---
+
+*LICENSE-PRO v1.0 — Hyper Commerce · 2026*

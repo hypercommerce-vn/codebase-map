@@ -36,6 +36,13 @@ jobs:
       - name: Lint — flake8 (knowledge_memory)
         run: flake8 knowledge_memory/
 
+      # HC-AI | ticket: KMP-M0-08
+      - name: Check — LICENSE files exist
+        run: |
+          test -f LICENSE || { echo "ERROR: LICENSE file missing"; exit 1; }
+          test -f LICENSE-PRO || { echo "ERROR: LICENSE-PRO file missing"; exit 1; }
+          echo "LICENSE check OK: both files present"
+
       # HC-AI | ticket: KMP-M0-04
       - name: Lint — import-linter (Core never imports Vertical)
         run: lint-imports
