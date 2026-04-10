@@ -1,0 +1,567 @@
+<!-- HC-AI | ticket: KMP-M0 -->
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KMP — Knowledge Memory Platform Board</title>
+<style>
+/* ═══════════════════════════════════════════════════════
+   DESIGN SYSTEM — KMP Project Board
+   Cloned from: Codebase Map Board Design System
+   Designed by: PM Agent · April 2026
+═══════════════════════════════════════════════════════ */
+
+:root {
+  --brand:          #f97316;
+  --brand-dark:     #ea580c;
+  --brand-light:    #fff7ed;
+  --bg:             #ffffff;
+  --bg-subtle:      #f8fafc;
+  --bg-muted:       #f1f5f9;
+  --surface:        #ffffff;
+  --border:         #e2e8f0;
+  --border-muted:   #f1f5f9;
+  --text-primary:   #0f172a;
+  --text-secondary: #475569;
+  --text-muted:     #94a3b8;
+  --sidebar-bg:     #fafafa;
+  --sidebar-w:      260px;
+  --c-blue:   #1d4ed8;  --c-blue-bg:  #eff6ff;
+  --c-green:  #15803d;  --c-green-bg: #f0fdf4;
+  --c-amber:  #b45309;  --c-amber-bg: #fffbeb;
+  --c-red:    #b91c1c;  --c-red-bg:   #fef2f2;
+  --c-purple: #7c3aed;  --c-purple-bg:#faf5ff;
+  --c-orange: #ea580c;  --c-orange-bg:#fff7ed;
+  --r-sm: 4px; --r-md: 8px; --r-lg: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+[data-theme="dark"] {
+  --bg:#0a0a0f; --bg-subtle:#111118; --bg-muted:#1a1a24;
+  --surface:#111118; --border:#1e2030; --border-muted:#151520;
+  --sidebar-bg:#0d0d15; --text-primary:#f1f5f9; --text-secondary:#94a3b8; --text-muted:#475569;
+  --brand-light:#431407;
+  --c-blue-bg:#0f1728; --c-green-bg:#071b0f; --c-amber-bg:#1a1003; --c-red-bg:#1a0608; --c-purple-bg:#12071f; --c-orange-bg:#1a0c03;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.3); --shadow-md:0 4px 12px rgba(0,0,0,.4);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text-primary);line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
+
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px}
+.topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none!important}
+.logo-mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#ea580c,#f97316);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;flex-shrink:0}
+.logo-text{font-size:14px;font-weight:700;color:var(--text-primary);line-height:1.2}
+.logo-sub{font-size:10px;color:var(--text-muted);letter-spacing:.04em}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);margin-left:16px}
+.breadcrumb a{color:var(--text-muted)} .breadcrumb a:hover{color:var(--brand);text-decoration:none}
+.bc-sep{opacity:.4}
+.topbar-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+.icon-btn{width:32px;height:32px;border-radius:var(--r-md);border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;transition:background .15s}
+.icon-btn:hover{background:var(--bg-muted);color:var(--text-primary)}
+.topbar-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#9a3412,#f97316);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700}
+.gh-link{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);color:var(--text-secondary);font-size:12px;cursor:pointer;text-decoration:none!important;transition:all .15s}
+.gh-link:hover{background:var(--bg-muted);color:var(--text-primary);text-decoration:none}
+
+.shell{display:flex;padding-top:52px;min-height:100vh}
+.sidebar{position:fixed;top:52px;left:0;bottom:0;width:var(--sidebar-w);background:var(--sidebar-bg);border-right:1px solid var(--border);overflow-y:auto;padding:16px 0 40px;scrollbar-width:thin;z-index:100}
+.nav-section{margin-bottom:4px}
+.nav-section-header{display:flex;align-items:center;justify-content:space-between;padding:6px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);cursor:pointer;user-select:none}
+.nav-items{padding:2px 0}
+.nav-item{display:flex;align-items:center;gap:8px;padding:6px 16px;font-size:13px;color:var(--text-secondary);cursor:pointer;text-decoration:none!important;transition:background .1s,color .1s;position:relative}
+.nav-item:hover{background:var(--bg-muted);color:var(--text-primary)}
+.nav-item.active{background:var(--brand-light);color:var(--brand-dark);font-weight:600}
+.nav-item.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:2px;background:var(--brand);border-radius:0 2px 2px 0}
+.nav-item-icon{font-size:14px;flex-shrink:0;width:18px;text-align:center}
+.nav-item-badge{margin-left:auto;font-size:10px;font-weight:600;background:var(--brand-light);color:var(--brand);padding:1px 6px;border-radius:10px}
+.nav-sub-item{display:flex;align-items:center;gap:8px;padding:5px 16px 5px 38px;font-size:12.5px;color:var(--text-secondary);cursor:pointer;transition:background .1s;text-decoration:none!important}
+.nav-sub-item:hover{background:var(--bg-muted);color:var(--text-primary)}
+.nav-divider{height:1px;background:var(--border);margin:8px 16px}
+
+.main{margin-left:var(--sidebar-w);flex:1;min-width:0}
+.content-area{max-width:900px;padding:32px 48px 80px}
+
+.hero{background:linear-gradient(135deg,#ea580c 0%,#f97316 50%,#fb923c 100%);border-radius:var(--r-lg);padding:36px 40px;color:#fff;margin-bottom:32px}
+.hero-icon{font-size:40px;margin-bottom:12px}
+.hero h1{font-size:26px;font-weight:700;margin-bottom:8px}
+.hero p{font-size:14px;opacity:.9;margin-bottom:20px}
+.hero-badges{display:flex;flex-wrap:wrap;gap:10px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:6px 16px;font-size:12.5px;font-weight:600;color:#fff}
+
+.article h2{font-size:18px;font-weight:700;margin:36px 0 16px;display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.article h2 .h2-icon{font-size:20px}
+.article h3{font-size:15px;font-weight:600;margin:24px 0 12px;color:var(--text-secondary)}
+.article p{margin-bottom:12px;font-size:14px;color:var(--text-secondary)}
+
+.article table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px}
+.article th{text-align:left;padding:10px 14px;background:var(--bg-subtle);border-bottom:2px solid var(--border);font-weight:600;color:var(--text-secondary);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.article td{padding:10px 14px;border-bottom:1px solid var(--border-muted);vertical-align:middle}
+.article tr:hover td{background:var(--bg-subtle)}
+.article code{background:var(--bg-muted);border:1px solid var(--border);border-radius:var(--r-sm);padding:1px 6px;font-family:var(--font-mono);font-size:12px;color:var(--c-orange)}
+
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;background:var(--c-orange-bg);color:var(--c-orange)}
+.badge.done{background:var(--c-green-bg);color:var(--c-green)}
+.badge.active{background:var(--c-blue-bg);color:var(--c-blue)}
+.badge.planned{background:var(--bg-muted);color:var(--text-muted)}
+.badge.merged{background:var(--c-green-bg);color:var(--c-green)}
+.badge.ceo{background:#f0fdf4;color:#15803d;font-weight:700}
+.badge.review{background:var(--c-amber-bg);color:var(--c-amber)}
+.badge.issue{background:var(--c-purple-bg);color:var(--c-purple)}
+
+.workflow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px}
+.wf-pill{display:inline-flex;align-items:center;padding:6px 14px;border-radius:20px;font-size:12.5px;font-weight:500;border:1px solid var(--border);background:var(--bg-subtle);color:var(--text-primary)}
+.wf-pill.orange{background:var(--c-orange-bg);color:var(--c-orange);border-color:transparent}
+.wf-pill.amber{background:var(--c-amber-bg);color:var(--c-amber);border-color:transparent}
+.wf-pill.blue{background:var(--c-blue-bg);color:var(--c-blue);border-color:transparent}
+.wf-pill.green{background:var(--c-green-bg);color:var(--c-green);border-color:transparent}
+.wf-pill.purple{background:var(--c-purple-bg);color:var(--c-purple);border-color:transparent}
+.wf-arrow{color:var(--text-muted);font-size:14px}
+
+.progress-bar{height:6px;border-radius:3px;background:var(--bg-muted);overflow:hidden;margin-bottom:8px}
+.progress-fill{height:100%;border-radius:3px;transition:width .3s}
+.progress-label{font-size:11px;color:var(--text-muted)}
+
+.timeline{margin-bottom:24px}
+.tl-item{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border-muted)}
+.tl-date{flex-shrink:0;width:100px;font-size:12px;font-weight:600;color:var(--text-muted)}
+.tl-content{font-size:13px;color:var(--text-secondary)} .tl-content strong{color:var(--text-primary)}
+
+.issue-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;margin-bottom:10px;transition:box-shadow .15s}
+.issue-card:hover{box-shadow:var(--shadow-md)}
+.issue-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.issue-card-title{font-size:13px;font-weight:600;color:var(--text-primary)}
+.issue-card-body{font-size:12px;color:var(--text-secondary);line-height:1.6}
+.issue-card-meta{display:flex;gap:8px;margin-top:8px;font-size:11px;color:var(--text-muted)}
+
+.footer{border-top:1px solid var(--border);padding:20px 48px;margin-left:var(--sidebar-w);font-size:12px;color:var(--text-muted);display:flex;justify-content:space-between}
+
+@media(max-width:900px){
+  .sidebar{display:none} .main{margin-left:0} .footer{margin-left:0}
+  .content-area{padding:20px 16px 60px} .hero{padding:24px 20px}
+  .hero h1{font-size:20px} .hero-badges{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP HEADER -->
+<div class="topbar">
+  <a class="topbar-logo" href="#">
+    <div class="logo-mark">KM</div>
+    <div>
+      <div class="logo-text">Knowledge Memory Platform</div>
+      <div class="logo-sub">Project Board</div>
+    </div>
+  </a>
+  <div class="breadcrumb">
+    <a href="board.html">Codebase Map</a>
+    <span class="bc-sep">&#8250;</span>
+    <span>KMP Board</span>
+  </div>
+  <div class="topbar-actions">
+    <a class="gh-link" href="https://github.com/hypercommerce-vn/codebase-map" target="_blank">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      GitHub (PRIVATE)
+    </a>
+    <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">&#127769;</button>
+    <div class="topbar-avatar">&#272;T</div>
+  </div>
+</div>
+
+<!-- LAYOUT SHELL -->
+<div class="shell">
+
+<!-- Left Sidebar -->
+<nav class="sidebar">
+  <div class="nav-section">
+    <div class="nav-section-header">KMP SPRINTS</div>
+    <div class="nav-items">
+      <a class="nav-item active" href="#sprint-m0">
+        <span class="nav-item-icon">&#128293;</span> Sprint M0
+        <span class="nav-item-badge">8 SP</span>
+      </a>
+      <a class="nav-sub-item" href="#day1">Day 1 &#10003; PR #44</a>
+      <a class="nav-sub-item" href="#day2">Day 2 &#10003; PR #45</a>
+      <a class="nav-sub-item" href="#day3">Day 3 &#10003; PR #47</a>
+      <a class="nav-sub-item" href="#day4">Day 4 &#9888; PR #51</a>
+      <a class="nav-sub-item" href="#day5">Day 5 &#9203; pending</a>
+    </div>
+  </div>
+
+  <div class="nav-divider"></div>
+
+  <div class="nav-section">
+    <div class="nav-section-header">TRACKING</div>
+    <div class="nav-items">
+      <a class="nav-item" href="#issues">
+        <span class="nav-item-icon">&#128203;</span> Issues & Polish
+        <span class="nav-item-badge">4</span>
+      </a>
+      <a class="nav-item" href="#decisions">
+        <span class="nav-item-icon">&#128203;</span> Decisions
+      </a>
+      <a class="nav-item" href="#pr-history">
+        <span class="nav-item-icon">&#128230;</span> PR History
+      </a>
+    </div>
+  </div>
+
+  <div class="nav-divider"></div>
+
+  <div class="nav-section">
+    <div class="nav-section-header">REFERENCES</div>
+    <div class="nav-items">
+      <a class="nav-item" href="../specs/kmp/architecture.md" target="_blank">
+        <span class="nav-item-icon">&#128209;</span> Architecture Spec
+      </a>
+      <a class="nav-item" href="../specs/kmp/fdd-v2.md" target="_blank">
+        <span class="nav-item-icon">&#128209;</span> FDD v2
+      </a>
+      <a class="nav-item" href="../design-preview/kmp-v2-design.html" target="_blank">
+        <span class="nav-item-icon">&#127912;</span> KMP Design v2
+      </a>
+      <a class="nav-item" href="../design-preview/kmp-M0-design.html" target="_blank">
+        <span class="nav-item-icon">&#127912;</span> KMP M0 Design
+      </a>
+      <a class="nav-item" href="board.html">
+        <span class="nav-item-icon">&#128506;</span> Codebase Map Board
+      </a>
+      <a class="nav-item" href="../BRIEF.md" target="_blank">
+        <span class="nav-item-icon">&#128221;</span> BRIEF.md
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+<div class="content-area article">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-icon">&#129504;</div>
+    <h1>Knowledge Memory Platform — Project Board</h1>
+    <p>Knowledge OS for every domain. Local-first, BYOK, open vault format. CEO-approved 08/04/2026.</p>
+    <div class="hero-badges">
+      <span class="hero-badge">&#128293; Sprint M0 ACTIVE &middot; 8/8 SP (100%) coded</span>
+      <span class="hero-badge">Day 4 &#9888; IN REVIEW &middot; PR #51 (92/100)</span>
+      <span class="hero-badge">51/51 tests green</span>
+      <span class="hero-badge">Repo PRIVATE &middot; 10/04/2026</span>
+    </div>
+  </div>
+
+  <!-- Architecture Overview -->
+  <h2><span class="h2-icon">&#128736;</span> Architecture Overview</h2>
+  <table>
+    <thead>
+      <tr><th>Component</th><th>Description</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>knowledge_memory/core/vault/</code></td><td>BaseVault ABC &mdash; local-first SQLite storage</td><td><span class="badge done">&#10003; M0</span></td></tr>
+      <tr><td><code>knowledge_memory/core/learners/</code></td><td>BaseLearner[E,C] + LearnerRuntime orchestrator</td><td><span class="badge done">&#10003; M0</span></td></tr>
+      <tr><td><code>knowledge_memory/core/parsers/</code></td><td>BaseParser ABC + Evidence dataclass</td><td><span class="badge done">&#10003; M0</span></td></tr>
+      <tr><td><code>knowledge_memory/core/ai/</code></td><td>AI Gateway &mdash; BYOK multi-LLM provider</td><td><span class="badge planned">M1</span></td></tr>
+      <tr><td><code>knowledge_memory/core/mcp/</code></td><td>MCP Hub &mdash; tool/resource registry</td><td><span class="badge planned">M1</span></td></tr>
+      <tr><td><code>knowledge_memory/core/cli/</code></td><td>CLI framework &mdash; BaseCLI per vertical</td><td><span class="badge planned">M1</span></td></tr>
+      <tr><td><code>knowledge_memory/core/licensing/</code></td><td>Ed25519 license verification &mdash; MIT + Pro</td><td><span class="badge planned">M0-D5</span></td></tr>
+      <tr><td><code>knowledge_memory/verticals/hello/</code></td><td>Reference vertical &mdash; &#8804;50 LOC proof of contract</td><td><span class="badge done">&#10003; M0</span></td></tr>
+      <tr><td><code>knowledge_memory/verticals/codebase/</code></td><td>Codebase Memory vertical (first product)</td><td><span class="badge planned">M1</span></td></tr>
+    </tbody>
+  </table>
+
+  <!-- Sprint M0 Task Board -->
+  <h2 id="sprint-m0"><span class="h2-icon">&#128293;</span> Sprint M0 &mdash; Core Skeleton + Hello Vertical <span class="badge" style="font-size:12px;margin-left:8px;">8/8 SP &middot; 100% coded</span></h2>
+
+  <div class="progress-bar"><div class="progress-fill" style="width:100%;background:#f97316"></div></div>
+  <div class="progress-label">8/8 SP (100%) coded &middot; Day 4 in review &middot; Day 5 pending &middot; Target: 15/04/2026</div>
+
+  <table>
+    <thead>
+      <tr><th>#</th><th>ID</th><th>Task</th><th>SP</th><th>Day</th><th>PR</th><th>Score</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr id="day1">
+        <td>1</td><td><code>KMP-M0-01</code></td>
+        <td>Package <code>knowledge_memory/core/</code> skeleton (9 sub-packages)</td>
+        <td>1</td><td>D1</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/44" target="_blank">#44</a></td>
+        <td>99/100</td>
+        <td><span class="badge done">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td>2</td><td><code>KMP-M0-02</code></td>
+        <td>BaseVault + BaseLearner + BaseParser + Pattern + Evidence</td>
+        <td>2</td><td>D1-2</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/44" target="_blank">#44</a> + <a href="https://github.com/hypercommerce-vn/codebase-map/pull/45" target="_blank">#45</a></td>
+        <td>99</td>
+        <td><span class="badge done">&#10003; Merged</span></td>
+      </tr>
+      <tr id="day2">
+        <td>3</td><td><code>KMP-M0-03</code></td>
+        <td>LearnerRuntime orchestrator (register + run pipeline)</td>
+        <td>1</td><td>D2</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/45" target="_blank">#45</a></td>
+        <td>99/100</td>
+        <td><span class="badge done">&#10003; Merged</span></td>
+      </tr>
+      <tr id="day3">
+        <td>4</td><td><code>KMP-M0-04</code></td>
+        <td>import-linter CI gate: Core &#8603; Vertical</td>
+        <td>0.5</td><td>D3</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/47" target="_blank">#47</a></td>
+        <td>100/100</td>
+        <td><span class="badge done">&#10003; Merged</span></td>
+      </tr>
+      <tr id="day4">
+        <td>5</td><td><code>KMP-M0-05</code></td>
+        <td>Hello vertical &#8804;50 LOC + README + e2e tests</td>
+        <td>1</td><td>D3-4</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/47" target="_blank">#47</a> + <a href="https://github.com/hypercommerce-vn/codebase-map/pull/51" target="_blank">#51</a></td>
+        <td>92/100</td>
+        <td><span class="badge review">&#9888; In Review</span></td>
+      </tr>
+      <tr>
+        <td>6</td><td><code>KMP-M0-07</code></td>
+        <td>Vault format public spec (<code>docs/vault-format-spec.md</code>)</td>
+        <td>0.5</td><td>D4</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/51" target="_blank">#51</a></td>
+        <td>92/100</td>
+        <td><span class="badge review">&#9888; In Review</span></td>
+      </tr>
+      <tr id="day5">
+        <td>7</td><td><code>KMP-M0-08</code></td>
+        <td>LICENSE (MIT) + LICENSE-PRO template + CI check</td>
+        <td>0.5</td><td>D5</td>
+        <td>&mdash;</td>
+        <td>&mdash;</td>
+        <td><span class="badge planned">&#9203; Todo</span></td>
+      </tr>
+      <tr>
+        <td>8</td><td><code>KMP-M0-06</code></td>
+        <td>CTO architecture review + sign-off</td>
+        <td>0.5</td><td>D5</td>
+        <td>&mdash;</td>
+        <td>&mdash;</td>
+        <td><span class="badge planned">&#9203; Todo</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Daily Summary -->
+  <h3>Daily Summary</h3>
+  <table>
+    <thead><tr><th>Day</th><th>Date</th><th>SP</th><th>PR</th><th>Score</th><th>Key Deliverables</th></tr></thead>
+    <tbody>
+      <tr><td><strong>D1</strong></td><td>09/04</td><td>3</td><td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/44" target="_blank">#44</a></td><td>99/100 SHIPIT</td><td>Core skeleton + Pattern + Evidence + BaseVault</td></tr>
+      <tr><td><strong>D2</strong></td><td>09/04</td><td>2</td><td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/45" target="_blank">#45</a></td><td>99/100 SHIPIT</td><td>BaseLearner + BaseParser + LearnerRuntime + datetime fix</td></tr>
+      <tr><td><strong>D3</strong></td><td>09/04</td><td>1.5</td><td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/47" target="_blank">#47</a></td><td>100/100 SHIPIT</td><td>import-linter CI + HelloLearner + HelloParser</td></tr>
+      <tr><td><strong>D4</strong></td><td>10/04</td><td>1.5</td><td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/51" target="_blank">#51</a></td><td>92/100 SHIPIT+NOTE</td><td>Hello README + 8 e2e tests + vault-format-spec.md</td></tr>
+      <tr><td><strong>D5</strong></td><td>TBD</td><td>0.5</td><td>&mdash;</td><td>&mdash;</td><td>LICENSE dual MIT/PRO + CTO sign-off</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Issues & Polish Backlog -->
+  <h2 id="issues"><span class="h2-icon">&#128203;</span> Issues & Polish Backlog</h2>
+  <p>Issues detected during review-gate. Non-blocking but tracked for follow-up.</p>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-01: vault-format-spec schema extras vs architecture.md</span>
+      <span class="badge issue">spec-drift</span>
+    </div>
+    <div class="issue-card-body">
+      <code>vault-format-spec.md</code> adds <code>metadata_json</code> column and <code>AUTOINCREMENT</code> to <code>patterns</code> table that are not in <code>architecture.md</code> &sect;4.1. Also adds <code>idx_patterns_confidence</code> index. These are forward-compatible improvements but create drift between public spec and internal architecture doc.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: PR #51 review-gate (CTO, Dim C)</span>
+      <span>&middot;</span>
+      <span>Priority: Low</span>
+      <span>&middot;</span>
+      <span>Action: Reconcile architecture.md in M1 or add "Spec Extensions" note</span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-02: Dead register_parser call in e2e test</span>
+      <span class="badge issue">test-clarity</span>
+    </div>
+    <div class="issue-card-body">
+      <code>test_runtime_full_pipeline</code> calls <code>runtime.register_parser(parser)</code> but <code>LearnerRuntime.run()</code> never uses <code>_parsers</code>. The parser is used externally to generate evidence fed into StubVault. Cosmetic: remove the line or add a comment.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: PR #51 review-gate (CTO, Dim A)</span>
+      <span>&middot;</span>
+      <span>Priority: Low</span>
+      <span>&middot;</span>
+      <span>Action: Clean up in Day 5 or M1</span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-03: Index/column minor diffs (IF NOT EXISTS, DEFAULT)</span>
+      <span class="badge issue">spec-drift</span>
+    </div>
+    <div class="issue-card-body">
+      vault-format-spec uses <code>CREATE INDEX IF NOT EXISTS</code> and <code>success BOOLEAN NOT NULL DEFAULT 1</code> while architecture.md has bare <code>CREATE INDEX</code> and <code>success BOOLEAN</code>. The spec versions are better practice for production.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: PR #51 review-gate (CTO, Dim C)</span>
+      <span>&middot;</span>
+      <span>Priority: Low</span>
+      <span>&middot;</span>
+      <span>Action: Update architecture.md to match spec in M1</span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-04: File naming discrepancy (hello_parser.py vs parsers.py)</span>
+      <span class="badge issue">doc-drift</span>
+    </div>
+    <div class="issue-card-body">
+      Implementation uses <code>hello_parser.py</code> / <code>hello_learner.py</code> while <code>architecture.md</code> &sect;5 Reference vertical shows <code>parsers.py</code> / <code>learners.py</code>. README correctly documents reality (actual file names). Architecture doc needs update.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: PR #51 review-gate (CTO, Dim B)</span>
+      <span>&middot;</span>
+      <span>Priority: Low</span>
+      <span>&middot;</span>
+      <span>Action: Update architecture.md &sect;5 in M1</span>
+    </div>
+  </div>
+
+  <!-- PR History -->
+  <h2 id="pr-history"><span class="h2-icon">&#128230;</span> PR History</h2>
+  <table>
+    <thead><tr><th>PR</th><th>Title</th><th>Branch</th><th>Score</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/40" target="_blank">#40</a></td>
+        <td>docs(kmp): Phase 2 foundation specs</td>
+        <td><code>docs/kmp-phase2-foundation</code></td>
+        <td>&mdash;</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/42" target="_blank">#42</a></td>
+        <td>design(kmp): Phase 2 design mocks (v2 + M0)</td>
+        <td><code>design/kmp-phase2</code></td>
+        <td>82/100</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/43" target="_blank">#43</a></td>
+        <td>chore(kmp): kickoff Sprint M0 &mdash; task board + day plan</td>
+        <td><code>chore/kmp-m0-kickoff</code></td>
+        <td>&mdash;</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/44" target="_blank">#44</a></td>
+        <td>feat(kmp): M0 Day 1 &mdash; core skeleton + Pattern/Evidence/BaseVault</td>
+        <td><code>feat/kmp-m0-01-core-skeleton</code></td>
+        <td>99/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/45" target="_blank">#45</a></td>
+        <td>feat(kmp): M0 Day 2 &mdash; BaseLearner + BaseParser + LearnerRuntime</td>
+        <td><code>feat/kmp-m0-day2-learner-parser-runtime</code></td>
+        <td>99/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/47" target="_blank">#47</a></td>
+        <td>feat(kmp): M0 Day 3 &mdash; import-linter CI + Hello vertical</td>
+        <td><code>feat/kmp-m0-day3-importlinter-hello</code></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/51" target="_blank">#51</a></td>
+        <td>feat(kmp): M0 Day 4 &mdash; Hello vertical finish + vault-format-spec</td>
+        <td><code>feat/kmp-m0-day4-hello-finish-vaultspec</code></td>
+        <td>92/100 SHIPIT+NOTE</td>
+        <td><span class="badge review">&#9888; In Review</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Key Decisions -->
+  <h2 id="decisions"><span class="h2-icon">&#128203;</span> Key Decisions</h2>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-date">07/04/2026</div>
+      <div class="tl-content"><strong>KMP Architecture approved</strong> &mdash; 5 design principles, extension contract, Core &#8603; Vertical rule. CEO sign-off &sect;9.bis.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">08/04/2026</div>
+      <div class="tl-content"><strong>Phase 2 designs approved</strong> &mdash; kmp-v2-design.html + kmp-M0-design.html (combined 82/100). PR #42 merged.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">08/04/2026</div>
+      <div class="tl-content"><strong>Sprint M0 kickoff</strong> &mdash; 8 SP, 5 Days, 8 tasks. CEO approved 2 add-ons: KMP-M0-07 (vault-format-spec) + KMP-M0-08 (LICENSE).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">08/04/2026</div>
+      <div class="tl-content"><strong>D-1: Package name</strong> = <code>knowledge_memory</code> (clear, SEO-friendly). D-2: Monorepo. D-3: MIT Core + Pro features. D-4: Open vault spec. D-5: Hello ships with v1.0.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">09/04/2026</div>
+      <div class="tl-content"><strong>M0 Days 1-3 merged</strong> &mdash; 6.5/8 SP (81%). Review scores: 99, 99, 100. import-linter enforcing Core &#8603; Vertical.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">09/04/2026</div>
+      <div class="tl-content"><strong>Repo PRIVATE</strong> &mdash; Public &rarr; Private. PR #49: SSH install URLs + auth guide + ONBOARDING.md update.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">10/04/2026</div>
+      <div class="tl-content"><strong>M0 Day 4 submitted</strong> &mdash; PR #51: Hello README + 8 e2e tests + vault-format-spec.md. 92/100 SHIPIT+NOTE. 4 non-blocking issues tracked.</div>
+    </div>
+  </div>
+
+  <!-- Specs & Design Refs -->
+  <h2><span class="h2-icon">&#128196;</span> Specs & Design References</h2>
+  <table>
+    <thead><tr><th>Document</th><th>File</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>KMP Architecture</td><td><code>specs/kmp/architecture.md</code></td><td><span class="badge ceo">CEO &#10003;</span></td></tr>
+      <tr><td>FDD v2</td><td><code>specs/kmp/fdd-v2.md</code></td><td><span class="badge ceo">CEO &#10003;</span></td></tr>
+      <tr><td>User Stories M0-M1</td><td><code>specs/kmp/user-stories-m0-m1.md</code></td><td><span class="badge ceo">CEO &#10003;</span></td></tr>
+      <tr><td>Design KMP v2</td><td><code>design-preview/kmp-v2-design.html</code></td><td><span class="badge ceo">CEO &#10003;</span></td></tr>
+      <tr><td>Design KMP M0</td><td><code>design-preview/kmp-M0-design.html</code></td><td><span class="badge ceo">CEO &#10003;</span></td></tr>
+      <tr><td>Vault Format Spec</td><td><code>docs/vault-format-spec.md</code></td><td><span class="badge review">&#9888; PR #51</span></td></tr>
+      <tr><td>Task Board M0</td><td><code>project/CM-MEM-M0-TASK-BOARD.md</code></td><td><span class="badge active">Active</span></td></tr>
+      <tr><td>Session State</td><td><code>specs/kmp/SESSION-STATE.md</code></td><td><span class="badge active">v4.1</span></td></tr>
+    </tbody>
+  </table>
+
+</div>
+</div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <span>KMP Project Board &middot; Knowledge Memory Platform &middot; Hyper Commerce</span>
+  <span>Updated: 10/04/2026 &middot; Sprint M0 Day 4 IN REVIEW &middot; 8/8 SP (100%) &middot; Repo PRIVATE</span>
+</div>
+
+<script>
+function toggleTheme(){
+  const h=document.documentElement;
+  const t=h.getAttribute('data-theme')==='dark'?'light':'dark';
+  h.setAttribute('data-theme',t);
+  document.getElementById('theme-btn').textContent=t==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';
+}
+</script>
+</body>
+</html>
