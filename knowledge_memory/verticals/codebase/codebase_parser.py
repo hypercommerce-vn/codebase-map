@@ -2,8 +2,9 @@
 """PythonASTParser — parse Python files into Evidence objects for KMP."""
 
 import ast
+import fnmatch
 from pathlib import Path
-from typing import Iterator, List, Optional, Union
+from typing import Dict, Iterator, List, Optional, Union
 
 from knowledge_memory.core.parsers.base import BaseParser
 from knowledge_memory.core.parsers.evidence import Evidence
@@ -176,6 +177,110 @@ class PythonASTParser(BaseParser):
                 "class_name": class_name or "",
             },
         )
+
+    # HC-AI | ticket: MEM-M1-02
+    def parse_directory(
+        self,
+        root: Path,
+        include: Optional[List[str]] = None,
+        exclude: Optional[List[str]] = None,
+    ) -> Iterator[Evidence]:
+        """Scan a directory tree for Python files and yield Evidence.
+
+        Args:
+            root: Project root directory to scan.
+            include: Glob patterns for files to include (default: ``["**/*.py"]``).
+            exclude: Glob patterns for files to exclude
+                     (default: common non-source dirs).
+
+        Yields:
+            Evidence objects for every function/class/method found.
+        """
+        if include is None:
+            include = ["**/*.py"]
+        if exclude is None:
+            exclude = [
+                "**/__pycache__/**",
+                "**/.venv/**",
+                "**/venv/**",
+                "**/node_modules/**",
+                "**/.git/**",
+                "**/dist/**",
+                "**/.tox/**",
+                "**/.mypy_cache/**",
+                "**/.pytest_cache/**",
+            ]
+
+        # Collect matching files
+        files: List[Path] = []
+        for pattern in include:
+            for p in root.glob(pattern):
+                if p.is_file() and self.supports(p):
+                    # Check exclude patterns
+                    rel = str(p.relative_to(root))
+                    if not any(fnmatch.fnmatch(rel, ex) for ex in exclude):
+                        files.append(p)
+
+        # Deduplicate and sort for deterministic ordering
+        files = sorted(set(files))
+
+        for f in files:
+            yield from self.parse(f)
+
+    # HC-AI | ticket: MEM-M1-02
+    def scan_stats(
+        self,
+        root: Path,
+        include: Optional[List[str]] = None,
+        exclude: Optional[List[str]] = None,
+    ) -> Dict[str, int]:
+        """Scan directory and return stats without yielding all evidence.
+
+        Returns dict with keys: files, nodes, classes, functions, methods.
+        Useful for pre-scan estimation and summary display.
+        """
+        if include is None:
+            include = ["**/*.py"]
+        if exclude is None:
+            exclude = [
+                "**/__pycache__/**",
+                "**/.venv/**",
+                "**/venv/**",
+                "**/node_modules/**",
+                "**/.git/**",
+            ]
+
+        stats: Dict[str, int] = {
+            "files": 0,
+            "nodes": 0,
+            "classes": 0,
+            "functions": 0,
+            "methods": 0,
+        }
+
+        files: List[Path] = []
+        for pattern in include:
+            for p in root.glob(pattern):
+                if p.is_file() and self.supports(p):
+                    rel = str(p.relative_to(root))
+                    if not any(fnmatch.fnmatch(rel, ex) for ex in exclude):
+                        files.append(p)
+
+        files = sorted(set(files))
+        stats["files"] = len(files)
+
+        for f in files:
+            for ev in self.parse(f):
+                stats["nodes"] += 1
+                node_type = ev.data.get("type", "")
+                if node_type == "class":
+                    stats["classes"] += 1
+                elif node_type == "function":
+                    stats["functions"] += 1
+                elif node_type == "method":
+                    stats["methods"] += 1
+
+        return stats
 
     @staticmethod
     def _is_method(

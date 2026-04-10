@@ -18,7 +18,7 @@ Build first product vertical: PythonAST parser + 3 learners (Naming, Layer, GitO
 | Field | Value |
 |-------|-------|
 | **Sprint code** | CM-MEM-M1 |
-| **Status** | 🔥 **ACTIVE** — Day 1 starting · 10/04/2026 |
+| **Status** | 🔥 **ACTIVE** — Day 2 · 11/04/2026 · 6/26 SP |
 | **Start date** | 2026-04-10 (T5) — CEO approved M1 design |
 | **Target end** | 2026-04-24 (T5) — 10 working days, nghỉ T7-CN |
 | **Duration** | 2 tuần |
@@ -36,9 +36,9 @@ Build first product vertical: PythonAST parser + 3 learners (Naming, Layer, GitO
 
 | # | ID | Task | SP | Day | Status | Acceptance |
 |---|----|------|:--:|:---:|:------:|------------|
-| 1 | MEM-M1-01 | `CodebaseVault(BaseVault)` — init vault structure, SQLite core.db | 2 | D1 | ⏳ Todo | `codebase-memory init` creates `.knowledge-memory/`, idempotent, schema_version: 1 |
-| 2 | MEM-M1-02 | `PythonASTParser(BaseParser)` — port AST parsing from codebase-map | 2 | D1-2 | ⏳ Todo | Parse HC project, yield Evidence objects, ≥1000 nodes extracted |
-| 3 | MEM-M1-03 | Snapshots + rotation (keep 5 recent) | 2 | D2 | ⏳ Todo | `vault.snapshot()` saves corpus, auto-delete old >5, timestamp naming |
+| 1 | MEM-M1-01 | `CodebaseVault(BaseVault)` — init vault structure, SQLite core.db | 2 | D1 | ✅ Done | `codebase-memory init` creates `.knowledge-memory/`, idempotent, schema_version: 1 |
+| 2 | MEM-M1-02 | `PythonASTParser(BaseParser)` — port AST parsing + directory scan | 2 | D1-2 | ✅ Done | parse_directory + scan_stats, include/exclude, 29 parser tests |
+| 3 | MEM-M1-03 | Snapshots + rotation (keep 5 recent) | 2 | D2 | ✅ Done | Full corpus save, list/load/restore, rotation keep 5, labels, 31 vault tests |
 | 4 | MEM-M1-04 | SQLite extension schema (nodes, edges, ownership) | 2 | D3 | ⏳ Todo | `schema_extension_sql()` returns valid SQL, tables created on init |
 | 5 | MEM-M1-05 | `NamingLearner(BaseLearner)` — naming conventions | 2 | D3-4 | ⏳ Todo | Detect snake_case %, prefix patterns, ≥5 patterns with confidence ≥60% |
 | 6 | MEM-M1-06 | `LayerLearner` — path hierarchy patterns | 2 | D4 | ⏳ Todo | Classify service/route/model/util layers, ≥5 patterns |

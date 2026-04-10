@@ -5,7 +5,7 @@ import json
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterator, List, Optional
+from typing import Dict, Iterator, List, Optional
 
 from knowledge_memory.core.learners.pattern import Pattern
 from knowledge_memory.core.parsers.evidence import Evidence
@@ -171,15 +171,40 @@ class CodebaseVault(BaseVault):
         vert_dir = vault_dir / "verticals" / self.VERTICAL_NAME
         self._vertical_db = vert_dir / "vault.db"
 
-    def snapshot(self) -> object:
-        """Save current corpus state as a snapshot. Returns snapshot id."""
+    # HC-AI | ticket: MEM-M1-03
+    def snapshot(self, label: Optional[str] = None) -> Dict[str, object]:
+        """Save current corpus state as a snapshot with full evidence data.
+
+        Args:
+            label: Optional human-readable label (e.g. ``"bootstrap-run-1"``).
+
+        Returns:
+            Dict with ``id``, ``created_at``, ``evidence_count``, ``label``.
+        """
         self._ensure_initialized()
         assert self._core_db is not None
         ts = datetime.now(timezone.utc).isoformat()
+
+        # Serialize full evidence corpus for reproducibility
+        evidence_payload = []
+        for ev in self._evidences:
+            evidence_payload.append(
+                {
+                    "source": ev.source,
+                    "data": ev.data,
+                    "line_range": list(ev.line_range) if ev.line_range else None,
+                    "commit_sha": ev.commit_sha,
+                    "metadata": ev.metadata,
+                }
+            )
+
         data = {
             "evidence_count": len(self._evidences),
+            "evidences": evidence_payload,
             "timestamp": ts,
+            "label": label or "",
         }
+
         with sqlite3.connect(str(self._core_db)) as conn:
             cursor = conn.execute(
                 "INSERT INTO snapshots (created_at, data_json) VALUES (?, ?)",
@@ -187,13 +212,99 @@ class CodebaseVault(BaseVault):
             )
             snap_id = cursor.lastrowid
 
-            # Rotation: keep only last 5 snapshots
+            # Rotation: keep only last 5 snapshots (design decision D-M1-06)
             conn.execute(
                 "DELETE FROM snapshots WHERE id NOT IN "
                 "(SELECT id FROM snapshots ORDER BY id DESC LIMIT 5)"
             )
             conn.commit()
-        return {"id": snap_id, "created_at": ts}
+
+        return {
+            "id": snap_id,
+            "created_at": ts,
+            "evidence_count": len(self._evidences),
+            "label": label or "",
+        }
+
+    # HC-AI | ticket: MEM-M1-03
+    def list_snapshots(self) -> List[Dict[str, object]]:
+        """List all snapshots in the vault, newest first.
+
+        Returns:
+            List of dicts with ``id``, ``created_at``, ``evidence_count``,
+            ``label``.
+        """
+        self._ensure_initialized()
+        assert self._core_db is not None
+        with sqlite3.connect(str(self._core_db)) as conn:
+            rows = conn.execute(
+                "SELECT id, created_at, data_json " "FROM snapshots ORDER BY id DESC"
+            ).fetchall()
+
+        result: List[Dict[str, object]] = []
+        for row in rows:
+            data = json.loads(row[2])
+            result.append(
+                {
+                    "id": row[0],
+                    "created_at": row[1],
+                    "evidence_count": data.get("evidence_count", 0),
+                    "label": data.get("label", ""),
+                }
+            )
+        return result
+
+    # HC-AI | ticket: MEM-M1-03
+    def load_snapshot(self, snapshot_id: int) -> List[Evidence]:
+        """Load evidences from a snapshot back into memory.
+
+        Args:
+            snapshot_id: The snapshot ID to load.
+
+        Returns:
+            List of Evidence objects restored from the snapshot.
+
+        Raises:
+            ValueError: If snapshot_id not found.
+        """
+        self._ensure_initialized()
+        assert self._core_db is not None
+        with sqlite3.connect(str(self._core_db)) as conn:
+            row = conn.execute(
+                "SELECT data_json FROM snapshots WHERE id = ?",
+                (snapshot_id,),
+            ).fetchone()
+
+        if row is None:
+            raise ValueError(f"Snapshot {snapshot_id} not found.")
+
+        data = json.loads(row[0])
+        evidences: List[Evidence] = []
+
+        for ev_data in data.get("evidences", []):
+            lr = ev_data.get("line_range")
+            evidences.append(
+                Evidence(
+                    source=ev_data.get("source", ""),
+                    data=ev_data.get("data", {}),
+                    line_range=tuple(lr) if lr else None,
+                    commit_sha=ev_data.get("commit_sha"),
+                    metadata=ev_data.get("metadata", {}),
+                )
+            )
+
+        # Also load into memory for immediate learner use
+        self._evidences = evidences
+        return evidences
+
+    # HC-AI | ticket: MEM-M1-03
+    def snapshot_count(self) -> int:
+        """Return the number of snapshots currently stored."""
+        self._ensure_initialized()
+        assert self._core_db is not None
+        with sqlite3.connect(str(self._core_db)) as conn:
+            row = conn.execute("SELECT COUNT(*) FROM snapshots").fetchone()
+        return row[0] if row else 0
 
     def get_corpus_iterator(self) -> Iterator[Evidence]:
         """Yield evidence objects loaded into this vault."""
