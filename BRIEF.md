@@ -6,9 +6,9 @@
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**KMP Sprint M0 COMPLETE · 8/8 SP · 51/51 tests green · 5 Days · 5 PRs · CTO 20/20 · v2.0.1 shipped**
+**KMP Sprint M1 ACTIVE · Day 1 · 0/26 SP · M0 COMPLETE (8/8 SP, CTO 20/20) · v2.0.1 shipped**
 
-Days 1-5 all merged. Day 5: LICENSE (MIT + PRO) + CI check + CTO architecture sign-off 20/20 PASS. Sprint M0 **8/8 SP (100%)** DONE. All 8 tasks complete. Ready for M1 design phase.
+M0 all 5 PRs merged, CTO sign-off 20/20. M1 Design approved by CEO 10/04/2026 (PO+CTO+Designer 3-way meeting, 7 screens, 8 decisions). M1 Sprint kickoff: 14 tasks, 26 SP, 10 Days. Day 1: MEM-M1-01 (CodebaseVault) + MEM-M1-02 (PythonASTParser start).
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
@@ -43,8 +43,9 @@ Days 1-5 all merged. Day 5: LICENSE (MIT + PRO) + CI check + CTO architecture si
 
 ### ▶️ Next actions
 
-- **M0 COMPLETE** — all 8 tasks done, CTO sign-off 20/20 PASS
-- **Next:** M1 design phase → CEO approve → M1 Sprint kickoff
+- **M1 Day 1 ACTIVE** — MEM-M1-01 CodebaseVault + MEM-M1-02 PythonASTParser start
+- M1 Design: `design-preview/kmp-M1-design.html` (CEO approved 10/04/2026)
+- M1 Task board: `project/CM-MEM-M1-TASK-BOARD.md`
 
 | Field | Value |
 |-------|-------|
@@ -284,6 +285,9 @@ Days 1-5 all merged. Day 5: LICENSE (MIT + PRO) + CI check + CTO architecture si
 | 08/04/2026 | **KMP M0 Day 2 MERGED** — PR #45: BaseLearner + BaseParser + LearnerRuntime + datetime polish (2 SP, 99/100 SHIPIT). Sprint 5/8 SP (62%) | CEO |
 | 09/04/2026 | **KMP M0 Day 3 MERGED** — PR #47: import-linter CI gate + HelloLearner + HelloParser (1.5 SP, 100/100 SHIPIT). Sprint 6.5/8 SP (81%) | CEO |
 | 09/04/2026 | **Repo PRIVATE** — chuyển public → private, PR #49 cập nhật SSH URLs + auth guide + ONBOARDING.md | CEO |
+| 10/04/2026 | **KMP M0 COMPLETE** — 8/8 SP, 5 PRs, CTO sign-off 20/20 PASS. PR #53 merged | CEO |
+| 10/04/2026 | **KMP M1 Design approved** — PO+CTO+Designer 3-way meeting, 7 screens, 8 decisions. `kmp-M1-design.html` | CEO |
+| 10/04/2026 | **KMP M1 Sprint kickoff** — 14 tasks, 26 SP, 10 Days (10/04 → 23/04). Day 1: CodebaseVault + PythonASTParser | CEO |
 
 ---
 
@@ -291,7 +295,7 @@ Days 1-5 all merged. Day 5: LICENSE (MIT + PRO) + CI check + CTO architecture si
 
 | Vấn đề | Priority |
 |--------|----------|
-| KMP M1 design phase — cần design trước khi code (Rule #5) | 🔥 Next |
+| KMP M1 Day 1 — CodebaseVault + PythonASTParser (4 SP) | 🔥 Active |
 | Wiki board ở HC repo cần update link repo mới | 🟢 Low |
 
 ---
@@ -325,4 +329,4 @@ Days 1-5 all merged. Day 5: LICENSE (MIT + PRO) + CI check + CTO architecture si
 
 ---
 
-*BRIEF.md v2.1 — Codebase Map | 10/04/2026 | Repo PRIVATE · KMP M0 COMPLETE · CTO 20/20*
+*BRIEF.md v2.2 — Codebase Map | 10/04/2026 | Repo PRIVATE · KMP M1 ACTIVE · M0 COMPLETE*
