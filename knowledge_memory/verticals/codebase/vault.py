@@ -529,3 +529,75 @@ class CodebaseVault(BaseVault):
         with sqlite3.connect(str(self._vertical_db)) as conn:
             row = conn.execute("SELECT COUNT(*) FROM cb_edges").fetchone()
         return row[0] if row else 0
+
+    # HC-AI | ticket: MEM-M1-07
+    def store_ownership(self, records: list) -> None:
+        """Batch-insert file ownership records into cb_file_ownership.
+
+        Each record is a dict with keys:
+        ``file_path``, ``author``, ``commits``, ``pct``.
+        """
+        self._ensure_initialized()
+        assert self._vertical_db is not None
+        with sqlite3.connect(str(self._vertical_db)) as conn:
+            conn.executemany(
+                "INSERT INTO cb_file_ownership "
+                "(file_path, author, commits, pct) VALUES (?, ?, ?, ?)",
+                [
+                    (
+                        r.get("file_path", ""),
+                        r.get("author", ""),
+                        r.get("commits", 0),
+                        r.get("pct", 0.0),
+                    )
+                    for r in records
+                ],
+            )
+            conn.commit()
+
+    # HC-AI | ticket: MEM-M1-07
+    def query_ownership(
+        self, file_path: Optional[str] = None, author: Optional[str] = None
+    ) -> List[Dict[str, object]]:
+        """Query file ownership records, optionally filtered.
+
+        Returns list of dicts with ``file_path``, ``author``,
+        ``commits``, ``pct``.
+        """
+        self._ensure_initialized()
+        assert self._vertical_db is not None
+        where_parts: List[str] = []
+        params: List[object] = []
+        if file_path:
+            where_parts.append("file_path = ?")
+            params.append(file_path)
+        if author:
+            where_parts.append("author = ?")
+            params.append(author)
+
+        sql = "SELECT file_path, author, commits, pct FROM cb_file_ownership"
+        if where_parts:
+            sql += " WHERE " + " AND ".join(where_parts)
+        sql += " ORDER BY commits DESC"
+
+        with sqlite3.connect(str(self._vertical_db)) as conn:
+            rows = conn.execute(sql, params).fetchall()
+
+        return [
+            {
+                "file_path": r[0],
+                "author": r[1],
+                "commits": r[2],
+                "pct": r[3],
+            }
+            for r in rows
+        ]
+
+    # HC-AI | ticket: MEM-M1-07
+    def ownership_count(self) -> int:
+        """Return total number of stored ownership records."""
+        self._ensure_initialized()
+        assert self._vertical_db is not None
+        with sqlite3.connect(str(self._vertical_db)) as conn:
+            row = conn.execute("SELECT COUNT(*) FROM cb_file_ownership").fetchone()
+        return row[0] if row else 0
