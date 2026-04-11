@@ -1,14 +1,14 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 2.7 | Cập nhật: 21/04/2026 (PR #63 — bugfix P0/P1 + dogfood tooling)
+> Version: 2.8 | Cập nhật: 22/04/2026 (Day 9 — BM25 spike + coverage 94%)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**KMP Sprint M1 ACTIVE · Day 8 · 24/26 SP · M0 COMPLETE (8/8 SP, CTO 20/20) · v2.0.1 shipped**
+**KMP Sprint M1 ACTIVE · Day 9 · 26/26 SP · M0 COMPLETE (8/8 SP, CTO 20/20) · v2.0.1 shipped**
 
-M1 Day 8 complete + 3 P0/P1 bugfixes (PR #63 merged). 356 tests green. Patterns output clean: 11 unique, correct authors, relative paths only. Dogfood tooling added (scripts/refresh.py).
+M1 Day 9 complete: MEM-M1-12 (BM25 Vietnamese spike: 100% recall, target ≥75%) + MEM-M1-13 (coverage: 94%, target ≥80%). 434 tests green. Only MEM-M1-14 (CTO dogfood) remains for D10.
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
@@ -54,7 +54,7 @@ M1 Day 8 complete + 3 P0/P1 bugfixes (PR #63 merged). 356 tests green. Patterns 
 
 ### ▶️ Next actions
 
-- **M1 Day 9 next** — MEM-M1-12 (BM25 spike) + MEM-M1-13 (coverage)
+- **M1 Day 10 next** — MEM-M1-14 (CTO dogfood ≥15/20) → final PR → CEO approve
 - M1 Design: `design-preview/kmp-M1-design.html` (CEO approved 10/04/2026)
 - M1 Task board: `project/CM-MEM-M1-TASK-BOARD.md`
 

@@ -375,3 +375,260 @@ class TestVaultSummary:
         assert "Vault:" in output
         assert "Schema:" in output
         assert "Patterns:" in output
+
+
+# ═══════════════════════════════════════════════════════
+# RICH COLOR PATH TESTS
+# ═══════════════════════════════════════════════════════
+
+
+# HC-AI | ticket: MEM-M1-13
+class TestRichBootstrapHeader:
+    """Tests for bootstrap header with rich colors enabled."""
+
+    def test_rich_header_returns_string(self) -> None:
+        from knowledge_memory.verticals.codebase import cli_output
+
+        old = cli_output._NO_COLOR
+        cli_output._NO_COLOR = False
+        try:
+            output = format_bootstrap_header()
+            assert isinstance(output, str)
+            assert "Knowledge Memory Platform" in output
+        finally:
+            cli_output._NO_COLOR = old
+
+
+class TestRichVaultInfo:
+    """Tests for vault info with rich colors."""
+
+    def test_rich_vault_info(self) -> None:
+        from knowledge_memory.verticals.codebase import cli_output
+
+        old = cli_output._NO_COLOR
+        cli_output._NO_COLOR = False
+        try:
+            output = format_vault_info(
+                vault_path="/test/vault/", vertical="codebase", schema_version=1
+            )
+            assert "/test/vault/" in output
+            assert "codebase" in output
+        finally:
+            cli_output._NO_COLOR = old
+
+
+class TestRichStepProgress:
+    """Tests for step progress with rich colors."""
+
+    def test_rich_step_with_detail(self) -> None:
+        from knowledge_memory.verticals.codebase import cli_output
+
+        old = cli_output._NO_COLOR
+        cli_output._NO_COLOR = False
+        try:
+            output = format_step_progress(1, 5, "Parse", "Scanning files...")
+            assert "[1/5]" in output
+            assert "Parse" in output
+        finally:
+            cli_output._NO_COLOR = old
+
+    def test_rich_step_no_detail(self) -> None:
+        from knowledge_memory.verticals.codebase import cli_output
+
+        old = cli_output._NO_COLOR
+        cli_output._NO_COLOR = False
+        try:
+            output = format_step_progress(3, 5, "Learn")
+            assert "[3/5]" in output
+        finally:
+            cli_output._NO_COLOR = old
+
+
+class TestRichStepResult:
+    """Tests for step result with rich colors."""
+
+    def test_rich_with_all_parts(self) -> None:
+        from knowledge_memory.verticals.codebase import cli_output
+
+        old = cli_output._NO_COLOR
+        cli_output._NO_COLOR = False
+        try:
+            output = format_step_result(
+                "25 patterns", detail="(12 naming)", elapsed=0.3
+            )
+            assert "25 patterns" in output
+        finally:
+            cli_output._NO_COLOR = old
+
+    def test_rich_simple(self) -> None:
+        from knowledge_memory.verticals.codebase import cli_output
+
+        old = cli_output._NO_COLOR
+        cli_output._NO_COLOR = False
+        try:
+            output = format_step_result("Done")
+            assert "Done" in output
+        finally:
+            cli_output._NO_COLOR = old
+
+
+class TestRichBootstrapComplete:
+    """Tests for bootstrap complete banner with rich."""
+
+    def test_rich_complete_banner(self) -> None:
+        from knowledge_memory.verticals.codebase import cli_output
+
+        old = cli_output._NO_COLOR
+        cli_output._NO_COLOR = False
+        try:
+            output = format_bootstrap_complete(5.7, 25, 10)
+            assert "Bootstrap complete" in output
+        finally:
+            cli_output._NO_COLOR = old
+
+
+class TestRichOutputFiles:
+    """Tests for output files with rich colors."""
+
+    def test_rich_output_files(self) -> None:
+        from knowledge_memory.verticals.codebase import cli_output
+
+        old = cli_output._NO_COLOR
+        cli_output._NO_COLOR = False
+        try:
+            output = format_output_files(["patterns.md", "quick-wins.md"])
+            assert "Output files" in output
+            assert "patterns.md" in output
+        finally:
+            cli_output._NO_COLOR = old
+
+
+class TestRichQuickWinsInline:
+    """Tests for quick wins inline with rich colors."""
+
+    def test_rich_quick_wins(self, quick_wins_result: QuickWinsResult) -> None:
+        from knowledge_memory.verticals.codebase import cli_output
+
+        old = cli_output._NO_COLOR
+        cli_output._NO_COLOR = False
+        try:
+            output = format_quick_wins_inline(quick_wins_result)
+            assert "Quick Wins" in output
+            assert "STRUCTURE" in output
+        finally:
+            cli_output._NO_COLOR = old
+
+    def test_rich_max_lines(self, quick_wins_result: QuickWinsResult) -> None:
+        from knowledge_memory.verticals.codebase import cli_output
+
+        old = cli_output._NO_COLOR
+        cli_output._NO_COLOR = False
+        try:
+            output = format_quick_wins_inline(quick_wins_result, max_lines=8)
+            assert "Quick Wins" in output
+        finally:
+            cli_output._NO_COLOR = old
+
+    def test_rich_empty_result(self) -> None:
+        from knowledge_memory.verticals.codebase import cli_output
+
+        old = cli_output._NO_COLOR
+        cli_output._NO_COLOR = False
+        try:
+            result = QuickWinsResult()
+            output = format_quick_wins_inline(result)
+            assert "Quick Wins" in output
+        finally:
+            cli_output._NO_COLOR = old
+
+
+class TestRichVaultSummary:
+    """Tests for vault summary with rich colors."""
+
+    def test_rich_full_summary(self) -> None:
+        from knowledge_memory.verticals.codebase import cli_output
+
+        old = cli_output._NO_COLOR
+        cli_output._NO_COLOR = False
+        try:
+            output = format_vault_summary(
+                vault_path=".knowledge-memory/",
+                pattern_count=25,
+                pattern_breakdown="12 naming + 8 layer + 5 ownership",
+                snapshot_count=3,
+                snapshot_limit=5,
+                quick_win_count=10,
+                quick_win_breakdown="5 struct + 3 pat + 2 risk",
+                last_bootstrap="2026-04-18",
+                duration=5.7,
+                node_count=1386,
+                edge_count=8285,
+                file_count=120,
+            )
+            assert "Knowledge Memory" in output
+            assert "Vault Summary" in output
+        finally:
+            cli_output._NO_COLOR = old
+
+    def test_rich_minimal_summary(self) -> None:
+        from knowledge_memory.verticals.codebase import cli_output
+
+        old = cli_output._NO_COLOR
+        cli_output._NO_COLOR = False
+        try:
+            output = format_vault_summary()
+            assert "Knowledge Memory" in output
+        finally:
+            cli_output._NO_COLOR = old
+
+
+class TestConfidenceStyle:
+    """Tests for confidence style mapping."""
+
+    def test_high_confidence(self) -> None:
+        from knowledge_memory.verticals.codebase.cli_output import _confidence_style
+
+        assert _confidence_style(95.0) == "green"
+
+    def test_medium_confidence(self) -> None:
+        from knowledge_memory.verticals.codebase.cli_output import _confidence_style
+
+        assert _confidence_style(70.0) == "yellow"
+
+    def test_low_confidence(self) -> None:
+        from knowledge_memory.verticals.codebase.cli_output import _confidence_style
+
+        assert _confidence_style(45.0) == "red"
+
+    def test_boundary_80(self) -> None:
+        from knowledge_memory.verticals.codebase.cli_output import _confidence_style
+
+        assert _confidence_style(80.0) == "green"
+
+    def test_boundary_60(self) -> None:
+        from knowledge_memory.verticals.codebase.cli_output import _confidence_style
+
+        assert _confidence_style(60.0) == "yellow"
+
+
+class TestFormatInsightInline:
+    """Tests for individual insight formatting."""
+
+    def test_format_insight(self) -> None:
+        from knowledge_memory.verticals.codebase.cli_output import (
+            _format_insight_inline,
+        )
+
+        insight = Insight(
+            number=1,
+            title="Test insight",
+            description="A long description that should be truncated at 50 chars",
+            evidence="test/",
+            confidence=85.0,
+            action="Do something",
+            category="structure",
+        )
+        output = _format_insight_inline(insight)
+        assert "1." in output
+        assert "Test insight" in output
+        assert "85%" in output
