@@ -22,7 +22,7 @@ M1 Day 1 merged (PR #54, 97/100). Day 2: MEM-M1-02 finish (parse_directory + sca
 **09/04/2026:**
 6. KMP M0 Day 3 PR #47 (100/100 SHIPIT) — import-linter + Hello vertical — CEO merged
 
-### 📦 PRs merged (11 PRs across 2 sessions)
+### 📦 PRs merged (13 PRs across 3 sessions)
 
 | PR | Title / Scope | Score | Status |
 |----|---------------|-------|--------|
@@ -40,10 +40,12 @@ M1 Day 1 merged (PR #54, 97/100). Day 2: MEM-M1-02 finish (parse_directory + sca
 | #49 | chore(docs): update install URLs + auth guide for private repo | — | ✅ merged |
 | #51 | feat(kmp): M0 Day 4 — Hello finish + vault-format-spec | 92 | ✅ merged |
 | #52 | chore(project): board separation KMP/CM | — | ✅ merged |
+| #53 | feat(kmp): M0 Day 5 — LICENSE dual MIT/PRO + CTO sign-off 20/20 | — | ✅ merged |
+| #54 | feat(kmp): M1 Day 1 — CodebaseVault + PythonASTParser + M1 design | 97 | ✅ merged |
+| #55 | feat(kmp): M1 Day 2 — PythonASTParser finish + Snapshots enhanced | 98 | ✅ merged |
 
 ### ▶️ Next actions
 
-- **M1 Day 2 PR pending** — MEM-M1-02 finish + MEM-M1-03 Snapshots → PR #55
 - **M1 Day 3 next** — MEM-M1-04 (SQLite extension schema) + MEM-M1-05 start (NamingLearner)
 - M1 Design: `design-preview/kmp-M1-design.html` (CEO approved 10/04/2026)
 - M1 Task board: `project/CM-MEM-M1-TASK-BOARD.md`
