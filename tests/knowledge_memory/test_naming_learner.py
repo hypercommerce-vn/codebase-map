@@ -330,6 +330,79 @@ class TestNamingLearnerPattern:
         assert p.metadata["crud_coverage_pct"] == 75.0
 
 
+class TestNamingLearnerVaultQuery:
+    """Tests for vault-stored node extraction path."""
+
+    def test_extract_from_stored_nodes(self, tmp_path: Path) -> None:
+        """NamingLearner reads from vault query_nodes when data is stored."""
+        vault = CodebaseVault()
+        vault.init(tmp_path)
+
+        # Store nodes into vault SQLite
+        vault.store_nodes(
+            [
+                {
+                    "name": "get_customer",
+                    "file_path": "svc.py",
+                    "node_type": "function",
+                    "layer": "service",
+                    "line_start": 10,
+                    "line_end": 20,
+                },
+                {
+                    "name": "Customer",
+                    "file_path": "svc.py",
+                    "node_type": "class",
+                    "layer": "service",
+                    "line_start": 1,
+                    "line_end": 50,
+                },
+                {
+                    "name": "__init__",
+                    "file_path": "svc.py",
+                    "node_type": "method",
+                    "layer": "service",
+                    "line_start": 5,
+                    "line_end": 8,
+                },
+            ]
+        )
+
+        learner = NamingLearner()
+        result = learner.extract_evidence(vault)
+
+        # __init__ should be filtered out
+        assert len(result) == 2
+        names = {ev.data["name"] for ev in result}
+        assert "get_customer" in names
+        assert "Customer" in names
+        assert "__init__" not in names
+
+    def test_extract_stored_includes_layer_metadata(self, tmp_path: Path) -> None:
+        """Stored node extraction preserves layer in metadata."""
+        vault = CodebaseVault()
+        vault.init(tmp_path)
+
+        vault.store_nodes(
+            [
+                {
+                    "name": "process_order",
+                    "file_path": "order_svc.py",
+                    "node_type": "function",
+                    "layer": "service",
+                    "line_start": 1,
+                    "line_end": 10,
+                },
+            ]
+        )
+
+        learner = NamingLearner()
+        result = learner.extract_evidence(vault)
+        assert len(result) == 1
+        assert result[0].data["layer"] == "service"
+        assert result[0].metadata["layer"] == "service"
+
+
 class TestNamingLearnerE2E:
     """End-to-end test with vault + runtime."""
 
