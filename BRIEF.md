@@ -1,14 +1,14 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 2.8 | Cập nhật: 22/04/2026 (Day 9 — BM25 spike + coverage 94%)
+> Version: 2.9 | Cập nhật: 23/04/2026 (Day 10 — CTO dogfood 20/20, Sprint M1 READY)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**KMP Sprint M1 ACTIVE · Day 9 · 26/26 SP · M0 COMPLETE (8/8 SP, CTO 20/20) · v2.0.1 shipped**
+**KMP Sprint M1 READY FOR CEO · Day 10 · 26/26 SP · 14/14 tasks · CTO 20/20 · M0 COMPLETE · v2.0.1 shipped**
 
-M1 Day 9 complete: MEM-M1-12 (BM25 Vietnamese spike: 100% recall, target ≥75%) + MEM-M1-13 (coverage: 94%, target ≥80%). 434 tests green. Only MEM-M1-14 (CTO dogfood) remains for D10.
+M1 Day 10: CTO dogfood 20/20 PASS. --resume implemented (DoD gap fixed). 442 tests, 94% coverage. All 12/13 DoD items verified — pending CEO approve final PR.
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
@@ -54,9 +54,10 @@ M1 Day 9 complete: MEM-M1-12 (BM25 Vietnamese spike: 100% recall, target ≥75%)
 
 ### ▶️ Next actions
 
-- **M1 Day 10 next** — MEM-M1-14 (CTO dogfood ≥15/20) → final PR → CEO approve
-- M1 Design: `design-preview/kmp-M1-design.html` (CEO approved 10/04/2026)
-- M1 Task board: `project/CM-MEM-M1-TASK-BOARD.md`
+- **CEO approve PR #65** → Sprint M1 COMPLETE
+- CTO dogfood report: `docs/reviews/CTO-Dogfood-M1-Report.md` (20/20)
+- M1 Task board: `project/CM-MEM-M1-TASK-BOARD.md` (14/14 tasks done)
+- After M1: plan Sprint M2 (search integration, MCP, advanced learners)
 
 | Field | Value |
 |-------|-------|

@@ -418,3 +418,34 @@ class TestCodebaseVaultOperations:
         assert vault.edge_count() == 0
         vault.store_edges([{"source": "a", "target": "b"}])
         assert vault.edge_count() == 1
+
+
+# HC-AI | ticket: MEM-M1-14
+class TestVaultMeta:
+    """Tests for vault _meta key-value access."""
+
+    @pytest.fixture()
+    def vault(self, tmp_path: Path) -> CodebaseVault:
+        v = CodebaseVault()
+        v.init(tmp_path)
+        return v
+
+    def test_get_meta_default(self, vault: CodebaseVault) -> None:
+        """get_meta returns default when key not found."""
+        assert vault.get_meta("nonexistent") == ""
+        assert vault.get_meta("nonexistent", "fallback") == "fallback"
+
+    def test_set_and_get_meta(self, vault: CodebaseVault) -> None:
+        """set_meta + get_meta round-trip."""
+        vault.set_meta("bootstrap_step", "3")
+        assert vault.get_meta("bootstrap_step") == "3"
+
+    def test_set_meta_overwrite(self, vault: CodebaseVault) -> None:
+        """set_meta overwrites existing key."""
+        vault.set_meta("key", "old")
+        vault.set_meta("key", "new")
+        assert vault.get_meta("key") == "new"
+
+    def test_get_meta_schema_version(self, vault: CodebaseVault) -> None:
+        """Can read pre-set schema_version from init."""
+        assert vault.get_meta("schema_version") == "1"
