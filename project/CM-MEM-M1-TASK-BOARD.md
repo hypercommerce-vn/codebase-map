@@ -104,6 +104,19 @@ Build first product vertical: PythonAST parser + 3 learners (Naming, Layer, GitO
 
 ---
 
+## 🐛 NON-BLOCKING ISSUES (CTO Review Gate)
+
+| # | ID | Issue | Source | Priority | Action |
+|---|----|-------|--------|:--------:|--------|
+| 1 | KMP-ISSUE-05 | Learner `cluster()` methods ~130-140 LOC — nên tách sub-methods | PR #58 CTO Dim B | Low | Refactor in M2 |
+| 2 | KMP-ISSUE-06 | `_parse_git_log` chưa có mock-based unit test (subprocess) | PR #58 CTO Dim A | Low | Add mock test M2 |
+| 3 | KMP-ISSUE-07 | `_extract_domain_from_path` duplicate giữa 2 learners → shared utils | PR #59 CTO Dim B | Low | Extract shared util M2 |
+| 4 | KMP-ISSUE-08 | `vault.py` ~600 LOC — approaching split threshold | PR #57+59 CTO Dim B | Low | Split queries.py M2 |
+| 5 | KMP-ISSUE-09 | `_step_learn()` accesses `runtime._learners` private attr | PR #60 CTO Dim A | Low | Add public method to LearnerRuntime M2 |
+| 6 | KMP-ISSUE-10 | Node/edge extraction in `_step_parse()` could be helper | PR #60 CTO Dim B | Low | Extract helper M2 |
+
+---
+
 ## 📝 DESIGN DECISIONS (locked 10/04/2026)
 
 | # | Decision | Owner |

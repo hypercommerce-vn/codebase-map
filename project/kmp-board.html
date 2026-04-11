@@ -621,6 +621,40 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
     </div>
   </div>
 
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-09: _step_learn() accesses runtime._learners (private attr)</span>
+      <span class="badge issue">refactor</span>
+    </div>
+    <div class="issue-card-body">
+      <code>BootstrapOrchestrator._step_learn()</code> directly sets <code>runtime._learners = [learner]</code> to run each learner individually with isolation. Should use a public method (e.g. <code>runtime.set_learners()</code> or <code>runtime.run_single(learner)</code>) instead of accessing private attribute.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: PR #60 review-gate (CTO, Dim A)</span>
+      <span>&middot;</span>
+      <span>Priority: Low</span>
+      <span>&middot;</span>
+      <span>Action: Add public method to LearnerRuntime in M2</span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-10: Node/edge extraction in _step_parse() could be helper</span>
+      <span class="badge issue">refactor</span>
+    </div>
+    <div class="issue-card-body">
+      <code>BootstrapOrchestrator._step_parse()</code> has ~30 lines converting Evidence objects to node/edge dicts for vault storage. This extraction logic could be a standalone helper function (e.g. <code>_evidences_to_nodes_edges()</code>) for readability and reuse.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: PR #60 review-gate (CTO, Dim B)</span>
+      <span>&middot;</span>
+      <span>Priority: Low</span>
+      <span>&middot;</span>
+      <span>Action: Extract helper when bootstrap grows in M2</span>
+    </div>
+  </div>
+
   <!-- PR History -->
   <h2 id="pr-history"><span class="h2-icon">&#128230;</span> PR History</h2>
   <table>
