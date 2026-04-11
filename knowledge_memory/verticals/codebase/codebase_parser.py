@@ -224,8 +224,16 @@ class PythonASTParser(BaseParser):
         # Deduplicate and sort for deterministic ordering
         files = sorted(set(files))
 
+        # HC-AI | ticket: KMP-ISSUE-13
+        # Parse with absolute paths (file I/O) but store relative paths
+        # in Evidence.source for consistent output across machines.
         for f in files:
-            yield from self.parse(f)
+            for ev in self.parse(f):
+                try:
+                    ev.source = str(f.relative_to(root))
+                except ValueError:
+                    pass
+                yield ev
 
     # HC-AI | ticket: MEM-M1-02
     def scan_stats(

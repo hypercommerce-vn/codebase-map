@@ -33,6 +33,11 @@ def _parse_git_log(
         List of dicts with ``file_path``, ``author``, ``commits``.
         Each dict represents one author's contribution to one file.
     """
+    # HC-AI | ticket: KMP-ISSUE-12
+    # Use COMMIT_AUTHOR: prefix to unambiguously separate author from filenames.
+    # Previous format (--format=%aN --name-only) confused filenames with authors
+    # when squash-merge commits had no blank-line separator.
+    _author_prefix = "COMMIT_AUTHOR:"
     try:
         result = subprocess.run(
             [
@@ -41,7 +46,7 @@ def _parse_git_log(
                 repo_path,
                 "log",
                 f"--max-count={max_commits}",
-                "--format=%aN",
+                f"--format={_author_prefix}%aN",
                 "--name-only",
             ],
             capture_output=True,
@@ -53,7 +58,8 @@ def _parse_git_log(
     except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
         return []
 
-    # Parse output: author line followed by file paths, separated by blank lines
+    # Parse output: lines starting with COMMIT_AUTHOR: are author names,
+    # all other non-blank lines are file paths for the current author.
     file_author_counts: Dict[str, Counter] = defaultdict(Counter)
     lines = result.stdout.strip().split("\n")
 
@@ -61,11 +67,10 @@ def _parse_git_log(
     for line in lines:
         line = line.strip()
         if not line:
-            current_author = ""
             continue
-        if not current_author:
-            current_author = line
-        else:
+        if line.startswith(_author_prefix):
+            current_author = line[len(_author_prefix) :]
+        elif current_author:
             # This is a file path
             file_author_counts[line][current_author] += 1
 
