@@ -202,7 +202,7 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
     <div class="nav-items">
       <a class="nav-item" href="#issues">
         <span class="nav-item-icon">&#128203;</span> Issues & Polish
-        <span class="nav-item-badge">13</span>
+        <span class="nav-item-badge">16</span>
       </a>
       <a class="nav-item" href="#decisions">
         <span class="nav-item-icon">&#128203;</span> Decisions
@@ -676,7 +676,7 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
   <div class="issue-card" style="border-left:3px solid var(--c-red)">
     <div class="issue-card-header">
       <span class="issue-card-title">KMP-ISSUE-11: Duplicate patterns across snapshots (4x repeat)</span>
-      <span class="badge" style="background:var(--c-red-bg);color:var(--c-red)">P0 · bug</span>
+      <span class="badge done">&#10003; Fixed PR #63</span>
     </div>
     <div class="issue-card-body">
       44 patterns output but only ~11 unique. Each pattern repeated 4x with accumulating counts (PascalCase: 46→92→138→184). Root cause: <code>patterns_generator</code> or <code>commit_pattern()</code> doesn't deduplicate — learners process all snapshots and commit duplicate entries.
@@ -693,7 +693,7 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
   <div class="issue-card" style="border-left:3px solid var(--c-red)">
     <div class="issue-card-header">
       <span class="issue-card-title">KMP-ISSUE-12: Git author shows filename instead of author name</span>
-      <span class="badge" style="background:var(--c-red-bg);color:var(--c-red)">P0 · bug</span>
+      <span class="badge done">&#10003; Fixed PR #63</span>
     </div>
     <div class="issue-card-body">
       GitOwnershipLearner outputs "BRIEF.md owns 80.6%" — <code>BRIEF.md</code> is a filename, not an author. <code>_parse_git_log()</code> is extracting the wrong field from <code>git log</code> output.
@@ -710,7 +710,7 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
   <div class="issue-card">
     <div class="issue-card-header">
       <span class="issue-card-title">KMP-ISSUE-13: File concentration mixes absolute and relative paths</span>
-      <span class="badge issue">P1 · cleanup</span>
+      <span class="badge done">&#10003; Fixed PR #63</span>
     </div>
     <div class="issue-card-body">
       <code>layers › file concentration</code> shows both <code>knowledge_memory/verticals/codebase: 110 nodes</code> and <code>/Users/pro/Projects/codebase-map/knowledge_memory/verticals/codebase: 330 nodes</code>. Paths should be normalized to relative-only.
@@ -721,6 +721,57 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
       <span>Priority: P1</span>
       <span>&middot;</span>
       <span>Action: Fix in M2 or D9 if time</span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-14: NamingLearner counts __init__ as naming violation</span>
+      <span class="badge issue">P1 · false-positive</span>
+    </div>
+    <div class="issue-card-body">
+      13 "violations" in snake_case analysis are all <code>__init__</code> dunder methods (e.g. <code>APICatalog.__init__</code>). Classifier sees uppercase from class name prefix &rarr; "mixed". Dunder methods (<code>__init__</code>, <code>__repr__</code>, <code>__str__</code>) should be excluded from naming convention analysis.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: CTO review of quick-wins.md</span>
+      <span>&middot;</span>
+      <span>Priority: P1</span>
+      <span>&middot;</span>
+      <span>Action: Fix in M2 &mdash; exclude dunder methods from naming check</span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-15: Layer compliance 100% misleading when unknown &gt;50%</span>
+      <span class="badge issue">P2 · UX</span>
+    </div>
+    <div class="issue-card-body">
+      "Layer compliance: 100%" when 93% of nodes are <code>unknown</code> layer is technically correct (detected = stored) but misleading. When unknown &gt;50%, title should show "Layer classification: X% recognized" instead of "compliance 100%".
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: CTO review of quick-wins.md</span>
+      <span>&middot;</span>
+      <span>Priority: P2</span>
+      <span>&middot;</span>
+      <span>Action: Improve in M2 &mdash; add recognized-layer awareness</span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-16: Depth analysis action too generic for normal nesting</span>
+      <span class="badge issue">P3 · UX</span>
+    </div>
+    <div class="issue-card-body">
+      "Avg depth 3.5 &mdash; Review deeply nested modules" but depth 3-4 is normal for Python packages. When <code>avg_depth &le; 4</code>, action should be "Normal nesting &mdash; no action needed" instead of "Review deeply nested modules".
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: CTO review of quick-wins.md</span>
+      <span>&middot;</span>
+      <span>Priority: P3</span>
+      <span>&middot;</span>
+      <span>Action: Improve in M2 &mdash; threshold-based action text</span>
     </div>
   </div>
 
