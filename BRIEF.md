@@ -1,14 +1,14 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 2.5 | Cập nhật: 18/04/2026 (M1 Day 7 — Quick Wins generator)
+> Version: 2.6 | Cập nhật: 21/04/2026 (M1 Day 8 — CLI rich output)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**KMP Sprint M1 ACTIVE · Day 7 · 23/26 SP · M0 COMPLETE (8/8 SP, CTO 20/20) · v2.0.1 shipped**
+**KMP Sprint M1 ACTIVE · Day 8 · 24/26 SP · M0 COMPLETE (8/8 SP, CTO 20/20) · v2.0.1 shipped**
 
-M1 Day 7: MEM-M1-10 (Quick Wins generator — 43 tests). 322 total tests green. Days 1-6 merged (PR #54-60). Day 7 PR pending.
+M1 Day 8: MEM-M1-11 (CLI rich output — 34 tests). 356 total tests green. Days 1-7 merged (PR #54-61). Day 8 PR pending.
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
@@ -43,10 +43,16 @@ M1 Day 7: MEM-M1-10 (Quick Wins generator — 43 tests). 322 total tests green. 
 | #53 | feat(kmp): M0 Day 5 — LICENSE dual MIT/PRO + CTO sign-off 20/20 | — | ✅ merged |
 | #54 | feat(kmp): M1 Day 1 — CodebaseVault + PythonASTParser + M1 design | 97 | ✅ merged |
 | #55 | feat(kmp): M1 Day 2 — PythonASTParser finish + Snapshots enhanced | 98 | ✅ merged |
+| #56 | feat(kmp): M1 Day 3 — SQLite extension + NamingLearner start | 95 | ✅ merged |
+| #57 | feat(kmp): M1 Day 3.5 — NamingLearner runtime E2E | — | ✅ merged |
+| #58 | feat(kmp): M1 Day 4 — NamingLearner vault-query + LayerLearner | 96 | ✅ merged |
+| #59 | feat(kmp): M1 Day 5 — GitOwnershipLearner + vault ownership | 97 | ✅ merged |
+| #60 | feat(kmp): M1 Day 6 — patterns.md generator + bootstrap orchestrator | 97 | ✅ merged |
+| #61 | feat(kmp): M1 Day 7 — Quick Wins generator (10 insights 5+3+2) | 98 | ✅ merged |
 
 ### ▶️ Next actions
 
-- **M1 Day 8 next** — MEM-M1-11 (CLI rich summary)
+- **M1 Day 9 next** — MEM-M1-12 (BM25 spike) + MEM-M1-13 (coverage)
 - M1 Design: `design-preview/kmp-M1-design.html` (CEO approved 10/04/2026)
 - M1 Task board: `project/CM-MEM-M1-TASK-BOARD.md`
 
