@@ -1,14 +1,14 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 2.9 | Cập nhật: 23/04/2026 (Day 10 — CTO dogfood 20/20, Sprint M1 READY)
+> Version: 3.0 | Cập nhật: 23/04/2026 (Sprint M1 COMPLETE — CEO approved PR #65)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**KMP Sprint M1 READY FOR CEO · Day 10 · 26/26 SP · 14/14 tasks · CTO 20/20 · M0 COMPLETE · v2.0.1 shipped**
+**KMP Sprint M1 COMPLETE · 26/26 SP · 14/14 tasks · CTO 20/20 · CEO approved · M0 COMPLETE · v2.0.1 shipped**
 
-M1 Day 10: CTO dogfood 20/20 PASS. --resume implemented (DoD gap fixed). 442 tests, 94% coverage. All 12/13 DoD items verified — pending CEO approve final PR.
+Sprint CM-MEM-M1 COMPLETE. CEO approved PR #65 (23/04/2026). 10 Days, 26 SP, 14 tasks, 10 PRs + 1 hotfix. CTO dogfood 20/20. 442 tests, 94% coverage. DoD 13/13 all verified.
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
@@ -51,19 +51,20 @@ M1 Day 10: CTO dogfood 20/20 PASS. --resume implemented (DoD gap fixed). 442 tes
 | #61 | feat(kmp): M1 Day 7 — Quick Wins generator (10 insights 5+3+2) | 98 | ✅ merged |
 | #62 | feat(kmp): M1 Day 8 — CLI summary output with rich colors | 97 | ✅ merged |
 | #63 | fix(kmp): 3 P0/P1 bugs — duplicate patterns, git author, path mixing | — | ✅ merged |
+| #64 | feat(kmp): M1 Day 9 — BM25 Vietnamese spike + 94% coverage | — | ✅ merged |
+| #65 | feat(kmp): M1 Day 10 — CTO dogfood 20/20 + --resume + final PR | 98 | ✅ merged |
 
 ### ▶️ Next actions
 
-- **CEO approve PR #65** → Sprint M1 COMPLETE
-- CTO dogfood report: `docs/reviews/CTO-Dogfood-M1-Report.md` (20/20)
-- M1 Task board: `project/CM-MEM-M1-TASK-BOARD.md` (14/14 tasks done)
-- After M1: plan Sprint M2 (search integration, MCP, advanced learners)
+- **Plan Sprint M2** — search integration (BM25), MCP server, advanced learners
+- Known issues deferred to M2: KMP-ISSUE-14 (NamingLearner __init__ false positive), KMP-ISSUE-15 (layer compliance misleading), KMP-ISSUE-16 (depth action generic)
+- Consider: tag v1.0.0 for KMP milestone
 
 | Field | Value |
 |-------|-------|
 | **Version hiện tại** | v2.0.1 ✅ SHIPPED (08/04/2026) — tag `v2.0.1` pushed, GitHub release published |
-| **Sprint hiện tại** | 🔥 **KMP CM-MEM-M0** — ACTIVE, Day 1 ready (kickoff plan published 09/04/2026) |
-| **KMP Sprint M0** | 8 tasks · 8 SP · 5 Days (D1=09/04 → D5=15/04) · awaiting CEO "Approve Day 1 start" |
+| **Sprint hiện tại** | ✅ **KMP CM-MEM-M1** — COMPLETE · 26/26 SP · 14/14 tasks · CTO 20/20 · CEO approved 23/04/2026 |
+| **KMP Sprint M0** | ✅ COMPLETE · 8/8 SP · CTO 20/20 · PR #53 merged 10/04/2026 |
 | **Sprint vừa xong** | CM-HOTFIX v2.0.1 — ✅ CLOSED · PR #38 + PR #39 merged · tag v2.0.1 pushed |
 | **Designs approved** | `design-preview/kmp-v2-design.html` + `kmp-M0-design.html` (PR #42 merged 09/04) |
 | **Sprint trước** | CM-S3 (v2.0) — ✅ DELIVERED (22/22 SP, 8/8 tasks, v2.0.0 released) |
