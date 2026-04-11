@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 2.6 | Cập nhật: 21/04/2026 (M1 Day 8 — CLI rich output)
+> Version: 2.7 | Cập nhật: 21/04/2026 (PR #63 — bugfix P0/P1 + dogfood tooling)
 
 ---
 
@@ -8,7 +8,7 @@
 
 **KMP Sprint M1 ACTIVE · Day 8 · 24/26 SP · M0 COMPLETE (8/8 SP, CTO 20/20) · v2.0.1 shipped**
 
-M1 Day 8: MEM-M1-11 (CLI rich output — 34 tests). 356 total tests green. Days 1-7 merged (PR #54-61). Day 8 PR pending.
+M1 Day 8 complete + 3 P0/P1 bugfixes (PR #63 merged). 356 tests green. Patterns output clean: 11 unique, correct authors, relative paths only. Dogfood tooling added (scripts/refresh.py).
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
@@ -50,6 +50,7 @@ M1 Day 8: MEM-M1-11 (CLI rich output — 34 tests). 356 total tests green. Days 
 | #60 | feat(kmp): M1 Day 6 — patterns.md generator + bootstrap orchestrator | 97 | ✅ merged |
 | #61 | feat(kmp): M1 Day 7 — Quick Wins generator (10 insights 5+3+2) | 98 | ✅ merged |
 | #62 | feat(kmp): M1 Day 8 — CLI summary output with rich colors | 97 | ✅ merged |
+| #63 | fix(kmp): 3 P0/P1 bugs — duplicate patterns, git author, path mixing | — | ✅ merged |
 
 ### ▶️ Next actions
 

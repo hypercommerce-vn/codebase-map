@@ -841,6 +841,13 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
         <td>97/100 SHIPIT</td>
         <td><span class="badge merged">&#10003; Merged</span></td>
       </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/63">#63</a></td>
+        <td>fix(kmp): 3 P0/P1 bugs &mdash; duplicate patterns, git author, path mixing</td>
+        <td><code>fix/kmp-issue-11-12-13-bugfix</code></td>
+        <td>&mdash;</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -919,6 +926,10 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
       <div class="tl-date">21/04/2026</div>
       <div class="tl-content"><strong>M1 Day 8 merged</strong> &mdash; PR #62 (97/100 SHIPIT). MEM-M1-11 (CLI rich output: bootstrap progress, quick-wins inline, vault summary, NO_COLOR=1 fallback). Added <code>rich&ge;13.0</code> dependency. 34 new tests, 356 total.</div>
     </div>
+    <div class="tl-item">
+      <div class="tl-date">21/04/2026</div>
+      <div class="tl-content"><strong>P0/P1 Bugfix merged</strong> &mdash; PR #63. CEO dogfood found 3 bugs: (1) KMP-ISSUE-11: 44 patterns = 11&times;4 duplicates &mdash; vault store/commit now clears+upserts; (2) KMP-ISSUE-12: git author = filename &mdash; COMMIT_AUTHOR: prefix delimiter; (3) KMP-ISSUE-13: absolute/relative path mix &mdash; normalize to relative. Also added <code>scripts/refresh.py</code> dogfood CLI. 356 tests green.</div>
+    </div>
   </div>
 
   <!-- Specs & Design Refs -->
@@ -947,7 +958,7 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
 <!-- Footer -->
 <div class="footer">
   <span>KMP Project Board &middot; Knowledge Memory Platform &middot; Hyper Commerce</span>
-  <span>Updated: 21/04/2026 &middot; Sprint M1 ACTIVE (24/26 SP, Day 8, 11/14 tasks) &middot; M0 &#10003; COMPLETE (8/8 SP, CTO 20/20) &middot; 356 tests &middot; Repo PRIVATE</span>
+  <span>Updated: 21/04/2026 &middot; Sprint M1 ACTIVE (24/26 SP, Day 8, 11/14 tasks) &middot; PR #63 bugfix merged &middot; M0 &#10003; COMPLETE (8/8 SP, CTO 20/20) &middot; 356 tests &middot; Repo PRIVATE</span>
 </div>
 
 <script>

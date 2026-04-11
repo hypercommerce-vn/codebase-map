@@ -130,4 +130,25 @@ Build first product vertical: PythonAST parser + 3 learners (Naming, Layer, GitO
 
 ---
 
-*CM-MEM-M1 Task Board · Created 10/04/2026 · @PM*
+## 🐛 HOTFIX — PR #63 (21/04/2026)
+
+CEO dogfood review identified 3 bugs in patterns.md output. All fixed in PR #63:
+
+| Issue | Severity | Description | Fix |
+|-------|----------|-------------|-----|
+| KMP-ISSUE-11 | 🔴 P0 | 44 patterns = 11 unique × 4 duplicates | store_nodes/edges: DELETE before INSERT; commit_pattern: upsert |
+| KMP-ISSUE-12 | 🔴 P0 | Git author shows filename (BRIEF.md) instead of author name | `_parse_git_log()`: COMMIT_AUTHOR: prefix delimiter |
+| KMP-ISSUE-13 | 🟡 P1 | File concentration mixes absolute + relative paths | `parse_directory()`: normalize Evidence.source to relative |
+
+**Result:** 11 unique patterns, correct author names (`Macbook`), relative paths only. 356 tests pass.
+
+**Bonus deliverables in PR #63:**
+- `scripts/refresh.py` — dogfood CLI for post-merge data refresh
+- `codebase-map-self.yaml` — added knowledge_memory/ source for self-scan
+- `.gitignore` — added .knowledge-memory/ vault data
+- `setup.cfg` — E203 ignore (standard black compat)
+- `project/kmp-board.html` — synced Day 8 progress + 13 issues tracked
+
+---
+
+*CM-MEM-M1 Task Board · Created 10/04/2026 · Updated 21/04/2026 · @PM*
