@@ -329,10 +329,26 @@ class CodebaseVault(BaseVault):
         return _CODEBASE_EXTENSION_SQL
 
     def commit_pattern(self, pattern: Pattern) -> None:
-        """Persist a pattern to core.db."""
+        """Persist a pattern to core.db.
+
+        Replaces any existing pattern with the same (name, category, vertical)
+        to prevent duplicates across bootstrap runs (KMP-ISSUE-11).
+        """
+        # HC-AI | ticket: KMP-ISSUE-11
         self._ensure_initialized()
         assert self._core_db is not None
+        vertical = pattern.vertical or self.VERTICAL_NAME
+        evidence_json = json.dumps(
+            [e.source if isinstance(e, Evidence) else str(e) for e in pattern.evidence]
+        )
+        metadata_json = json.dumps(pattern.metadata)
         with sqlite3.connect(str(self._core_db)) as conn:
+            # Delete existing pattern with same key to prevent duplicates
+            conn.execute(
+                "DELETE FROM patterns WHERE name = ? AND category = ? "
+                "AND vertical = ?",
+                (pattern.name, pattern.category, vertical),
+            )
             conn.execute(
                 "INSERT INTO patterns "
                 "(name, category, confidence, vertical, "
@@ -342,14 +358,9 @@ class CodebaseVault(BaseVault):
                     pattern.name,
                     pattern.category,
                     pattern.confidence,
-                    pattern.vertical or self.VERTICAL_NAME,
-                    json.dumps(
-                        [
-                            e.source if isinstance(e, Evidence) else str(e)
-                            for e in pattern.evidence
-                        ]
-                    ),
-                    json.dumps(pattern.metadata),
+                    vertical,
+                    evidence_json,
+                    metadata_json,
                     pattern.created_at,
                 ),
             )
@@ -390,10 +401,16 @@ class CodebaseVault(BaseVault):
         return patterns
 
     def store_nodes(self, nodes: list) -> None:
-        """Batch-insert parsed AST nodes into cb_nodes table."""
+        """Replace all AST nodes in cb_nodes table.
+
+        Clears existing nodes first to prevent accumulation across
+        multiple bootstrap runs (KMP-ISSUE-11).
+        """
+        # HC-AI | ticket: KMP-ISSUE-11
         self._ensure_initialized()
         assert self._vertical_db is not None
         with sqlite3.connect(str(self._vertical_db)) as conn:
+            conn.execute("DELETE FROM cb_nodes")
             conn.executemany(
                 "INSERT INTO cb_nodes "
                 "(name, file_path, node_type, layer, "
@@ -415,10 +432,15 @@ class CodebaseVault(BaseVault):
             conn.commit()
 
     def store_edges(self, edges: list) -> None:
-        """Batch-insert call edges into cb_edges table."""
+        """Replace all call edges in cb_edges table.
+
+        Clears existing edges first to prevent accumulation (KMP-ISSUE-11).
+        """
+        # HC-AI | ticket: KMP-ISSUE-11
         self._ensure_initialized()
         assert self._vertical_db is not None
         with sqlite3.connect(str(self._vertical_db)) as conn:
+            conn.execute("DELETE FROM cb_edges")
             conn.executemany(
                 "INSERT INTO cb_edges "
                 "(source_name, target_name, edge_type, file_path) "

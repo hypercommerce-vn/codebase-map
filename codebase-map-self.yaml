@@ -10,6 +10,13 @@ sources:
       - "__pycache__"
       - ".venv"
 
+  - path: "knowledge_memory"
+    language: python
+    base_module: "knowledge_memory"
+    exclude:
+      - "__pycache__"
+      - ".venv"
+
 output:
   dir: "docs/function-map"
   formats: [json, html]
