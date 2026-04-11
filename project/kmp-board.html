@@ -553,6 +553,40 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
     </div>
   </div>
 
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-05: Duplicated file collection logic in PythonASTParser</span>
+      <span class="badge issue">dry</span>
+    </div>
+    <div class="issue-card-body">
+      <code>parse_directory()</code> and <code>scan_stats()</code> both contain identical file collection logic (glob + fnmatch exclude + dedup + sort). Should extract a shared <code>_collect_files(root, include, exclude)</code> helper method to reduce duplication.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: PR #55 review-gate (CTO, Dim B)</span>
+      <span>&middot;</span>
+      <span>Priority: Low</span>
+      <span>&middot;</span>
+      <span>Action: Refactor in D9+ or M1 polish phase</span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-06: Snapshot full evidence JSON may bloat core.db</span>
+      <span class="badge issue">performance</span>
+    </div>
+    <div class="issue-card-body">
+      <code>snapshot()</code> serializes the full Evidence corpus (all fields) into <code>data_json</code> column in <code>snapshots</code> table. For large projects (1000+ nodes), this can significantly increase <code>core.db</code> file size. Consider zlib/gzip compression of <code>data_json</code> or storing evidence in a separate snapshot file.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: PR #55 review-gate (CTO, Dim D)</span>
+      <span>&middot;</span>
+      <span>Priority: Low</span>
+      <span>&middot;</span>
+      <span>Action: Evaluate compression in D9+ based on HC project benchmark</span>
+    </div>
+  </div>
+
   <!-- PR History -->
   <h2 id="pr-history"><span class="h2-icon">&#128230;</span> PR History</h2>
   <table>
