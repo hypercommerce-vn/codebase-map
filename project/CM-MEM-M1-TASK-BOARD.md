@@ -18,7 +18,7 @@ Build first product vertical: PythonAST parser + 3 learners (Naming, Layer, GitO
 | Field | Value |
 |-------|-------|
 | **Sprint code** | CM-MEM-M1 |
-| **Status** | 🔥 **ACTIVE** — Day 6 · 17/04/2026 · 20/26 SP |
+| **Status** | 🔥 **ACTIVE** — Day 7 · 18/04/2026 · 23/26 SP |
 | **Start date** | 2026-04-10 (T5) — CEO approved M1 design |
 | **Target end** | 2026-04-24 (T5) — 10 working days, nghỉ T7-CN |
 | **Duration** | 2 tuần |
@@ -45,7 +45,7 @@ Build first product vertical: PythonAST parser + 3 learners (Naming, Layer, GitO
 | 7 | MEM-M1-07 | `GitOwnershipLearner` — author attribution | 2 | D5 | ✅ Done | git log parse, single-owner files, bus factor, domain risk, knowledge concentration, 45 tests, ≥4 patterns |
 | 8 | MEM-M1-08 | `patterns.md` generator via `vault.commit_pattern()` | 2 | D6 | ✅ Done | Human-readable Markdown, grouped by learner, confidence threshold, 17 tests |
 | 9 | MEM-M1-09 | `bootstrap` orchestrator (Parse→Snapshot→Learn→Commit→Summary) | 2 | D6 | ✅ Done | 5-step pipeline, progress callback, Ctrl+C graceful, learner isolation, 18 tests |
-| 10 | MEM-M1-10 | Quick Wins generator (10 insights: 5+3+2) | 3 | D7-8 | ⏳ Todo | 5 structure + 3 patterns + 2 risks, each with evidence + confidence |
+| 10 | MEM-M1-10 | Quick Wins generator (10 insights: 5+3+2) | 3 | D7 | ✅ Done | 5 structure + 3 patterns + 2 risks, deterministic, evidence + confidence + action, 43 tests |
 | 11 | MEM-M1-11 | CLI summary output with rich colors | 1 | D8 | ⏳ Todo | `rich` library, progress bars, NO_COLOR=1 fallback, ≤20 lines |
 | 12 | MEM-M1-12 | Spike: BM25 Vietnamese language validation (recall ≥75%) | 2 | D9 | ⏳ Todo | Report on BM25 + tiếng Việt tokenization, recall benchmark |
 | 13 | MEM-M1-13 | Unit tests ≥80% coverage | 1 | D9-10 | ⏳ Todo | pytest coverage report, all learners + vault + parser covered |
