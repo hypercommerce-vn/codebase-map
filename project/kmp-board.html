@@ -277,10 +277,10 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
   </table>
 
   <!-- Sprint M1 Task Board -->
-  <h2 id="sprint-m1"><span class="h2-icon">&#128293;</span> Sprint M1 &mdash; Codebase Memory Vertical <span class="badge" style="font-size:12px;margin-left:8px;">6/26 SP &middot; ACTIVE</span></h2>
+  <h2 id="sprint-m1"><span class="h2-icon">&#128293;</span> Sprint M1 &mdash; Codebase Memory Vertical <span class="badge" style="font-size:12px;margin-left:8px;">14/26 SP &middot; ACTIVE</span></h2>
 
-  <div class="progress-bar"><div class="progress-fill" style="width:23%;background:#6366f1"></div></div>
-  <div class="progress-label">6/26 SP (23%) &middot; Day 2 active &middot; 3/14 tasks done &middot; Target: 23/04/2026</div>
+  <div class="progress-bar"><div class="progress-fill" style="width:54%;background:#6366f1"></div></div>
+  <div class="progress-label">14/26 SP (54%) &middot; Day 4 active &middot; 6/14 tasks done &middot; Target: 23/04/2026</div>
 
   <table>
     <thead>
@@ -310,24 +310,24 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
       </tr>
       <tr>
         <td>4</td><td><code>MEM-M1-04</code></td>
-        <td>SQLite extension schema (nodes, edges, ownership)</td>
+        <td>SQLite extension schema + indices + query methods</td>
         <td>2</td><td>D3</td>
-        <td>&mdash;</td><td>&mdash;</td>
-        <td><span class="badge planned">&#9203; Todo</span></td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/57">#57</a></td><td>97</td>
+        <td><span class="badge done">&#10003; Merged</span></td>
       </tr>
       <tr>
         <td>5</td><td><code>MEM-M1-05</code></td>
-        <td>NamingLearner(BaseLearner) &mdash; naming conventions</td>
+        <td>NamingLearner(BaseLearner) &mdash; naming conventions + vault-query</td>
         <td>2</td><td>D3-4</td>
-        <td>&mdash;</td><td>&mdash;</td>
-        <td><span class="badge planned">&#9203; Todo</span></td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/57">#57</a>+#58</td><td>97</td>
+        <td><span class="badge done">&#10003; Merged</span></td>
       </tr>
       <tr>
         <td>6</td><td><code>MEM-M1-06</code></td>
-        <td>LayerLearner &mdash; path hierarchy patterns</td>
+        <td>LayerLearner &mdash; 10 layer types, 5 cluster patterns</td>
         <td>2</td><td>D4</td>
-        <td>&mdash;</td><td>&mdash;</td>
-        <td><span class="badge planned">&#9203; Todo</span></td>
+        <td>#58</td><td>&mdash;</td>
+        <td><span class="badge wip">&#128260; In PR</span></td>
       </tr>
       <tr>
         <td>7</td><td><code>MEM-M1-07</code></td>
@@ -628,6 +628,20 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
         <td>98/100 SHIPIT</td>
         <td><span class="badge merged">&#10003; Merged</span></td>
       </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/57" target="_blank">#57</a></td>
+        <td>feat(kmp): M1 Day 3 &mdash; SQLite indices + NamingLearner</td>
+        <td><code>feat/kmp-m1-day3-schema-naming</code></td>
+        <td>97/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td>#58</td>
+        <td>feat(kmp): M1 Day 4 &mdash; NamingLearner finish + LayerLearner</td>
+        <td><code>feat/kmp-m1-day4-naming-layer</code></td>
+        <td>&mdash;</td>
+        <td><span class="badge wip">&#128260; In Review</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -681,6 +695,14 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
     <div class="tl-item">
       <div class="tl-date">11/04/2026</div>
       <div class="tl-content"><strong>M1 Day 2 merged</strong> &mdash; PR #55 (98/100 SHIPIT). MEM-M1-02 finish (parse_directory + scan_stats) + MEM-M1-03 (snapshots full corpus save, list/load/restore, rotation, labels). 108 tests. CEO approved 11/04.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">11/04/2026</div>
+      <div class="tl-content"><strong>M1 Day 3 merged</strong> &mdash; PR #57 (97/100 SHIPIT). MEM-M1-04 (8 SQLite indices + query_nodes/edges) + MEM-M1-05 start (NamingLearner: case classification, CRUD prefix, violations). 145 tests.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">14/04/2026</div>
+      <div class="tl-content"><strong>M1 Day 4 submitted</strong> &mdash; PR #58. MEM-M1-05 finish (vault-query extraction) + MEM-M1-06 (LayerLearner: 10 layer types, 5 cluster patterns, domain grouping, depth analysis). 197 tests.</div>
     </div>
   </div>
 

@@ -80,9 +80,47 @@ class NamingLearner(BaseLearner[Evidence, Dict]):
     MIN_EVIDENCE_COUNT = 5
     MIN_CONFIDENCE = 60.0
 
+    # HC-AI | ticket: MEM-M1-05
     def extract_evidence(self, vault: "BaseVault") -> List[Evidence]:
-        """Pull function/method/class evidence from vault corpus."""
+        """Pull function/method/class evidence from vault.
+
+        Tries vault-stored nodes first (via ``query_nodes``); falls back to
+        in-memory corpus iterator when the vault has no stored nodes.
+        """
         results: List[Evidence] = []
+
+        # Prefer stored nodes (populated after store_nodes)
+        if hasattr(vault, "query_nodes"):
+            try:
+                stored = vault.query_nodes()
+                if stored:
+                    for node in stored:
+                        name = node.get("name", "")
+                        node_type = node.get("node_type", "")
+                        if not name or name.startswith("__"):
+                            continue
+                        if node_type in ("function", "method", "class"):
+                            results.append(
+                                Evidence(
+                                    source=node.get("file_path", ""),
+                                    data={
+                                        "name": name,
+                                        "type": node_type,
+                                        "layer": node.get("layer", "unknown"),
+                                    },
+                                    metadata={
+                                        "layer": node.get("layer", "unknown"),
+                                        "line_start": node.get("line_start", 0),
+                                        "line_end": node.get("line_end", 0),
+                                    },
+                                )
+                            )
+                    if results:
+                        return results
+            except Exception:
+                pass  # Fallback to corpus iterator
+
+        # Fallback: in-memory corpus (loaded via load_evidences)
         for ev in vault.get_corpus_iterator():
             name = ev.data.get("name", "")
             node_type = ev.data.get("type", "")
