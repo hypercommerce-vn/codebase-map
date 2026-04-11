@@ -1,14 +1,14 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 2.4 | Cập nhật: 17/04/2026 (M1 Day 6 — patterns.md + bootstrap)
+> Version: 2.5 | Cập nhật: 18/04/2026 (M1 Day 7 — Quick Wins generator)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**KMP Sprint M1 ACTIVE · Day 6 · 20/26 SP · M0 COMPLETE (8/8 SP, CTO 20/20) · v2.0.1 shipped**
+**KMP Sprint M1 ACTIVE · Day 7 · 23/26 SP · M0 COMPLETE (8/8 SP, CTO 20/20) · v2.0.1 shipped**
 
-M1 Day 6: MEM-M1-08 (patterns.md generator — 17 tests) + MEM-M1-09 (bootstrap orchestrator — 18 tests). All 279 tests green. Days 1-5 merged (PR #54-59). Day 6 PR pending.
+M1 Day 7: MEM-M1-10 (Quick Wins generator — 43 tests). 322 total tests green. Days 1-6 merged (PR #54-60). Day 7 PR pending.
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
@@ -46,7 +46,7 @@ M1 Day 6: MEM-M1-08 (patterns.md generator — 17 tests) + MEM-M1-09 (bootstrap 
 
 ### ▶️ Next actions
 
-- **M1 Day 7 next** — MEM-M1-09 finish (bootstrap) + MEM-M1-10 start (Quick Wins generator)
+- **M1 Day 8 next** — MEM-M1-11 (CLI rich summary)
 - M1 Design: `design-preview/kmp-M1-design.html` (CEO approved 10/04/2026)
 - M1 Task board: `project/CM-MEM-M1-TASK-BOARD.md`
 
