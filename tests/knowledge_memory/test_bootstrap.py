@@ -322,3 +322,68 @@ class TestBootstrapE2E:
         vault.open(sample_project)
         assert vault.node_count() >= 10
         assert vault.snapshot_count() >= 1
+
+
+# HC-AI | ticket: MEM-M1-14
+class TestBootstrapResume:
+    """Tests for --resume flag (design D-M1-07)."""
+
+    def test_resume_skips_completed_steps(self, sample_project: Path) -> None:
+        """First run completes all 5 steps, resume run skips them."""
+        # Full run first
+        orch = BootstrapOrchestrator(root=sample_project, force_init=True)
+        result1 = orch.run()
+        assert result1.success
+        assert result1.steps_completed == 5
+
+        # Verify resume step saved in vault
+        vault = CodebaseVault()
+        vault.open(sample_project)
+        assert vault.get_meta("bootstrap_step") == "5"
+
+        # Resume run — should succeed quickly (all steps done)
+        orch2 = BootstrapOrchestrator(root=sample_project, resume=True)
+        result2 = orch2.run()
+        assert result2.success
+        assert result2.steps_completed == 5
+
+    def test_resume_from_partial(self, sample_project: Path) -> None:
+        """Resume from a partially completed bootstrap."""
+        # Do a full bootstrap first to create vault
+        orch = BootstrapOrchestrator(root=sample_project, force_init=True)
+        result = orch.run()
+        assert result.success
+
+        # Simulate partial run: set step back to 2
+        vault = CodebaseVault()
+        vault.open(sample_project)
+        vault.set_meta("bootstrap_step", "2")
+
+        # Resume — should re-run steps 3-5
+        orch2 = BootstrapOrchestrator(root=sample_project, resume=True)
+        result2 = orch2.run()
+        assert result2.success
+        assert result2.steps_completed == 5
+        assert vault.get_meta("bootstrap_step") == "5"
+
+    def test_resume_no_vault_falls_back(self, tmp_path: Path) -> None:
+        """Resume on empty project falls back to full run."""
+        # Create minimal Python file
+        (tmp_path / "app.py").write_text("def hello(): pass\n")
+
+        orch = BootstrapOrchestrator(root=tmp_path, resume=True, force_init=True)
+        result = orch.run()
+        assert result.success
+        assert result.steps_completed == 5
+
+    def test_resume_false_runs_all_steps(self, sample_project: Path) -> None:
+        """Without resume=True, all steps run regardless of saved state."""
+        # Full run
+        orch1 = BootstrapOrchestrator(root=sample_project, force_init=True)
+        orch1.run()
+
+        # Non-resume run — should run all steps from scratch
+        orch2 = BootstrapOrchestrator(root=sample_project)
+        result2 = orch2.run()
+        assert result2.success
+        assert result2.steps_completed == 5

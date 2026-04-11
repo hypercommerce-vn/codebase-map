@@ -97,6 +97,7 @@ class BootstrapOrchestrator:
         include_patterns: Optional[List[str]] = None,
         exclude_patterns: Optional[List[str]] = None,
         force_init: bool = False,
+        resume: bool = False,
     ) -> None:
         self._root = root
         self._confidence_threshold = confidence_threshold
@@ -104,6 +105,7 @@ class BootstrapOrchestrator:
         self._include = include_patterns or ["**/*.py"]
         self._exclude = exclude_patterns
         self._force_init = force_init
+        self._resume = resume
         self._interrupted = False
 
         # Components
@@ -150,7 +152,16 @@ class BootstrapOrchestrator:
         return self._result
 
     def _run_pipeline(self, progress_callback=None) -> None:
-        """Internal pipeline execution."""
+        """Internal pipeline execution.
+
+        Supports ``--resume``: reads last completed step from vault
+        metadata and skips already-finished steps (design D-M1-07).
+        """
+        resume_from = 0
+        if self._resume:
+            resume_from = self._get_resume_step()
+            if resume_from > 0:
+                logger.info("Resuming from step %d", resume_from + 1)
 
         def _progress(step: int, msg: str) -> None:
             if progress_callback:
@@ -158,28 +169,47 @@ class BootstrapOrchestrator:
             logger.info("[%d/5] %s", step, msg)
 
         # --- Step 1: Parse ---
-        _progress(1, "Parsing codebase...")
-        self._step_parse()
-        self._check_interrupt()
+        if resume_from < 1:
+            _progress(1, "Parsing codebase...")
+            self._step_parse()
+            self._save_resume_step(1)
+            self._check_interrupt()
+        else:
+            # Re-open vault for resume (need vault handle for later steps)
+            self._reopen_vault()
+            self._result.steps_completed = 1
 
         # --- Step 2: Snapshot ---
-        _progress(2, "Saving snapshot...")
-        self._step_snapshot()
-        self._check_interrupt()
+        if resume_from < 2:
+            _progress(2, "Saving snapshot...")
+            self._step_snapshot()
+            self._save_resume_step(2)
+            self._check_interrupt()
+        else:
+            self._result.steps_completed = 2
 
         # --- Step 3: Learn ---
-        _progress(3, "Running learners...")
-        self._step_learn()
-        self._check_interrupt()
+        if resume_from < 3:
+            _progress(3, "Running learners...")
+            self._step_learn()
+            self._save_resume_step(3)
+            self._check_interrupt()
+        else:
+            self._result.steps_completed = 3
 
         # --- Step 4: Commit ---
-        _progress(4, "Generating patterns.md...")
-        self._step_commit()
-        self._check_interrupt()
+        if resume_from < 4:
+            _progress(4, "Generating patterns.md...")
+            self._step_commit()
+            self._save_resume_step(4)
+            self._check_interrupt()
+        else:
+            self._result.steps_completed = 4
 
         # --- Step 5: Summary ---
         _progress(5, "Finalizing...")
         self._step_summary()
+        self._save_resume_step(5)
 
         self._result.success = True
 
@@ -317,6 +347,32 @@ class BootstrapOrchestrator:
     def _step_summary(self) -> None:
         """Step 5: Final summary — log completion stats."""
         self._result.steps_completed = 5
+
+    # HC-AI | ticket: MEM-M1-14 — resume support (design D-M1-07)
+    def _reopen_vault(self) -> None:
+        """Re-open existing vault for --resume (skip Step 1 parse)."""
+        vault = CodebaseVault()
+        vault.open(self._root)
+        self._vault = vault
+
+    def _get_resume_step(self) -> int:
+        """Read last completed step from vault metadata."""
+        try:
+            vault = CodebaseVault()
+            vault.open(self._root)
+            self._vault = vault
+            step_str = vault.get_meta("bootstrap_step", "0")
+            return int(step_str)
+        except (FileNotFoundError, ValueError):
+            return 0
+
+    def _save_resume_step(self, step: int) -> None:
+        """Persist completed step to vault for --resume."""
+        if self._vault is not None:
+            try:
+                self._vault.set_meta("bootstrap_step", str(step))
+            except Exception:
+                pass  # Non-critical: resume is best-effort
 
     def _handle_interrupt(self, signum, frame) -> None:
         """Ctrl+C handler: set flag for graceful shutdown."""

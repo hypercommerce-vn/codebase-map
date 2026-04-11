@@ -400,6 +400,28 @@ class CodebaseVault(BaseVault):
             )
         return patterns
 
+    # HC-AI | ticket: MEM-M1-14
+    def get_meta(self, key: str, default: str = "") -> str:
+        """Read a value from the _meta key-value table."""
+        self._ensure_initialized()
+        assert self._core_db is not None
+        with sqlite3.connect(str(self._core_db)) as conn:
+            row = conn.execute(
+                "SELECT value FROM _meta WHERE key = ?", (key,)
+            ).fetchone()
+        return row[0] if row else default
+
+    def set_meta(self, key: str, value: str) -> None:
+        """Write a value to the _meta key-value table."""
+        self._ensure_initialized()
+        assert self._core_db is not None
+        with sqlite3.connect(str(self._core_db)) as conn:
+            conn.execute(
+                "INSERT OR REPLACE INTO _meta (key, value) VALUES (?, ?)",
+                (key, value),
+            )
+            conn.commit()
+
     def store_nodes(self, nodes: list) -> None:
         """Replace all AST nodes in cb_nodes table.
 

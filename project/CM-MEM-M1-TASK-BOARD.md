@@ -18,7 +18,7 @@ Build first product vertical: PythonAST parser + 3 learners (Naming, Layer, GitO
 | Field | Value |
 |-------|-------|
 | **Sprint code** | CM-MEM-M1 |
-| **Status** | 🔥 **ACTIVE** — Day 9 · 22/04/2026 · 26/26 SP |
+| **Status** | 🔥 **ACTIVE** — Day 10 · 23/04/2026 · 26/26 SP |
 | **Start date** | 2026-04-10 (T5) — CEO approved M1 design |
 | **Target end** | 2026-04-24 (T5) — 10 working days, nghỉ T7-CN |
 | **Duration** | 2 tuần |
@@ -49,7 +49,7 @@ Build first product vertical: PythonAST parser + 3 learners (Naming, Layer, GitO
 | 11 | MEM-M1-11 | CLI summary output with rich colors | 1 | D8 | ✅ Done | `rich` library, bootstrap/quick-wins/summary formatters, NO_COLOR=1 fallback, ≤20 lines, 34 tests |
 | 12 | MEM-M1-12 | Spike: BM25 Vietnamese language validation (recall ≥75%) | 2 | D9 | ✅ Done | BM25Index + VietnameseTokenizer (compound/syllable/bigram), 100% recall (target ≥75%), 59 tests, spike report |
 | 13 | MEM-M1-13 | Unit tests ≥80% coverage | 1 | D9 | ✅ Done | 94% coverage (target ≥80%), 434 tests, all modules covered, cli_output rich path tested |
-| 14 | MEM-M1-14 | CTO dogfood + subjective gate (≥15/20) | 1 | D10 | ⏳ Todo | CTO runs on HC codebase, scores ≥15/20 |
+| 14 | MEM-M1-14 | CTO dogfood + subjective gate (≥15/20) | 1 | D10 | ✅ Done | CTO 20/20 PASS, --resume implemented, 442 tests, 94% coverage, DoD 12/13 verified |
 
 **Total: 26 SP**
 
@@ -151,4 +151,4 @@ CEO dogfood review identified 3 bugs in patterns.md output. All fixed in PR #63:
 
 ---
 
-*CM-MEM-M1 Task Board · Created 10/04/2026 · Updated 22/04/2026 · @PM*
+*CM-MEM-M1 Task Board · Created 10/04/2026 · Updated 23/04/2026 · @PM*
