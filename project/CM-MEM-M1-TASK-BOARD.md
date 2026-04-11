@@ -18,7 +18,7 @@ Build first product vertical: PythonAST parser + 3 learners (Naming, Layer, GitO
 | Field | Value |
 |-------|-------|
 | **Sprint code** | CM-MEM-M1 |
-| **Status** | 🔥 **ACTIVE** — Day 2 · 11/04/2026 · 6/26 SP |
+| **Status** | 🔥 **ACTIVE** — Day 3 · 11/04/2026 · 10/26 SP |
 | **Start date** | 2026-04-10 (T5) — CEO approved M1 design |
 | **Target end** | 2026-04-24 (T5) — 10 working days, nghỉ T7-CN |
 | **Duration** | 2 tuần |
@@ -39,8 +39,8 @@ Build first product vertical: PythonAST parser + 3 learners (Naming, Layer, GitO
 | 1 | MEM-M1-01 | `CodebaseVault(BaseVault)` — init vault structure, SQLite core.db | 2 | D1 | ✅ Done | `codebase-memory init` creates `.knowledge-memory/`, idempotent, schema_version: 1 |
 | 2 | MEM-M1-02 | `PythonASTParser(BaseParser)` — port AST parsing + directory scan | 2 | D1-2 | ✅ Done | parse_directory + scan_stats, include/exclude, 29 parser tests |
 | 3 | MEM-M1-03 | Snapshots + rotation (keep 5 recent) | 2 | D2 | ✅ Done | Full corpus save, list/load/restore, rotation keep 5, labels, 31 vault tests |
-| 4 | MEM-M1-04 | SQLite extension schema (nodes, edges, ownership) | 2 | D3 | ⏳ Todo | `schema_extension_sql()` returns valid SQL, tables created on init |
-| 5 | MEM-M1-05 | `NamingLearner(BaseLearner)` — naming conventions | 2 | D3-4 | ⏳ Todo | Detect snake_case %, prefix patterns, ≥5 patterns with confidence ≥60% |
+| 4 | MEM-M1-04 | SQLite extension schema + indices + query methods | 2 | D3 | ✅ Done | 8 indices, query_nodes/edges, node_count/edge_count, 8 new tests |
+| 5 | MEM-M1-05 | `NamingLearner(BaseLearner)` — naming conventions | 2 | D3-4 | 🔄 D3 done | snake_case/PascalCase detection, CRUD prefix, violations, 27 tests, E2E pass |
 | 6 | MEM-M1-06 | `LayerLearner` — path hierarchy patterns | 2 | D4 | ⏳ Todo | Classify service/route/model/util layers, ≥5 patterns |
 | 7 | MEM-M1-07 | `GitOwnershipLearner` — author attribution | 2 | D5 | ⏳ Todo | Parse git log, detect single-owner risk (bus factor), ≥3 patterns |
 | 8 | MEM-M1-08 | `patterns.md` generator via `vault.commit_pattern()` | 2 | D6 | ⏳ Todo | Human-readable Markdown, grouped by learner, confidence + evidence |

@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS usage_log (
 );
 """
 
-# HC-AI | ticket: MEM-M1-04 (schema extension — placed here for Day 1 init)
+# HC-AI | ticket: MEM-M1-04
 _CODEBASE_EXTENSION_SQL = """\
 CREATE TABLE IF NOT EXISTS cb_nodes (
     id        INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,6 +71,16 @@ CREATE TABLE IF NOT EXISTS cb_file_ownership (
     commits   INTEGER NOT NULL DEFAULT 0,
     pct       REAL    NOT NULL DEFAULT 0.0
 );
+
+-- HC-AI | ticket: MEM-M1-04 — Performance indices
+CREATE INDEX IF NOT EXISTS idx_cb_nodes_name ON cb_nodes(name);
+CREATE INDEX IF NOT EXISTS idx_cb_nodes_layer ON cb_nodes(layer);
+CREATE INDEX IF NOT EXISTS idx_cb_nodes_file_path ON cb_nodes(file_path);
+CREATE INDEX IF NOT EXISTS idx_cb_nodes_node_type ON cb_nodes(node_type);
+CREATE INDEX IF NOT EXISTS idx_cb_edges_source ON cb_edges(source_name);
+CREATE INDEX IF NOT EXISTS idx_cb_edges_target ON cb_edges(target_name);
+CREATE INDEX IF NOT EXISTS idx_cb_ownership_file ON cb_file_ownership(file_path);
+CREATE INDEX IF NOT EXISTS idx_cb_ownership_author ON cb_file_ownership(author);
 """
 
 
@@ -424,3 +434,98 @@ class CodebaseVault(BaseVault):
                 ],
             )
             conn.commit()
+
+    # HC-AI | ticket: MEM-M1-04
+    def query_nodes(
+        self,
+        layer: Optional[str] = None,
+        node_type: Optional[str] = None,
+    ) -> List[Dict[str, object]]:
+        """Query stored nodes, optionally filtered by layer/node_type.
+
+        Returns list of dicts with node fields.
+        """
+        self._ensure_initialized()
+        assert self._vertical_db is not None
+        where_parts: List[str] = []
+        params: List[object] = []
+        if layer:
+            where_parts.append("layer = ?")
+            params.append(layer)
+        if node_type:
+            where_parts.append("node_type = ?")
+            params.append(node_type)
+
+        sql = (
+            "SELECT name, file_path, node_type, layer, "
+            "line_start, line_end, metadata_json FROM cb_nodes"
+        )
+        if where_parts:
+            sql += " WHERE " + " AND ".join(where_parts)
+        sql += " ORDER BY name"
+
+        with sqlite3.connect(str(self._vertical_db)) as conn:
+            rows = conn.execute(sql, params).fetchall()
+
+        return [
+            {
+                "name": r[0],
+                "file_path": r[1],
+                "node_type": r[2],
+                "layer": r[3],
+                "line_start": r[4],
+                "line_end": r[5],
+                "metadata": json.loads(r[6]),
+            }
+            for r in rows
+        ]
+
+    # HC-AI | ticket: MEM-M1-04
+    def query_edges(self, source_name: Optional[str] = None) -> List[Dict[str, str]]:
+        """Query stored edges, optionally filtered by source node name."""
+        self._ensure_initialized()
+        assert self._vertical_db is not None
+
+        if source_name:
+            sql = (
+                "SELECT source_name, target_name, edge_type, file_path "
+                "FROM cb_edges WHERE source_name = ? ORDER BY target_name"
+            )
+            params: list = [source_name]
+        else:
+            sql = (
+                "SELECT source_name, target_name, edge_type, file_path "
+                "FROM cb_edges ORDER BY source_name, target_name"
+            )
+            params = []
+
+        with sqlite3.connect(str(self._vertical_db)) as conn:
+            rows = conn.execute(sql, params).fetchall()
+
+        return [
+            {
+                "source_name": r[0],
+                "target_name": r[1],
+                "edge_type": r[2],
+                "file_path": r[3],
+            }
+            for r in rows
+        ]
+
+    # HC-AI | ticket: MEM-M1-04
+    def node_count(self) -> int:
+        """Return total number of stored nodes."""
+        self._ensure_initialized()
+        assert self._vertical_db is not None
+        with sqlite3.connect(str(self._vertical_db)) as conn:
+            row = conn.execute("SELECT COUNT(*) FROM cb_nodes").fetchone()
+        return row[0] if row else 0
+
+    # HC-AI | ticket: MEM-M1-04
+    def edge_count(self) -> int:
+        """Return total number of stored edges."""
+        self._ensure_initialized()
+        assert self._vertical_db is not None
+        with sqlite3.connect(str(self._vertical_db)) as conn:
+            row = conn.execute("SELECT COUNT(*) FROM cb_edges").fetchone()
+        return row[0] if row else 0

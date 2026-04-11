@@ -320,3 +320,101 @@ class TestCodebaseVaultOperations:
             ).fetchall()
         assert len(rows) == 1
         assert rows[0] == ("func_a", "func_b")
+
+    # HC-AI | ticket: MEM-M1-04
+    def test_schema_has_indices(self, tmp_path: Path) -> None:
+        """Extension schema creates performance indices."""
+        vault = CodebaseVault()
+        vault.init(tmp_path)
+
+        db = tmp_path / ".knowledge-memory" / "verticals" / "codebase" / "vault.db"
+        with sqlite3.connect(str(db)) as conn:
+            indices = {
+                row[0]
+                for row in conn.execute(
+                    "SELECT name FROM sqlite_master WHERE type='index'"
+                ).fetchall()
+            }
+        assert "idx_cb_nodes_name" in indices
+        assert "idx_cb_nodes_layer" in indices
+        assert "idx_cb_edges_source" in indices
+        assert "idx_cb_edges_target" in indices
+        assert "idx_cb_ownership_file" in indices
+
+    # HC-AI | ticket: MEM-M1-04
+    def test_query_nodes_all(self, vault: CodebaseVault) -> None:
+        """query_nodes() returns all nodes when no filter."""
+        vault.store_nodes(
+            [
+                {"name": "a", "file_path": "x.py", "layer": "service"},
+                {"name": "b", "file_path": "y.py", "layer": "model"},
+            ]
+        )
+        result = vault.query_nodes()
+        assert len(result) == 2
+
+    # HC-AI | ticket: MEM-M1-04
+    def test_query_nodes_filter_layer(self, vault: CodebaseVault) -> None:
+        """query_nodes(layer=...) filters correctly."""
+        vault.store_nodes(
+            [
+                {"name": "a", "file_path": "x.py", "layer": "service"},
+                {"name": "b", "file_path": "y.py", "layer": "model"},
+                {"name": "c", "file_path": "z.py", "layer": "service"},
+            ]
+        )
+        result = vault.query_nodes(layer="service")
+        assert len(result) == 2
+        assert all(r["layer"] == "service" for r in result)
+
+    # HC-AI | ticket: MEM-M1-04
+    def test_query_nodes_filter_type(self, vault: CodebaseVault) -> None:
+        """query_nodes(node_type=...) filters correctly."""
+        vault.store_nodes(
+            [
+                {"name": "a", "node_type": "function"},
+                {"name": "B", "node_type": "class"},
+            ]
+        )
+        result = vault.query_nodes(node_type="class")
+        assert len(result) == 1
+        assert result[0]["name"] == "B"
+
+    # HC-AI | ticket: MEM-M1-04
+    def test_query_edges_all(self, vault: CodebaseVault) -> None:
+        """query_edges() returns all edges."""
+        vault.store_edges(
+            [
+                {"source": "a", "target": "b"},
+                {"source": "c", "target": "d"},
+            ]
+        )
+        result = vault.query_edges()
+        assert len(result) == 2
+
+    # HC-AI | ticket: MEM-M1-04
+    def test_query_edges_filter_source(self, vault: CodebaseVault) -> None:
+        """query_edges(source_name=...) filters correctly."""
+        vault.store_edges(
+            [
+                {"source": "a", "target": "b"},
+                {"source": "a", "target": "c"},
+                {"source": "x", "target": "y"},
+            ]
+        )
+        result = vault.query_edges(source_name="a")
+        assert len(result) == 2
+
+    # HC-AI | ticket: MEM-M1-04
+    def test_node_count(self, vault: CodebaseVault) -> None:
+        """node_count() returns correct count."""
+        assert vault.node_count() == 0
+        vault.store_nodes([{"name": "a"}, {"name": "b"}])
+        assert vault.node_count() == 2
+
+    # HC-AI | ticket: MEM-M1-04
+    def test_edge_count(self, vault: CodebaseVault) -> None:
+        """edge_count() returns correct count."""
+        assert vault.edge_count() == 0
+        vault.store_edges([{"source": "a", "target": "b"}])
+        assert vault.edge_count() == 1
