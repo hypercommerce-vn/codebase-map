@@ -20,9 +20,7 @@ from knowledge_memory.verticals.codebase.git_ownership_learner import (
 )
 from knowledge_memory.verticals.codebase.layer_learner import LayerLearner
 from knowledge_memory.verticals.codebase.naming_learner import NamingLearner
-from knowledge_memory.verticals.codebase.patterns_generator import (
-    generate_patterns_md,
-)
+from knowledge_memory.verticals.codebase.patterns_generator import generate_patterns_md
 from knowledge_memory.verticals.codebase.vault import CodebaseVault
 
 logger = logging.getLogger("codebase-memory.bootstrap")

@@ -7,9 +7,7 @@ import pytest
 
 from knowledge_memory.core.learners.pattern import Pattern
 from knowledge_memory.core.parsers.evidence import Evidence
-from knowledge_memory.verticals.codebase.patterns_generator import (
-    generate_patterns_md,
-)
+from knowledge_memory.verticals.codebase.patterns_generator import generate_patterns_md
 from knowledge_memory.verticals.codebase.vault import CodebaseVault
 
 # --- Fixtures ---
