@@ -49,6 +49,7 @@ M1 Day 8: MEM-M1-11 (CLI rich output — 34 tests). 356 total tests green. Days 
 | #59 | feat(kmp): M1 Day 5 — GitOwnershipLearner + vault ownership | 97 | ✅ merged |
 | #60 | feat(kmp): M1 Day 6 — patterns.md generator + bootstrap orchestrator | 97 | ✅ merged |
 | #61 | feat(kmp): M1 Day 7 — Quick Wins generator (10 insights 5+3+2) | 98 | ✅ merged |
+| #62 | feat(kmp): M1 Day 8 — CLI summary output with rich colors | 97 | ✅ merged |
 
 ### ▶️ Next actions
 
