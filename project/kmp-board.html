@@ -553,6 +553,74 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
     </div>
   </div>
 
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-05: Learner cluster() methods ~130-140 LOC</span>
+      <span class="badge issue">refactor</span>
+    </div>
+    <div class="issue-card-body">
+      Both <code>LayerLearner.cluster()</code> and <code>GitOwnershipLearner.cluster()</code> are ~130-140 lines. Each cluster type should be extracted into a private sub-method for readability and testability.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: PR #58 + #59 review-gate (CTO, Dim B)</span>
+      <span>&middot;</span>
+      <span>Priority: Low</span>
+      <span>&middot;</span>
+      <span>Action: Refactor in M2</span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-06: _parse_git_log lacks mock-based unit test</span>
+      <span class="badge issue">test-gap</span>
+    </div>
+    <div class="issue-card-body">
+      <code>_parse_git_log()</code> runs <code>subprocess.run</code> against real git repo. No mock test exists to verify parsing logic in isolation. Should add <code>unittest.mock.patch</code> test in M2 to cover output parsing without requiring a git repo.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: PR #59 review-gate (CTO)</span>
+      <span>&middot;</span>
+      <span>Priority: Low</span>
+      <span>&middot;</span>
+      <span>Action: Add mock test in M2 test coverage task</span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-07: _extract_domain_from_path duplicated in 2 learners</span>
+      <span class="badge issue">DRY</span>
+    </div>
+    <div class="issue-card-body">
+      <code>_extract_domain_from_path()</code> exists in both <code>layer_learner.py</code> and <code>git_ownership_learner.py</code> with near-identical logic. Should extract to a shared <code>verticals/codebase/utils.py</code> module.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: PR #59 review-gate (CTO, Dim B)</span>
+      <span>&middot;</span>
+      <span>Priority: Low</span>
+      <span>&middot;</span>
+      <span>Action: Extract shared utils when adding 4th learner or in M2</span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">KMP-ISSUE-08: vault.py growing to ~600 LOC</span>
+      <span class="badge issue">refactor</span>
+    </div>
+    <div class="issue-card-body">
+      <code>CodebaseVault</code> now has ~600 LOC with store/query methods for nodes, edges, ownership, patterns, and snapshots. Consider splitting query methods into a separate <code>queries.py</code> module to keep vault.py focused on init/open/schema.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: PR #57 + #59 review-gate (CTO, Dim B)</span>
+      <span>&middot;</span>
+      <span>Priority: Low</span>
+      <span>&middot;</span>
+      <span>Action: Split in M2 when adding MCP query tools</span>
+    </div>
+  </div>
+
   <!-- PR History -->
   <h2 id="pr-history"><span class="h2-icon">&#128230;</span> PR History</h2>
   <table>
@@ -743,7 +811,7 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
 <!-- Footer -->
 <div class="footer">
   <span>KMP Project Board &middot; Knowledge Memory Platform &middot; Hyper Commerce</span>
-  <span>Updated: 11/04/2026 &middot; Sprint M1 ACTIVE (6/26 SP) &middot; M0 &#10003; COMPLETE (8/8 SP, CTO 20/20) &middot; Repo PRIVATE</span>
+  <span>Updated: 16/04/2026 &middot; Sprint M1 ACTIVE (16/26 SP) &middot; M0 &#10003; COMPLETE (8/8 SP, CTO 20/20) &middot; Repo PRIVATE</span>
 </div>
 
 <script>
