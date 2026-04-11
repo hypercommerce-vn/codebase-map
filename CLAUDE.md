@@ -90,6 +90,21 @@ codebase-map/
 │   └── CM-S1-TASK-BOARD.md            ← Task board sprint 1
 ├── .github/workflows/ci.yml           ← CI: lint + self-test
 ├── pyproject.toml                     ← pip installable
+├── docs/
+│   ├── ONBOARDING.md                  ← Customer onboarding guide
+│   ├── vault-format-spec.md           ← KMP vault format spec
+│   ├── cbm-dual-snapshot/             ← Dual-Snapshot CBM (v2.1 + v2.2)
+│   │   ├── Proposal_Dual_Snapshot_CBM.md       ← Proposal v1.1 + CEO decisions
+│   │   ├── CTO_Review_Dual_Snapshot.md         ← CTO review 48/60 + effort estimate
+│   │   ├── CTO_CI_Integration_Proposal.md      ← CI Phương án B + YAML templates
+│   │   ├── CBM-PHASE1-TASK-BOARD.md            ← Sprint Phase 1 (v2.1, 7 SP)
+│   │   ├── CBM-PHASE2-TASK-BOARD.md            ← Sprint Phase 2 (v2.2, 12 SP)
+│   │   ├── CBM-Dual-Snapshot-Design.html       ← Design preview (6 tabs)
+│   │   └── CBM-Implementation-Specs.md         ← Technical specs đầy đủ
+│   ├── reviews/                       ← Review gate reports
+│   ├── releases/                      ← Release notes
+│   ├── sessions/                      ← Session state files
+│   └── function-map/                  ← Legacy function map docs
 ├── setup.cfg                          ← flake8 config
 ├── codebase-map.example.yaml          ← sample config
 ├── templates/                         ← HTML templates (future)
@@ -109,6 +124,13 @@ codebase-map/
 | Design CM-S1 chi tiết | **`design-preview/codebase-map-CM-S1-design.html`** |
 | AI Agents overview | **`agents/README.md`** |
 | Slash commands | **`.claude/commands/`** |
+| CBM Dual-Snapshot proposal | **`docs/cbm-dual-snapshot/Proposal_Dual_Snapshot_CBM.md`** |
+| CBM CTO review | **`docs/cbm-dual-snapshot/CTO_Review_Dual_Snapshot.md`** |
+| CBM CI integration | **`docs/cbm-dual-snapshot/CTO_CI_Integration_Proposal.md`** |
+| CBM Phase 1 task board | **`docs/cbm-dual-snapshot/CBM-PHASE1-TASK-BOARD.md`** |
+| CBM Phase 2 task board | **`docs/cbm-dual-snapshot/CBM-PHASE2-TASK-BOARD.md`** |
+| CBM Design preview | **`docs/cbm-dual-snapshot/CBM-Dual-Snapshot-Design.html`** |
+| CBM Implementation specs | **`docs/cbm-dual-snapshot/CBM-Implementation-Specs.md`** |
 
 ---
 
@@ -168,8 +190,11 @@ Cập nhật `BRIEF.md` + `project/board.html`:
 |---------|--------|-------|----|--------|
 | **v1.0** | — | Core: parser + graph + CLI + HTML | 8 | ✅ Done |
 | **v1.1** | CM-S1 | UX: sidebar tree, clusters, minimap, toolbar, D3 bundle | 15 | ✅ Done (06/04/2026) |
-| **v1.2** | CM-S2 | Workflow: git diff, coverage, API catalog, /implement | 18 | ⏳ Planned |
-| **v2.0** | CM-S3 | Multi-view: Executive, PR Diff, TS parser, responsive | 22 | ⏳ Planned |
+| **v1.2** | CM-S2 | Workflow: git diff, coverage, API catalog, /implement | 18 | ✅ Done (07/04/2026) |
+| **v2.0** | CM-S3 | Multi-view: Executive, PR Diff, TS parser, responsive | 22 | ✅ Done (07/04/2026) |
+| **v2.0.1** | Hotfix | Classifier fix, coverage hook, generate --diff | 3 | ✅ Done (08/04/2026) |
+| **v2.1** | CBM-P1 | Graph metadata + snapshot versioning | 7 | 🟡 Ready — chờ CEO |
+| **v2.2** | CBM-P2 | Dual-snapshot diff engine | 12 | 🟡 Ready — sau Phase 1 |
 
 ---
 
@@ -196,4 +221,4 @@ black --check codebase_map/ && isort --check codebase_map/ && flake8 codebase_ma
 
 ---
 
-*CLAUDE.md v1.1 — Codebase Map | Updated 06/04/2026 | Added agents + commands + settings*
+*CLAUDE.md v1.2 — Codebase Map | Updated 11/04/2026 | Added docs/cbm-dual-snapshot + roadmap v2.1/v2.2*

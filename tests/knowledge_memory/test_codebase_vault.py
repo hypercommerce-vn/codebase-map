@@ -1,7 +1,6 @@
 # HC-AI | ticket: MEM-M1-01
 """Tests for CodebaseVault — vault init, schema, commit, query, snapshot."""
 
-import json
 import sqlite3
 from pathlib import Path
 
@@ -148,6 +147,39 @@ class TestCodebaseVaultOperations:
         result = vault.snapshot()
         assert "id" in result
         assert "created_at" in result
+        assert "evidence_count" in result
+
+    def test_snapshot_with_label(self, vault: CodebaseVault) -> None:
+        """snapshot(label=...) stores label in result."""
+        result = vault.snapshot(label="bootstrap-run-1")
+        assert result["label"] == "bootstrap-run-1"
+
+    def test_snapshot_saves_evidence_data(self, vault: CodebaseVault) -> None:
+        """snapshot() saves full evidence corpus, restorable via load_snapshot."""
+        evs = [
+            Evidence(
+                source="a.py",
+                data={"name": "func_a", "type": "function"},
+                line_range=(1, 10),
+            ),
+            Evidence(
+                source="b.py",
+                data={"name": "ClassB", "type": "class"},
+                line_range=(5, 20),
+                metadata={"layer": "service"},
+            ),
+        ]
+        vault.load_evidences(evs)
+        result = vault.snapshot(label="test-snap")
+        assert result["evidence_count"] == 2
+
+        # Restore from snapshot
+        restored = vault.load_snapshot(result["id"])
+        assert len(restored) == 2
+        assert restored[0].source == "a.py"
+        assert restored[0].data["name"] == "func_a"
+        assert restored[0].line_range == (1, 10)
+        assert restored[1].metadata.get("layer") == "service"
 
     def test_snapshot_rotation(self, vault: CodebaseVault) -> None:
         """Only 5 snapshots kept after rotation."""
@@ -158,6 +190,63 @@ class TestCodebaseVaultOperations:
         with sqlite3.connect(str(vault._core_db)) as conn:
             count = conn.execute("SELECT COUNT(*) FROM snapshots").fetchone()[0]
         assert count == 5
+
+    def test_snapshot_rotation_keeps_newest(self, vault: CodebaseVault) -> None:
+        """Rotation keeps the 5 newest snapshots, not oldest."""
+        for i in range(7):
+            vault.snapshot(label=f"snap-{i}")
+
+        snapshots = vault.list_snapshots()
+        assert len(snapshots) == 5
+        # Newest first
+        labels = [s["label"] for s in snapshots]
+        assert labels[0] == "snap-6"
+        assert labels[-1] == "snap-2"
+
+    def test_list_snapshots(self, vault: CodebaseVault) -> None:
+        """list_snapshots() returns all snapshots newest first."""
+        vault.snapshot(label="first")
+        vault.snapshot(label="second")
+
+        snaps = vault.list_snapshots()
+        assert len(snaps) == 2
+        assert snaps[0]["label"] == "second"
+        assert snaps[1]["label"] == "first"
+        assert "id" in snaps[0]
+        assert "created_at" in snaps[0]
+        assert "evidence_count" in snaps[0]
+
+    def test_list_snapshots_empty(self, vault: CodebaseVault) -> None:
+        """list_snapshots() returns empty list when no snapshots."""
+        assert vault.list_snapshots() == []
+
+    def test_load_snapshot_not_found(self, vault: CodebaseVault) -> None:
+        """load_snapshot() raises ValueError for nonexistent ID."""
+        with pytest.raises(ValueError, match="not found"):
+            vault.load_snapshot(9999)
+
+    def test_load_snapshot_restores_to_memory(self, vault: CodebaseVault) -> None:
+        """load_snapshot() also sets _evidences for immediate learner use."""
+        evs = [Evidence(source="x.py", data={"name": "x"})]
+        vault.load_evidences(evs)
+        snap = vault.snapshot()
+
+        # Clear memory
+        vault.load_evidences([])
+        assert list(vault.get_corpus_iterator()) == []
+
+        # Restore
+        vault.load_snapshot(snap["id"])
+        result = list(vault.get_corpus_iterator())
+        assert len(result) == 1
+        assert result[0].data["name"] == "x"
+
+    def test_snapshot_count(self, vault: CodebaseVault) -> None:
+        """snapshot_count() returns correct count."""
+        assert vault.snapshot_count() == 0
+        vault.snapshot()
+        vault.snapshot()
+        assert vault.snapshot_count() == 2
 
     def test_corpus_iterator_empty(self, vault: CodebaseVault) -> None:
         """get_corpus_iterator() yields nothing by default."""

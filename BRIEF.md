@@ -1,14 +1,14 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 2.0 | Cập nhật: 09/04/2026 (PR #49 private repo docs merged)
+> Version: 2.3 | Cập nhật: 11/04/2026 (M1 Day 2 — parser finish + snapshots)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**KMP Sprint M1 ACTIVE · Day 1 · 0/26 SP · M0 COMPLETE (8/8 SP, CTO 20/20) · v2.0.1 shipped**
+**KMP Sprint M1 ACTIVE · Day 2 · 6/26 SP · M0 COMPLETE (8/8 SP, CTO 20/20) · v2.0.1 shipped**
 
-M0 all 5 PRs merged, CTO sign-off 20/20. M1 Design approved by CEO 10/04/2026 (PO+CTO+Designer 3-way meeting, 7 screens, 8 decisions). M1 Sprint kickoff: 14 tasks, 26 SP, 10 Days. Day 1: MEM-M1-01 (CodebaseVault) + MEM-M1-02 (PythonASTParser start).
+M1 Day 1 merged (PR #54, 97/100). Day 2: MEM-M1-02 finish (parse_directory + scan_stats) + MEM-M1-03 (snapshot full corpus save, list/load/restore, rotation keep 5, labels). 108 tests green.
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
@@ -43,7 +43,8 @@ M0 all 5 PRs merged, CTO sign-off 20/20. M1 Design approved by CEO 10/04/2026 (P
 
 ### ▶️ Next actions
 
-- **M1 Day 1 ACTIVE** — MEM-M1-01 CodebaseVault + MEM-M1-02 PythonASTParser start
+- **M1 Day 2 PR pending** — MEM-M1-02 finish + MEM-M1-03 Snapshots → PR #55
+- **M1 Day 3 next** — MEM-M1-04 (SQLite extension schema) + MEM-M1-05 start (NamingLearner)
 - M1 Design: `design-preview/kmp-M1-design.html` (CEO approved 10/04/2026)
 - M1 Task board: `project/CM-MEM-M1-TASK-BOARD.md`
 
@@ -288,6 +289,42 @@ M0 all 5 PRs merged, CTO sign-off 20/20. M1 Design approved by CEO 10/04/2026 (P
 | 10/04/2026 | **KMP M0 COMPLETE** — 8/8 SP, 5 PRs, CTO sign-off 20/20 PASS. PR #53 merged | CEO |
 | 10/04/2026 | **KMP M1 Design approved** — PO+CTO+Designer 3-way meeting, 7 screens, 8 decisions. `kmp-M1-design.html` | CEO |
 | 10/04/2026 | **KMP M1 Sprint kickoff** — 14 tasks, 26 SP, 10 Days (10/04 → 23/04). Day 1: CodebaseVault + PythonASTParser | CEO |
+| 10/04/2026 | **CBM Dual-Snapshot APPROVED** — Proposal + CTO Review + CI Integration. 3 modifications: Phase 3→KMP, rename=signature matching, CI=artifact. Scope: 19 SP / 2 phases / 3 tuần | CEO |
+| 10/04/2026 | **CI Phương án B chốt** — GitHub Actions Artifact + Auto PR Comment. Zero commit noise. 3-day warn Telegram, 7-day block merge | CEO |
+| 10/04/2026 | **CBM ranh giới** — codebase-map = stateless graph tool (free). KMP = stateful knowledge engine (freemium). Lifecycle commands ở KMP M3 | CEO + CTO |
+| 11/04/2026 | **CBM Sprint plans + Design + Specs hoàn tất** — 7 files trong `docs/cbm-dual-snapshot/`, sẵn sàng implement khi CEO ra lệnh | PM + CTO |
+
+---
+
+## 🗺️ CBM DUAL-SNAPSHOT — READY (10/04/2026)
+
+**Goal:** Nâng codebase-map từ snapshot tool → lifecycle tool. Before vs After function-level impact analysis.
+
+**Scope:** Phase 1 (v2.1, 7 SP, 1 tuần) + Phase 2 (v2.2, 12 SP, 2 tuần) = **19 SP / 3 tuần**
+**Phase 3 (Lifecycle):** DEFERRED sang KMP M3
+
+**Start condition:** KMP M1 done + CEO duyệt plan
+**Branch:** `feat/cbm-phase1-metadata` → `feat/cbm-phase2-diff-engine`
+
+**Deliverables (trong `docs/cbm-dual-snapshot/`):**
+
+| File | Nội dung |
+|------|---------|
+| `Proposal_Dual_Snapshot_CBM.md` | Proposal gốc (v1.1) + CEO decisions section 14 |
+| `CTO_Review_Dual_Snapshot.md` | CTO review 48/60, 3 modifications, 15 tasks chi tiết |
+| `CTO_CI_Integration_Proposal.md` | CI deep-dive, Phương án B, 3 YAML templates, CEO decisions |
+| `CBM-PHASE1-TASK-BOARD.md` | Sprint Phase 1: 7 tasks, 7 SP, daily plan, DoD |
+| `CBM-PHASE2-TASK-BOARD.md` | Sprint Phase 2: 8 tasks + CI, 12 SP, daily plan 2 tuần |
+| `CBM-Dual-Snapshot-Design.html` | Design preview 6 tabs (PR comment, CLI diff, snapshots, test plan, Telegram, JSON) |
+| `CBM-Implementation-Specs.md` | Technical specs: metadata schema, SnapshotManager, SnapshotDiff, formatters, tests |
+
+**CEO Decisions (tóm tắt):**
+- Phase 3 → KMP M3 (giữ codebase-map stateless)
+- Rename = signature matching (name + params + return_type)
+- CI = GitHub Actions artifact + auto PR comment (zero commit)
+- PR comment = summary visible + full diff `<details>` collapsible
+- Staleness = 3 ngày warn Telegram, 7 ngày block merge
+- Pricing = 100% free (paid ở KMP)
 
 ---
 
@@ -295,7 +332,8 @@ M0 all 5 PRs merged, CTO sign-off 20/20. M1 Design approved by CEO 10/04/2026 (P
 
 | Vấn đề | Priority |
 |--------|----------|
-| KMP M1 Day 1 — CodebaseVault + PythonASTParser (4 SP) | 🔥 Active |
+| KMP M1 Day 2 — Parser finish + Snapshots (4 SP) | 🔥 Active |
+| CBM Dual-Snapshot — READY, chờ CEO ra lệnh start (sau KMP M1) | 🟡 Ready |
 | Wiki board ở HC repo cần update link repo mới | 🟢 Low |
 
 ---
@@ -315,6 +353,13 @@ M0 all 5 PRs merged, CTO sign-off 20/20. M1 Design approved by CEO 10/04/2026 (P
 | `agents/README.md` | 7 AI agents overview |
 | `.claude/commands/` | 5 slash commands (review-gate, implement, review, ci-watch, security-audit) |
 | `.claude/settings.json` | Security deny/allow rules |
+| `docs/cbm-dual-snapshot/Proposal_Dual_Snapshot_CBM.md` | CBM Dual-Snapshot proposal v1.1 + CEO decisions |
+| `docs/cbm-dual-snapshot/CTO_Review_Dual_Snapshot.md` | CTO review + effort re-estimate |
+| `docs/cbm-dual-snapshot/CTO_CI_Integration_Proposal.md` | CI Phương án B + 3 YAML templates |
+| `docs/cbm-dual-snapshot/CBM-PHASE1-TASK-BOARD.md` | Sprint Phase 1 task board (v2.1, 7 SP) |
+| `docs/cbm-dual-snapshot/CBM-PHASE2-TASK-BOARD.md` | Sprint Phase 2 task board (v2.2, 12 SP) |
+| `docs/cbm-dual-snapshot/CBM-Dual-Snapshot-Design.html` | Design preview interactive (6 tabs) |
+| `docs/cbm-dual-snapshot/CBM-Implementation-Specs.md` | Implementation specs kỹ thuật |
 
 ---
 
@@ -329,4 +374,4 @@ M0 all 5 PRs merged, CTO sign-off 20/20. M1 Design approved by CEO 10/04/2026 (P
 
 ---
 
-*BRIEF.md v2.2 — Codebase Map | 10/04/2026 | Repo PRIVATE · KMP M1 ACTIVE · M0 COMPLETE*
+*BRIEF.md v2.4 — Codebase Map | 11/04/2026 | Repo PRIVATE · KMP M1 ACTIVE · M0 COMPLETE · CBM Dual-Snapshot READY*

@@ -2,7 +2,6 @@
 """Tests for PythonASTParser — parse Python files into Evidence."""
 
 from pathlib import Path
-from typing import List
 
 import pytest
 
@@ -163,6 +162,131 @@ class TestPythonASTParserParsing:
         funcs = [e for e in results if e.data.get("type") == "function"]
         assert len(funcs) >= 1
         assert len(funcs[0].data["decorators"]) >= 1
+
+
+class TestPythonASTParserDirectory:
+    """Tests for directory scanning (MEM-M1-02 finish)."""
+
+    # HC-AI | ticket: MEM-M1-02
+
+    @pytest.fixture()
+    def project_dir(self, tmp_path: Path) -> Path:
+        """Create a mini project directory with multiple Python files."""
+        # app/service.py
+        svc = tmp_path / "app" / "services"
+        svc.mkdir(parents=True)
+        (svc / "customer_service.py").write_text(
+            "class CustomerService:\n"
+            "    def create(self, name: str) -> dict:\n"
+            "        return {'name': name}\n"
+        )
+        (svc / "order_service.py").write_text(
+            "def place_order(item_id: int) -> dict:\n"
+            "    return {'item': item_id}\n"
+            "\n"
+            "def cancel_order(order_id: int) -> bool:\n"
+            "    return True\n"
+        )
+
+        # app/models/
+        models = tmp_path / "app" / "models"
+        models.mkdir(parents=True)
+        (models / "user.py").write_text(
+            "class User:\n" "    name: str\n" "    email: str\n"
+        )
+
+        # utils/
+        utils = tmp_path / "utils"
+        utils.mkdir()
+        (utils / "helpers.py").write_text(
+            "def format_name(s: str) -> str:\n" "    return s.title()\n"
+        )
+
+        # Should be excluded: __pycache__
+        cache = tmp_path / "app" / "__pycache__"
+        cache.mkdir()
+        (cache / "cached.py").write_text("x = 1\n")
+
+        # Should be excluded: .venv
+        venv = tmp_path / ".venv" / "lib"
+        venv.mkdir(parents=True)
+        (venv / "pkg.py").write_text("y = 2\n")
+
+        # Non-python file (ignored)
+        (tmp_path / "README.md").write_text("# Project\n")
+
+        return tmp_path
+
+    def test_parse_directory_yields_evidence(
+        self, parser: PythonASTParser, project_dir: Path
+    ) -> None:
+        """parse_directory yields Evidence from all Python files."""
+        results = list(parser.parse_directory(project_dir))
+        assert len(results) >= 5  # 1 class + 1 method + 2 funcs + 1 class + 1 func
+        assert all(isinstance(e, Evidence) for e in results)
+
+    def test_parse_directory_excludes_pycache(
+        self, parser: PythonASTParser, project_dir: Path
+    ) -> None:
+        """Files in __pycache__/ are excluded by default."""
+        results = list(parser.parse_directory(project_dir))
+        sources = {e.source for e in results}
+        assert not any("__pycache__" in s for s in sources)
+
+    def test_parse_directory_excludes_venv(
+        self, parser: PythonASTParser, project_dir: Path
+    ) -> None:
+        """Files in .venv/ are excluded by default."""
+        results = list(parser.parse_directory(project_dir))
+        sources = {e.source for e in results}
+        assert not any(".venv" in s for s in sources)
+
+    def test_parse_directory_custom_include(
+        self, parser: PythonASTParser, project_dir: Path
+    ) -> None:
+        """Custom include pattern limits scan scope."""
+        results = list(
+            parser.parse_directory(project_dir, include=["app/services/**/*.py"])
+        )
+        # Only service files
+        assert len(results) >= 3  # 1 class + 1 method + 2 funcs
+        sources = {e.source for e in results}
+        assert all("services" in s for s in sources)
+
+    def test_parse_directory_custom_exclude(
+        self, parser: PythonASTParser, project_dir: Path
+    ) -> None:
+        """Custom exclude pattern filters out matching files."""
+        results = list(
+            parser.parse_directory(
+                project_dir,
+                exclude=["**/helpers.py", "**/__pycache__/**", "**/.venv/**"],
+            )
+        )
+        sources = {e.source for e in results}
+        assert not any("helpers" in s for s in sources)
+
+    def test_parse_directory_empty_dir(
+        self, parser: PythonASTParser, tmp_path: Path
+    ) -> None:
+        """Empty directory yields nothing."""
+        results = list(parser.parse_directory(tmp_path))
+        assert results == []
+
+    def test_scan_stats(self, parser: PythonASTParser, project_dir: Path) -> None:
+        """scan_stats returns correct counts."""
+        stats = parser.scan_stats(project_dir)
+        assert stats["files"] >= 4  # 4 .py files (excl __pycache__, .venv)
+        assert stats["nodes"] >= 5
+        assert stats["classes"] >= 2  # CustomerService, User
+        assert stats["functions"] >= 3  # place_order, cancel_order, format_name
+        assert stats["methods"] >= 1  # create
+
+    def test_scan_stats_empty(self, parser: PythonASTParser, tmp_path: Path) -> None:
+        """scan_stats on empty dir returns all zeros."""
+        stats = parser.scan_stats(tmp_path)
+        assert stats["files"] == 0
+        assert stats["nodes"] == 0
 
 
 class TestPythonASTParserEdgeCases:

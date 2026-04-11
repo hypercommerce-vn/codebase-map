@@ -1,0 +1,388 @@
+# @CTO — CI Integration Proposal: Dual-Snapshot Automation
+> **Reviewer:** @CTO · **Date:** 10/04/2026
+> **Input:** CEO's 9-step HC workflow (screenshot) + Proposal FR-030→033
+> **Goal:** Tự động hoá 9 bước mà không làm dài commit history
+
+---
+
+## 1. PHÂN TÍCH FLOW HIỆN TẠI (CEO's 9 Steps)
+
+Từ ảnh anh share, flow HC project đang chạy:
+
+| Bước | Hành động | Ai làm | Đánh giá CTO |
+|:----:|-----------|--------|-------------|
+| 1 | Generate CBM#99 từ develop (post-merge) | Claude local | ✅ Đúng — baseline phải từ develop |
+| 2 | Commit CBM#99 vào develop | Claude | ⚠️ **Đây là commit thừa** — mỗi PR cycle +1 commit |
+| 3 | Dev đọc CBM#99 để planning | Dev/Claude | ✅ Core value |
+| 4 | Dev implement xong, báo "done" | Dev/Claude | ✅ |
+| 5 | Generate CBM#100 trên branch | Claude local | ✅ Post-dev snapshot |
+| 6 | CBM#100 vào PR body | Claude | ✅ Impact Analysis block — **rất hay** |
+| 7 | CTO + Tester dùng CBM#100 | CTO/Tester | ✅ Review + test scope |
+| 8 | Merge → regenerate CBM#100 từ develop | Claude local | ✅ **Bước thông minh** — capture review-gate fixes |
+| 9 | Commit CBM#100 lên GitHub thay CBM#99 | Claude | ⚠️ **Commit thừa thứ 2** |
+
+**Insight từ flow CEO:** Bước 8 (regenerate after merge) là **key innovation** — sau review-gate CTO có thể yêu cầu sửa code, nên CBM#100 phải capture cả fixes. Không tool nào ngoài kia làm bước này.
+
+**Vấn đề:** Bước 2 + 9 tạo ra **2 extra commits** mỗi PR cycle. Với HC team nhỏ (2-3 người): chấp nhận được. Nhưng team 10+ người, mỗi ngày 3-5 PRs merge = **6-10 extra commits/ngày** chỉ để update graph file.
+
+---
+
+## 2. 3 PHƯƠNG ÁN CẢI THIỆN
+
+### Phương án A — Replace Commit (cải thiện flow hiện tại)
+
+**Ý tưởng:** Giữ nguyên commit-to-repo nhưng LUÔN commit vào cùng 1 file, dùng `--amend` hoặc force-push trên branch riêng.
+
+```
+develop ──► merge PR ──► CI auto: generate graph ──► commit vào branch `cbm/baseline`
+                                                      (force-push, chỉ 1 commit luôn luôn)
+```
+
+**Cách hoạt động:**
+- Branch `cbm/baseline` chỉ chứa 1 file: `graph_baseline.json`
+- Mỗi merge vào develop → CI force-push lên `cbm/baseline` (overwrite)
+- Dev muốn đọc baseline → `git show cbm/baseline:graph_baseline.json` hoặc fetch từ GitHub
+- **Commit history develop: SẠCH** — 0 extra commits
+- **Branch cbm/baseline: luôn chỉ 1 commit** (force-push overwrite)
+
+**Pros:** Zero commit noise trên develop. Dev vẫn access được graph qua git.
+**Cons:** Force-push = lost history (nhưng graph history thường không cần giữ). Cần dev biết fetch branch riêng.
+
+**Effort:** 2 SP (CI workflow + docs)
+
+### Phương án B — GitHub Actions Artifact + PR Comment (em recommend)
+
+**Ý tưởng:** Không commit gì cả. Graph file lưu dưới dạng GitHub Actions artifact. CI auto-post Impact Analysis vào PR comment.
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  TRIGGER: push to develop (after merge)                          │
+│                                                                  │
+│  1. CI chạy `codebase-map generate --label baseline`             │
+│  2. Upload graph_baseline.json → GitHub Actions artifact         │
+│     (auto-expire 90 ngày, downloadable từ Actions tab)           │
+│  3. Staleness check: nếu baseline > 3 ngày → Slack/Telegram warn│
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│  TRIGGER: pull_request opened/synchronize                        │
+│                                                                  │
+│  1. CI download artifact "baseline" mới nhất                     │
+│  2. CI chạy `codebase-map generate --label post-dev`             │
+│  3. CI chạy `codebase-map diff baseline post-dev --format md`    │
+│  4. CI post kết quả diff → **PR comment** (auto-update mỗi push)│
+│                                                                  │
+│  ┌─── PR Comment ────────────────────────────────────────────┐   │
+│  │ ## 🗺️ Codebase-Map Impact Analysis                        │   │
+│  │                                                            │   │
+│  │ **Baseline:** CBM#99 (develop, a7bd55e, 10/04 10:00)      │   │
+│  │ **Post-dev:** CBM#100 (feat/channel-wizard, 1207b8d)      │   │
+│  │                                                            │   │
+│  │ | Metric | Count |                                         │   │
+│  │ | Functions added | 12 |                                   │   │
+│  │ | Functions removed | 3 |                                  │   │
+│  │ | Affected callers | 7 |                                   │   │
+│  │ |                                                          │   │
+│  │ <details><summary>Full diff (click to expand)</summary>    │   │
+│  │ ...detailed tables...                                      │   │
+│  │ </details>                                                 │   │
+│  │                                                            │   │
+│  │ 🤖 Auto-generated by codebase-map CI                       │   │
+│  └────────────────────────────────────────────────────────────┘   │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│  TRIGGER: pull_request merged                                    │
+│                                                                  │
+│  1. CI regenerate graph từ develop (capture review-gate fixes)   │
+│  2. Upload new baseline artifact (replace previous)              │
+│  3. CBM#100 becomes new baseline cho PR tiếp theo                │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+**Mapping vào flow CEO 9 bước:**
+
+| CEO Step | Hiện tại (manual) | Phương án B (CI auto) |
+|:--------:|-------------------|----------------------|
+| 1. Generate CBM#99 | Claude local | ✅ CI on merge trigger |
+| 2. Commit CBM#99 | Claude commit → develop | ✅ **ELIMINATED** — artifact, không commit |
+| 3. Dev đọc planning | Dev pull + đọc | Dev download artifact hoặc `gh run download` |
+| 4. Dev implement | Dev/Claude | Không đổi |
+| 5. Generate CBM#100 | Claude local | ✅ CI on PR trigger |
+| 6. CBM#100 vào PR | Claude paste | ✅ **AUTO** — CI post PR comment |
+| 7. CTO + Tester review | Manual đọc | Đọc PR comment — **nhanh hơn** |
+| 8. Merge → regenerate | Claude local | ✅ CI on merge trigger |
+| 9. Commit CBM#100 | Claude commit | ✅ **ELIMINATED** — artifact replace |
+
+**Kết quả: 0 extra commits. 3 bước manual → full auto. CTO + Tester thấy Impact ngay trong PR.**
+
+**Pros:**
+- Zero commit noise — commit history sạch 100%
+- Impact Analysis auto-post vào PR — CTO/Tester không cần chạy command
+- Baseline auto-rotate sau mỗi merge (bước 8 CEO vẫn giữ)
+- Artifact expire 90 ngày tự động — không disk management
+
+**Cons:**
+- Dev cần `gh run download` hoặc click UI để download baseline (vs `git pull` hiện tại)
+- Artifact không version-tracked (nhưng graph history thường không critical)
+- Cần GitHub Actions setup (nhưng team đã dùng Actions)
+
+**Effort:** 3 SP (2 CI workflows + PR comment bot)
+
+### Phương án C — Hybrid: Artifact + Optional Commit (cho team muốn cả hai)
+
+Kết hợp A + B:
+- Default: artifact (zero commit noise)
+- Config `cbm.commit_baseline: true` trong `codebase-map.yaml` → CI commit vào `cbm/baseline` branch (cho team muốn git-tracked)
+
+**Effort:** 4 SP
+
+---
+
+## 3. SO SÁNH 3 PHƯƠNG ÁN
+
+| Tiêu chí | A (Replace) | B (Artifact+Comment) | C (Hybrid) |
+|----------|:-----------:|:--------------------:|:----------:|
+| Commit noise | 0 trên develop, 1 trên branch riêng | **0 everywhere** | Configurable |
+| Dev access baseline | `git show cbm/baseline:...` | `gh run download` | Cả 2 |
+| Auto Impact in PR | ❌ Manual | **✅ Auto PR comment** | ✅ |
+| Auto rotate baseline | ✅ | **✅** | ✅ |
+| Complexity | Low | **Medium** | High |
+| Effort | 2 SP | **3 SP** | 4 SP |
+| **CTO recommend** | | **✅ Recommend** | Nếu CEO muốn thêm option |
+
+---
+
+## 4. @CTO RECOMMEND: PHƯƠNG ÁN B
+
+**Lý do chọn B:**
+
+1. **Giải quyết triệt để vấn đề commit history** — 0 extra commits ở mọi branch
+2. **Auto Impact Analysis trong PR** — đây là killer feature mà flow manual hiện tại chưa có. CTO + Tester mở PR → thấy Impact ngay, không cần chạy command
+3. **Bước 8 (CEO's innovation) được giữ nguyên** — CI trigger on merge sẽ regenerate baseline, capture review-gate fixes
+4. **3 SP effort** — reasonable cho value nhận được
+5. **Không block codebase-map v2.1/v2.2** — CI workflow là file YAML riêng, ship song song
+
+**Cho HC project specifically:** Anh đang dùng Claude local cho 9 bước. Với phương án B:
+- Bước 1,2,5,6,8,9 → **full auto** (CI)
+- Bước 3 → Dev download artifact (1 click) hoặc Claude fetch cho dev
+- Bước 4 → Không đổi
+- Bước 7 → CTO/Tester đọc PR comment (không cần tool)
+
+**6/9 bước automated. Claude local freed up cho việc khác.**
+
+---
+
+## 5. CI WORKFLOW CODE (draft)
+
+### 5.1 Workflow 1: Baseline Generator (on merge)
+
+```yaml
+# .github/workflows/cbm-baseline.yml
+name: CBM Baseline Generator
+
+on:
+  push:
+    branches: [develop, main]
+
+jobs:
+  generate-baseline:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[cbm skip]')"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install codebase-map
+        run: pip install "git+ssh://git@github.com/hypercommerce-vn/codebase-map.git"
+
+      - name: Generate baseline graph
+        run: |
+          codebase-map generate \
+            -c codebase-map.yaml \
+            --label "baseline" \
+            -o .codebase-map-cache/graph_baseline.json
+
+      - name: Upload baseline artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cbm-baseline
+          path: .codebase-map-cache/graph_baseline.json
+          retention-days: 90
+          overwrite: true  # replace previous baseline
+
+      - name: Staleness check — notify if baseline > 3 days
+        run: echo "Baseline generated at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+        # TODO: Add Telegram/Slack notification if last baseline > 3 days
+```
+
+### 5.2 Workflow 2: PR Impact Analyzer (on PR)
+
+```yaml
+# .github/workflows/cbm-pr-impact.yml
+name: CBM PR Impact Analysis
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  impact-analysis:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write  # needed for PR comment
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install codebase-map
+        run: pip install "git+ssh://git@github.com/hypercommerce-vn/codebase-map.git"
+
+      - name: Download baseline artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cbm-baseline
+          path: .codebase-map-cache/
+        continue-on-error: true  # OK if no baseline yet
+
+      - name: Generate post-dev graph
+        run: |
+          codebase-map generate \
+            -c codebase-map.yaml \
+            --label "post-dev" \
+            -o .codebase-map-cache/graph_post-dev.json
+
+      - name: Run diff (if baseline exists)
+        id: diff
+        run: |
+          if [ -f .codebase-map-cache/graph_baseline.json ]; then
+            codebase-map diff \
+              --baseline .codebase-map-cache/graph_baseline.json \
+              --current .codebase-map-cache/graph_post-dev.json \
+              --format markdown \
+              > impact_report.md
+            echo "has_diff=true" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ No baseline found. Run baseline generator first." > impact_report.md
+            echo "has_diff=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Post/Update PR comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: cbm-impact
+          path: impact_report.md
+```
+
+### 5.3 Workflow 3: Post-merge Baseline Rotate
+
+```yaml
+# .github/workflows/cbm-post-merge.yml
+name: CBM Post-Merge Baseline Rotate
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  rotate-baseline:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}  # develop after merge
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install codebase-map
+        run: pip install "git+ssh://git@github.com/hypercommerce-vn/codebase-map.git"
+
+      - name: Regenerate baseline (captures review-gate fixes)
+        run: |
+          codebase-map generate \
+            -c codebase-map.yaml \
+            --label "baseline" \
+            -o .codebase-map-cache/graph_baseline.json
+
+      - name: Upload new baseline (replaces old)
+        uses: actions/upload-artifact@v4
+        with:
+          name: cbm-baseline
+          path: .codebase-map-cache/graph_baseline.json
+          retention-days: 90
+          overwrite: true
+```
+
+---
+
+## 6. MIGRATION PLAN: HC PROJECT
+
+Áp dụng cho HC project cụ thể:
+
+| Phase | Action | Duration |
+|-------|--------|----------|
+| **Week 1** | Copy 3 workflow files vào HC repo `.github/workflows/` | 1 ngày |
+| **Week 1** | Test với 1 PR thật: verify baseline artifact + PR comment | 1 ngày |
+| **Week 1** | Đào tạo team: dev download artifact, CTO/Tester đọc PR comment | 1 ngày |
+| **Week 2** | Xoá graph commit manual flow (Claude không cần commit graph nữa) | 1 ngày |
+| **Week 2** | Monitor + fine-tune (staleness threshold, comment format) | Ongoing |
+
+**Prerequisite:** Codebase-map phải có `--label` flag + metadata trong `graph.json` (= Phase 1 CBM, 7 SP). Workflow draft trên assume feature này đã ship.
+
+**Interim (trước khi Phase 1 ship):** Anh tiếp tục flow 9 bước manual hiện tại. CI workflows chỉ enable sau khi codebase-map v2.1 (Phase 1) release.
+
+---
+
+## 7. QUYẾT ĐỊNH CẦN CEO
+
+| # | Question | @CTO Recommendation |
+|---|---------|-------------------|
+| 1 | Chọn phương án nào? | **B** (Artifact + PR Comment) — zero commit, auto Impact |
+| 2 | Khi nào apply cho HC? | Sau codebase-map v2.1 ship (Phase 1 Metadata) |
+| 3 | Cần thêm option commit-to-repo? | Không cần cho HC. Thêm sau nếu có user request (Phương án C) |
+| 4 | PR comment format? | Collapsible `<details>` cho full diff + summary table visible |
+| 5 | Staleness threshold? | 3 ngày warn (Telegram), 7 ngày block merge (optional) |
+
+---
+
+---
+
+## 8. CEO DECISIONS (10/04/2026) ✅
+
+| # | Decision | CEO Answer |
+|---|---------|-----------|
+| 1 | Phương án | ✅ **Phương án B** (Artifact + Auto PR Comment) |
+| 2 | PR comment format | ✅ Summary table visible + full diff collapsible `<details>` |
+| 3 | Staleness | ✅ 3 ngày warn Telegram, 7 ngày block merge |
+| 4 | Start Phase 1 (v2.1) | ✅ **Sau KMP M1 done + CEO duyệt plan** — không start trước |
+| 5 | Draft CI vào HC repo | ❌ Không cần ngay — **lưu templates vào proposal**, triển khai khi cần |
+
+**Next step:** CI workflow templates đã có sẵn trong section 5 (3 files YAML). Khi codebase-map v2.1 (Phase 1 Metadata) ship + CEO duyệt → copy 3 files vào HC repo `.github/workflows/` → enable.
+
+**Timeline tóm tắt:**
+```
+NOW          KMP M1 active (Vault + Parser)
+    ↓
+M1 done      CEO review + duyệt CBM Phase 1 plan
+    ↓
+Phase 1      CBM v2.1: Metadata + Snapshot Save (7 SP, 1 tuần)
+    ↓
+Phase 2      CBM v2.2: Dual-Snapshot Diff (12 SP, 2 tuần)
+    ↓
+CI enable    Copy 3 workflow files → HC repo → enable → 6/9 bước automated
+```
+
+---
+
+*CTO CI Integration Proposal · 10/04/2026 · @CTO*
+*Based on CEO's 9-step HC workflow*
+*CEO decisions recorded: 10/04/2026*

@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBM Dual-Snapshot — Design Preview</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card-bg: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --red: #f85149;
+    --yellow: #d29922;
+    --orange: #db6d28;
+    --purple: #bc8cff;
+    --pink: #f778ba;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 0;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 48px;
+    text-align: center;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .header h1 span { color: var(--accent); }
+  .header p {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+  .header .badges {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+  .badge-green { color: var(--green); border-color: #238636; background: rgba(63,185,80,0.1); }
+  .badge-blue { color: var(--accent); border-color: #1f6feb; background: rgba(88,166,255,0.1); }
+  .badge-yellow { color: var(--yellow); border-color: #9e6a03; background: rgba(210,153,34,0.1); }
+  .badge-purple { color: var(--purple); border-color: #8b5cf6; background: rgba(188,140,255,0.1); }
+
+  /* Navigation */
+  .nav {
+    display: flex;
+    gap: 0;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    overflow-x: auto;
+  }
+  .nav-item {
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .nav-item:hover { color: var(--text); }
+  .nav-item.active {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+  }
+
+  /* Main */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* Sections */
+  .section {
+    display: none;
+    animation: fadeIn 0.3s;
+  }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-desc {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  /* Card */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(88,166,255,0.04);
+  }
+  .card-body { padding: 16px; }
+
+  /* PR Comment Preview */
+  .pr-comment {
+    background: #ffffff;
+    color: #1f2328;
+    border-radius: 8px;
+    border: 1px solid #d0d7de;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    overflow: hidden;
+  }
+  .pr-comment-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid #d0d7de;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f6f8fa;
+    font-size: 13px;
+  }
+  .pr-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #fff;
+    font-weight: 700;
+  }
+  .pr-body {
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .pr-body h2 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #d0d7de;
+    color: #1f2328;
+  }
+  .pr-body table {
+    border-collapse: collapse;
+    margin: 12px 0;
+    width: auto;
+  }
+  .pr-body th, .pr-body td {
+    border: 1px solid #d0d7de;
+    padding: 6px 12px;
+    text-align: left;
+    font-size: 13px;
+  }
+  .pr-body th {
+    background: #f6f8fa;
+    font-weight: 600;
+  }
+  .pr-body code {
+    background: #eff1f3;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    color: #1f2328;
+  }
+  .pr-details {
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    margin: 12px 0;
+    overflow: hidden;
+  }
+  .pr-details-summary {
+    padding: 10px 16px;
+    background: #f6f8fa;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+  .pr-details-summary:hover { background: #eef1f5; }
+  .pr-details-content {
+    display: none;
+    padding: 16px;
+    border-top: 1px solid #d0d7de;
+  }
+  .pr-details.open .pr-details-content { display: block; }
+  .pr-details-arrow { transition: transform 0.2s; font-size: 10px; }
+  .pr-details.open .pr-details-arrow { transform: rotate(90deg); }
+  .pr-footer {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #d0d7de;
+    font-size: 12px;
+    color: #656d76;
+  }
+
+  .pr-label-add { color: #1a7f37; font-weight: 600; }
+  .pr-label-remove { color: #cf222e; font-weight: 600; }
+  .pr-label-modify { color: #9a6700; font-weight: 600; }
+  .pr-label-impact { color: #cf222e; font-weight: 700; }
+
+  /* CLI Preview */
+  .terminal {
+    background: #1a1b26;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .terminal-bar {
+    background: #24283b;
+    padding: 8px 12px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .terminal-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .terminal-dot.r { background: #f7768e; }
+  .terminal-dot.y { background: #e0af68; }
+  .terminal-dot.g { background: #9ece6a; }
+  .terminal-title {
+    flex: 1;
+    text-align: center;
+    font-size: 11px;
+    color: #565f89;
+  }
+  .terminal-body {
+    padding: 16px;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .t-prompt { color: #9ece6a; }
+  .t-cmd { color: #7aa2f7; }
+  .t-flag { color: #bb9af7; }
+  .t-arg { color: #e0af68; }
+  .t-dim { color: #565f89; }
+  .t-white { color: #c0caf5; }
+  .t-green { color: #9ece6a; }
+  .t-red { color: #f7768e; }
+  .t-yellow { color: #e0af68; }
+  .t-cyan { color: #7dcfff; }
+  .t-border { color: #3b4261; }
+  .t-header { color: #7aa2f7; font-weight: 700; }
+  .t-bold { font-weight: 700; }
+
+  /* Telegram Preview */
+  .telegram-msg {
+    background: #17212b;
+    border-radius: 12px;
+    max-width: 440px;
+    overflow: hidden;
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+  .telegram-header {
+    background: #242f3d;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .telegram-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #3b82f6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: #fff; font-weight: 700;
+  }
+  .telegram-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #e1e3e6;
+  }
+  .telegram-sub {
+    font-size: 11px;
+    color: #6c7883;
+  }
+  .telegram-body {
+    padding: 12px 14px;
+  }
+  .telegram-bubble {
+    background: #182533;
+    border-radius: 0 12px 12px 12px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #e1e3e6;
+    line-height: 1.6;
+    position: relative;
+  }
+  .telegram-bubble.warn {
+    border-left: 3px solid var(--yellow);
+  }
+  .telegram-bubble.block {
+    border-left: 3px solid var(--red);
+  }
+  .telegram-time {
+    text-align: right;
+    font-size: 11px;
+    color: #6c7883;
+    margin-top: 4px;
+  }
+  .telegram-emoji { font-size: 15px; }
+
+  /* Misc */
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+  .label {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .label-info { background: rgba(88,166,255,0.15); color: var(--accent); }
+  .label-warn { background: rgba(210,153,34,0.15); color: var(--yellow); }
+  .label-danger { background: rgba(248,81,73,0.15); color: var(--red); }
+  .label-success { background: rgba(63,185,80,0.15); color: var(--green); }
+
+  .note {
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin: 16px 0;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .note-info {
+    background: rgba(88,166,255,0.08);
+    border: 1px solid rgba(88,166,255,0.2);
+    color: var(--accent);
+  }
+  .note-ceo {
+    background: rgba(210,153,34,0.08);
+    border: 1px solid rgba(210,153,34,0.2);
+    color: var(--yellow);
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>🗺️ Codebase-Map <span>Dual-Snapshot</span> — Design Preview</h1>
+  <p>Thiết kế giao diện cho tất cả output formats · CEO duyệt trước khi implement</p>
+  <div class="badges">
+    <span class="badge badge-green">Phase 1: v2.1</span>
+    <span class="badge badge-blue">Phase 2: v2.2</span>
+    <span class="badge badge-yellow">19 SP / 3 tuần</span>
+    <span class="badge badge-purple">CEO Approved 10/04</span>
+  </div>
+</div>
+
+<!-- Nav -->
+<div class="nav">
+  <div class="nav-item active" onclick="showSection('pr-comment')">PR Comment</div>
+  <div class="nav-item" onclick="showSection('cli-diff')">CLI Diff Output</div>
+  <div class="nav-item" onclick="showSection('cli-snapshots')">Snapshots List</div>
+  <div class="nav-item" onclick="showSection('cli-testplan')">Test Plan</div>
+  <div class="nav-item" onclick="showSection('telegram')">Staleness Alert</div>
+  <div class="nav-item" onclick="showSection('json')">JSON Schema</div>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+
+  <!-- ========== SECTION: PR COMMENT ========== -->
+  <div id="pr-comment" class="section active">
+    <div class="section-title">💬 PR Comment — Auto Impact Analysis</div>
+    <div class="section-desc">CI tự động post comment này vào mỗi PR. Summary table luôn visible, full diff trong collapsible &lt;details&gt;.</div>
+
+    <div class="note note-ceo">
+      <span>📌</span>
+      <span><strong>CEO Decision:</strong> Summary table visible + full diff collapsible &lt;details&gt;. Sử dụng <code>marocchino/sticky-pull-request-comment@v2</code> để auto-update mỗi push.</span>
+    </div>
+
+    <div class="pr-comment">
+      <div class="pr-comment-header">
+        <div class="pr-avatar">CB</div>
+        <div>
+          <strong>codebase-map[bot]</strong>
+          <span style="color:#656d76"> commented 2 minutes ago</span>
+        </div>
+      </div>
+      <div class="pr-body">
+        <h2>🗺️ Codebase-Map Impact Analysis</h2>
+
+        <p>
+          <strong>Baseline:</strong> <code>baseline</code> (develop, <code>a7bd55e</code>, 10/04/2026 10:00)<br>
+          <strong>Post-dev:</strong> <code>post-dev</code> (feat/channel-wizard, <code>1207b8d</code>, 10/04/2026 14:30)
+        </p>
+
+        <table>
+          <thead>
+            <tr><th>Metric</th><th>Count</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="pr-label-add">Functions added</span></td><td><strong>12</strong></td></tr>
+            <tr><td><span class="pr-label-remove">Functions removed</span></td><td><strong>3</strong></td></tr>
+            <tr><td><span class="pr-label-modify">Functions modified</span></td><td><strong>5</strong></td></tr>
+            <tr><td>Functions renamed</td><td>1</td></tr>
+            <tr><td>Edges added</td><td>18</td></tr>
+            <tr><td>Edges removed</td><td>4</td></tr>
+            <tr><td><span class="pr-label-impact">⚠️ Affected callers</span></td><td><strong>7</strong></td></tr>
+          </tbody>
+        </table>
+
+        <div class="pr-details" onclick="this.classList.toggle('open')">
+          <div class="pr-details-summary">
+            <span class="pr-details-arrow">▶</span>
+            📋 Full Diff Details (click to expand)
+          </div>
+          <div class="pr-details-content">
+            <h3 style="font-size:15px; margin-bottom:8px; color:#1a7f37;">Added Functions (12)</h3>
+            <table>
+              <thead><tr><th>Function</th><th>File</th><th>Layer</th><th>Called by</th></tr></thead>
+              <tbody>
+                <tr><td><code>StepSelectChannel</code></td><td>ChannelWizard/StepSelectChannel.tsx</td><td>SERVICE</td><td>ChannelWizard/index.tsx</td></tr>
+                <tr><td><code>StepConfigure</code></td><td>ChannelWizard/StepConfigure.tsx</td><td>SERVICE</td><td>ChannelWizard/index.tsx</td></tr>
+                <tr><td><code>StepConfirm</code></td><td>ChannelWizard/StepConfirm.tsx</td><td>SERVICE</td><td>ChannelWizard/index.tsx</td></tr>
+                <tr><td><code>useChannelWizard</code></td><td>hooks/useChannelWizard.ts</td><td>UTIL</td><td>StepSelectChannel, StepConfigure</td></tr>
+                <tr><td colspan="4" style="color:#656d76;text-align:center">... +8 more functions</td></tr>
+              </tbody>
+            </table>
+
+            <h3 style="font-size:15px; margin:16px 0 8px; color:#cf222e;">Removed Functions (3)</h3>
+            <table>
+              <thead><tr><th>Function</th><th>File</th><th>Was called by (⚠️ IMPACT)</th></tr></thead>
+              <tbody>
+                <tr><td><code>ConnectChannelModal</code></td><td>channels/ChannelMgmtPage.tsx</td><td>ChannelMgmtPage (internal)</td></tr>
+                <tr><td><code>validateChannelConfig</code></td><td>channels/utils.ts</td><td><span class="pr-label-impact">ChannelMgmtPage, ChannelList</span></td></tr>
+                <tr><td><code>legacyChannelCheck</code></td><td>channels/legacy.ts</td><td>—</td></tr>
+              </tbody>
+            </table>
+
+            <h3 style="font-size:15px; margin:16px 0 8px; color:#9a6700;">Modified Functions (5)</h3>
+            <table>
+              <thead><tr><th>Function</th><th>File</th><th>Change</th><th>Affected callers</th></tr></thead>
+              <tbody>
+                <tr><td><code>ChannelMgmtPage</code></td><td>channels/ChannelMgmtPage.tsx</td><td>Removed ConnectChannelModal, added ChannelWizard</td><td>router.tsx</td></tr>
+                <tr><td><code>channelFactory</code></td><td>channels/factory.ts</td><td>Added 3 new channel types</td><td>AlertService, NotificationService</td></tr>
+                <tr><td colspan="4" style="color:#656d76;text-align:center">... +3 more functions</td></tr>
+              </tbody>
+            </table>
+
+            <h3 style="font-size:15px; margin:16px 0 8px; color:#8250df;">🔄 Renamed Functions (1)</h3>
+            <table>
+              <thead><tr><th>Old Name</th><th>Old File</th><th>New File</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><code>ChannelConfigForm</code></td><td>channels/forms.tsx</td><td>ChannelWizard/ConfigForm.tsx</td><td>✅ Signature match</td></tr>
+              </tbody>
+            </table>
+
+            <h3 style="font-size:15px; margin:16px 0 8px; color:#cf222e;">🧪 Affected Callers — Tester Focus (7)</h3>
+            <table>
+              <thead><tr><th>Caller</th><th>File</th><th>Domain</th><th>Reason</th></tr></thead>
+              <tbody>
+                <tr><td><code>router.tsx</code></td><td>app/router.tsx</td><td>ROUTER</td><td>Imports ChannelMgmtPage (modified)</td></tr>
+                <tr><td><code>AlertService</code></td><td>services/alert.ts</td><td>SERVICE</td><td>Calls channelFactory (modified)</td></tr>
+                <tr><td><code>NotificationService</code></td><td>services/notification.ts</td><td>SERVICE</td><td>Calls channelFactory (modified)</td></tr>
+                <tr><td><code>ChannelList</code></td><td>channels/ChannelList.tsx</td><td>SERVICE</td><td>Called validateChannelConfig (removed)</td></tr>
+                <tr><td colspan="4" style="color:#656d76;text-align:center">... +3 more callers</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="pr-footer">
+          🤖 Auto-generated by <a href="#" style="color:#0969da">codebase-map</a> CI · Updated on every push · <a href="#" style="color:#0969da">Download full diff (JSON)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION: CLI DIFF ========== -->
+  <div id="cli-diff" class="section">
+    <div class="section-title">⚡ CLI Diff Output</div>
+    <div class="section-desc">Output của lệnh <code>codebase-map diff --baseline graph1.json --current graph2.json</code></div>
+
+    <div class="card">
+      <div class="card-header">📟 Terminal — codebase-map diff</div>
+      <div class="card-body" style="padding:0">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="terminal-dot r"></div>
+            <div class="terminal-dot y"></div>
+            <div class="terminal-dot g"></div>
+            <div class="terminal-title">Terminal — codebase-map</div>
+          </div>
+          <div class="terminal-body"><span class="t-prompt">❯ </span><span class="t-cmd">codebase-map diff</span> <span class="t-flag">--baseline</span> <span class="t-arg">graph_baseline_a7bd55e.json</span> <span class="t-flag">--current</span> <span class="t-arg">graph_post-dev_1207b8d.json</span>
+
+<span class="t-header">🗺️  CODEBASE-MAP DIFF REPORT</span>
+<span class="t-border">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="t-dim">Baseline:</span>  <span class="t-cyan">baseline</span> <span class="t-dim">(develop, a7bd55e, 10/04/2026 10:00)</span>
+<span class="t-dim">Current:</span>   <span class="t-cyan">post-dev</span> <span class="t-dim">(feat/channel-wizard, 1207b8d, 10/04/2026 14:30)</span>
+
+<span class="t-header">SUMMARY</span>
+<span class="t-border">┌──────────────────────┬───────┐</span>
+<span class="t-border">│</span> <span class="t-white">Metric</span>               <span class="t-border">│</span> <span class="t-white">Count</span> <span class="t-border">│</span>
+<span class="t-border">├──────────────────────┼───────┤</span>
+<span class="t-border">│</span> <span class="t-green">Functions added</span>      <span class="t-border">│</span> <span class="t-green t-bold">  12</span>  <span class="t-border">│</span>
+<span class="t-border">│</span> <span class="t-red">Functions removed</span>    <span class="t-border">│</span> <span class="t-red t-bold">   3</span>  <span class="t-border">│</span>
+<span class="t-border">│</span> <span class="t-yellow">Functions modified</span>   <span class="t-border">│</span> <span class="t-yellow t-bold">   5</span>  <span class="t-border">│</span>
+<span class="t-border">│</span> <span class="t-cyan">Functions renamed</span>    <span class="t-border">│</span> <span class="t-cyan t-bold">   1</span>  <span class="t-border">│</span>
+<span class="t-border">│</span> <span class="t-white">Edges added</span>          <span class="t-border">│</span>    18  <span class="t-border">│</span>
+<span class="t-border">│</span> <span class="t-white">Edges removed</span>        <span class="t-border">│</span>     4  <span class="t-border">│</span>
+<span class="t-border">│</span> <span class="t-red t-bold">⚠ Affected callers</span>  <span class="t-border">│</span> <span class="t-red t-bold">   7</span>  <span class="t-border">│</span>
+<span class="t-border">└──────────────────────┴───────┘</span>
+
+<span class="t-green t-bold">ADDED</span> <span class="t-dim">(12 functions)</span>
+  <span class="t-green">+</span> <span class="t-white">StepSelectChannel</span>       <span class="t-dim">ChannelWizard/StepSelectChannel.tsx</span>  <span class="t-dim">← ChannelWizard/index.tsx</span>
+  <span class="t-green">+</span> <span class="t-white">StepConfigure</span>           <span class="t-dim">ChannelWizard/StepConfigure.tsx</span>      <span class="t-dim">← ChannelWizard/index.tsx</span>
+  <span class="t-green">+</span> <span class="t-white">StepConfirm</span>             <span class="t-dim">ChannelWizard/StepConfirm.tsx</span>        <span class="t-dim">← ChannelWizard/index.tsx</span>
+  <span class="t-green">+</span> <span class="t-white">useChannelWizard</span>        <span class="t-dim">hooks/useChannelWizard.ts</span>            <span class="t-dim">← StepSelectChannel, StepConfigure</span>
+  <span class="t-dim">  ... +8 more</span>
+
+<span class="t-red t-bold">REMOVED</span> <span class="t-dim">(3 functions)</span>
+  <span class="t-red">-</span> <span class="t-white">ConnectChannelModal</span>     <span class="t-dim">channels/ChannelMgmtPage.tsx</span>         <span class="t-dim">was called by: ChannelMgmtPage</span>
+  <span class="t-red">-</span> <span class="t-white">validateChannelConfig</span>   <span class="t-dim">channels/utils.ts</span>                   <span class="t-red">⚠ was called by: ChannelMgmtPage, ChannelList</span>
+  <span class="t-red">-</span> <span class="t-white">legacyChannelCheck</span>      <span class="t-dim">channels/legacy.ts</span>                  <span class="t-dim">no callers</span>
+
+<span class="t-yellow t-bold">MODIFIED</span> <span class="t-dim">(5 functions)</span>
+  <span class="t-yellow">~</span> <span class="t-white">ChannelMgmtPage</span>         <span class="t-dim">channels/ChannelMgmtPage.tsx</span>         <span class="t-yellow">signature changed</span>  <span class="t-dim">→ 1 caller affected</span>
+  <span class="t-yellow">~</span> <span class="t-white">channelFactory</span>          <span class="t-dim">channels/factory.ts</span>                 <span class="t-yellow">params added</span>       <span class="t-dim">→ 2 callers affected</span>
+  <span class="t-dim">  ... +3 more</span>
+
+<span class="t-cyan t-bold">RENAMED</span> <span class="t-dim">(1 function)</span>
+  <span class="t-cyan">→</span> <span class="t-white">ChannelConfigForm</span>       <span class="t-dim">channels/forms.tsx</span> <span class="t-cyan">→</span> <span class="t-dim">ChannelWizard/ConfigForm.tsx</span>  <span class="t-green">✓ signature match</span>
+
+<span class="t-red t-bold">⚠ AFFECTED CALLERS</span> <span class="t-dim">(7 — may need testing)</span>
+  <span class="t-red">!</span> <span class="t-white">router.tsx</span>              <span class="t-dim">app/router.tsx</span>             <span class="t-dim">ROUTER</span>   <span class="t-dim">← imports ChannelMgmtPage (modified)</span>
+  <span class="t-red">!</span> <span class="t-white">AlertService</span>            <span class="t-dim">services/alert.ts</span>          <span class="t-dim">SERVICE</span>  <span class="t-dim">← calls channelFactory (modified)</span>
+  <span class="t-red">!</span> <span class="t-white">NotificationService</span>     <span class="t-dim">services/notification.ts</span>   <span class="t-dim">SERVICE</span>  <span class="t-dim">← calls channelFactory (modified)</span>
+  <span class="t-red">!</span> <span class="t-white">ChannelList</span>             <span class="t-dim">channels/ChannelList.tsx</span>    <span class="t-dim">SERVICE</span>  <span class="t-dim">← called validateChannelConfig (removed)</span>
+  <span class="t-dim">  ... +3 more</span>
+
+<span class="t-border">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="t-dim">🤖 codebase-map v2.2.0 · diff completed in 0.34s</span>
+</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note note-info">
+      <span>💡</span>
+      <span>Thêm <code>--format markdown</code> để output markdown (copy vào PR body). Thêm <code>--format json</code> cho CI automation. Thêm <code>--breaking-only</code> để chỉ xem dangerous changes.</span>
+    </div>
+  </div>
+
+  <!-- ========== SECTION: CLI SNAPSHOTS ========== -->
+  <div id="cli-snapshots" class="section">
+    <div class="section-title">📸 Snapshots List</div>
+    <div class="section-desc">Output của lệnh <code>codebase-map snapshots list</code> — Phase 1 (v2.1)</div>
+
+    <div class="card">
+      <div class="card-header">📟 Terminal — codebase-map snapshots list</div>
+      <div class="card-body" style="padding:0">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="terminal-dot r"></div>
+            <div class="terminal-dot y"></div>
+            <div class="terminal-dot g"></div>
+            <div class="terminal-title">Terminal — codebase-map</div>
+          </div>
+          <div class="terminal-body"><span class="t-prompt">❯ </span><span class="t-cmd">codebase-map snapshots list</span>
+
+<span class="t-header">📸 SNAPSHOTS</span> <span class="t-dim">(5 found in .codebase-map-cache/snapshots/)</span>
+<span class="t-border">┌──────────────┬─────────────────────┬───────────────────────┬─────────┬───────┬───────┬─────────┐</span>
+<span class="t-border">│</span> <span class="t-white t-bold">Label</span>        <span class="t-border">│</span> <span class="t-white t-bold">Date</span>                <span class="t-border">│</span> <span class="t-white t-bold">Branch</span>                <span class="t-border">│</span> <span class="t-white t-bold">SHA</span>     <span class="t-border">│</span> <span class="t-white t-bold">Nodes</span> <span class="t-border">│</span> <span class="t-white t-bold">Edges</span> <span class="t-border">│</span> <span class="t-white t-bold">Size</span>    <span class="t-border">│</span>
+<span class="t-border">├──────────────┼─────────────────────┼───────────────────────┼─────────┼───────┼───────┼─────────┤</span>
+<span class="t-border">│</span> <span class="t-cyan">baseline</span>     <span class="t-border">│</span> <span class="t-white">2026-04-10 10:00:00</span> <span class="t-border">│</span> <span class="t-green">develop</span>               <span class="t-border">│</span> <span class="t-dim">a7bd55e</span> <span class="t-border">│</span>   847 <span class="t-border">│</span>  1523 <span class="t-border">│</span> <span class="t-dim">2.1 MB</span>  <span class="t-border">│</span>
+<span class="t-border">│</span> <span class="t-yellow">post-dev</span>     <span class="t-border">│</span> <span class="t-white">2026-04-10 14:30:00</span> <span class="t-border">│</span> <span class="t-yellow">feat/channel-wizard</span>   <span class="t-border">│</span> <span class="t-dim">1207b8d</span> <span class="t-border">│</span>   859 <span class="t-border">│</span>  1541 <span class="t-border">│</span> <span class="t-dim">2.2 MB</span>  <span class="t-border">│</span>
+<span class="t-border">│</span> <span class="t-cyan">baseline</span>     <span class="t-border">│</span> <span class="t-white">2026-04-09 09:15:00</span> <span class="t-border">│</span> <span class="t-green">develop</span>               <span class="t-border">│</span> <span class="t-dim">f3c21aa</span> <span class="t-border">│</span>   841 <span class="t-border">│</span>  1510 <span class="t-border">│</span> <span class="t-dim">2.1 MB</span>  <span class="t-border">│</span>
+<span class="t-border">│</span> <span class="t-yellow">post-dev</span>     <span class="t-border">│</span> <span class="t-white">2026-04-08 16:45:00</span> <span class="t-border">│</span> <span class="t-yellow">feat/alert-dispatcher</span> <span class="t-border">│</span> <span class="t-dim">8e4d12b</span> <span class="t-border">│</span>   838 <span class="t-border">│</span>  1498 <span class="t-border">│</span> <span class="t-dim">2.0 MB</span>  <span class="t-border">│</span>
+<span class="t-border">│</span> <span class="t-cyan">baseline</span>     <span class="t-border">│</span> <span class="t-white">2026-04-07 11:00:00</span> <span class="t-border">│</span> <span class="t-green">develop</span>               <span class="t-border">│</span> <span class="t-dim">b21e7f3</span> <span class="t-border">│</span>   830 <span class="t-border">│</span>  1485 <span class="t-border">│</span> <span class="t-dim">2.0 MB</span>  <span class="t-border">│</span>
+<span class="t-border">└──────────────┴─────────────────────┴───────────────────────┴─────────┴───────┴───────┴─────────┘</span>
+
+<span class="t-dim">Storage: 10.4 MB total · Max: 10 snapshots (configurable: max_snapshots in codebase-map.yaml)</span>
+<span class="t-dim">Tip: </span><span class="t-cmd">codebase-map snapshots clean --keep 3</span><span class="t-dim"> to remove old snapshots</span>
+</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-16">
+      <div class="card-header">📟 Terminal — codebase-map snapshots clean</div>
+      <div class="card-body" style="padding:0">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="terminal-dot r"></div>
+            <div class="terminal-dot y"></div>
+            <div class="terminal-dot g"></div>
+            <div class="terminal-title">Terminal — codebase-map</div>
+          </div>
+          <div class="terminal-body"><span class="t-prompt">❯ </span><span class="t-cmd">codebase-map snapshots clean</span> <span class="t-flag">--keep</span> <span class="t-arg">3</span>
+
+<span class="t-yellow">🧹 Cleaning snapshots...</span>
+  <span class="t-red">✗</span> <span class="t-dim">Removed:</span> graph_baseline_b21e7f3.json <span class="t-dim">(2026-04-07)</span>
+  <span class="t-red">✗</span> <span class="t-dim">Removed:</span> graph_post-dev_8e4d12b.json <span class="t-dim">(2026-04-08)</span>
+  <span class="t-green">✓</span> <span class="t-dim">Kept:</span>    graph_baseline_f3c21aa.json <span class="t-dim">(2026-04-09)</span>
+  <span class="t-green">✓</span> <span class="t-dim">Kept:</span>    graph_post-dev_1207b8d.json <span class="t-dim">(2026-04-10)</span>
+  <span class="t-green">✓</span> <span class="t-dim">Kept:</span>    graph_baseline_a7bd55e.json <span class="t-dim">(2026-04-10)</span>
+
+<span class="t-green">Done:</span> Removed 2 snapshots, kept 3. Freed 4.0 MB.
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION: CLI TEST PLAN ========== -->
+  <div id="cli-testplan" class="section">
+    <div class="section-title">🧪 Test Plan Output</div>
+    <div class="section-desc">Output của lệnh <code>codebase-map diff --test-plan</code> — affected callers grouped by domain</div>
+
+    <div class="card">
+      <div class="card-header">📟 Terminal — codebase-map diff --test-plan</div>
+      <div class="card-body" style="padding:0">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="terminal-dot r"></div>
+            <div class="terminal-dot y"></div>
+            <div class="terminal-dot g"></div>
+            <div class="terminal-title">Terminal — codebase-map</div>
+          </div>
+          <div class="terminal-body"><span class="t-prompt">❯ </span><span class="t-cmd">codebase-map diff</span> <span class="t-flag">--baseline</span> <span class="t-arg">graph_baseline_a7bd55e.json</span> <span class="t-flag">--current</span> <span class="t-arg">graph_post-dev_1207b8d.json</span> <span class="t-flag">--test-plan</span>
+
+<span class="t-header">🧪 SUGGESTED TEST PLAN</span>
+<span class="t-dim">Based on 7 affected callers across 3 domains</span>
+<span class="t-border">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="t-yellow t-bold">SERVICE</span> <span class="t-dim">(4 functions affected)</span>
+  <span class="t-white">☐</span> Test <span class="t-white">AlertService.dispatch()</span>
+    <span class="t-dim">↳ Caller of</span> <span class="t-yellow">channelFactory</span> <span class="t-dim">(modified: params added)</span>
+    <span class="t-dim">   services/alert.ts:42</span>
+
+  <span class="t-white">☐</span> Test <span class="t-white">NotificationService.send()</span>
+    <span class="t-dim">↳ Caller of</span> <span class="t-yellow">channelFactory</span> <span class="t-dim">(modified: params added)</span>
+    <span class="t-dim">   services/notification.ts:28</span>
+
+  <span class="t-white">☐</span> Test <span class="t-white">ChannelList.render()</span>
+    <span class="t-dim">↳ Caller of</span> <span class="t-red">validateChannelConfig</span> <span class="t-dim">(removed!)</span>
+    <span class="t-dim">   channels/ChannelList.tsx:15</span>
+
+  <span class="t-white">☐</span> Test <span class="t-white">ChannelMgmtPage.render()</span>
+    <span class="t-dim">↳ Caller of</span> <span class="t-red">ConnectChannelModal</span> <span class="t-dim">(removed!)</span>
+    <span class="t-dim">   channels/ChannelMgmtPage.tsx:8</span>
+
+<span class="t-yellow t-bold">ROUTER</span> <span class="t-dim">(2 functions affected)</span>
+  <span class="t-white">☐</span> Test <span class="t-white">router.tsx</span>
+    <span class="t-dim">↳ Imports</span> <span class="t-yellow">ChannelMgmtPage</span> <span class="t-dim">(modified)</span>
+    <span class="t-dim">   app/router.tsx:12</span>
+
+  <span class="t-white">☐</span> Test <span class="t-white">apiRoutes.ts</span>
+    <span class="t-dim">↳ Imports</span> <span class="t-yellow">channelFactory</span> <span class="t-dim">(modified)</span>
+    <span class="t-dim">   api/apiRoutes.ts:5</span>
+
+<span class="t-yellow t-bold">WORKER</span> <span class="t-dim">(1 function affected)</span>
+  <span class="t-white">☐</span> Test <span class="t-white">channelSyncWorker</span>
+    <span class="t-dim">↳ Caller of</span> <span class="t-yellow">channelFactory</span> <span class="t-dim">(modified: params added)</span>
+    <span class="t-dim">   workers/channelSync.ts:20</span>
+
+<span class="t-border">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="t-white t-bold">Total: 7 functions need testing across 3 domains</span>
+<span class="t-red t-bold">⚠ 2 functions call REMOVED dependencies — likely will break!</span>
+<span class="t-dim">🤖 codebase-map v2.2.0</span>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION: TELEGRAM ========== -->
+  <div id="telegram" class="section">
+    <div class="section-title">📢 Staleness Alert — Telegram</div>
+    <div class="section-desc">Format cảnh báo gửi qua Telegram khi baseline quá cũ. CEO đã duyệt: 3 ngày warn, 7 ngày block merge.</div>
+
+    <div style="display:flex; gap:24px; flex-wrap:wrap;">
+      <div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">
+          <span class="label label-warn">3-day Warning</span>
+        </p>
+        <div class="telegram-msg">
+          <div class="telegram-header">
+            <div class="telegram-avatar">CB</div>
+            <div>
+              <div class="telegram-name">Codebase-Map Bot</div>
+              <div class="telegram-sub">bot · HC Team</div>
+            </div>
+          </div>
+          <div class="telegram-body">
+            <div class="telegram-bubble warn">
+              <span class="telegram-emoji">⚠️</span> <strong>Baseline Stale Warning</strong><br><br>
+              <strong>Project:</strong> HyperCommerce<br>
+              <strong>Last baseline:</strong> 07/04/2026 (3 ngày trước)<br>
+              <strong>Branch:</strong> develop<br>
+              <strong>SHA:</strong> b21e7f3<br><br>
+              Baseline đã <strong>3 ngày</strong> chưa update. Impact analysis trong PR có thể không chính xác.<br><br>
+              <em>→ Merge vào develop hoặc chạy CI rebuild để cập nhật.</em>
+            </div>
+            <div class="telegram-time">10:00 AM</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">
+          <span class="label label-danger">7-day Block</span>
+        </p>
+        <div class="telegram-msg">
+          <div class="telegram-header">
+            <div class="telegram-avatar">CB</div>
+            <div>
+              <div class="telegram-name">Codebase-Map Bot</div>
+              <div class="telegram-sub">bot · HC Team</div>
+            </div>
+          </div>
+          <div class="telegram-body">
+            <div class="telegram-bubble block">
+              <span class="telegram-emoji">🚫</span> <strong>Baseline Expired — Merge Blocked</strong><br><br>
+              <strong>Project:</strong> HyperCommerce<br>
+              <strong>Last baseline:</strong> 03/04/2026 (<strong>7 ngày</strong> trước)<br>
+              <strong>Branch:</strong> develop<br>
+              <strong>SHA:</strong> b21e7f3<br><br>
+              Baseline đã quá <strong>7 ngày</strong>. PR merge bị <strong>BLOCK</strong> cho đến khi baseline được cập nhật.<br><br>
+              <strong>Action required:</strong><br>
+              1. Merge pending PRs vào develop<br>
+              2. Chờ CI rebuild baseline<br>
+              3. Hoặc chạy manual: <code>codebase-map generate --label baseline</code><br><br>
+              <em>@CTO @TechLead vui lòng xử lý.</em>
+            </div>
+            <div class="telegram-time">10:00 AM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION: JSON SCHEMA ========== -->
+  <div id="json" class="section">
+    <div class="section-title">📦 JSON Output Schema</div>
+    <div class="section-desc">Schema cho <code>--format json</code> output và graph metadata format mới (v2.1)</div>
+
+    <div class="card">
+      <div class="card-header">📄 Graph Metadata Schema (v2.1) — graph_{label}_{sha}.json</div>
+      <div class="card-body" style="padding:0">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="terminal-dot r"></div>
+            <div class="terminal-dot y"></div>
+            <div class="terminal-dot g"></div>
+            <div class="terminal-title">graph_baseline_a7bd55e.json</div>
+          </div>
+          <div class="terminal-body"><span class="t-border">{</span>
+  <span class="t-cyan">"metadata"</span><span class="t-border">:</span> <span class="t-border">{</span>
+    <span class="t-cyan">"version"</span><span class="t-border">:</span>           <span class="t-green">"2.1"</span><span class="t-border">,</span>
+    <span class="t-cyan">"generated_at"</span><span class="t-border">:</span>      <span class="t-green">"2026-04-10T10:00:00+07:00"</span><span class="t-border">,</span>
+    <span class="t-cyan">"commit_sha"</span><span class="t-border">:</span>        <span class="t-green">"a7bd55e3f1c9d..."</span><span class="t-border">,</span>
+    <span class="t-cyan">"branch"</span><span class="t-border">:</span>            <span class="t-green">"develop"</span><span class="t-border">,</span>
+    <span class="t-cyan">"label"</span><span class="t-border">:</span>             <span class="t-green">"baseline"</span><span class="t-border">,</span>
+    <span class="t-cyan">"generator_version"</span><span class="t-border">:</span> <span class="t-green">"2.1.0"</span><span class="t-border">,</span>
+    <span class="t-cyan">"source_paths"</span><span class="t-border">:</span>      <span class="t-border">[</span><span class="t-green">"backend/app/"</span><span class="t-border">,</span> <span class="t-green">"frontend/src/"</span><span class="t-border">],</span>
+    <span class="t-cyan">"stats"</span><span class="t-border">:</span> <span class="t-border">{</span>
+      <span class="t-cyan">"total_functions"</span><span class="t-border">:</span> <span class="t-yellow">847</span><span class="t-border">,</span>
+      <span class="t-cyan">"total_files"</span><span class="t-border">:</span>     <span class="t-yellow">234</span><span class="t-border">,</span>
+      <span class="t-cyan">"total_edges"</span><span class="t-border">:</span>     <span class="t-yellow">1523</span>
+    <span class="t-border">}</span>
+  <span class="t-border">},</span>
+  <span class="t-cyan">"nodes"</span><span class="t-border">:</span> <span class="t-border">[</span> <span class="t-dim">... existing node format ...</span> <span class="t-border">],</span>
+  <span class="t-cyan">"edges"</span><span class="t-border">:</span> <span class="t-border">[</span> <span class="t-dim">... existing edge format ...</span> <span class="t-border">]</span>
+<span class="t-border">}</span>
+</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-16">
+      <div class="card-header">📄 Diff JSON Output Schema — codebase-map diff --format json</div>
+      <div class="card-body" style="padding:0">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="terminal-dot r"></div>
+            <div class="terminal-dot y"></div>
+            <div class="terminal-dot g"></div>
+            <div class="terminal-title">diff_output.json</div>
+          </div>
+          <div class="terminal-body"><span class="t-border">{</span>
+  <span class="t-cyan">"baseline"</span><span class="t-border">:</span> <span class="t-border">{</span>
+    <span class="t-cyan">"label"</span><span class="t-border">:</span> <span class="t-green">"baseline"</span><span class="t-border">,</span> <span class="t-cyan">"branch"</span><span class="t-border">:</span> <span class="t-green">"develop"</span><span class="t-border">,</span>
+    <span class="t-cyan">"sha"</span><span class="t-border">:</span> <span class="t-green">"a7bd55e"</span><span class="t-border">,</span> <span class="t-cyan">"date"</span><span class="t-border">:</span> <span class="t-green">"2026-04-10T10:00:00+07:00"</span>
+  <span class="t-border">},</span>
+  <span class="t-cyan">"current"</span><span class="t-border">:</span> <span class="t-border">{</span>
+    <span class="t-cyan">"label"</span><span class="t-border">:</span> <span class="t-green">"post-dev"</span><span class="t-border">,</span> <span class="t-cyan">"branch"</span><span class="t-border">:</span> <span class="t-green">"feat/channel-wizard"</span><span class="t-border">,</span>
+    <span class="t-cyan">"sha"</span><span class="t-border">:</span> <span class="t-green">"1207b8d"</span><span class="t-border">,</span> <span class="t-cyan">"date"</span><span class="t-border">:</span> <span class="t-green">"2026-04-10T14:30:00+07:00"</span>
+  <span class="t-border">},</span>
+  <span class="t-cyan">"summary"</span><span class="t-border">:</span> <span class="t-border">{</span>
+    <span class="t-cyan">"functions_added"</span><span class="t-border">:</span> <span class="t-yellow">12</span><span class="t-border">,</span>  <span class="t-cyan">"functions_removed"</span><span class="t-border">:</span> <span class="t-yellow">3</span><span class="t-border">,</span>
+    <span class="t-cyan">"functions_modified"</span><span class="t-border">:</span> <span class="t-yellow">5</span><span class="t-border">,</span> <span class="t-cyan">"functions_renamed"</span><span class="t-border">:</span> <span class="t-yellow">1</span><span class="t-border">,</span>
+    <span class="t-cyan">"edges_added"</span><span class="t-border">:</span> <span class="t-yellow">18</span><span class="t-border">,</span>     <span class="t-cyan">"edges_removed"</span><span class="t-border">:</span> <span class="t-yellow">4</span><span class="t-border">,</span>
+    <span class="t-cyan">"affected_callers"</span><span class="t-border">:</span> <span class="t-yellow">7</span>
+  <span class="t-border">},</span>
+  <span class="t-cyan">"nodes_added"</span><span class="t-border">:</span> <span class="t-border">[</span>
+    <span class="t-border">{</span>
+      <span class="t-cyan">"name"</span><span class="t-border">:</span> <span class="t-green">"StepSelectChannel"</span><span class="t-border">,</span>
+      <span class="t-cyan">"file"</span><span class="t-border">:</span> <span class="t-green">"ChannelWizard/StepSelectChannel.tsx"</span><span class="t-border">,</span>
+      <span class="t-cyan">"layer"</span><span class="t-border">:</span> <span class="t-green">"SERVICE"</span><span class="t-border">,</span>
+      <span class="t-cyan">"called_by"</span><span class="t-border">:</span> <span class="t-border">[</span><span class="t-green">"ChannelWizard/index.tsx"</span><span class="t-border">]</span>
+    <span class="t-border">}</span><span class="t-dim">, ...</span>
+  <span class="t-border">],</span>
+  <span class="t-cyan">"nodes_removed"</span><span class="t-border">:</span> <span class="t-border">[</span> <span class="t-dim">... same structure + "was_called_by" ...</span> <span class="t-border">],</span>
+  <span class="t-cyan">"nodes_modified"</span><span class="t-border">:</span> <span class="t-border">[</span>
+    <span class="t-border">{</span>
+      <span class="t-cyan">"name"</span><span class="t-border">:</span> <span class="t-green">"ChannelMgmtPage"</span><span class="t-border">,</span>
+      <span class="t-cyan">"file"</span><span class="t-border">:</span> <span class="t-green">"channels/ChannelMgmtPage.tsx"</span><span class="t-border">,</span>
+      <span class="t-cyan">"changes"</span><span class="t-border">:</span> <span class="t-border">[</span><span class="t-green">"signature_changed"</span><span class="t-border">],</span>
+      <span class="t-cyan">"affected_callers"</span><span class="t-border">:</span> <span class="t-border">[</span><span class="t-green">"router.tsx"</span><span class="t-border">]</span>
+    <span class="t-border">}</span><span class="t-dim">, ...</span>
+  <span class="t-border">],</span>
+  <span class="t-cyan">"nodes_renamed"</span><span class="t-border">:</span> <span class="t-border">[</span>
+    <span class="t-border">{</span>
+      <span class="t-cyan">"name"</span><span class="t-border">:</span> <span class="t-green">"ChannelConfigForm"</span><span class="t-border">,</span>
+      <span class="t-cyan">"old_file"</span><span class="t-border">:</span> <span class="t-green">"channels/forms.tsx"</span><span class="t-border">,</span>
+      <span class="t-cyan">"new_file"</span><span class="t-border">:</span> <span class="t-green">"ChannelWizard/ConfigForm.tsx"</span><span class="t-border">,</span>
+      <span class="t-cyan">"match_type"</span><span class="t-border">:</span> <span class="t-green">"signature_exact"</span>
+    <span class="t-border">}</span><span class="t-dim">, ...</span>
+  <span class="t-border">],</span>
+  <span class="t-cyan">"edges_added"</span><span class="t-border">:</span> <span class="t-border">[</span> <span class="t-dim">... {source, target, type} ...</span> <span class="t-border">],</span>
+  <span class="t-cyan">"edges_removed"</span><span class="t-border">:</span> <span class="t-border">[</span> <span class="t-dim">...</span> <span class="t-border">],</span>
+  <span class="t-cyan">"affected_callers"</span><span class="t-border">:</span> <span class="t-border">[</span>
+    <span class="t-border">{</span>
+      <span class="t-cyan">"name"</span><span class="t-border">:</span> <span class="t-green">"router.tsx"</span><span class="t-border">,</span>
+      <span class="t-cyan">"file"</span><span class="t-border">:</span> <span class="t-green">"app/router.tsx"</span><span class="t-border">,</span>
+      <span class="t-cyan">"domain"</span><span class="t-border">:</span> <span class="t-green">"ROUTER"</span><span class="t-border">,</span>
+      <span class="t-cyan">"reason"</span><span class="t-border">:</span> <span class="t-green">"imports ChannelMgmtPage (modified)"</span><span class="t-border">,</span>
+      <span class="t-cyan">"depth"</span><span class="t-border">:</span> <span class="t-yellow">1</span>
+    <span class="t-border">}</span><span class="t-dim">, ...</span>
+  <span class="t-border">]</span>
+<span class="t-border">}</span>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+</body>
+</html>
