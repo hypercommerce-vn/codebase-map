@@ -3,7 +3,7 @@
 
 > **Sprint:** CBM-P2 · **Total:** 12 SP · **Duration:** 10 ngày (2 tuần)
 > **Prerequisite:** CBM Phase 1 (v2.1) shipped + merged
-> **Status:** 🟡 READY — Chờ Phase 1 hoàn tất
+> **Status:** 🔥 ACTIVE — CEO kickoff 12/04/2026 · Day 1 · 3/12 SP (25%)
 > **Branch:** `feat/cbm-phase2-diff-engine`
 > **Release:** codebase-map **v2.2.0**
 > **Created:** 10/04/2026 · @PM + @CTO
@@ -14,7 +14,7 @@
 
 | Task ID | Task | SP | Assignee | Status | Day | Dependencies |
 |---------|------|----|----------|--------|-----|-------------|
-| CBM-P2-01 | `SnapshotDiff` class: load 2 graphs → compute node diff | 3 | TechLead | ⬜ TODO | D1-D2 | Phase 1 done |
+| CBM-P2-01 | `SnapshotDiff` class: load 2 graphs → compute node diff | 3 | TechLead | ✅ Done | D1 | Phase 1 done |
 | CBM-P2-02 | Edge diff: new/removed caller relationships | 2 | TechLead | ⬜ TODO | D3 | P2-01 |
 | CBM-P2-03 | Affected callers: transitive 1-level, `--depth N` max 3 | 2 | TechLead | ⬜ TODO | D4-D5 | P2-01, P2-02 |
 | CBM-P2-04 | Rename detection: signature matching (name + params + return_type) | 2 | TechLead | ⬜ TODO | D5-D6 | P2-01 |
