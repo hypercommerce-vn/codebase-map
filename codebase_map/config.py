@@ -1,5 +1,6 @@
 # HC-AI | ticket: FDD-TOOL-CODEMAP
 """Configuration loader — reads codebase-map.yaml from any project root."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

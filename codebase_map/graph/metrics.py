@@ -5,6 +5,7 @@ CM-S2-10: Persist {pr_number, timestamp, changed, impact, risk} entries
 to `.codebase-map-cache/pr_metrics.json` for sprint health dashboards.
 Threshold-based alerting on excessive impact zones.
 """
+
 from __future__ import annotations
 
 import json

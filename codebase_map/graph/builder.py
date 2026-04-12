@@ -1,17 +1,23 @@
 # HC-AI | ticket: FDD-TOOL-CODEMAP
 """Graph Builder — orchestrates parsers and builds the complete graph."""
+
 from __future__ import annotations
 
+import logging
+import subprocess
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from codebase_map import __version__
 from codebase_map.config import Config, SourceConfig
 from codebase_map.graph.cache import BuildCache, CacheStats
 from codebase_map.graph.models import Edge, Graph
 from codebase_map.parsers.base import BaseParser
 from codebase_map.parsers.python_parser import PythonParser
 from codebase_map.parsers.typescript_parser import TypeScriptParser
+
+logger = logging.getLogger(__name__)
 
 
 class GraphBuilder:
@@ -25,9 +31,12 @@ class GraphBuilder:
         "javascript": TypeScriptParser,
     }
 
-    def __init__(self, config: Config, use_cache: bool = True) -> None:
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CBM-P1-01/02: Accept optional label for snapshot metadata
+    def __init__(self, config: Config, use_cache: bool = True, label: str = "") -> None:
         self.config = config
         self.use_cache = use_cache
+        self._label = label
         self.graph = Graph(
             project=config.project,
             generated_at=datetime.now(timezone.utc).isoformat(),
@@ -77,7 +86,26 @@ class GraphBuilder:
             )
 
         elapsed = time.monotonic() - start_time
+
+        # HC-AI | ticket: FDD-TOOL-CODEMAP
+        # CBM-P1-01: Build full snapshot metadata (v2.1 schema)
+        git_info = _collect_git_info(self.config.project_root)
+        label = self._label or _auto_label(git_info)
+        graph_stats = self.graph.stats()
+
         self.graph.metadata = {
+            "version": "2.1",
+            "generated_at": self.graph.generated_at,
+            "commit_sha": git_info.get("commit_sha", ""),
+            "branch": git_info.get("branch", ""),
+            "label": label,
+            "generator_version": __version__,
+            "source_paths": [s.path for s in self.config.sources],
+            "stats": {
+                "total_functions": graph_stats["total_nodes"],
+                "total_files": self._cache_stats.total_files,
+                "total_edges": graph_stats["total_edges"],
+            },
             "build_time_ms": round(elapsed * 1000),
             "cache_stats": {
                 "total_files": self._cache_stats.total_files,
@@ -202,3 +230,50 @@ class GraphBuilder:
                 seen.add(key)
                 unique.append(edge)
         self.graph.edges = unique
+
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# CBM-P1-01: Git info helpers for snapshot metadata
+def _collect_git_info(project_root: Path) -> dict[str, str]:
+    """Collect git commit SHA and branch from the project root.
+
+    Returns dict with ``commit_sha`` and ``branch`` keys.
+    Falls back gracefully if git is unavailable or detached HEAD.
+    """
+    info: dict[str, str] = {"commit_sha": "", "branch": ""}
+    try:
+        sha = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            capture_output=True,
+            text=True,
+            cwd=str(project_root),
+            timeout=5,
+        )
+        if sha.returncode == 0:
+            info["commit_sha"] = sha.stdout.strip()
+
+        branch = subprocess.run(
+            ["git", "branch", "--show-current"],
+            capture_output=True,
+            text=True,
+            cwd=str(project_root),
+            timeout=5,
+        )
+        if branch.returncode == 0:
+            info["branch"] = branch.stdout.strip() or "detached"
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        logger.debug("git not available, metadata will have empty git fields")
+    return info
+
+
+def _auto_label(git_info: dict[str, str]) -> str:
+    """Generate automatic label from branch + short SHA + timestamp.
+
+    Format: ``{branch}_{sha}_{YYYYMMDD_HHMM}`` (e.g. ``main_a7bd55e_20260412_1430``).
+    """
+    branch = git_info.get("branch", "unknown") or "unknown"
+    sha = git_info.get("commit_sha", "unknown") or "unknown"
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M")
+    # Sanitize branch name for filesystem safety
+    safe_branch = branch.replace("/", "_").replace("\\", "_")
+    return f"{safe_branch}_{sha}_{ts}"

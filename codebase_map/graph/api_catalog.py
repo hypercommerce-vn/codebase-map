@@ -11,6 +11,7 @@ Usage:
     catalog.to_json()   # structured data
     catalog.to_html()   # standalone HTML catalog page
 """
+
 from __future__ import annotations
 
 import json

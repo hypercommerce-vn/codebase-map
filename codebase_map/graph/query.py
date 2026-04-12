@@ -1,5 +1,6 @@
 # HC-AI | ticket: FDD-TOOL-CODEMAP
 """Graph Query Engine — search, impact analysis, dependency lookup."""
+
 from __future__ import annotations
 
 import json
@@ -60,43 +61,16 @@ class QueryEngine:
 
     @classmethod
     def from_json(cls, json_path: str | Path) -> QueryEngine:
-        """Load graph from exported JSON file."""
+        """Load graph from exported JSON file.
+
+        Supports both v1.x (no metadata) and v2.1+ (with metadata) formats
+        via ``Graph.from_dict()``.
+        """
         with open(json_path) as f:
             data = json.load(f)
-        graph = Graph(
-            project=data.get("project", ""),
-            generated_at=data.get("generated_at", ""),
-        )
-        from codebase_map.graph.models import Edge, EdgeType, LayerType, NodeType
-
-        for n in data.get("nodes", []):
-            node = Node(
-                id=n["id"],
-                name=n["name"],
-                node_type=NodeType(n["type"]),
-                layer=LayerType(n["layer"]),
-                module_domain=n["domain"],
-                file_path=n["file"],
-                line_start=n["line_start"],
-                line_end=n.get("line_end", 0),
-                docstring=n.get("docstring", ""),
-                decorators=n.get("decorators", []),
-                params=n.get("params", []),
-                return_type=n.get("return_type", ""),
-                parent_class=n.get("parent_class", ""),
-                metadata=n.get("metadata", {}),
-            )
-            graph.add_node(node)
-
-        for e in data.get("edges", []):
-            edge = Edge(
-                source=e["source"],
-                target=e["target"],
-                edge_type=EdgeType(e["type"]),
-                metadata=e.get("metadata", {}),
-            )
-            graph.add_edge(edge)
-
+        # HC-AI | ticket: FDD-TOOL-CODEMAP
+        # CBM-P1-01: Delegate to Graph.from_dict for v1.x + v2.1 compat
+        graph = Graph.from_dict(data)
         return cls(graph)
 
     def search(self, query: str) -> list[Node]:

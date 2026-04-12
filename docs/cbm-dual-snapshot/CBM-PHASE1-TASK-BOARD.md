@@ -14,12 +14,12 @@
 
 | Task ID | Task | SP | Assignee | Status | Day | Dependencies |
 |---------|------|----|----------|--------|-----|-------------|
-| CBM-P1-01 | Thêm `metadata` dict vào `Graph` dataclass + `to_dict()` | 1 | TechLead | ⬜ TODO | D1 | — |
-| CBM-P1-02 | CLI flag `generate --label <name>` | 1 | TechLead | ⬜ TODO | D1 | P1-01 |
+| CBM-P1-01 | Thêm `metadata` dict vào `Graph` dataclass + `to_dict()` + `from_dict()` | 1 | TechLead | ✅ Done | D1 | — |
+| CBM-P1-02 | CLI flag `generate --label <name>` | 1 | TechLead | ✅ Done | D1 | P1-01 |
 | CBM-P1-03 | Snapshot naming: `graph_{label}_{short_sha}.json` + save vào `.codebase-map-cache/snapshots/` | 1 | TechLead | ⬜ TODO | D2 | P1-01, P1-02 |
 | CBM-P1-04 | Command `snapshots list` — hiển thị table snapshots | 1 | TechLead | ⬜ TODO | D3 | P1-03 |
 | CBM-P1-05 | Command `snapshots clean --keep N` (default 10) | 0.5 | TechLead | ⬜ TODO | D3 | P1-03 |
-| CBM-P1-06 | Backward compat: đọc graph v1.x (không metadata) → inject empty metadata | 1 | TechLead | ⬜ TODO | D4 | P1-01 |
+| CBM-P1-06 | Backward compat: đọc graph v1.x (không metadata) → inject empty metadata | 1 | TechLead | ✅ Done | D1 | P1-01 |
 | CBM-P1-07 | CI workflow: `cbm-baseline.yml` — auto-generate baseline + artifact upload | 1.5 | TechLead | ⬜ TODO | D4-D5 | P1-02, P1-03 |
 | — | Unit tests + lint gate | — | TechLead | ⬜ TODO | D5 | All |
 | — | PR → /review-gate → CEO approve | — | Team | ⬜ TODO | D5 | All |

@@ -1,5 +1,6 @@
 # HC-AI | ticket: FDD-TOOL-CODEMAP
 """Graph data models — Node, Edge, Graph dataclasses."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -166,10 +167,82 @@ class Graph:
         }
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        result: dict[str, Any] = {
             "project": self.project,
             "generated_at": self.generated_at,
             "stats": self.stats(),
             "nodes": [n.to_dict() for n in self.nodes.values()],
             "edges": [e.to_dict() for e in self.edges],
         }
+        # HC-AI | ticket: FDD-TOOL-CODEMAP
+        # CBM-P1-01: Include snapshot metadata when present
+        if self.metadata:
+            result["metadata"] = self.metadata
+        return result
+
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CBM-P1-01: Reconstruct Graph from dict (supports v1.x legacy + v2.1 metadata)
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "Graph":
+        """Reconstruct a Graph from a serialized dict.
+
+        Supports both legacy v1.x format (no metadata key) and
+        v2.1+ format with ``metadata`` block.
+        """
+        from codebase_map.graph.models import Edge, EdgeType, LayerType, Node, NodeType
+
+        graph = cls(
+            project=data.get("project", ""),
+            generated_at=data.get("generated_at", ""),
+        )
+
+        # Parse metadata — inject empty stub for legacy v1.x graphs
+        raw_meta = data.get("metadata")
+        if raw_meta and isinstance(raw_meta, dict):
+            graph.metadata = raw_meta
+        else:
+            graph.metadata = {
+                "version": "1.x-legacy",
+                "label": "",
+                "commit_sha": "",
+                "branch": "",
+                "generator_version": "",
+            }
+
+        # Parse nodes
+        for nd in data.get("nodes", []):
+            try:
+                node = Node(
+                    id=nd["id"],
+                    name=nd["name"],
+                    node_type=NodeType(nd.get("type", "function")),
+                    layer=LayerType(nd.get("layer", "unknown")),
+                    module_domain=nd.get("domain", ""),
+                    file_path=nd.get("file", ""),
+                    line_start=nd.get("line_start", 0),
+                    line_end=nd.get("line_end", 0),
+                    docstring=nd.get("docstring", ""),
+                    decorators=nd.get("decorators", []),
+                    params=nd.get("params", []),
+                    return_type=nd.get("return_type", ""),
+                    parent_class=nd.get("parent_class", ""),
+                    metadata=nd.get("metadata", {}),
+                )
+                graph.add_node(node)
+            except (KeyError, ValueError):
+                continue  # skip malformed nodes
+
+        # Parse edges
+        for ed in data.get("edges", []):
+            try:
+                edge = Edge(
+                    source=ed["source"],
+                    target=ed["target"],
+                    edge_type=EdgeType(ed.get("type", "calls")),
+                    metadata=ed.get("metadata", {}),
+                )
+                graph.add_edge(edge)
+            except (KeyError, ValueError):
+                continue  # skip malformed edges
+
+        return graph

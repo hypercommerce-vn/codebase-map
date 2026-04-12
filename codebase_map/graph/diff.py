@@ -6,6 +6,7 @@ Usage:
     codebase-map diff HEAD~3 --depth 2
     codebase-map diff abc1234..def5678
 """
+
 from __future__ import annotations
 
 import json

@@ -1,5 +1,6 @@
 # HC-AI | ticket: FDD-TOOL-CODEMAP
 """Abstract base parser — extend for each language."""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
