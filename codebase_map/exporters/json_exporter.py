@@ -1,5 +1,6 @@
 # HC-AI | ticket: FDD-TOOL-CODEMAP
 """JSON Exporter — structured output for programmatic access."""
+
 from __future__ import annotations
 
 import json

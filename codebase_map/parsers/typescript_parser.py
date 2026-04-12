@@ -14,6 +14,7 @@ should hit ≥95% function/class capture for typical NestJS/Express/Next.js
 codebases. Edge cases (deeply nested arrow chains, computed prop names)
 are tolerated by skip-not-crash.
 """
+
 from __future__ import annotations
 
 import re

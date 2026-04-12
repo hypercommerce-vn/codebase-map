@@ -3,6 +3,7 @@
 
 Extracts functions, classes, methods, imports, decorators.
 """
+
 from __future__ import annotations
 
 import ast

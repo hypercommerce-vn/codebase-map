@@ -1,5 +1,6 @@
 # HC-AI | ticket: FDD-TOOL-CODEMAP
 """CLI entry point — codebase-map generate|query|impact|summary."""
+
 from __future__ import annotations
 
 import argparse
@@ -40,6 +41,17 @@ def main(argv: list[str] | None = None) -> int:
     # pr_diff.json vs the given git ref so the HTML PR Diff view is baked
     # in automatically. Previously required a separate `codebase-map diff`
     # invocation piped into pr_diff.json.
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CBM-P1-02: Snapshot label flag for metadata versioning
+    gen.add_argument(
+        "--label",
+        default="",
+        metavar="NAME",
+        help=(
+            "Snapshot label (e.g. 'baseline', 'post-dev'). "
+            "Default: auto-generate from branch + SHA + timestamp."
+        ),
+    )
     gen.add_argument(
         "--diff",
         default="",
@@ -255,7 +267,9 @@ def _cmd_generate(args: argparse.Namespace) -> int:
     # HC-AI | ticket: FDD-TOOL-CODEMAP
     # CM-S2-02: Incremental cache support
     use_cache = not getattr(args, "no_cache", False)
-    builder = GraphBuilder(config, use_cache=use_cache)
+    # CBM-P1-02: Pass snapshot label to builder
+    label = getattr(args, "label", "") or ""
+    builder = GraphBuilder(config, use_cache=use_cache, label=label)
     graph = builder.build()
 
     output_dir = config.project_root / config.output.dir
@@ -299,10 +313,20 @@ def _cmd_generate(args: argparse.Namespace) -> int:
     print(f"  Layers: {stats['by_layer']}")
     print(f"  Domains: {stats['by_domain']}")
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CBM-P1-01: Print snapshot metadata summary
+    meta = graph.metadata
+    if meta.get("version") == "2.1":
+        print(
+            f"  Snapshot: label={meta.get('label', '?')} "
+            f"branch={meta.get('branch', '?')} "
+            f"sha={meta.get('commit_sha', '?')}"
+        )
+
     # Print cache stats
     cs = builder.cache_stats
     if cs.total_files > 0:
-        build_ms = graph.metadata.get("build_time_ms", 0)
+        build_ms = meta.get("build_time_ms", 0)
         print(f"  Build time: {build_ms}ms")
         print(
             f"  Cache: {cs.cached_files}/{cs.total_files} files cached "
