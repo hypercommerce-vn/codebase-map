@@ -1,0 +1,77 @@
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# CBM-P1-07: Post-merge baseline rotate — captures review-gate fixes
+# Phương án B — GitHub Actions Artifact (CTO approved, CEO approved 10/04/2026)
+# CEO's Step 8 innovation: regenerate after merge to capture fixes
+
+name: CBM Post-Merge Baseline Rotate
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main, develop]
+
+jobs:
+  rotate-baseline:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install codebase-map
+        run: pip install -e ".[dev]"
+
+      - name: Regenerate baseline (captures review-gate fixes)
+        run: |
+          cat > cbm-baseline-config.yaml << 'EOF'
+          project: "codebase-map-baseline"
+          sources:
+            - path: "codebase_map"
+              language: python
+              base_module: "codebase_map"
+              exclude: ["__pycache__", "d3.v7.min.js"]
+          output:
+            dir: ".codebase-map-cache"
+            formats: [json]
+          graph:
+            depth: 3
+            group_by: module
+          EOF
+          python -m codebase_map generate \
+            -c cbm-baseline-config.yaml \
+            --label "baseline"
+
+      - name: Prepare baseline artifact
+        run: |
+          SNAP_DIR=".codebase-map-cache/snapshots"
+          if [ -d "$SNAP_DIR" ]; then
+            BASELINE=$(ls -t "$SNAP_DIR"/graph_baseline_*.json 2>/dev/null | head -1)
+          fi
+          if [ -z "$BASELINE" ]; then
+            BASELINE=".codebase-map-cache/graph.json"
+          fi
+          test -f "$BASELINE" || { echo "ERROR: No baseline graph found"; exit 1; }
+          cp "$BASELINE" .codebase-map-cache/graph_baseline.json
+          python -c "
+          import json
+          d = json.load(open('.codebase-map-cache/graph_baseline.json'))
+          nodes = d['stats']['total_nodes']
+          meta = d.get('metadata', {})
+          sha = meta.get('commit_sha', 'unknown')
+          print(f'Post-merge baseline: {nodes} nodes, sha={sha}')
+          assert nodes > 10, f'Too few nodes: {nodes}'
+          "
+
+      - name: Upload new baseline (replaces old)
+        uses: actions/upload-artifact@v4
+        with:
+          name: cbm-baseline
+          path: .codebase-map-cache/graph_baseline.json
+          retention-days: 90
+          overwrite: true

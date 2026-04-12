@@ -1,0 +1,87 @@
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# CBM-P1-07: Auto-generate baseline graph + upload as artifact
+# Phương án B — GitHub Actions Artifact (CTO approved, CEO approved 10/04/2026)
+
+name: CBM Baseline Generator
+
+on:
+  push:
+    branches: [main, develop]
+
+jobs:
+  generate-baseline:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[cbm skip]')"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install codebase-map
+        run: pip install -e ".[dev]"
+
+      - name: Generate baseline graph
+        run: |
+          cat > cbm-baseline-config.yaml << 'EOF'
+          project: "codebase-map-baseline"
+          sources:
+            - path: "codebase_map"
+              language: python
+              base_module: "codebase_map"
+              exclude: ["__pycache__", "d3.v7.min.js"]
+          output:
+            dir: ".codebase-map-cache"
+            formats: [json]
+          graph:
+            depth: 3
+            group_by: module
+          EOF
+          python -m codebase_map generate \
+            -c cbm-baseline-config.yaml \
+            --label "baseline"
+
+      - name: Verify baseline output
+        run: |
+          # Find the generated snapshot
+          SNAP_DIR=".codebase-map-cache/snapshots"
+          if [ -d "$SNAP_DIR" ]; then
+            BASELINE=$(ls -t "$SNAP_DIR"/graph_baseline_*.json 2>/dev/null | head -1)
+          fi
+          # Fallback to main output
+          if [ -z "$BASELINE" ]; then
+            BASELINE=".codebase-map-cache/graph.json"
+          fi
+          test -f "$BASELINE" || { echo "ERROR: No baseline graph found"; exit 1; }
+          python -c "
+          import json
+          d = json.load(open('$BASELINE'))
+          nodes = d['stats']['total_nodes']
+          print(f'Baseline OK: {nodes} nodes')
+          assert nodes > 10, f'Too few nodes: {nodes}'
+          "
+          # Copy to standard name for artifact upload
+          cp "$BASELINE" .codebase-map-cache/graph_baseline.json
+
+      - name: Upload baseline artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cbm-baseline
+          path: .codebase-map-cache/graph_baseline.json
+          retention-days: 90
+          overwrite: true
+
+      - name: Log baseline metadata
+        run: |
+          python -c "
+          import json
+          d = json.load(open('.codebase-map-cache/graph_baseline.json'))
+          meta = d.get('metadata', {})
+          print('--- CBM Baseline Metadata ---')
+          for k, v in meta.items():
+              print(f'  {k}: {v}')
+          print(f'  total_nodes: {d[\"stats\"][\"total_nodes\"]}')
+          print(f'  total_edges: {d[\"stats\"][\"total_edges\"]}')
+          "
