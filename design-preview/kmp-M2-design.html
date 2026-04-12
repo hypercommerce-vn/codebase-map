@@ -1,0 +1,783 @@
+<!-- HC-AI | ticket: KMP-M2-DESIGN | designed 12/04/2026 -->
+<!-- PO + CTO + Designer 3-way design meeting output -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KMP Sprint M2 — Design Preview | Hyper Commerce</title>
+<style>
+/* ═══════════════════════════════════════════════════════
+   DESIGN SYSTEM — KMP M2 Design Preview
+   Inherited from: kmp-M1-design.html
+   Meeting: PO + CTO + Designer · 12/04/2026
+═══════════════════════════════════════════════════════ */
+:root {
+  --hc-primary: #6366f1;
+  --hc-primary-hover: #4f46e5;
+  --bg-canvas: #0d1117;
+  --bg-surface: #161b22;
+  --bg-surface-hover: #1c2128;
+  --bg-elevated: #21262d;
+  --border: #30363d;
+  --border-focus: #58a6ff;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #484f58;
+  --ok: #3fb950;
+  --warn: #d29922;
+  --err: #f85149;
+  --info: #58a6ff;
+  --codebase-blue: #79c0ff;
+  --ai-purple: #a371f7;
+  --mcp-orange: #f0883e;
+  --topbar-h: 52px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.55;
+}
+a { color: var(--border-focus); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; background: var(--bg-elevated); padding: 1px 6px; border-radius: 4px; color: var(--info); }
+
+/* TOP BAR */
+#topbar {
+  height: var(--topbar-h);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 24px; gap: 18px;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--ai-purple), var(--hc-primary));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: #fff;
+}
+.logo-text { font-size: 14px; font-weight: 600; }
+.breadcrumb { font-size: 12px; color: var(--text-secondary); display: flex; gap: 6px; align-items: center; }
+.breadcrumb .sep { color: var(--text-muted); }
+.breadcrumb .cur { color: var(--text-primary); font-weight: 500; }
+.spacer { flex: 1; }
+.sprint-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, rgba(163,113,247,0.18), rgba(99,102,241,0.08));
+  border: 1px solid var(--ai-purple);
+  border-radius: 20px;
+  font-size: 12px; font-weight: 600;
+}
+.sprint-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ai-purple); box-shadow: 0 0 8px var(--ai-purple); }
+
+/* PAGE */
+main { max-width: 1180px; margin: 0 auto; padding: 32px 32px 80px; }
+h1.page-title { font-size: 26px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 14px; }
+.page-sub { color: var(--text-secondary); font-size: 13px; margin-bottom: 32px; }
+
+section.block { margin-bottom: 40px; }
+section.block > h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+section.block > h2 .num {
+  width: 26px; height: 26px;
+  background: var(--ai-purple); color: #fff;
+  border-radius: 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+}
+section.block > .desc { color: var(--text-secondary); margin-bottom: 16px; font-size: 12px; }
+
+.card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+
+/* TERMINAL MOCK */
+.terminal { background: #0a0a0f; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; font-family: 'SF Mono', Menlo, monospace; font-size: 12px; line-height: 1.7; }
+.terminal-bar { height: 32px; background: var(--bg-elevated); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 14px; gap: 8px; }
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+.terminal-dot.r { background: #ff5f56; }
+.terminal-dot.y { background: #ffbd2e; }
+.terminal-dot.g { background: #27c93f; }
+.terminal-title { font-size: 11px; color: var(--text-muted); margin-left: 12px; }
+.terminal-body { padding: 16px 18px; white-space: pre; overflow-x: auto; }
+.terminal-body .prompt { color: var(--ok); }
+.terminal-body .cmd { color: var(--text-primary); font-weight: 600; }
+.terminal-body .dim { color: var(--text-muted); }
+.terminal-body .ok { color: var(--ok); }
+.terminal-body .warn { color: var(--warn); }
+.terminal-body .err { color: var(--err); }
+.terminal-body .info { color: var(--info); }
+.terminal-body .blue { color: var(--codebase-blue); }
+.terminal-body .purple { color: var(--ai-purple); }
+.terminal-body .orange { color: var(--mcp-orange); }
+.terminal-body .bold { font-weight: 700; color: var(--text-primary); }
+.terminal-body .heading { color: var(--ai-purple); font-weight: 700; }
+.terminal-body .conf { color: var(--ok); font-weight: 600; }
+
+/* FILE MOCK */
+.file-mock { background: var(--bg-canvas); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.file-mock-bar { height: 28px; background: var(--bg-elevated); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 12px; font-size: 11px; color: var(--text-muted); font-family: 'SF Mono', Menlo, monospace; }
+.file-mock-body { padding: 14px 16px; font-family: 'SF Mono', Menlo, monospace; font-size: 11px; line-height: 1.7; white-space: pre; overflow-x: auto; color: var(--text-secondary); }
+.file-mock-body .k { color: #f0883e; }
+.file-mock-body .s { color: var(--ok); }
+.file-mock-body .c { color: var(--text-muted); }
+.file-mock-body .n { color: var(--codebase-blue); }
+.file-mock-body .h1 { color: var(--text-primary); font-weight: 700; font-size: 13px; }
+.file-mock-body .h2 { color: var(--text-primary); font-weight: 600; }
+
+/* DESIGN / CTO / PO NOTE */
+.design-note { margin-top: 16px; padding: 12px 16px; background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.3); border-radius: 8px; font-size: 12px; color: var(--text-secondary); }
+.design-note strong { color: var(--hc-primary); }
+.design-note .label { display: inline-block; font-size: 10px; font-weight: 700; color: var(--hc-primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+
+.cto-note { margin-top: 12px; padding: 12px 16px; background: rgba(210,153,34,0.08); border: 1px solid rgba(210,153,34,0.3); border-radius: 8px; font-size: 12px; color: var(--text-secondary); }
+.cto-note strong { color: var(--warn); }
+.cto-note .label { display: inline-block; font-size: 10px; font-weight: 700; color: var(--warn); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+
+.po-note { margin-top: 12px; padding: 12px 16px; background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.3); border-radius: 8px; font-size: 12px; color: var(--text-secondary); }
+.po-note strong { color: var(--ok); }
+.po-note .label { display: inline-block; font-size: 10px; font-weight: 700; color: var(--ok); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+
+/* SPEC TABLE */
+.spec-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px; }
+.spec-table th { text-align: left; padding: 8px 12px; background: var(--bg-canvas); border-bottom: 1px solid var(--border); color: var(--text-secondary); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+.spec-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+.spec-table td:first-child { color: var(--text-primary); font-weight: 500; }
+.spec-table tr:last-child td { border-bottom: none; }
+
+.badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+.badge.core { background: rgba(63,185,80,0.15); color: var(--ok); }
+.badge.cli { background: rgba(88,166,255,0.15); color: var(--info); }
+.badge.ml { background: rgba(163,113,247,0.15); color: var(--ai-purple); }
+.badge.mcp { background: rgba(240,136,62,0.15); color: var(--mcp-orange); }
+.badge.qa { background: rgba(248,81,73,0.15); color: var(--err); }
+.badge.new { background: rgba(99,102,241,0.18); color: var(--hc-primary); }
+
+/* GRID */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+
+/* ARCHITECTURE DIAGRAM */
+.arch-box { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; font-family: 'SF Mono', Menlo, monospace; font-size: 11px; line-height: 1.8; white-space: pre; overflow-x: auto; color: var(--text-secondary); }
+.arch-box .layer-label { color: var(--ai-purple); font-weight: 700; }
+.arch-box .component { color: var(--info); }
+.arch-box .arrow { color: var(--text-muted); }
+.arch-box .highlight { color: var(--ok); font-weight: 600; }
+.arch-box .cbm { color: var(--mcp-orange); font-weight: 600; }
+
+/* FOOTER */
+#footer { border-top: 1px solid var(--border); background: var(--bg-surface); padding: 24px 32px; margin-top: 60px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.version-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 20px; font-size: 11px; }
+.version-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ai-purple); }
+.approval { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-secondary); }
+.approval input { width: 18px; height: 18px; accent-color: var(--hc-primary); }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="logo">
+    <div class="logo-icon">K</div>
+    <div class="logo-text">Knowledge Memory Platform</div>
+  </div>
+  <div class="breadcrumb">
+    <span>Hyper Commerce</span>
+    <span class="sep">&rsaquo;</span>
+    <span>KMP</span>
+    <span class="sep">&rsaquo;</span>
+    <span class="cur">Sprint M2 Design</span>
+  </div>
+  <div class="spacer"></div>
+  <div class="sprint-badge">
+    <div class="dot"></div>
+    Sprint M2 &middot; 28 SP &middot; 13 tasks &middot; DESIGN
+  </div>
+</div>
+
+<main>
+
+  <h1 class="page-title">Sprint M2 &mdash; Ask + MCP + Multi-LLM</h1>
+  <p class="page-sub">
+    AI-powered codebase Q&amp;A: RAG retrieval + multi-LLM providers + MCP tool server. CBM Dual-Snapshot integration.
+    Owner: <strong>@TechLead</strong> &middot; Reviewers: <strong>@CTO + @Tester + @Designer</strong>
+    &middot; Duration: <strong>2 weeks (10 Days)</strong> &middot; <strong>28 SP</strong>
+  </p>
+
+  <!-- ════ SCREEN A: ASK COMMAND ════ -->
+  <section class="block">
+    <h2><span class="num">A</span> Screen: <code>codebase-memory ask</code> &mdash; Natural Language Query <code>MEM-M2-04</code></h2>
+    <div class="desc">User asks a question about their codebase. RAG retrieves context from vault, LLM generates answer with citations.</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot r"></div>
+        <div class="terminal-dot y"></div>
+        <div class="terminal-dot g"></div>
+        <div class="terminal-title">Terminal &mdash; ~/Projects/hypercommerce</div>
+      </div>
+      <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory ask "How is authentication handled in this project?"</span>
+
+<span class="heading">Knowledge Memory &mdash; Ask</span>
+<span class="dim">Provider: anthropic (claude-sonnet-4-20250514) &middot; Vault: 25 patterns &middot; 1,386 nodes</span>
+
+<span class="purple">&#9654; Retrieving context...</span>  <span class="dim">BM25 + graph proximity</span>
+  <span class="ok">&#10003;</span> <span class="dim">5 chunks retrieved (182ms)</span>
+
+<span class="purple">&#9654; Generating answer...</span>
+  <span class="ok">&#10003;</span> <span class="dim">Response received (1.8s &middot; 340 input + 180 output tokens)</span>
+
+<span class="bold">Answer:</span>
+
+  Authentication in this project uses a <span class="info">JWT-based</span> approach
+  with the following architecture:
+
+  1. <span class="bold">Login endpoint</span> at <span class="info">auth/router.py:login()</span>
+     validates credentials via <span class="info">auth/service.py:authenticate()</span>
+
+  2. <span class="bold">Token generation</span> by <span class="info">auth/jwt_utils.py:create_token()</span>
+     using HS256 algorithm, 24h expiry
+
+  3. <span class="bold">Middleware</span> <span class="info">auth/middleware.py:require_auth()</span>
+     decorates 47 protected routes across 5 domains
+
+  4. <span class="bold">Refresh flow</span> at <span class="info">auth/router.py:refresh_token()</span>
+     with sliding window (7-day refresh token)
+
+<span class="dim">&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;</span>
+<span class="dim">Citations (5 sources):</span>
+  <span class="info">auth/router.py</span>:12       <span class="dim">login() &mdash; route layer</span>
+  <span class="info">auth/service.py</span>:45      <span class="dim">authenticate() &mdash; service layer</span>
+  <span class="info">auth/jwt_utils.py</span>:8     <span class="dim">create_token() &mdash; util layer</span>
+  <span class="info">auth/middleware.py</span>:20    <span class="dim">require_auth() &mdash; core layer</span>
+  <span class="info">patterns.md</span>             <span class="dim">Pattern: "JWT auth middleware"</span>
+
+<span class="dim">Cost: $0.003 (340 in + 180 out tokens &middot; Anthropic claude-sonnet)</span></div>
+    </div>
+
+    <div class="design-note">
+      <div class="label">Designer note</div>
+      <strong>3-phase output:</strong> (1) Retrieve context + timing, (2) Generate answer + timing, (3) Citations + cost.
+      Answer body indented 2 spaces. File paths in <code>info</code> blue. Cost always shown at bottom.
+      <strong>NO_COLOR=1</strong> env var disables all ANSI. Answer still readable as plain text.
+    </div>
+
+    <div class="cto-note">
+      <div class="label">CTO constraint</div>
+      <strong>RAG pipeline:</strong> BM25 keyword search + AST graph proximity scoring. Minimum 75% recall target.
+      <strong>Context window:</strong> Max 5 chunks (configurable). Context builder must complete &lt;200ms.
+      <strong>Streaming:</strong> Optional <code>--stream</code> flag for real-time output. Default: wait for full response.
+      <strong>Citations:</strong> Every function mentioned in answer must have source file:line citation.
+    </div>
+  </section>
+
+  <!-- ════ SCREEN B: WHY COMMAND ════ -->
+  <section class="block">
+    <h2><span class="num">B</span> Screen: <code>codebase-memory why</code> &mdash; Dependency Explanation <code>MEM-M2-05</code></h2>
+    <div class="desc">Explain why two modules/functions are connected. Uses call graph + patterns to provide architectural reasoning.</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot r"></div>
+        <div class="terminal-dot y"></div>
+        <div class="terminal-dot g"></div>
+        <div class="terminal-title">Terminal &mdash; why command</div>
+      </div>
+      <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory why "OrderService calls BillingService"</span>
+
+<span class="heading">Knowledge Memory &mdash; Why</span>
+
+<span class="purple">&#9654; Analyzing call graph...</span>
+  <span class="ok">&#10003;</span> Found 3 call paths between <span class="info">OrderService</span> &rarr; <span class="info">BillingService</span>
+
+<span class="bold">Call Paths:</span>
+
+  <span class="bold">Path 1</span> <span class="dim">(direct)</span>
+  <span class="info">OrderService.submit_order</span> &rarr; <span class="info">BillingService.create_invoice</span>
+  <span class="dim">Reason: Order completion triggers invoice generation</span>
+
+  <span class="bold">Path 2</span> <span class="dim">(via shared)</span>
+  <span class="info">OrderService.refund</span> &rarr; <span class="info">PaymentGateway.reverse</span> &rarr; <span class="info">BillingService.credit_note</span>
+  <span class="dim">Reason: Refund flow crosses billing boundary</span>
+
+  <span class="bold">Path 3</span> <span class="dim">(transitive)</span>
+  <span class="info">OrderService.get_total</span> &rarr; <span class="info">PricingEngine.calculate</span> &rarr; <span class="info">BillingService.tax_rate</span>
+  <span class="dim">Reason: Price calculation depends on tax configuration</span>
+
+<span class="warn">&#9888; Architecture note:</span>
+  <span class="dim">Pattern detected: </span><span class="warn">cross-domain coupling</span>
+  <span class="dim">Suggestion: Extract shared interface to</span> <span class="info">shared/billing_interface.py</span>
+  <span class="dim">Related Quick Win: #9 "Circular dependency auth &harr; billing"</span></div>
+    </div>
+
+    <div class="po-note">
+      <div class="label">PO acceptance</div>
+      <strong>AC-1:</strong> Must show all call paths (not just direct). <strong>AC-2:</strong> Must reference related Quick Win if exists.
+      <strong>AC-3:</strong> If no path found, show "No direct dependency found. Did you mean...?" with fuzzy suggestions.
+    </div>
+  </section>
+
+  <!-- ════ SCREEN C: IMPACT COMMAND ════ -->
+  <section class="block">
+    <h2><span class="num">C</span> Screen: <code>codebase-memory impact</code> &mdash; Change Impact Analysis <code>MEM-M2-06</code></h2>
+    <div class="desc">Predict impact of changing a function. Uses vault call graph + CBM dual-snapshot data for structural analysis.</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot r"></div>
+        <div class="terminal-dot y"></div>
+        <div class="terminal-dot g"></div>
+        <div class="terminal-title">Terminal &mdash; impact command</div>
+      </div>
+      <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory impact "auth/service.py:authenticate"</span>
+
+<span class="heading">Knowledge Memory &mdash; Impact Analysis</span>
+
+<span class="purple">&#9654; Computing impact zone...</span>
+  <span class="ok">&#10003;</span> <span class="dim">Depth 1: 8 direct callers &middot; Depth 2: 23 transitive</span>
+
+<span class="bold">Function:</span> <span class="info">authenticate(email, password) &rarr; User</span>
+<span class="bold">File:</span>     <span class="info">auth/service.py</span>:45
+<span class="bold">Layer:</span>    service &middot; <span class="bold">Domain:</span> auth
+<span class="bold">Callers:</span>  8 direct &middot; 23 transitive (depth 2)
+
+<span class="bold">Direct Callers (depth 1):</span>
+  <span class="err">&#9679;</span> <span class="info">auth/router.py</span>:login            <span class="dim">&mdash; route (high traffic)</span>
+  <span class="err">&#9679;</span> <span class="info">auth/router.py</span>:api_login        <span class="dim">&mdash; route (API endpoint)</span>
+  <span class="warn">&#9679;</span> <span class="info">auth/middleware.py</span>:verify_session <span class="dim">&mdash; middleware (47 routes)</span>
+  <span class="warn">&#9679;</span> <span class="info">admin/service.py</span>:sudo_login      <span class="dim">&mdash; admin module</span>
+  <span class="dim">&#9679;</span> <span class="info">tests/test_auth.py</span>:test_login    <span class="dim">&mdash; test (safe)</span>
+  <span class="dim">... 3 more callers</span>
+
+<span class="bold">Risk Assessment:</span>
+  <span class="err">HIGH</span> <span class="dim">&mdash; affects 47 protected routes via middleware chain</span>
+  <span class="warn">Recommendation:</span> <span class="dim">Add integration test covering login + middleware before modifying</span>
+
+<span class="dim">&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;</span>
+<span class="dim">Powered by vault call graph + CBM dual-snapshot engine</span></div>
+    </div>
+
+    <div class="cto-note">
+      <div class="label">CTO constraint</div>
+      <strong>Integration with CBM v2.2:</strong> Impact command uses <code>SnapshotDiff.affected_callers</code> engine from CBM Phase 2.
+      KMP wraps CBM as data source: <code>codebase-map snapshot-diff --format json</code> &rarr; parse + enrich with vault patterns.
+      <strong>Risk scoring:</strong> RED = route/middleware caller (user-facing). YELLOW = service caller. GRAY = test/util (safe).
+    </div>
+  </section>
+
+  <!-- ════ SCREEN D: CBM DUAL-SNAPSHOT INTEGRATION ════ -->
+  <section class="block">
+    <h2><span class="num">D</span> CBM Dual-Snapshot &harr; KMP Integration Architecture</h2>
+    <div class="desc">How CBM v2.2 (stateless graph tool) feeds into KMP (stateful knowledge engine). CTO-approved boundary.</div>
+
+    <div class="arch-box"><span class="layer-label">&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;</span>
+<span class="layer-label">&#9474;</span>  <span class="cbm">CODEBASE-MAP v2.2 (standalone, free, OSS)</span>                 <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>                                                            <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>  <span class="component">[AST Parser]</span> <span class="arrow">&rarr;</span> <span class="component">[Graph Builder]</span> <span class="arrow">&rarr;</span> <span class="component">[graph.json]</span>       <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>       <span class="arrow">&#9474;</span>                                      <span class="arrow">&#9474;</span>            <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>  <span class="component">[SnapshotDiff]</span> <span class="arrow">&larr;&rarr;</span> <span class="component">[Affected Callers]</span> <span class="arrow">&larr;</span> <span class="component">[Snapshots]</span>   <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>       <span class="arrow">&#9474;</span>                                                     <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>  <span class="component">[diff_formatter]</span> <span class="arrow">&rarr;</span> <span class="highlight">markdown / json / text</span>              <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>       <span class="arrow">&#9474;</span>                                                     <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>  <span class="component">[CI: cbm-pr-impact.yml]</span> <span class="arrow">&rarr;</span> <span class="highlight">Auto PR comment</span>               <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span><span class="arrow">&#9474;</span><span class="layer-label">&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+                             <span class="arrow">&#9474;</span>
+                    <span class="highlight">graph.json + diff.json</span>
+                             <span class="arrow">&#9660;</span>
+<span class="layer-label">&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;</span>
+<span class="layer-label">&#9474;</span>  <span class="purple">KMP (stateful knowledge engine, freemium)</span>               <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>                                                            <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>  <span class="component">[CodebaseVault]</span> <span class="arrow">&larr;</span> imports graph.json as corpus         <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>       <span class="arrow">&#9474;</span>                                                     <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>  <span class="component">[AI Gateway]</span> <span class="arrow">&rarr;</span> <span class="component">[RAG: BM25 + graph]</span> <span class="arrow">&rarr;</span> <span class="component">[LLM Provider]</span>  <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>       <span class="arrow">&#9474;</span>                                                     <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>  <span class="component">[MCP Server]</span> <span class="arrow">&rarr;</span> 4 tools for Claude/Cursor/AI agents      <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>       <span class="arrow">&#9474;</span>                                                     <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9474;</span>  <span class="component">[CLI: ask / why / impact]</span> <span class="arrow">&rarr;</span> answers with citations       <span class="layer-label">&#9474;</span>
+<span class="layer-label">&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="dim">Principle: CBM = stateless data generator. KMP = stateful intelligence layer.</span>
+<span class="dim">Lifecycle commands (state management) &rarr; KMP M3 (not CBM)</span></div>
+
+    <div class="cto-note">
+      <div class="label">CTO architecture decision (10/04/2026)</div>
+      <strong>Boundary rule:</strong> CBM generates graph + diff (JSON). KMP imports + enriches with patterns + LLM.
+      <strong>No duplication:</strong> KMP calls <code>codebase-map snapshot-diff --format json</code> via subprocess, does NOT reimplement diff logic.
+      <strong>Lifecycle commands</strong> (state management, task tracking) belong in KMP M3, NOT in CBM.
+      <strong>CBM v2.2 shipped:</strong> SnapshotDiff, affected callers, rename detection, CI PR Impact &mdash; all ready for KMP to consume.
+    </div>
+
+    <div class="po-note">
+      <div class="label">PO business value</div>
+      <strong>CBM = free OSS</strong> drives adoption. <strong>KMP = freemium</strong> monetizes intelligence layer.
+      <code>impact</code> command is the bridge: uses CBM data + KMP patterns + LLM reasoning &rarr; actionable insight.
+      This combination is the moat &mdash; no competitor (Cursor, Aider, Sourcegraph) has function-level structural diff + AI explanation.
+    </div>
+  </section>
+
+  <!-- ════ SCREEN E: LLM PROVIDER CONFIG ════ -->
+  <section class="block">
+    <h2><span class="num">E</span> LLM Provider Configuration <code>MEM-M2-01 / M2-09 / M2-10</code></h2>
+    <div class="desc">BYOK (Bring Your Own Key) multi-LLM. Config-driven provider selection. Anthropic first, then OpenAI + Gemini.</div>
+
+    <div class="two-col">
+      <!-- config.yaml -->
+      <div class="file-mock">
+        <div class="file-mock-bar">.knowledge-memory/config.yaml</div>
+        <div class="file-mock-body"><span class="c"># LLM Provider Configuration</span>
+<span class="k">llm:</span>
+  <span class="k">provider:</span> <span class="s">"anthropic"</span>       <span class="c"># anthropic | openai | gemini</span>
+  <span class="k">model:</span> <span class="s">"claude-sonnet-4-20250514"</span>
+  <span class="k">api_key_env:</span> <span class="s">"ANTHROPIC_API_KEY"</span>  <span class="c"># env var name</span>
+  <span class="k">max_tokens:</span> <span class="n">1024</span>
+  <span class="k">temperature:</span> <span class="n">0.3</span>           <span class="c"># low for factual answers</span>
+
+  <span class="c"># Fallback provider (optional)</span>
+  <span class="k">fallback:</span>
+    <span class="k">provider:</span> <span class="s">"openai"</span>
+    <span class="k">model:</span> <span class="s">"gpt-4o-mini"</span>
+    <span class="k">api_key_env:</span> <span class="s">"OPENAI_API_KEY"</span>
+
+<span class="c"># RAG Configuration</span>
+<span class="k">rag:</span>
+  <span class="k">max_chunks:</span> <span class="n">5</span>              <span class="c"># context window limit</span>
+  <span class="k">bm25_weight:</span> <span class="n">0.6</span>           <span class="c"># keyword relevance</span>
+  <span class="k">graph_weight:</span> <span class="n">0.4</span>          <span class="c"># structural proximity</span>
+  <span class="k">min_score:</span> <span class="n">0.3</span>             <span class="c"># filter low-relevance</span></div>
+      </div>
+
+      <!-- Provider factory -->
+      <div class="file-mock">
+        <div class="file-mock-bar">core/ai/providers.py &mdash; LLMProvider ABC</div>
+        <div class="file-mock-body"><span class="c"># HC-AI | ticket: KMP-M2</span>
+<span class="k">class</span> <span class="n">LLMProvider</span>(<span class="n">ABC</span>):
+    <span class="s">"""Multi-LLM provider abstraction."""</span>
+    <span class="n">PROVIDER_NAME</span>: <span class="k">str</span>
+
+    <span class="k">@abstractmethod</span>
+    <span class="k">def</span> <span class="n">chat</span>(self, messages, **kw):
+        <span class="s">"""Send chat request, return response."""</span>
+        ...
+
+    <span class="k">@abstractmethod</span>
+    <span class="k">def</span> <span class="n">count_tokens</span>(self, text: <span class="k">str</span>) -&gt; <span class="k">int</span>:
+        ...
+
+    <span class="k">@abstractmethod</span>
+    <span class="k">def</span> <span class="n">estimate_cost</span>(self, inp, out) -&gt; <span class="k">float</span>:
+        ...
+
+<span class="c"># Factory</span>
+<span class="k">def</span> <span class="n">get_provider</span>(config) -&gt; <span class="n">LLMProvider</span>:
+    <span class="k">return</span> {
+        <span class="s">"anthropic"</span>: <span class="n">AnthropicProvider</span>,
+        <span class="s">"openai"</span>:    <span class="n">OpenAIProvider</span>,
+        <span class="s">"gemini"</span>:    <span class="n">GeminiProvider</span>,
+    }[config[<span class="s">"llm"</span>][<span class="s">"provider"</span>]](config)</div>
+      </div>
+    </div>
+
+    <div class="cto-note">
+      <div class="label">CTO constraint</div>
+      <strong>BYOK mandatory:</strong> No API key stored in code or vault. Only env var name in config.
+      <strong>Fallback logic:</strong> If primary fails (rate limit, network), auto-switch to fallback provider + show warning.
+      <strong>Cost tracking:</strong> Every LLM call logged: provider, model, tokens in/out, cost estimate, latency.
+      <strong>No vendor lock-in:</strong> <code>LLMProvider</code> ABC means adding new provider = 1 new file implementing 3 methods.
+    </div>
+  </section>
+
+  <!-- ════ SCREEN F: MCP SERVER ════ -->
+  <section class="block">
+    <h2><span class="num">F</span> Screen: MCP Server + Tool Registry <code>MEM-M2-08</code></h2>
+    <div class="desc">MCP server exposes 4 tools for Claude Code, Cursor, and other AI agents. Registry pattern: <code>@register_tool</code> decorator.</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot r"></div>
+        <div class="terminal-dot y"></div>
+        <div class="terminal-dot g"></div>
+        <div class="terminal-title">Terminal &mdash; MCP server startup</div>
+      </div>
+      <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory mcp serve</span>
+
+<span class="heading">Knowledge Memory &mdash; MCP Server</span>
+<span class="dim">Protocol: MCP v1.0 &middot; Transport: stdio</span>
+
+<span class="orange">&#9654; Registering tools...</span>
+  <span class="ok">&#10003;</span> <span class="orange">find_function</span>    <span class="dim">&mdash; Search codebase vault by function name</span>
+  <span class="ok">&#10003;</span> <span class="orange">explain_module</span>   <span class="dim">&mdash; Generate explanation for a module</span>
+  <span class="ok">&#10003;</span> <span class="orange">pattern_check</span>    <span class="dim">&mdash; Validate code against learned patterns</span>
+  <span class="ok">&#10003;</span> <span class="orange">impact</span>           <span class="dim">&mdash; Analyze change impact via call graph</span>
+
+<span class="orange">&#9654; Registering resources...</span>
+  <span class="ok">&#10003;</span> <span class="orange">patterns://codebase</span>  <span class="dim">&mdash; 25 patterns from vault</span>
+  <span class="ok">&#10003;</span> <span class="orange">quickwins://codebase</span> <span class="dim">&mdash; 10 actionable insights</span>
+
+<span class="ok">&#10003; MCP server ready</span> <span class="dim">&middot; 4 tools &middot; 2 resources &middot; Waiting for connections...</span></div>
+    </div>
+
+    <div class="design-note">
+      <div class="label">Designer note</div>
+      <strong>Color coding:</strong> Orange = MCP-specific elements (tools, resources). Green = success. Dim = metadata.
+      Tool names are short, action-oriented verbs. Resource URIs use <code>protocol://vertical</code> format.
+    </div>
+  </section>
+
+  <!-- ════ SCREEN G: MCP TOOL EXECUTION ════ -->
+  <section class="block">
+    <h2><span class="num">G</span> Screen: MCP Tool Execution Example <code>MEM-M2-07</code></h2>
+    <div class="desc">Claude Code calls <code>find_function</code> tool via MCP. Shows request &rarr; vault query &rarr; response flow.</div>
+
+    <div class="two-col">
+      <div class="terminal" style="height:auto">
+        <div class="terminal-bar">
+          <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
+          <div class="terminal-title">MCP Tool Call: find_function</div>
+        </div>
+        <div class="terminal-body"><span class="orange">&#9654; Tool call:</span> <span class="bold">find_function</span>
+<span class="dim">  name: "authenticate"</span>
+
+<span class="purple">&#9654; Searching vault...</span> <span class="dim">(3ms)</span>
+
+<span class="bold">Result:</span>
+  <span class="bold">name:</span>     <span class="info">authenticate</span>
+  <span class="bold">file:</span>     <span class="info">auth/service.py</span>:45
+  <span class="bold">type:</span>     function
+  <span class="bold">layer:</span>    service
+  <span class="bold">domain:</span>   auth
+  <span class="bold">params:</span>   (email: str, password: str)
+  <span class="bold">returns:</span>  User | None
+  <span class="bold">callers:</span>  8 <span class="dim">(login, api_login, ...)</span>
+  <span class="bold">callees:</span>  3 <span class="dim">(hash_password, find_user, ...)</span>
+  <span class="bold">pattern:</span>  <span class="conf">snake_case</span> <span class="dim">(94%)</span></div>
+      </div>
+
+      <div class="terminal" style="height:auto">
+        <div class="terminal-bar">
+          <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
+          <div class="terminal-title">MCP Tool Call: pattern_check</div>
+        </div>
+        <div class="terminal-body"><span class="orange">&#9654; Tool call:</span> <span class="bold">pattern_check</span>
+<span class="dim">  function: "getOrderTotal"</span>
+<span class="dim">  file: "ecommerce/service.py"</span>
+
+<span class="purple">&#9654; Checking patterns...</span> <span class="dim">(5ms)</span>
+
+<span class="bold">Result:</span>
+  <span class="bold">violations:</span> 1
+
+  <span class="err">&#10007;</span> <span class="bold">Naming: camelCase detected</span>
+    <span class="dim">Expected:</span> <span class="ok">get_order_total</span>
+    <span class="dim">Found:</span>    <span class="err">getOrderTotal</span>
+    <span class="dim">Pattern:</span>  snake_case (94% codebase)
+    <span class="dim">Severity:</span> <span class="warn">medium</span>
+
+  <span class="bold">compliance:</span> <span class="warn">0/1 checks passed</span></div>
+      </div>
+    </div>
+
+    <div class="cto-note">
+      <div class="label">CTO constraint</div>
+      <strong>MCP adapter:</strong> Wraps Anthropic MCP SDK (<code>@anthropic-ai/sdk</code>). Adapter pattern isolates protocol changes (Risk R-T3).
+      <strong>Tool registration:</strong> <code>@register_tool("find_function")</code> decorator. Vertical imports trigger auto-discovery.
+      <strong>Response &lt;100ms:</strong> All tools query SQLite vault locally. No LLM call for find/check tools.
+    </div>
+  </section>
+
+  <!-- ════ SCREEN H: ERROR STATES ════ -->
+  <section class="block">
+    <h2><span class="num">H</span> Screen: Error States &amp; Fallback <code>MEM-M2-01 / M2-11</code></h2>
+    <div class="desc">LLM provider failure, no API key, rate limit, empty vault. Graceful degradation.</div>
+
+    <div class="two-col">
+      <div class="terminal" style="height:auto">
+        <div class="terminal-bar">
+          <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
+          <div class="terminal-title">Provider fallback</div>
+        </div>
+        <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory ask "How does auth work?"</span>
+
+<span class="purple">&#9654; Retrieving context...</span>  <span class="ok">&#10003;</span> <span class="dim">5 chunks (180ms)</span>
+<span class="purple">&#9654; Generating answer...</span>
+  <span class="warn">&#9888; Anthropic rate limit exceeded</span>
+  <span class="dim">Falling back to: openai (gpt-4o-mini)</span>
+  <span class="ok">&#10003;</span> <span class="dim">Response via OpenAI (2.1s)</span>
+
+<span class="bold">Answer:</span> <span class="dim">(via OpenAI fallback)</span>
+  Authentication uses JWT tokens...
+
+<span class="dim">Cost: $0.001 (OpenAI gpt-4o-mini)</span></div>
+      </div>
+
+      <div class="terminal" style="height:auto">
+        <div class="terminal-bar">
+          <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
+          <div class="terminal-title">No API key configured</div>
+        </div>
+        <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory ask "How does auth work?"</span>
+
+<span class="err">&#10007; No LLM provider configured.</span>
+
+<span class="dim">Set up in</span> <span class="info">.knowledge-memory/config.yaml</span><span class="dim">:</span>
+
+  <span class="bold">llm:</span>
+    <span class="bold">provider:</span> <span class="info">"anthropic"</span>
+    <span class="bold">api_key_env:</span> <span class="info">"ANTHROPIC_API_KEY"</span>
+
+<span class="dim">Then export your key:</span>
+  <span class="cmd">export ANTHROPIC_API_KEY="sk-ant-..."</span>
+
+<span class="dim">Supported: anthropic, openai, gemini</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ SCREEN I: COST TRACKING ════ -->
+  <section class="block">
+    <h2><span class="num">I</span> Screen: Cost Calculator &amp; Usage Summary <code>MEM-M2-04 / M2-11</code></h2>
+    <div class="desc">Every LLM call tracked. Users see cost per query + cumulative usage.</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot r"></div>
+        <div class="terminal-dot y"></div>
+        <div class="terminal-dot g"></div>
+        <div class="terminal-title">Terminal &mdash; usage summary</div>
+      </div>
+      <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory usage</span>
+
+<span class="heading">Knowledge Memory &mdash; LLM Usage Summary</span>
+
+  <span class="bold">Provider</span>         <span class="bold">Calls</span>  <span class="bold">Tokens In</span>  <span class="bold">Tokens Out</span>  <span class="bold">Cost</span>
+  <span class="info">anthropic</span>          12     4,200       2,100       $0.042
+  <span class="warn">openai</span>              3       890         450       $0.004
+  <span class="dim">&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;</span>
+  <span class="bold">Total</span>              15     5,090       2,550       <span class="ok">$0.046</span>
+
+  <span class="dim">Period: last 7 days &middot; Avg $0.003/query</span>
+  <span class="dim">Most expensive: "Explain full auth flow" ($0.008)</span></div>
+    </div>
+  </section>
+
+  <!-- ════ SECTION J: TASK BOARD ════ -->
+  <section class="block">
+    <h2><span class="num">J</span> M2 Sprint Task Board &mdash; 13 tasks &middot; 28 SP</h2>
+    <div class="desc">2-week sprint. Split M2a (week 1: AI + RAG + CLI) / M2b (week 2: MCP + providers + E2E).</div>
+
+    <div class="card">
+      <table class="spec-table">
+        <thead>
+          <tr><th>ID</th><th>Task</th><th>SP</th><th>Phase</th><th>Category</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>MEM-M2-01</code></td><td>AnthropicProvider(LLMProvider) &mdash; chat, count_tokens, estimate_cost</td><td>1</td><td>M2a</td><td><span class="badge ml">AI</span></td></tr>
+          <tr><td><code>MEM-M2-02</code></td><td>RAG pipeline: BM25 + AST graph proximity (&ge;75% recall)</td><td>5</td><td>M2a</td><td><span class="badge ml">AI</span></td></tr>
+          <tr><td><code>MEM-M2-03</code></td><td>Context builder &lt;200ms &mdash; chunk selection + prompt assembly</td><td>2</td><td>M2a</td><td><span class="badge ml">AI</span></td></tr>
+          <tr><td><code>MEM-M2-04</code></td><td><code>ask</code> CLI command &mdash; natural language Q&amp;A</td><td>2</td><td>M2a</td><td><span class="badge cli">CLI</span></td></tr>
+          <tr><td><code>MEM-M2-05</code></td><td><code>why</code> CLI command &mdash; dependency explanation</td><td>2</td><td>M2a</td><td><span class="badge cli">CLI</span></td></tr>
+          <tr><td><code>MEM-M2-06</code></td><td><code>impact</code> CLI command &mdash; change impact (uses CBM v2.2)</td><td>2</td><td>M2a</td><td><span class="badge cli">CLI</span></td></tr>
+          <tr><td><code>MEM-M2-07</code></td><td>MCP adapter wrapping Anthropic SDK (R-T3 mitigation)</td><td>1</td><td>M2b</td><td><span class="badge mcp">MCP</span></td></tr>
+          <tr><td><code>MEM-M2-08</code></td><td>MCP server + 4 tools via <code>@register_tool</code></td><td>4</td><td>M2b</td><td><span class="badge mcp">MCP</span></td></tr>
+          <tr><td><code>MEM-M2-09</code></td><td>OpenAIProvider(LLMProvider)</td><td>2</td><td>M2b</td><td><span class="badge ml">AI</span></td></tr>
+          <tr><td><code>MEM-M2-10</code></td><td>GeminiProvider(LLMProvider)</td><td>2</td><td>M2b</td><td><span class="badge ml">AI</span></td></tr>
+          <tr><td><code>MEM-M2-11</code></td><td>Cost calculator + cross-provider tests + usage CLI</td><td>1</td><td>M2b</td><td><span class="badge qa">QA</span></td></tr>
+          <tr><td><code>MEM-M2-12</code></td><td>E2E test with Cursor + Claude Code via MCP</td><td>2</td><td>M2b</td><td><span class="badge qa">QA</span></td></tr>
+          <tr><td><code>MEM-M2-13</code></td><td>Pattern threshold tuning (R-T2) + recall benchmark</td><td>2</td><td>M2b</td><td><span class="badge qa">QA</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="design-note">
+      <div class="label">Designer note &mdash; Phase split</div>
+      <strong>M2a (Week 1, ~16 SP):</strong> AI Gateway + RAG + 3 CLI commands. User gets <code>ask</code>/<code>why</code>/<code>impact</code> working.
+      <strong>M2b (Week 2, ~12 SP):</strong> MCP server + additional providers + E2E. AI agents get tool access.
+      Each phase ends with a PR. PR-per-day rule applies within each phase.
+    </div>
+
+    <div class="cto-note">
+      <div class="label">CTO architecture constraints for M2</div>
+      <strong>1. LLM calls are lazy:</strong> Only <code>ask</code>/<code>why</code> invoke LLM. <code>impact</code> can work offline via CBM diff engine.<br>
+      <strong>2. Core &#8603; Vertical enforced:</strong> import-linter CI gate from M0 still active.<br>
+      <strong>3. MCP protocol isolation:</strong> Adapter pattern (M2-07) wraps SDK &mdash; if MCP spec changes, only adapter file needs update.<br>
+      <strong>4. RAG recall gate:</strong> MEM-M2-02 must demonstrate &ge;75% recall on 3 test queries before PR merge.<br>
+      <strong>5. Cost transparency:</strong> Every LLM call shows token count + cost estimate. No hidden API calls.
+    </div>
+  </section>
+
+  <!-- ════ SECTION K: DESIGN DECISIONS ════ -->
+  <section class="block">
+    <h2><span class="num">K</span> Design Decisions from PO + CTO + Designer Meeting</h2>
+    <div class="desc">3-way meeting 12/04/2026. Decisions locked for M2 implementation.</div>
+
+    <div class="card">
+      <table class="spec-table">
+        <thead>
+          <tr><th>#</th><th>Decision</th><th>Owner</th><th>Rationale</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>D-M2-01</td>
+            <td><strong>Anthropic first, others follow</strong></td>
+            <td>CTO</td>
+            <td>Team expertise. AnthropicProvider (Day 1) unblocks RAG development. OpenAI + Gemini in M2b.</td>
+          </tr>
+          <tr>
+            <td>D-M2-02</td>
+            <td><strong>BM25 + graph proximity RAG (no vector DB)</strong></td>
+            <td>CTO</td>
+            <td>Local-first principle. BM25 spike in M1 proved 100% recall. Graph proximity adds structural relevance. No external DB dependency.</td>
+          </tr>
+          <tr>
+            <td>D-M2-03</td>
+            <td><strong>MCP ship with M2 (not separate sprint)</strong></td>
+            <td>PO + CTO</td>
+            <td>CLI commands and MCP tools share same logic. Ship together = 1 E2E test cycle. User gets full value immediately.</td>
+          </tr>
+          <tr>
+            <td>D-M2-04</td>
+            <td><strong>CBM integration via subprocess call</strong></td>
+            <td>CTO</td>
+            <td>KMP calls <code>codebase-map snapshot-diff --format json</code>. No library import = clean dependency boundary. CBM can upgrade independently.</td>
+          </tr>
+          <tr>
+            <td>D-M2-05</td>
+            <td><strong>Cost shown on every query</strong></td>
+            <td>PO</td>
+            <td>Transparency builds trust. Enterprise users need cost visibility. <code>usage</code> command for cumulative tracking.</td>
+          </tr>
+          <tr>
+            <td>D-M2-06</td>
+            <td><strong>Fallback provider = automatic</strong></td>
+            <td>CTO</td>
+            <td>Rate limits are common. Auto-fallback with warning (not error). User configures fallback in config.yaml.</td>
+          </tr>
+          <tr>
+            <td>D-M2-07</td>
+            <td><strong>Split M2a/M2b for risk management</strong></td>
+            <td>PM</td>
+            <td>M2a delivers user value (CLI commands). M2b extends to AI agents (MCP). If M2b slips, M2a still ships.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<div id="footer">
+  <div class="version-badge">
+    <div class="dot"></div>
+    KMP M2 Design Preview v1.0 &middot; 12/04/2026
+  </div>
+  <span style="font-size:12px;color:var(--text-secondary);">
+    PO + CTO + Designer 3-way meeting output &middot; 11 screens (A&ndash;K) &middot; 13 tasks &middot; 28 SP
+  </span>
+  <div class="approval">
+    <input type="checkbox" id="ceo-approve">
+    <label for="ceo-approve">CEO Approved</label>
+  </div>
+</div>
+
+</body>
+</html>
