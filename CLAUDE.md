@@ -21,7 +21,7 @@
 5. **No Design = No Implementation** — FE component phải có design approved trước
 6. **PR Per Day Mandatory** — mỗi Day implement → 1 PR → review-gate → CEO approve
 7. **Review Gate 3 tầng:** Tester → CTO → Designer (trước CEO)
-8. **Cập nhật Project Board:** Mỗi khi cập nhật BRIEF.md/task board → cập nhật luôn `project/board.html`
+8. **Board là Single Source of Truth (SSOT)** — CEO chỉ tham chiếu duy nhất `project/board.html` (Codebase Map) và `project/kmp-board.html` (KMP) để nắm toàn bộ dự án. **Mọi thay đổi** (code, task, docs, design, config, PR, decision...) **PHẢI được phản ánh** lên board tương ứng. Không có ngoại lệ. Bao gồm: cập nhật task status, thêm mới task, bổ sung reference link tài liệu, PR history, timeline decisions, sprint progress, acceptance criteria. Board phải luôn đầy đủ và chính xác nhất tại mọi thời điểm.
 
 ---
 
@@ -175,12 +175,15 @@ Bước cuối: Cập nhật BRIEF.md
 
 ## 🔁 SESSION END PROTOCOL
 
-Cập nhật `BRIEF.md` + `project/board.html`:
+Cập nhật `BRIEF.md` + Board HTML (SSOT):
 - Trạng thái sprint/tasks
 - Quyết định quan trọng
 - Vấn đề đang mở
 - Next actions
-- **Board HTML** — sync sprint status, task board, PR history vào `project/board.html`
+- **`project/board.html`** (Codebase Map) — sync ALL: sprint progress, task status, PR history, timeline decisions, docs references, acceptance criteria
+- **`project/kmp-board.html`** (KMP) — tương tự cho KMP project
+
+> **Rule #8 SSOT:** Board là nguồn duy nhất CEO tham chiếu. Mọi thay đổi trong session PHẢI phản ánh lên board trước khi kết thúc. Không có ngoại lệ.
 
 ---
 
