@@ -1,0 +1,112 @@
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# CBM-P2 Day 3: Dual-Snapshot PR Impact Analysis
+# Phương án B — Download baseline artifact + snapshot-diff + PR comment
+# CEO approved 10/04/2026 · CTO CI Proposal section 5.2
+
+name: CBM PR Impact (Dual-Snapshot)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+
+jobs:
+  snapshot-impact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install codebase-map
+        run: pip install -e ".[dev]"
+
+      - name: Download baseline artifact
+        id: baseline
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          name: cbm-baseline
+          workflow: cbm-baseline.yml
+          branch: main
+          path: .cbm-ci/
+          if_no_artifact_found: warn
+        continue-on-error: true
+
+      - name: Generate post-dev graph
+        run: |
+          mkdir -p .cbm-ci
+          cat > cbm-ci-config.yaml << 'CONF'
+          project: "codebase-map-pr-impact"
+          sources:
+            - path: "codebase_map"
+              language: python
+              base_module: "codebase_map"
+              exclude: ["__pycache__", "d3.v7.min.js"]
+          output:
+            dir: ".cbm-ci"
+            formats: [json]
+          graph:
+            depth: 3
+            group_by: module
+          CONF
+          python -m codebase_map generate \
+            -c cbm-ci-config.yaml \
+            --label "post-dev"
+
+          # Find generated snapshot or main graph output
+          SNAP=$(ls -t .cbm-ci/snapshots/graph_post-dev_*.json 2>/dev/null | head -1)
+          if [ -z "$SNAP" ]; then
+            SNAP=$(find . -name "graph.json" -path "*cbm-ci*" 2>/dev/null | head -1)
+          fi
+          if [ -n "$SNAP" ] && [ -f "$SNAP" ]; then
+            cp "$SNAP" .cbm-ci/graph_post-dev.json
+          else
+            echo "[ERROR] No graph output found" && exit 1
+          fi
+          echo "post_dev_path=.cbm-ci/graph_post-dev.json" >> "$GITHUB_OUTPUT"
+
+      - name: Run snapshot-diff
+        id: diff
+        run: |
+          BASELINE=".cbm-ci/graph_baseline.json"
+          POSTDEV=".cbm-ci/graph_post-dev.json"
+
+          if [ ! -f "$BASELINE" ]; then
+            echo "⚠️ No baseline artifact found. Run baseline generator first." > .cbm-ci/impact_report.md
+            echo ""                                                             >> .cbm-ci/impact_report.md
+            echo "_Baseline will be available after the next push to main._"    >> .cbm-ci/impact_report.md
+            echo "has_baseline=false" >> "$GITHUB_OUTPUT"
+          else
+            python -m codebase_map snapshot-diff \
+              --baseline "$BASELINE" \
+              --current "$POSTDEV" \
+              --format markdown \
+              --depth 1 \
+              -c cbm-ci-config.yaml \
+              > .cbm-ci/impact_report.md
+            echo "has_baseline=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Post/Update PR comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: cbm-snapshot-impact
+          path: .cbm-ci/impact_report.md
+
+      - name: Upload diff artifact
+        if: steps.diff.outputs.has_baseline == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cbm-pr-impact-${{ github.event.pull_request.number }}
+          path: |
+            .cbm-ci/impact_report.md
+            .cbm-ci/graph_post-dev.json
+          retention-days: 30
