@@ -42,7 +42,8 @@ jobs:
 
       - name: Generate post-dev graph
         run: |
-          cat > .cbm-ci/config.yaml << 'CONF'
+          mkdir -p .cbm-ci
+          cat > cbm-ci-config.yaml << 'CONF'
           project: "codebase-map-pr-impact"
           sources:
             - path: "codebase_map"
@@ -57,15 +58,19 @@ jobs:
             group_by: module
           CONF
           python -m codebase_map generate \
-            -c .cbm-ci/config.yaml \
+            -c cbm-ci-config.yaml \
             --label "post-dev"
 
-          # Find generated snapshot
+          # Find generated snapshot or main graph output
           SNAP=$(ls -t .cbm-ci/snapshots/graph_post-dev_*.json 2>/dev/null | head -1)
           if [ -z "$SNAP" ]; then
-            SNAP=".cbm-ci/graph.json"
+            SNAP=$(find . -name "graph.json" -path "*cbm-ci*" 2>/dev/null | head -1)
           fi
-          cp "$SNAP" .cbm-ci/graph_post-dev.json
+          if [ -n "$SNAP" ] && [ -f "$SNAP" ]; then
+            cp "$SNAP" .cbm-ci/graph_post-dev.json
+          else
+            echo "[ERROR] No graph output found" && exit 1
+          fi
           echo "post_dev_path=.cbm-ci/graph_post-dev.json" >> "$GITHUB_OUTPUT"
 
       - name: Run snapshot-diff
@@ -85,7 +90,7 @@ jobs:
               --current "$POSTDEV" \
               --format markdown \
               --depth 1 \
-              -c .cbm-ci/config.yaml \
+              -c cbm-ci-config.yaml \
               > .cbm-ci/impact_report.md
             echo "has_baseline=true" >> "$GITHUB_OUTPUT"
           fi
