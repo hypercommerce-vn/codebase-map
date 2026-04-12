@@ -1,14 +1,14 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 3.6 | Cập nhật: 12/04/2026 (CBM Phase 2 ACTIVE — Day 1, P2-01 SnapshotDiff done, 3/12 SP)
+> Version: 3.7 | Cập nhật: 12/04/2026 (CBM Phase 2 ACTIVE — Day 2, P2-01→08 done, 9/12 SP, 75%)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**CBM Phase 2 (v2.2) ACTIVE · Day 1 · 3/12 SP · Dual-Snapshot Diff Engine · Phase 1 ✅ COMPLETE · v2.0.1 shipped**
+**CBM Phase 2 (v2.2) ACTIVE · Day 2 · 9/12 SP · Dual-Snapshot Diff Engine · Phase 1 ✅ COMPLETE · v2.0.1 shipped**
 
-CBM Phase 2 kickoff 12/04/2026. Day 1: P2-01 SnapshotDiff core — node diff (add/remove/modify), edge diff (add/remove/cascade), rename detection (signature matching), affected callers (BFS depth 1-3). 31 new tests (525 total). Next: P2-02 edge diff refinements + P2-03 affected callers CLI.
+CBM Phase 2 Day 1-2 done. P2-01→08 all implemented: SnapshotDiff core, edge diff, rename detection, affected callers, `--format markdown/json/text`, `--breaking-only`, `--test-plan`, CLI `snapshot-diff` command. 556 tests pass. Remaining: CI workflow update + integration tests + sprint close.
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
@@ -60,14 +60,14 @@ CBM Phase 2 kickoff 12/04/2026. Day 1: P2-01 SnapshotDiff core — node diff (ad
 
 ### ▶️ Next actions
 
-- **CBM Phase 2 (v2.2) ACTIVE** — Day 1 done (P2-01). Next: Day 2-3 (P2-02 edge diff, P2-03 affected callers). Task board: `docs/cbm-dual-snapshot/CBM-PHASE2-TASK-BOARD.md`
+- **CBM Phase 2 (v2.2) ACTIVE** — Day 2 done (P2-01→08, 9/12 SP). Remaining: CI workflow + integration tests + sprint close. Task board: `docs/cbm-dual-snapshot/CBM-PHASE2-TASK-BOARD.md`
 - KMP M2 deferred until CBM Phase 1+2 done
 - Known KMP issues deferred: KMP-ISSUE-14/15/16
 
 | Field | Value |
 |-------|-------|
 | **Version hiện tại** | v2.0.1 ✅ SHIPPED (08/04/2026) — tag `v2.0.1` pushed, GitHub release published |
-| **Sprint hiện tại** | 🔥 **CBM Phase 2 (v2.2)** — ACTIVE · 3/12 SP · Day 1 · P2-01 done · CEO kickoff 12/04/2026 |
+| **Sprint hiện tại** | 🔥 **CBM Phase 2 (v2.2)** — ACTIVE · 9/12 SP · Day 2 · P2-01→08 done · PR #71 merged |
 | **KMP M1** | ✅ COMPLETE · 26/26 SP · 14/14 tasks · CTO 20/20 · CEO approved 23/04/2026 |
 | **KMP Sprint M0** | ✅ COMPLETE · 8/8 SP · CTO 20/20 · PR #53 merged 10/04/2026 |
 | **Sprint vừa xong** | CM-HOTFIX v2.0.1 — ✅ CLOSED · PR #38 + PR #39 merged · tag v2.0.1 pushed |

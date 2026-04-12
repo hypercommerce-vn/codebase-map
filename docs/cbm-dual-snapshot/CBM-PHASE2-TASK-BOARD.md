@@ -3,7 +3,7 @@
 
 > **Sprint:** CBM-P2 · **Total:** 12 SP · **Duration:** 10 ngày (2 tuần)
 > **Prerequisite:** CBM Phase 1 (v2.1) shipped + merged
-> **Status:** 🔥 ACTIVE — CEO kickoff 12/04/2026 · Day 1 · 3/12 SP (25%)
+> **Status:** 🔥 ACTIVE — CEO kickoff 12/04/2026 · Day 2 · 9/12 SP (75%)
 > **Branch:** `feat/cbm-phase2-diff-engine`
 > **Release:** codebase-map **v2.2.0**
 > **Created:** 10/04/2026 · @PM + @CTO
@@ -15,13 +15,13 @@
 | Task ID | Task | SP | Assignee | Status | Day | Dependencies |
 |---------|------|----|----------|--------|-----|-------------|
 | CBM-P2-01 | `SnapshotDiff` class: load 2 graphs → compute node diff | 3 | TechLead | ✅ Done | D1 | Phase 1 done |
-| CBM-P2-02 | Edge diff: new/removed caller relationships | 2 | TechLead | ⬜ TODO | D3 | P2-01 |
-| CBM-P2-03 | Affected callers: transitive 1-level, `--depth N` max 3 | 2 | TechLead | ⬜ TODO | D4-D5 | P2-01, P2-02 |
-| CBM-P2-04 | Rename detection: signature matching (name + params + return_type) | 2 | TechLead | ⬜ TODO | D5-D6 | P2-01 |
-| CBM-P2-05 | `--format markdown` output (PR Impact block) | 1 | TechLead | ⬜ TODO | D7 | P2-01, P2-02, P2-03 |
-| CBM-P2-06 | `--format json` output | 0.5 | TechLead | ⬜ TODO | D7 | P2-01 |
-| CBM-P2-07 | `--breaking-only` filter | 0.5 | TechLead | ⬜ TODO | D8 | P2-01, P2-03 |
-| CBM-P2-08 | `--test-plan` output (affected callers grouped by domain) | 1 | TechLead | ⬜ TODO | D8 | P2-03 |
+| CBM-P2-02 | Edge diff: new/removed caller relationships | 2 | TechLead | ✅ Done | D1 | P2-01 |
+| CBM-P2-03 | Affected callers: transitive 1-level, `--depth N` max 3 | 2 | TechLead | ✅ Done | D1 | P2-01, P2-02 |
+| CBM-P2-04 | Rename detection: signature matching (name + params + return_type) | 2 | TechLead | ✅ Done | D1 | P2-01 |
+| CBM-P2-05 | `--format markdown` output (PR Impact block) | 1 | TechLead | ✅ Done | D2 | P2-01, P2-02, P2-03 |
+| CBM-P2-06 | `--format json` output | 0.5 | TechLead | ✅ Done | D2 | P2-01 |
+| CBM-P2-07 | `--breaking-only` filter | 0.5 | TechLead | ✅ Done | D2 | P2-01, P2-03 |
+| CBM-P2-08 | `--test-plan` output (affected callers grouped by domain) | 1 | TechLead | ✅ Done | D2 | P2-03 |
 | — | CI workflow: `cbm-pr-impact.yml` — auto diff + PR comment | — | TechLead | ⬜ TODO | D9 | P2-05 |
 | — | Integration test + lint gate | — | TechLead | ⬜ TODO | D9-D10 | All |
 | — | PR → /review-gate → CEO approve | — | Team | ⬜ TODO | D10 | All |
