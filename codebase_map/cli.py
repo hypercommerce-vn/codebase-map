@@ -223,6 +223,33 @@ def main(argv: list[str] | None = None) -> int:
         "--json", action="store_true", dest="json_output", help="Output as JSON"
     )
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CBM-P1-04/05: Snapshot management commands
+    snap_p = sub.add_parser("snapshots", help="Manage graph snapshots")
+    snap_p.add_argument(
+        "action",
+        choices=["list", "clean"],
+        help="Action: 'list' to show snapshots, 'clean' to remove old ones",
+    )
+    snap_p.add_argument(
+        "--keep",
+        type=int,
+        default=10,
+        help="Number of newest snapshots to keep (default: 10, used with 'clean')",
+    )
+    snap_p.add_argument(
+        "-c",
+        "--config",
+        default="codebase-map.yaml",
+        help="Config file (for project root detection)",
+    )
+    snap_p.add_argument(
+        "--json",
+        action="store_true",
+        dest="json_output",
+        help="Output as JSON (used with 'list')",
+    )
+
     args = parser.parse_args(argv)
 
     if not args.command:
@@ -247,6 +274,8 @@ def main(argv: list[str] | None = None) -> int:
         return _cmd_api_catalog(args)
     elif args.command == "check-staleness":
         return _cmd_check_staleness(args)
+    elif args.command == "snapshots":
+        return _cmd_snapshots(args)
 
     return 0
 
@@ -644,6 +673,86 @@ def _cmd_check_staleness(args: argparse.Namespace) -> int:
         return 2
     if status == "warning":
         return 1
+    return 0
+
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# CBM-P1-04/05: Snapshot list + clean commands
+def _cmd_snapshots(args: argparse.Namespace) -> int:
+    """Manage graph snapshots — list or clean (CBM-P1-04, CBM-P1-05)."""
+    from codebase_map.snapshot import SnapshotManager
+
+    # Resolve snapshot directory from config or default
+    config_path = Path(args.config)
+    if config_path.exists():
+        project_root = config_path.parent
+    else:
+        project_root = Path.cwd()
+
+    snap_dir = str(project_root / ".codebase-map-cache" / "snapshots")
+    mgr = SnapshotManager(snap_dir)
+
+    if args.action == "list":
+        return _snapshots_list(mgr, json_output=args.json_output)
+    elif args.action == "clean":
+        return _snapshots_clean(mgr, keep=args.keep)
+
+    return 0
+
+
+def _snapshots_list(mgr, json_output: bool = False) -> int:
+    """CBM-P1-04: Display snapshot table."""
+    import json as json_mod
+
+    snapshots = mgr.list_snapshots()
+
+    if not snapshots:
+        print("No snapshots found.")
+        print("Run 'codebase-map generate --label <name>' to create one.")
+        return 0
+
+    if json_output:
+        print(json_mod.dumps([s.to_dict() for s in snapshots], indent=2))
+        return 0
+
+    # Table header
+    print(f"\nSNAPSHOTS ({len(snapshots)} found)")
+    print(
+        f"{'Label':<30s} {'Date':<20s} {'Branch':<20s} "
+        f"{'SHA':<9s} {'Nodes':>6s} {'Edges':>6s} {'Size':>8s}"
+    )
+    print("-" * 103)
+
+    for s in snapshots:
+        # Format date (trim timezone/microseconds for display)
+        date_display = s.date[:19] if len(s.date) > 19 else s.date
+        # Format file size
+        if s.file_size >= 1024 * 1024:
+            size_str = f"{s.file_size / (1024 * 1024):.1f}MB"
+        elif s.file_size >= 1024:
+            size_str = f"{s.file_size // 1024}KB"
+        else:
+            size_str = f"{s.file_size}B"
+
+        print(
+            f"{s.label:<30s} {date_display:<20s} {s.branch:<20s} "
+            f"{s.sha:<9s} {s.nodes:>6d} {s.edges:>6d} {size_str:>8s}"
+        )
+
+    print()
+    return 0
+
+
+def _snapshots_clean(mgr, keep: int = 10) -> int:
+    """CBM-P1-05: Remove old snapshots, keep N newest."""
+    snapshots_before = mgr.list_snapshots()
+
+    if not snapshots_before:
+        print("No snapshots to clean.")
+        return 0
+
+    removed, kept = mgr.clean(keep=keep)
+    print(f"Removed {removed} snapshot(s), kept {kept}.")
     return 0
 
 

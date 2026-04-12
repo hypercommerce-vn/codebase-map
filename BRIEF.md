@@ -1,14 +1,14 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 3.1 | Cập nhật: 12/04/2026 (CBM Phase 1 KICKOFF — CEO approved)
+> Version: 3.2 | Cập nhật: 12/04/2026 (CBM Phase 1 Day 3 — 4/7 SP, PR #66 + #67 merged)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**CBM Phase 1 (v2.1) ACTIVE · Day 1 · 7 SP · Graph Metadata + Snapshot Versioning · KMP M1 COMPLETE · v2.0.1 shipped**
+**CBM Phase 1 (v2.1) ACTIVE · Day 3 · 4/7 SP · Graph Metadata + Snapshot Versioning · KMP M1 COMPLETE · v2.0.1 shipped**
 
-CBM Dual-Snapshot Phase 1 kicked off (12/04/2026). CEO approved start after KMP M1 completion. Target: codebase-map v2.1.0 with graph metadata, snapshot versioning, and CI workflow.
+CBM Phase 1 Day 1 (PR #66) + Day 2 (PR #67) merged. Graph metadata v2.1, CLI --label, SnapshotManager, backward compat done. Day 3: snapshots list/clean CLI commands.
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
@@ -53,10 +53,12 @@ CBM Dual-Snapshot Phase 1 kicked off (12/04/2026). CEO approved start after KMP 
 | #63 | fix(kmp): 3 P0/P1 bugs — duplicate patterns, git author, path mixing | — | ✅ merged |
 | #64 | feat(kmp): M1 Day 9 — BM25 Vietnamese spike + 94% coverage | — | ✅ merged |
 | #65 | feat(kmp): M1 Day 10 — CTO dogfood 20/20 + --resume + final PR | 98 | ✅ merged |
+| #66 | feat(snapshot): CBM-P1 Day 1 — graph metadata + --label + backward compat | 100 | ✅ merged |
+| #67 | feat(snapshot): CBM-P1 Day 2 — SnapshotManager save/list/clean/load | 100 | ✅ merged |
 
 ### ▶️ Next actions
 
-- **CBM Phase 1 (v2.1) ACTIVE** — Day 1: CBM-P1-01 (Graph metadata) + CBM-P1-02 (CLI --label flag)
+- **CBM Phase 1 (v2.1) ACTIVE** — Day 3: CBM-P1-04 (snapshots list) + CBM-P1-05 (snapshots clean)
 - Task board: `docs/cbm-dual-snapshot/CBM-PHASE1-TASK-BOARD.md`
 - Design: `docs/cbm-dual-snapshot/CBM-Dual-Snapshot-Design.html`
 - After Phase 1: Phase 2 (v2.2, 12 SP, diff engine)
@@ -66,7 +68,7 @@ CBM Dual-Snapshot Phase 1 kicked off (12/04/2026). CEO approved start after KMP 
 | Field | Value |
 |-------|-------|
 | **Version hiện tại** | v2.0.1 ✅ SHIPPED (08/04/2026) — tag `v2.0.1` pushed, GitHub release published |
-| **Sprint hiện tại** | 🔥 **CBM Phase 1 (v2.1)** — ACTIVE · 7 SP · 5 Days · Graph Metadata + Snapshot · CEO approved 12/04/2026 |
+| **Sprint hiện tại** | 🔥 **CBM Phase 1 (v2.1)** — ACTIVE · 4/7 SP · Day 3 · PR #66 + #67 merged · CEO approved 12/04/2026 |
 | **KMP M1** | ✅ COMPLETE · 26/26 SP · 14/14 tasks · CTO 20/20 · CEO approved 23/04/2026 |
 | **KMP Sprint M0** | ✅ COMPLETE · 8/8 SP · CTO 20/20 · PR #53 merged 10/04/2026 |
 | **Sprint vừa xong** | CM-HOTFIX v2.0.1 — ✅ CLOSED · PR #38 + PR #39 merged · tag v2.0.1 pushed |
@@ -309,6 +311,7 @@ CBM Dual-Snapshot Phase 1 kicked off (12/04/2026). CEO approved start after KMP 
 | 10/04/2026 | **CI Phương án B chốt** — GitHub Actions Artifact + Auto PR Comment. Zero commit noise. 3-day warn Telegram, 7-day block merge | CEO |
 | 10/04/2026 | **CBM ranh giới** — codebase-map = stateless graph tool (free). KMP = stateful knowledge engine (freemium). Lifecycle commands ở KMP M3 | CEO + CTO |
 | 11/04/2026 | **CBM Sprint plans + Design + Specs hoàn tất** — 7 files trong `docs/cbm-dual-snapshot/`, sẵn sàng implement khi CEO ra lệnh | PM + CTO |
+| 12/04/2026 | **CBM Phase 1 Kickoff** — CEO approved. Day 1: P1-01+P1-02+P1-06 (3 SP, PR #66 100/100 SHIPIT). Day 2: P1-03 (1 SP, PR #67 100/100 SHIPIT) | CEO |
 
 ---
 
@@ -348,8 +351,8 @@ CBM Dual-Snapshot Phase 1 kicked off (12/04/2026). CEO approved start after KMP 
 
 | Vấn đề | Priority |
 |--------|----------|
-| KMP M1 Day 2 — Parser finish + Snapshots (4 SP) | 🔥 Active |
-| CBM Dual-Snapshot — READY, chờ CEO ra lệnh start (sau KMP M1) | 🟡 Ready |
+| CBM Phase 1 Day 3 — P1-04 snapshots list + P1-05 snapshots clean (1.5 SP) | 🔥 Active |
+| CBM Phase 1 Day 4-5 — P1-07 CI workflow + tests + sprint close | 🟡 Next |
 | Wiki board ở HC repo cần update link repo mới | 🟢 Low |
 
 ---
