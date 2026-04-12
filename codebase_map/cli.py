@@ -278,6 +278,16 @@ def _cmd_generate(args: argparse.Namespace) -> int:
     if "json" in config.output.formats:
         export_json(graph, output_dir / "graph.json")
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CBM-P1-03: Auto-save snapshot to .codebase-map-cache/snapshots/
+    from codebase_map.snapshot import SnapshotManager
+
+    snap_mgr = SnapshotManager(
+        str(config.project_root / ".codebase-map-cache" / "snapshots")
+    )
+    snap_path = snap_mgr.save(graph)
+    print(f"[OK] Snapshot saved: {snap_path.name}")
+
     # HC-AI | ticket: CM-HOTFIX-V2.0.1 (POST-CM-S3-04)
     # When --diff <ref> is supplied, run the diff analyzer now and write
     # pr_diff.json into the output dir. export_html() will auto-bake it
