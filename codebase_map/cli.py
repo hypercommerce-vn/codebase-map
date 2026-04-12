@@ -250,6 +250,53 @@ def main(argv: list[str] | None = None) -> int:
         help="Output as JSON (used with 'list')",
     )
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # CBM-P2-05/06/07/08: Snapshot diff — compare two graph snapshots
+    sdiff_p = sub.add_parser(
+        "snapshot-diff",
+        help="Compare two graph snapshots (dual-snapshot diff engine)",
+    )
+    sdiff_p.add_argument(
+        "--baseline",
+        required=True,
+        help="Baseline graph file path or snapshot label",
+    )
+    sdiff_p.add_argument(
+        "--current",
+        required=True,
+        help="Current graph file path or snapshot label",
+    )
+    sdiff_p.add_argument(
+        "--format",
+        choices=["text", "markdown", "json"],
+        default="text",
+        dest="output_format",
+        help="Output format (default: text)",
+    )
+    sdiff_p.add_argument(
+        "--depth",
+        type=int,
+        default=1,
+        choices=[1, 2, 3],
+        help="Affected callers depth (default: 1, max: 3)",
+    )
+    sdiff_p.add_argument(
+        "--breaking-only",
+        action="store_true",
+        help="Show only breaking changes (with affected callers)",
+    )
+    sdiff_p.add_argument(
+        "--test-plan",
+        action="store_true",
+        help="Output suggested test plan grouped by domain",
+    )
+    sdiff_p.add_argument(
+        "-c",
+        "--config",
+        default="codebase-map.yaml",
+        help="Config file (for snapshot dir detection)",
+    )
+
     args = parser.parse_args(argv)
 
     if not args.command:
@@ -276,6 +323,8 @@ def main(argv: list[str] | None = None) -> int:
         return _cmd_check_staleness(args)
     elif args.command == "snapshots":
         return _cmd_snapshots(args)
+    elif args.command == "snapshot-diff":
+        return _cmd_snapshot_diff(args)
 
     return 0
 
@@ -753,6 +802,67 @@ def _snapshots_clean(mgr, keep: int = 10) -> int:
 
     removed, kept = mgr.clean(keep=keep)
     print(f"Removed {removed} snapshot(s), kept {kept}.")
+    return 0
+
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# CBM-P2-05/06/07/08: Dual-snapshot diff command
+def _cmd_snapshot_diff(args: argparse.Namespace) -> int:
+    """Compare two graph snapshots — dual-snapshot diff engine."""
+    from codebase_map.graph.diff_formatter import (
+        filter_breaking_only,
+        format_diff_json,
+        format_diff_markdown,
+        format_diff_text,
+        format_test_plan,
+    )
+    from codebase_map.graph.snapshot_diff import SnapshotDiff
+    from codebase_map.snapshot import SnapshotManager
+
+    # Resolve snapshot files
+    config_path = Path(args.config)
+    if config_path.exists():
+        project_root = config_path.parent
+    else:
+        project_root = Path.cwd()
+
+    snap_dir = project_root / ".codebase-map-cache" / "snapshots"
+    mgr = SnapshotManager(str(snap_dir))
+
+    try:
+        baseline = mgr.load(args.baseline)
+    except FileNotFoundError:
+        print(f"[ERROR] Baseline not found: {args.baseline}")
+        return 1
+
+    try:
+        current = mgr.load(args.current)
+    except FileNotFoundError:
+        print(f"[ERROR] Current not found: {args.current}")
+        return 1
+
+    # Compute diff
+    diff = SnapshotDiff(baseline, current)
+    result = diff.compute(depth=args.depth)
+
+    # Apply breaking-only filter
+    if args.breaking_only:
+        result = filter_breaking_only(result)
+
+    # Output test plan if requested
+    if args.test_plan:
+        print(format_test_plan(result))
+        return 0
+
+    # Format output
+    fmt = args.output_format
+    if fmt == "json":
+        print(format_diff_json(result))
+    elif fmt == "markdown":
+        print(format_diff_markdown(result))
+    else:
+        print(format_diff_text(result))
+
     return 0
 
 
