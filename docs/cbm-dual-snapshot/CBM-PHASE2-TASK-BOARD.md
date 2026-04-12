@@ -3,7 +3,7 @@
 
 > **Sprint:** CBM-P2 · **Total:** 12 SP · **Duration:** 10 ngày (2 tuần)
 > **Prerequisite:** CBM Phase 1 (v2.1) shipped + merged
-> **Status:** 🔥 ACTIVE — CEO kickoff 12/04/2026 · Day 2 · 9/12 SP (75%)
+> **Status:** 🔥 ACTIVE — CEO kickoff 12/04/2026 · Day 3 · 12/12 SP (100%)
 > **Branch:** `feat/cbm-phase2-diff-engine`
 > **Release:** codebase-map **v2.2.0**
 > **Created:** 10/04/2026 · @PM + @CTO
@@ -22,9 +22,9 @@
 | CBM-P2-06 | `--format json` output | 0.5 | TechLead | ✅ Done | D2 | P2-01 |
 | CBM-P2-07 | `--breaking-only` filter | 0.5 | TechLead | ✅ Done | D2 | P2-01, P2-03 |
 | CBM-P2-08 | `--test-plan` output (affected callers grouped by domain) | 1 | TechLead | ✅ Done | D2 | P2-03 |
-| — | CI workflow: `cbm-pr-impact.yml` — auto diff + PR comment | — | TechLead | ⬜ TODO | D9 | P2-05 |
-| — | Integration test + lint gate | — | TechLead | ⬜ TODO | D9-D10 | All |
-| — | PR → /review-gate → CEO approve | — | Team | ⬜ TODO | D10 | All |
+| CBM-P2-09 | CI workflow: `cbm-pr-impact.yml` — auto diff + PR comment | 1 | TechLead | ✅ Done | D3 | P2-05 |
+| CBM-P2-10 | Integration tests (26 tests: pipeline + CLI + edge cases + CI YAML) | 2 | TechLead | ✅ Done | D3 | All |
+| — | PR → /review-gate → CEO approve | — | Team | 🔄 In Progress | D3 | All |
 
 ---
 

@@ -1,14 +1,14 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 3.7 | Cập nhật: 12/04/2026 (CBM Phase 2 ACTIVE — Day 2, P2-01→08 done, 9/12 SP, 75%)
+> Version: 3.8 | Cập nhật: 12/04/2026 (CBM Phase 2 ACTIVE — Day 3, P2-01→10 done, 12/12 SP, 100%)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**CBM Phase 2 (v2.2) ACTIVE · Day 2 · 9/12 SP · Dual-Snapshot Diff Engine · Phase 1 ✅ COMPLETE · v2.0.1 shipped**
+**CBM Phase 2 (v2.2) ACTIVE · Day 3 · 12/12 SP (100%) · Dual-Snapshot Diff Engine · Phase 1 ✅ COMPLETE · v2.0.1 shipped**
 
-CBM Phase 2 Day 1-2 done. P2-01→08 all implemented: SnapshotDiff core, edge diff, rename detection, affected callers, `--format markdown/json/text`, `--breaking-only`, `--test-plan`, CLI `snapshot-diff` command. 556 tests pass. Remaining: CI workflow update + integration tests + sprint close.
+CBM Phase 2 Day 1-3 done. ALL tasks complete (P2-01→10): SnapshotDiff core, edge diff, rename detection, affected callers, formatters (markdown/json/text), `--breaking-only`, `--test-plan`, CLI `snapshot-diff`, CI `cbm-pr-impact.yml` workflow, 26 integration tests. 582 tests pass. Pending: PR review-gate → CEO approve → sprint close → tag v2.2.0.
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
