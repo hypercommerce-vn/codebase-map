@@ -467,6 +467,7 @@ a:hover { text-decoration: underline; }
       <a class="nav-sub-item active" onclick="showPage('board')">CM-S1 · v1.1 — UX + DevOps</a>
       <a class="nav-sub-item" onclick="showPage('s2')">CM-S2 · v1.2 — Workflow + Smart</a>
       <a class="nav-sub-item" onclick="showPage('s3')">CM-S3 · v2.0 — Multi-View + AI</a>
+      <a class="nav-sub-item active" onclick="showPage('board')">CBM-P1 · v2.1 — Metadata + Snapshot 🔥</a>
     </div>
   </div>
 
@@ -490,9 +491,12 @@ a:hover { text-decoration: underline; }
       <a class="nav-item" href="../design-preview/codebase-map-v2-design.html" target="_blank">
         <span class="nav-item-icon">🎨</span> Design v2.0
       </a>
+      <a class="nav-item" href="../docs/cbm-dual-snapshot/CBM-Dual-Snapshot-Design.html" target="_blank">
+        <span class="nav-item-icon">🎨</span> CBM Design
+      </a>
       <a class="nav-item" href="kmp-board.html">
         <span class="nav-item-icon">🧠</span> KMP Board
-        <span class="nav-item-badge">M0</span>
+        <span class="nav-item-badge">M1 ✅</span>
       </a>
       <a class="nav-item" href="../BRIEF.md" target="_blank">
         <span class="nav-item-icon">📝</span> BRIEF.md
@@ -536,8 +540,8 @@ a:hover { text-decoration: underline; }
     <p>Function Dependency Graph — standalone module cho mọi dự án. CEO-approved 05/04/2026.</p>
     <div class="hero-badges">
       <span class="hero-badge">📊 29 tasks · 55 SP · 3 Sprints</span>
-      <span class="hero-badge">v1.0 ✅ · v1.1 ✅ · v1.2 ✅ · v2.0.0 ✅ · v2.0.1 ✅ SHIPPED</span>
-      <span class="hero-badge">🏷️ v2.0.1 · 08/04/2026</span>
+      <span class="hero-badge">v1.0 ✅ · v1.1 ✅ · v1.2 ✅ · v2.0.0 ✅ · v2.0.1 ✅ · v2.1 🔥 ACTIVE</span>
+      <span class="hero-badge">🔥 CBM Phase 1 (v2.1) · Day 1 · 7 SP</span>
       <span class="hero-badge">HC scan: 1,386 nodes · 8,285 edges · 7 domains</span>
     </div>
   </div>
@@ -656,12 +660,30 @@ a:hover { text-decoration: underline; }
         </ul>
       </div>
     </div>
-    <div class="sprint-card" style="border-left: 3px solid #f97316;">
+    <div class="sprint-card" style="border-left: 3px solid #22c55e;">
       <div class="sprint-card-header">
         <h3>KMP · Knowledge Memory Platform</h3>
+        <span class="badge done">M0+M1 ✅</span>
+      </div>
+      <p>KMP M0 (8/8 SP) + M1 (26/26 SP) COMPLETE. CTO 20/20. <a href="kmp-board.html"><strong>Open KMP Board →</strong></a></p>
+    </div>
+    <div class="sprint-card" style="border-left: 3px solid #6366f1;">
+      <div class="sprint-card-header">
+        <h3>CBM Phase 1 · v2.1 — Metadata + Snapshot</h3>
         <span class="badge active">🔥 ACTIVE</span>
       </div>
-      <p>KMP is tracked on its own board. <a href="kmp-board.html"><strong>Open KMP Board →</strong></a></p>
+      <p>Dual-Snapshot Lifecycle: graph metadata, <code>--label</code> flag, snapshot save/list/clean, backward compat, CI baseline workflow. <a href="../docs/cbm-dual-snapshot/CBM-PHASE1-TASK-BOARD.md" target="_blank"><strong>Task Board →</strong></a></p>
+      <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#6366f1"></div></div>
+      <div class="progress-label">0/7 SP · Day 1 · 7 tasks · CEO approved 12/04/2026</div>
+    </div>
+    <div class="sprint-card" style="border-left: 3px solid var(--border); opacity:.7;">
+      <div class="sprint-card-header">
+        <h3>CBM Phase 2 · v2.2 — Diff Engine</h3>
+        <span class="badge planned">PLANNED</span>
+      </div>
+      <p>SnapshotDiff, edge diff, affected callers, rename detection, <code>--format markdown</code>, <code>--breaking-only</code>, <code>--test-plan</code>, CI PR Impact. <a href="../docs/cbm-dual-snapshot/CBM-PHASE2-TASK-BOARD.md" target="_blank"><strong>Task Board →</strong></a></p>
+      <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#94a3b8"></div></div>
+      <div class="progress-label">0/12 SP · Planned · After Phase 1 ships</div>
     </div>
   </div>
 
@@ -1032,6 +1054,10 @@ a:hover { text-decoration: underline; }
       <div class="tl-date">09/04/2026</div>
       <div class="tl-content"><strong>Repo PRIVATE</strong> — Chuyển public → private. PR #49: SSH install URLs + auth guide + ONBOARDING.md troubleshooting.</div>
     </div>
+    <div class="tl-item">
+      <div class="tl-date">12/04/2026</div>
+      <div class="tl-content"><strong>CBM Phase 1 Kickoff</strong> — CEO approved Dual-Snapshot Phase 1 start. KMP M1 COMPLETE (26/26 SP, CTO 20/20). CBM v2.1: graph metadata + snapshot versioning (7 SP, 5 Days). Design: CBM-Dual-Snapshot-Design.html (6 tabs). CTO review 48/60.</div>
+    </div>
   </div>
 
   <!-- CM-S2 Task Board -->
@@ -1319,7 +1345,7 @@ a:hover { text-decoration: underline; }
 <!-- Footer -->
 <div class="footer">
   <span>Codebase Map — Project Board · Hyper Commerce · CEO: Đoàn Đình Tỉnh</span>
-  <span>Updated: 10/04/2026 · v2.0.1 ✅ SHIPPED · Repo PRIVATE · KMP → <a href="kmp-board.html">kmp-board.html</a></span>
+  <span>Updated: 12/04/2026 · CBM Phase 1 (v2.1) 🔥 ACTIVE · v2.0.1 ✅ SHIPPED · KMP M1 ✅ COMPLETE · Repo PRIVATE · KMP → <a href="kmp-board.html">kmp-board.html</a></span>
 </div>
 
 <!-- ═══════════════════════════════════════

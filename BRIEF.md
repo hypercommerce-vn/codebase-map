@@ -1,14 +1,14 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 3.0 | Cập nhật: 23/04/2026 (Sprint M1 COMPLETE — CEO approved PR #65)
+> Version: 3.1 | Cập nhật: 12/04/2026 (CBM Phase 1 KICKOFF — CEO approved)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**KMP Sprint M1 COMPLETE · 26/26 SP · 14/14 tasks · CTO 20/20 · CEO approved · M0 COMPLETE · v2.0.1 shipped**
+**CBM Phase 1 (v2.1) ACTIVE · Day 1 · 7 SP · Graph Metadata + Snapshot Versioning · KMP M1 COMPLETE · v2.0.1 shipped**
 
-Sprint CM-MEM-M1 COMPLETE. CEO approved PR #65 (23/04/2026). 10 Days, 26 SP, 14 tasks, 10 PRs + 1 hotfix. CTO dogfood 20/20. 442 tests, 94% coverage. DoD 13/13 all verified.
+CBM Dual-Snapshot Phase 1 kicked off (12/04/2026). CEO approved start after KMP M1 completion. Target: codebase-map v2.1.0 with graph metadata, snapshot versioning, and CI workflow.
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
@@ -56,14 +56,18 @@ Sprint CM-MEM-M1 COMPLETE. CEO approved PR #65 (23/04/2026). 10 Days, 26 SP, 14 
 
 ### ▶️ Next actions
 
-- **Plan Sprint M2** — search integration (BM25), MCP server, advanced learners
-- Known issues deferred to M2: KMP-ISSUE-14 (NamingLearner __init__ false positive), KMP-ISSUE-15 (layer compliance misleading), KMP-ISSUE-16 (depth action generic)
-- Consider: tag v1.0.0 for KMP milestone
+- **CBM Phase 1 (v2.1) ACTIVE** — Day 1: CBM-P1-01 (Graph metadata) + CBM-P1-02 (CLI --label flag)
+- Task board: `docs/cbm-dual-snapshot/CBM-PHASE1-TASK-BOARD.md`
+- Design: `docs/cbm-dual-snapshot/CBM-Dual-Snapshot-Design.html`
+- After Phase 1: Phase 2 (v2.2, 12 SP, diff engine)
+- KMP M2 deferred until CBM Phase 1+2 done
+- Known KMP issues deferred: KMP-ISSUE-14/15/16
 
 | Field | Value |
 |-------|-------|
 | **Version hiện tại** | v2.0.1 ✅ SHIPPED (08/04/2026) — tag `v2.0.1` pushed, GitHub release published |
-| **Sprint hiện tại** | ✅ **KMP CM-MEM-M1** — COMPLETE · 26/26 SP · 14/14 tasks · CTO 20/20 · CEO approved 23/04/2026 |
+| **Sprint hiện tại** | 🔥 **CBM Phase 1 (v2.1)** — ACTIVE · 7 SP · 5 Days · Graph Metadata + Snapshot · CEO approved 12/04/2026 |
+| **KMP M1** | ✅ COMPLETE · 26/26 SP · 14/14 tasks · CTO 20/20 · CEO approved 23/04/2026 |
 | **KMP Sprint M0** | ✅ COMPLETE · 8/8 SP · CTO 20/20 · PR #53 merged 10/04/2026 |
 | **Sprint vừa xong** | CM-HOTFIX v2.0.1 — ✅ CLOSED · PR #38 + PR #39 merged · tag v2.0.1 pushed |
 | **Designs approved** | `design-preview/kmp-v2-design.html` + `kmp-M0-design.html` (PR #42 merged 09/04) |

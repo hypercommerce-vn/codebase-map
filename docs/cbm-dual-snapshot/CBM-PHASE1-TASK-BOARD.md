@@ -3,7 +3,7 @@
 
 > **Sprint:** CBM-P1 · **Total:** 7 SP · **Duration:** 5 ngày (1 tuần)
 > **Start condition:** KMP M1 done + CEO duyệt plan
-> **Status:** 🟡 READY — Chờ CEO ra lệnh bắt đầu
+> **Status:** 🔥 ACTIVE — CEO approved 12/04/2026 · Day 1
 > **Branch:** `feat/cbm-phase1-metadata`
 > **Release:** codebase-map **v2.1.0**
 > **Created:** 10/04/2026 · @PM + @CTO

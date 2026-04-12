@@ -193,7 +193,7 @@ Cập nhật `BRIEF.md` + `project/board.html`:
 | **v1.2** | CM-S2 | Workflow: git diff, coverage, API catalog, /implement | 18 | ✅ Done (07/04/2026) |
 | **v2.0** | CM-S3 | Multi-view: Executive, PR Diff, TS parser, responsive | 22 | ✅ Done (07/04/2026) |
 | **v2.0.1** | Hotfix | Classifier fix, coverage hook, generate --diff | 3 | ✅ Done (08/04/2026) |
-| **v2.1** | CBM-P1 | Graph metadata + snapshot versioning | 7 | 🟡 Ready — chờ CEO |
+| **v2.1** | CBM-P1 | Graph metadata + snapshot versioning | 7 | 🔥 ACTIVE — CEO approved 12/04/2026 |
 | **v2.2** | CBM-P2 | Dual-snapshot diff engine | 12 | 🟡 Ready — sau Phase 1 |
 
 ---
