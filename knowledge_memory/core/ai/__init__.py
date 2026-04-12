@@ -13,6 +13,7 @@ from knowledge_memory.core.ai.client import (
     get_fallback_provider,
     get_provider,
 )
+from knowledge_memory.core.ai.context_builder import ContextBuilder, ContextResult
 from knowledge_memory.core.ai.providers.base import (
     ChatMessage,
     ChatResponse,
@@ -32,4 +33,6 @@ __all__ = [
     "RAGPipeline",
     "RAGResult",
     "RetrievedChunk",
+    "ContextBuilder",
+    "ContextResult",
 ]
