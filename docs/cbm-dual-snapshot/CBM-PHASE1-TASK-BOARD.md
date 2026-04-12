@@ -3,8 +3,8 @@
 
 > **Sprint:** CBM-P1 · **Total:** 7 SP · **Duration:** 5 ngày (1 tuần)
 > **Start condition:** KMP M1 done + CEO duyệt plan
-> **Status:** 🔥 ACTIVE — CEO approved 12/04/2026 · Day 4-5 · 7/7 SP (100%)
-> **Branch:** `feat/cbm-phase1-metadata` (D1) · `feat/cbm-phase1-day2` (D2) · `feat/cbm-phase1-day3` (D3)
+> **Status:** ✅ COMPLETE — 7/7 SP · 7/7 tasks · 4 PRs merged · CEO approved 12/04/2026
+> **Branch:** `feat/cbm-phase1-metadata` (D1) · `feat/cbm-phase1-day2` (D2) · `feat/cbm-phase1-day3` (D3) · `feat/cbm-phase1-day4` (D4)
 > **Release:** codebase-map **v2.1.0**
 > **Created:** 10/04/2026 · @PM + @CTO
 
@@ -21,8 +21,8 @@
 | CBM-P1-05 | Command `snapshots clean --keep N` (default 10) | 0.5 | TechLead | ✅ Done | D3 | P1-03 |
 | CBM-P1-06 | Backward compat: đọc graph v1.x (không metadata) → inject empty metadata | 1 | TechLead | ✅ Done | D1 | P1-01 |
 | CBM-P1-07 | CI workflow: `cbm-baseline.yml` + `cbm-post-merge.yml` — auto-generate baseline + artifact upload | 1.5 | TechLead | ✅ Done | D4 | P1-02, P1-03 |
-| — | Unit tests + lint gate | — | TechLead | ⬜ TODO | D5 | All |
-| — | PR → /review-gate → CEO approve | — | Team | ⬜ TODO | D5 | All |
+| — | Unit tests + lint gate | — | TechLead | ✅ Done | D1-D4 | All |
+| — | PR → /review-gate → CEO approve | — | Team | ✅ Done | D1-D4 | All |
 
 ---
 

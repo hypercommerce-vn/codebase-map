@@ -1,14 +1,14 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 3.4 | Cập nhật: 12/04/2026 (CBM Phase 1 Day 4 — 7/7 SP, CI workflows done, pending tests + PR)
+> Version: 3.5 | Cập nhật: 12/04/2026 (CBM Phase 1 ✅ COMPLETE — 7/7 SP, 4 PRs merged, sprint closed)
 
 ---
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
-**CBM Phase 1 (v2.1) ACTIVE · Day 4-5 · 7/7 SP · Graph Metadata + Snapshot Versioning · KMP M1 COMPLETE · v2.0.1 shipped**
+**CBM Phase 1 (v2.1) ✅ COMPLETE · 7/7 SP · 7/7 tasks · 4 PRs merged · KMP M1 COMPLETE · v2.0.1 shipped**
 
-CBM Phase 1 Day 1-3 done (PR #66 + #67 + #68). Day 4: CI workflows (cbm-baseline.yml + cbm-post-merge.yml) created. All 7 SP implemented. Pending: unit tests + lint gate + PR + review-gate + CEO approve.
+CBM Phase 1 sprint closed 12/04/2026. All deliverables shipped: graph metadata v2.1, CLI --label, SnapshotManager (save/list/clean/load), snapshots CLI, backward compat, CI workflows (baseline generator + post-merge rotate). 494 tests pass, lint clean. Ready for Phase 2 (v2.2 diff engine).
 
 ### 🗓️ Session timeline (08-09/04/2026)
 
@@ -56,20 +56,18 @@ CBM Phase 1 Day 1-3 done (PR #66 + #67 + #68). Day 4: CI workflows (cbm-baseline
 | #66 | feat(snapshot): CBM-P1 Day 1 — graph metadata + --label + backward compat | 100 | ✅ merged |
 | #67 | feat(snapshot): CBM-P1 Day 2 — SnapshotManager save/list/clean/load | 100 | ✅ merged |
 | #68 | feat(snapshot): CBM-P1 Day 3 — snapshots list + clean CLI | 100 | ✅ merged |
+| #69 | feat(ci): CBM-P1 Day 4 — baseline generator + post-merge rotate workflows | 100 | ✅ merged |
 
 ### ▶️ Next actions
 
-- **CBM Phase 1 (v2.1) ACTIVE** — Day 4-5: CBM-P1-07 CI workflows done. Pending: unit tests + lint + PR + /review-gate + CEO approve
-- Task board: `docs/cbm-dual-snapshot/CBM-PHASE1-TASK-BOARD.md`
-- Design: `docs/cbm-dual-snapshot/CBM-Dual-Snapshot-Design.html`
-- After Phase 1: Phase 2 (v2.2, 12 SP, diff engine)
+- **CBM Phase 2 (v2.2) READY** — Dual-snapshot diff engine (12 SP, 2 weeks). Task board: `docs/cbm-dual-snapshot/CBM-PHASE2-TASK-BOARD.md`
 - KMP M2 deferred until CBM Phase 1+2 done
 - Known KMP issues deferred: KMP-ISSUE-14/15/16
 
 | Field | Value |
 |-------|-------|
 | **Version hiện tại** | v2.0.1 ✅ SHIPPED (08/04/2026) — tag `v2.0.1` pushed, GitHub release published |
-| **Sprint hiện tại** | 🔥 **CBM Phase 1 (v2.1)** — ACTIVE · 7/7 SP · Day 4-5 · PR #66 + #67 + #68 merged · CI workflows done · CEO approved 12/04/2026 |
+| **Sprint hiện tại** | ✅ **CBM Phase 1 (v2.1)** — COMPLETE · 7/7 SP · 7/7 tasks · 4 PRs (#66-#69) merged · CEO approved 12/04/2026 |
 | **KMP M1** | ✅ COMPLETE · 26/26 SP · 14/14 tasks · CTO 20/20 · CEO approved 23/04/2026 |
 | **KMP Sprint M0** | ✅ COMPLETE · 8/8 SP · CTO 20/20 · PR #53 merged 10/04/2026 |
 | **Sprint vừa xong** | CM-HOTFIX v2.0.1 — ✅ CLOSED · PR #38 + PR #39 merged · tag v2.0.1 pushed |
