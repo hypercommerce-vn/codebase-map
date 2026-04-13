@@ -182,12 +182,14 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
   <div class="nav-section">
     <div class="nav-section-header">KMP SPRINTS</div>
     <div class="nav-items">
-      <a class="nav-item active" href="#sprint-m1">
-        <span class="nav-item-icon">&#128293;</span> Sprint M1
+      <a class="nav-item active" href="#sprint-m2">
+        <span class="nav-item-icon">&#10003;</span> Sprint M2
+        <span class="nav-item-badge">28 SP</span>
+      </a>
+      <a class="nav-item" href="#sprint-m1">
+        <span class="nav-item-icon">&#10003;</span> Sprint M1
         <span class="nav-item-badge">26 SP</span>
       </a>
-      <a class="nav-sub-item" href="#m1-day10">Day 10 &#10003; done</a>
-
       <a class="nav-item" href="#sprint-m0">
         <span class="nav-item-icon">&#10003;</span> Sprint M0
         <span class="nav-item-badge">8 SP</span>
@@ -256,10 +258,10 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
     <h1>Knowledge Memory Platform — Project Board</h1>
     <p>Knowledge OS for every domain. Local-first, BYOK, open vault format. CEO-approved 08/04/2026.</p>
     <div class="hero-badges">
-      <span class="hero-badge">&#10003; Sprint M1 COMPLETE &middot; 26/26 SP &middot; 14/14 tasks &middot; CTO 20/20 &middot; CEO approved</span>
-      <span class="hero-badge">M0 &#10003; COMPLETE (8/8 SP &middot; CTO 20/20)</span>
-      <span class="hero-badge">442/442 tests green &middot; 94% coverage</span>
-      <span class="hero-badge">Repo PRIVATE &middot; 23/04/2026</span>
+      <span class="hero-badge">&#10003; Sprint M2 COMPLETE &middot; 28/28 SP &middot; 13 tasks &middot; Ask + MCP + Multi-LLM</span>
+      <span class="hero-badge">M0 &#10003; (8 SP) &middot; M1 &#10003; (26 SP) &middot; M2 &#10003; (28 SP) &middot; Total: 62 SP</span>
+      <span class="hero-badge">744 tests green &middot; 6 PRs (#78-#83) &middot; All CTO 100/100</span>
+      <span class="hero-badge">Repo PRIVATE &middot; 13/04/2026</span>
     </div>
   </div>
 
@@ -279,6 +281,83 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
       <tr><td><code>knowledge_memory/core/licensing/</code></td><td>Ed25519 license verification &mdash; MIT + Pro</td><td><span class="badge planned">M0-D5</span></td></tr>
       <tr><td><code>knowledge_memory/verticals/hello/</code></td><td>Reference vertical &mdash; &#8804;50 LOC proof of contract</td><td><span class="badge done">&#10003; M0</span></td></tr>
       <tr><td><code>knowledge_memory/verticals/codebase/</code></td><td>Codebase Memory vertical (first product)</td><td><span class="badge done">&#10003; M1</span></td></tr>
+    </tbody>
+  </table>
+
+  <!-- Sprint M2 Task Board -->
+  <h2 id="sprint-m2"><span class="h2-icon">&#10003;</span> Sprint M2 &mdash; Ask + MCP + Multi-LLM <span class="badge done" style="font-size:12px;margin-left:8px;">28/28 SP &middot; COMPLETE</span></h2>
+
+  <div class="progress-bar"><div class="progress-fill" style="width:100%;background:#a371f7"></div></div>
+  <p style="font-size:12px;color:var(--text-secondary);margin-bottom:16px;">28/28 SP &middot; 13 tasks &middot; 6 PRs (#78-#83) &middot; 744 tests &middot; COMPLETE 13/04/2026</p>
+
+  <table>
+    <thead><tr><th>ID</th><th>Task</th><th>SP</th><th>Day</th><th>PR</th><th>Review</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>MEM-M2-01</code></td><td>AnthropicProvider(LLMProvider) &mdash; chat, count_tokens, estimate_cost</td>
+        <td>1</td><td>D1</td><td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/78" target="_blank">PR #78</a></td><td>100/100</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M2-02</code></td><td>RAG pipeline: BM25 + AST graph proximity (&ge;75% recall)</td>
+        <td>5</td><td>D1</td><td>PR #78</td><td>100/100</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M2-03</code></td><td>Context builder &lt;200ms &mdash; chunk selection + prompt assembly</td>
+        <td>2</td><td>D2</td><td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/79" target="_blank">PR #79</a></td><td>100/100</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M2-04</code></td><td><code>ask</code> CLI command &mdash; natural language Q&amp;A with citations</td>
+        <td>2</td><td>D2</td><td>PR #79</td><td>100/100</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M2-05</code></td><td><code>why</code> CLI command &mdash; dependency explanation (BFS paths)</td>
+        <td>2</td><td>D3</td><td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/80" target="_blank">PR #80</a></td><td>100/100</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M2-06</code></td><td><code>impact</code> CLI command &mdash; change impact (uses CBM v2.2)</td>
+        <td>2</td><td>D3</td><td>PR #80</td><td>100/100</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M2-07</code></td><td>MCP adapter wrapping SDK (R-T3 mitigation)</td>
+        <td>1</td><td>D4</td><td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/81" target="_blank">PR #81</a></td><td>100/100</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M2-08</code></td><td>MCP server + 4 tools via <code>@register_tool</code></td>
+        <td>4</td><td>D4</td><td>PR #81</td><td>100/100</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M2-09</code></td><td>OpenAIProvider (GPT-4o/mini, tiktoken)</td>
+        <td>2</td><td>D5</td><td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/82" target="_blank">PR #82</a></td><td>100/100</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M2-10</code></td><td>GeminiProvider (Flash/Pro, GenAI SDK)</td>
+        <td>2</td><td>D5</td><td>PR #82</td><td>100/100</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M2-11</code></td><td>Cost calculator + cross-provider tests + usage CLI</td>
+        <td>1</td><td>D5</td><td>PR #82</td><td>100/100</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M2-12</code></td><td>E2E integration tests (ask/why/impact/MCP pipelines)</td>
+        <td>2</td><td>D6</td><td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/83" target="_blank">PR #83</a></td><td>100/100</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M2-13</code></td><td>Pattern threshold tuning (R-T2) + recall benchmark</td>
+        <td>2</td><td>D6</td><td>PR #83</td><td>100/100</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:20px;">M2 Day Plan</h3>
+  <table>
+    <thead><tr><th>Day</th><th>SP</th><th>Tasks</th><th>Focus</th><th>PR</th></tr></thead>
+    <tbody>
+      <tr><td>Day 1</td><td>6</td><td>M2-01, M2-02</td><td>AI Gateway + RAG pipeline</td><td>#78</td></tr>
+      <tr><td>Day 2</td><td>4</td><td>M2-03, M2-04</td><td>Context builder + Ask command</td><td>#79</td></tr>
+      <tr><td>Day 3</td><td>4</td><td>M2-05, M2-06</td><td>Why + Impact (M2a complete)</td><td>#80</td></tr>
+      <tr><td>Day 4</td><td>5</td><td>M2-07, M2-08</td><td>MCP adapter + server + 4 tools</td><td>#81</td></tr>
+      <tr><td>Day 5</td><td>5</td><td>M2-09, M2-10, M2-11</td><td>OpenAI + Gemini + Cost tracker</td><td>#82</td></tr>
+      <tr><td>Day 6</td><td>4</td><td>M2-12, M2-13</td><td>E2E tests + recall benchmark</td><td>#83</td></tr>
     </tbody>
   </table>
 
@@ -919,6 +998,80 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
         <td>98/100 SHIPIT</td>
         <td><span class="badge merged">&#10003; Merged</span></td>
       </tr>
+      <!-- CBM Phase 1+2 PRs (cross-project, KMP prerequisites) -->
+      <tr><td colspan="5" style="background:var(--bg-muted);font-size:11px;color:var(--text-muted);text-align:center;">CBM v2.1 + v2.2 (KMP M2 prerequisite)</td></tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/66" target="_blank">#66</a></td>
+        <td>feat(snapshot): CBM-P1 Day 1 &mdash; graph metadata + --label</td>
+        <td><code>feat/cbm-phase1-metadata</code></td>
+        <td>100/100</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/71" target="_blank">#71</a></td>
+        <td>feat(diff): CBM-P2 Day 1 &mdash; SnapshotDiff core engine</td>
+        <td><code>feat/cbm-phase2-day1</code></td>
+        <td>100/100</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/75" target="_blank">#75</a></td>
+        <td>chore(sprint): close CBM Phase 2 (v2.2) &mdash; 12/12 SP</td>
+        <td><code>chore/cbm-phase2-sprint-close</code></td>
+        <td>&mdash;</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <!-- KMP M2 Sprint PRs -->
+      <tr><td colspan="5" style="background:var(--bg-muted);font-size:11px;color:var(--text-muted);text-align:center;">Sprint M2 &mdash; Ask + MCP + Multi-LLM (28 SP)</td></tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/77" target="_blank">#77</a></td>
+        <td>feat(design): KMP M2 design + Final Design v1.0 (interactive)</td>
+        <td><code>feat/kmp-m2-design</code></td>
+        <td>CEO &#10003;</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/78" target="_blank">#78</a></td>
+        <td>feat(ai): M2 Day 1 &mdash; AI Gateway + RAG pipeline</td>
+        <td><code>feat/kmp-m2-day1</code></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/79" target="_blank">#79</a></td>
+        <td>feat(ai): M2 Day 2 &mdash; Context Builder + Ask command</td>
+        <td><code>feat/kmp-m2-day2</code></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/80" target="_blank">#80</a></td>
+        <td>feat(ai): M2 Day 3 &mdash; Why + Impact (M2a complete)</td>
+        <td><code>feat/kmp-m2-day3</code></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/81" target="_blank">#81</a></td>
+        <td>feat(mcp): M2 Day 4 &mdash; MCP Server + 4 tools</td>
+        <td><code>feat/kmp-m2-day4</code></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/82" target="_blank">#82</a></td>
+        <td>feat(ai): M2 Day 5 &mdash; OpenAI + Gemini + Cost tracker</td>
+        <td><code>feat/kmp-m2-day5</code></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/83" target="_blank">#83</a></td>
+        <td>feat(ai): M2 Day 6 &mdash; E2E + recall benchmark (SPRINT COMPLETE)</td>
+        <td><code>feat/kmp-m2-day6</code></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -1074,7 +1227,7 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
 <!-- Footer -->
 <div class="footer">
   <span>KMP Project Board &middot; Knowledge Memory Platform &middot; Hyper Commerce</span>
-  <span>Updated: 23/04/2026 &middot; Sprint M1 &#10003; COMPLETE (26/26 SP, 14/14 tasks, CTO 20/20, CEO approved PR #65) &middot; M0 &#10003; COMPLETE (8/8 SP, CTO 20/20) &middot; 442 tests &middot; 94% coverage &middot; Repo PRIVATE</span>
+  <span>Updated: 13/04/2026 &middot; Sprint M2 &#10003; COMPLETE (28/28 SP, 13 tasks, 6 PRs, all 100/100) &middot; M1 &#10003; (26 SP) &middot; M0 &#10003; (8 SP) &middot; 744 tests &middot; 62 SP total &middot; Repo PRIVATE</span>
 </div>
 
 <script>
