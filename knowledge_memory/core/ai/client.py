@@ -117,6 +117,9 @@ def _ensure_registered() -> None:
         return
 
     from knowledge_memory.core.ai.providers.anthropic_provider import AnthropicProvider
+    from knowledge_memory.core.ai.providers.gemini_provider import GeminiProvider
+    from knowledge_memory.core.ai.providers.openai_provider import OpenAIProvider
 
     register_provider("anthropic", AnthropicProvider)
-    # OpenAI and Gemini providers will be added in MEM-M2-09/10
+    register_provider("openai", OpenAIProvider)
+    register_provider("gemini", GeminiProvider)
