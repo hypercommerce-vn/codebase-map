@@ -247,30 +247,26 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
   </div>
 
   <div class="sb-section">
-    <div class="sb-label">M3 &mdash; Onboarding (Future)</div>
-    <div class="sb-item disabled">
+    <div class="sb-label">M3 &mdash; Onboarding</div>
+    <div class="sb-item" onclick="showScreen('m3-onboard')">
       <span class="icon">&#128214;</span> onboard
-      <span class="badge-sm badge-future">M3</span>
+      <span class="badge-sm badge-m2" style="background:rgba(45,212,191,.15);color:#2dd4bf;">M3</span>
+    </div>
+    <div class="sb-item" onclick="showScreen('m3-glossary')">
+      <span class="icon">&#128218;</span> glossary
+      <span class="badge-sm badge-m2" style="background:rgba(45,212,191,.15);color:#2dd4bf;">M3</span>
+    </div>
+    <div class="sb-item" onclick="showScreen('m3-insights')">
+      <span class="icon">&#128200;</span> insights
+      <span class="badge-sm badge-m2" style="background:rgba(45,212,191,.15);color:#2dd4bf;">M3</span>
+    </div>
+    <div class="sb-item" onclick="showScreen('m3-roi')">
+      <span class="icon">&#128176;</span> ROI
+      <span class="badge-sm badge-m2" style="background:rgba(45,212,191,.15);color:#2dd4bf;">M3</span>
     </div>
     <div class="sb-item disabled">
-      <span class="icon">&#128200;</span> insights HTML
-      <span class="badge-sm badge-future">M3</span>
-    </div>
-    <div class="sb-item disabled">
-      <span class="icon">&#128270;</span> error_handling learner
-      <span class="badge-sm badge-future">M3</span>
-    </div>
-    <div class="sb-item disabled">
-      <span class="icon">&#128300;</span> dependency_injection learner
-      <span class="badge-sm badge-future">M3</span>
-    </div>
-    <div class="sb-item disabled">
-      <span class="icon">&#128218;</span> glossary extractor
-      <span class="badge-sm badge-future">M3</span>
-    </div>
-    <div class="sb-item disabled">
-      <span class="icon">&#128736;</span> lifecycle commands
-      <span class="badge-sm badge-future">M3</span>
+      <span class="icon">&#128736;</span> lifecycle
+      <span class="badge-sm badge-future">M4</span>
     </div>
   </div>
 </div>
@@ -310,11 +306,11 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
 
   <!-- M3 Future -->
   <div class="overview-grid">
-    <div class="ov-card disabled">
+    <div class="ov-card" onclick="showScreen('m3-onboard')" style="cursor:pointer;">
       <div class="ov-icon">&#128214;</div>
       <div class="ov-title">Sprint M3 &mdash; Onboarding + Polish</div>
       <div class="ov-desc">Onboard command, insights HTML, 3 new learners, glossary, ROI calculator</div>
-      <span class="ov-status future">21 SP &middot; PLANNED</span>
+      <span class="ov-status" style="background:rgba(45,212,191,.15);color:#2dd4bf;">21 SP &middot; DESIGNED</span>
     </div>
     <div class="ov-card disabled">
       <div class="ov-icon">&#127760;</div>
@@ -846,11 +842,103 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
   </div>
 </div>
 
+<!-- ──── M3: ONBOARD ──── -->
+<div class="screen" id="screen-m3-onboard">
+  <h1 class="screen-title" style="color:#2dd4bf;">codebase-memory onboard</h1>
+  <p class="screen-sub">MEM-M3-01/02/03 &mdash; Auto-generate personalized 8-chapter onboarding report from vault patterns.</p>
+  <div class="terminal"><div class="terminal-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="t-title">onboard</span></div>
+  <div class="terminal-body"><span class="p">$</span> <span class="c">codebase-memory onboard</span>
+
+<span style="color:#2dd4bf;font-weight:700">Knowledge Memory — Onboarding Report Generator</span>
+<span class="d">Vault: 38 patterns · 6 learners · 1,386 nodes</span>
+
+<span style="color:#2dd4bf">▶ Generating chapters...</span>
+  <span class="g">✓</span> Ch.1: <span class="b">Project Overview</span>         <span class="d">— 7 domains, 1,386 functions</span>
+  <span class="g">✓</span> Ch.2: <span class="b">Naming Conventions</span>       <span class="d">— snake_case 98.2%, CRUD prefix 78%</span>
+  <span class="g">✓</span> Ch.3: <span class="b">Architecture Layers</span>      <span class="d">— 43% service, route/model/util</span>
+  <span class="g">✓</span> Ch.4: <span class="b">Error Handling Patterns</span>  <span class="d">— try/except 87%, custom exceptions</span>
+  <span class="g">✓</span> Ch.5: <span class="b">Testing Patterns</span>         <span class="d">— pytest fixtures, 94% coverage</span>
+  <span class="g">✓</span> Ch.6: <span class="b">Dependency Injection</span>     <span class="d">— constructor 72%, service locator 28%</span>
+  <span class="g">✓</span> Ch.7: <span class="b">Code Ownership</span>           <span class="d">— bus factor, single-owner risks</span>
+  <span class="g">✓</span> Ch.8: <span class="b">Domain Glossary</span>          <span class="d">— 45 business terms extracted</span>
+
+<span style="color:#2dd4bf">▶ Rendering Mermaid diagrams...</span>
+  <span class="g">✓</span> <span class="d">3 diagrams: architecture, domain map, call flow</span>
+
+<span class="g">✓ Onboarding report generated!</span>  <span class="d">8 chapters · 3 diagrams · 2.1s</span>
+<span class="b">Output:</span> <span class="i">.knowledge-memory/verticals/codebase/onboarding-report.md</span></div>
+  </div>
+</div>
+
+<!-- ──── M3: GLOSSARY ──── -->
+<div class="screen" id="screen-m3-glossary">
+  <h1 class="screen-title" style="color:#2dd4bf;">codebase-memory glossary</h1>
+  <p class="screen-sub">MEM-M3-07 &mdash; Business term extraction from function names, module names, comments.</p>
+  <div class="terminal"><div class="terminal-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="t-title">glossary</span></div>
+  <div class="terminal-body"><span class="p">$</span> <span class="c">codebase-memory glossary</span>
+
+<span style="color:#2dd4bf;font-weight:700">Knowledge Memory — Domain Glossary</span>
+
+  <span class="b">Term             Domain        Evidence  Confidence</span>
+  <span class="i">Customer</span>         crm              23     <span class="g">92%</span>
+  <span class="i">Order</span>            ecommerce        47     <span class="g">96%</span>
+  <span class="i">Invoice</span>          billing          12     <span class="g">85%</span>
+  <span class="i">Pipeline</span>         pipeline         18     <span class="g">88%</span>
+  <span class="i">Authentication</span>   auth             31     <span class="g">94%</span>
+  <span class="d">... 40 more terms</span>
+
+  <span class="b">Total:</span> 45 terms across 7 domains</div>
+  </div>
+</div>
+
+<!-- ──── M3: INSIGHTS ──── -->
+<div class="screen" id="screen-m3-insights">
+  <h1 class="screen-title" style="color:#2dd4bf;">codebase-memory insights --html</h1>
+  <p class="screen-sub">MEM-M3-10/11 &mdash; Interactive HTML dashboard. Pattern heatmap, learner efficiency, ROI.</p>
+  <div class="terminal"><div class="terminal-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="t-title">insights</span></div>
+  <div class="terminal-body"><span class="p">$</span> <span class="c">codebase-memory insights --html</span>
+
+<span style="color:#2dd4bf;font-weight:700">Knowledge Memory — Insights Dashboard</span>
+
+<span style="color:#2dd4bf">▶ Collecting metrics...</span>
+  <span class="g">✓</span> Patterns: 38 <span class="d">(6 learners)</span>
+  <span class="g">✓</span> Quick Wins: 10 <span class="d">(5+3+2)</span>
+  <span class="g">✓</span> LLM usage: 15 calls <span class="d">($0.046 total)</span>
+  <span class="g">✓</span> ROI estimate: <span class="g">$240 saved</span> <span class="d">(8h onboarding reduced)</span>
+
+<span class="g">✓ Dashboard exported!</span>
+  <span class="i">.knowledge-memory/verticals/codebase/insights.html</span>
+<span class="d">Open in browser for interactive charts.</span></div>
+  </div>
+</div>
+
+<!-- ──── M3: ROI ──── -->
+<div class="screen" id="screen-m3-roi">
+  <h1 class="screen-title" style="color:#2dd4bf;">codebase-memory roi</h1>
+  <p class="screen-sub">MEM-M3-08/09 &mdash; Local-only telemetry + ROI calculator. Privacy-safe.</p>
+  <div class="terminal"><div class="terminal-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="t-title">roi</span></div>
+  <div class="terminal-body"><span class="p">$</span> <span class="c">codebase-memory roi</span>
+
+<span style="color:#2dd4bf;font-weight:700">Knowledge Memory — ROI Report</span>
+
+  <span class="b">Metric                    Value</span>
+  Onboarding reports              3
+  New dev time saved (est.)       8h
+  LLM token cost                  $0.046
+  Hourly rate (config)            $30/h
+  <span class="d">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="g">Estimated ROI:            $239.95</span>
+  <span class="g">Return multiple:          5,216x</span>
+
+<span class="d">All data local. No cloud sync. Privacy-safe.</span></div>
+  </div>
+</div>
+
 </div><!-- /main -->
 
 <div id="footer">
-  KMP Final Design v1.0 &middot; 12/04/2026 &middot; M0 (8 SP) + M1 (26 SP) + M2 (28 SP) = 62 SP &middot;
-  16 interactive screens &middot; M3+ disabled (future) &middot;
+  KMP Final Design v1.1 &middot; 13/04/2026 &middot; M0 (8 SP) + M1 (26 SP) + M2 (28 SP) + M3 (21 SP) = 83 SP &middot;
+  20 interactive screens &middot; M4 lifecycle (future) &middot;
   <strong>PO + CTO + Designer</strong>
 </div>
 
