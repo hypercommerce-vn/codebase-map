@@ -1,0 +1,412 @@
+<!-- HC-AI | ticket: KMP-M3-DESIGN | designed 13/04/2026 -->
+<!-- PO + CTO + Designer 3-way design meeting output -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KMP Sprint M3 — Design Preview | Hyper Commerce</title>
+<style>
+/* ═══════════════════════════════════════════════════════
+   DESIGN SYSTEM — KMP M3 Design Preview
+   Inherited from: kmp-M2-design.html
+   Meeting: PO + CTO + Designer · 13/04/2026
+═══════════════════════════════════════════════════════ */
+:root {
+  --hc-primary: #6366f1;
+  --bg-canvas: #0d1117;
+  --bg-surface: #161b22;
+  --bg-elevated: #21262d;
+  --border: #30363d;
+  --border-focus: #58a6ff;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #484f58;
+  --ok: #3fb950;
+  --warn: #d29922;
+  --err: #f85149;
+  --info: #58a6ff;
+  --codebase-blue: #79c0ff;
+  --ai-purple: #a371f7;
+  --m3-teal: #2dd4bf;
+  --topbar-h: 52px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-canvas); color: var(--text-primary); font-size: 13px; line-height: 1.55; }
+a { color: var(--border-focus); text-decoration: none; }
+code { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; background: var(--bg-elevated); padding: 1px 6px; border-radius: 4px; color: var(--info); }
+
+#topbar { height: var(--topbar-h); background: var(--bg-surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 24px; gap: 18px; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--m3-teal), var(--hc-primary)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; }
+.logo-text { font-size: 14px; font-weight: 600; }
+.breadcrumb { font-size: 12px; color: var(--text-secondary); display: flex; gap: 6px; align-items: center; }
+.breadcrumb .sep { color: var(--text-muted); }
+.breadcrumb .cur { color: var(--text-primary); font-weight: 500; }
+.spacer { flex: 1; }
+.sprint-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: linear-gradient(135deg, rgba(45,212,191,0.18), rgba(99,102,241,0.08)); border: 1px solid var(--m3-teal); border-radius: 20px; font-size: 12px; font-weight: 600; }
+.sprint-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--m3-teal); box-shadow: 0 0 8px var(--m3-teal); }
+
+main { max-width: 1180px; margin: 0 auto; padding: 32px 32px 80px; }
+h1.page-title { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+.page-sub { color: var(--text-secondary); font-size: 13px; margin-bottom: 32px; }
+
+section.block { margin-bottom: 40px; }
+section.block > h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+section.block > h2 .num { width: 26px; height: 26px; background: var(--m3-teal); color: #0d1117; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+section.block > .desc { color: var(--text-secondary); margin-bottom: 16px; font-size: 12px; }
+
+.card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+.terminal { background: #0a0a0f; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; font-family: 'SF Mono', Menlo, monospace; font-size: 12px; line-height: 1.7; }
+.terminal-bar { height: 32px; background: var(--bg-elevated); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 14px; gap: 8px; }
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+.terminal-dot.r { background: #ff5f56; } .terminal-dot.y { background: #ffbd2e; } .terminal-dot.g { background: #27c93f; }
+.terminal-title { font-size: 11px; color: var(--text-muted); margin-left: 12px; }
+.terminal-body { padding: 16px 18px; white-space: pre; overflow-x: auto; }
+.terminal-body .prompt { color: var(--ok); } .terminal-body .cmd { color: var(--text-primary); font-weight: 600; }
+.terminal-body .dim { color: var(--text-muted); } .terminal-body .ok { color: var(--ok); } .terminal-body .warn { color: var(--warn); }
+.terminal-body .err { color: var(--err); } .terminal-body .info { color: var(--info); } .terminal-body .bold { font-weight: 700; color: var(--text-primary); }
+.terminal-body .heading { color: var(--m3-teal); font-weight: 700; } .terminal-body .teal { color: var(--m3-teal); }
+.terminal-body .conf { color: var(--ok); font-weight: 600; }
+
+.file-mock { background: var(--bg-canvas); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.file-mock-bar { height: 28px; background: var(--bg-elevated); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 12px; font-size: 11px; color: var(--text-muted); font-family: 'SF Mono', Menlo, monospace; }
+.file-mock-body { padding: 14px 16px; font-family: 'SF Mono', Menlo, monospace; font-size: 11px; line-height: 1.7; white-space: pre; overflow-x: auto; color: var(--text-secondary); }
+.file-mock-body .k { color: #f0883e; } .file-mock-body .s { color: var(--ok); } .file-mock-body .c { color: var(--text-muted); }
+.file-mock-body .n { color: var(--codebase-blue); } .file-mock-body .h1 { color: var(--text-primary); font-weight: 700; font-size: 13px; }
+.file-mock-body .h2 { color: var(--text-primary); font-weight: 600; }
+
+.design-note { margin-top: 16px; padding: 12px 16px; background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.3); border-radius: 8px; font-size: 12px; color: var(--text-secondary); }
+.design-note strong { color: var(--hc-primary); }
+.design-note .label { display: inline-block; font-size: 10px; font-weight: 700; color: var(--hc-primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+
+.cto-note { margin-top: 12px; padding: 12px 16px; background: rgba(210,153,34,0.08); border: 1px solid rgba(210,153,34,0.3); border-radius: 8px; font-size: 12px; color: var(--text-secondary); }
+.cto-note strong { color: var(--warn); }
+.cto-note .label { display: inline-block; font-size: 10px; font-weight: 700; color: var(--warn); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+
+.po-note { margin-top: 12px; padding: 12px 16px; background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.3); border-radius: 8px; font-size: 12px; color: var(--text-secondary); }
+.po-note strong { color: var(--ok); }
+.po-note .label { display: inline-block; font-size: 10px; font-weight: 700; color: var(--ok); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+
+.spec-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px; }
+.spec-table th { text-align: left; padding: 8px 12px; background: var(--bg-canvas); border-bottom: 1px solid var(--border); color: var(--text-secondary); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+.spec-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+.spec-table td:first-child { color: var(--text-primary); font-weight: 500; }
+
+.badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+.badge.core { background: rgba(63,185,80,0.15); color: var(--ok); }
+.badge.cli { background: rgba(88,166,255,0.15); color: var(--info); }
+.badge.ml { background: rgba(163,113,247,0.15); color: var(--ai-purple); }
+.badge.qa { background: rgba(248,81,73,0.15); color: var(--err); }
+.badge.onboard { background: rgba(45,212,191,0.15); color: var(--m3-teal); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+
+#footer { border-top: 1px solid var(--border); background: var(--bg-surface); padding: 24px 32px; margin-top: 60px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.version-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 20px; font-size: 11px; }
+.version-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--m3-teal); }
+.approval { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-secondary); }
+.approval input { width: 18px; height: 18px; accent-color: var(--hc-primary); }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="logo"><div class="logo-icon">K</div><div class="logo-text">Knowledge Memory Platform</div></div>
+  <div class="breadcrumb"><span>Hyper Commerce</span><span class="sep">&rsaquo;</span><span>KMP</span><span class="sep">&rsaquo;</span><span class="cur">Sprint M3 Design</span></div>
+  <div class="spacer"></div>
+  <div class="sprint-badge"><div class="dot"></div>Sprint M3 &middot; 21 SP &middot; 13 tasks &middot; DESIGN</div>
+</div>
+
+<main>
+
+  <h1 class="page-title">Sprint M3 &mdash; Onboarding + Polish</h1>
+  <p class="page-sub">
+    New dev onboarding report, 3 new learners, glossary extractor, insights dashboard, telemetry, ROI calculator.
+    Owner: <strong>@TechLead</strong> &middot; Reviewers: <strong>@CTO + @Tester + @Designer</strong>
+    &middot; Duration: <strong>2 weeks (10 Days)</strong> &middot; <strong>21 SP</strong>
+  </p>
+
+  <!-- ════ SCREEN A: ONBOARD COMMAND ════ -->
+  <section class="block">
+    <h2><span class="num">A</span> Screen: <code>codebase-memory onboard</code> &mdash; Personalized Onboarding Report <code>MEM-M3-01</code></h2>
+    <div class="desc">Auto-generate 8-chapter onboarding guide from vault patterns. Jinja2 templates + Mermaid diagrams.</div>
+
+    <div class="terminal">
+      <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; ~/Projects/hypercommerce</div></div>
+      <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory onboard</span>
+
+<span class="heading">Knowledge Memory &mdash; Onboarding Report Generator</span>
+<span class="dim">Vault: 25 patterns &middot; 6 learners &middot; 1,386 nodes</span>
+
+<span class="teal">&#9654; Generating chapters...</span>
+  <span class="ok">&#10003;</span> Ch.1: <span class="bold">Project Overview</span>         <span class="dim">&mdash; 7 domains, 1,386 functions</span>
+  <span class="ok">&#10003;</span> Ch.2: <span class="bold">Naming Conventions</span>       <span class="dim">&mdash; snake_case 98.2%, CRUD prefix 78%</span>
+  <span class="ok">&#10003;</span> Ch.3: <span class="bold">Architecture Layers</span>      <span class="dim">&mdash; 43% service, route/model/util breakdown</span>
+  <span class="ok">&#10003;</span> Ch.4: <span class="bold">Error Handling Patterns</span>  <span class="dim">&mdash; try/except 87%, custom exceptions 12</span>
+  <span class="ok">&#10003;</span> Ch.5: <span class="bold">Testing Patterns</span>         <span class="dim">&mdash; pytest fixtures, 94% coverage, gaps in billing</span>
+  <span class="ok">&#10003;</span> Ch.6: <span class="bold">Dependency Injection</span>     <span class="dim">&mdash; constructor injection 72%, service locator 28%</span>
+  <span class="ok">&#10003;</span> Ch.7: <span class="bold">Code Ownership</span>           <span class="dim">&mdash; bus factor, single-owner risks</span>
+  <span class="ok">&#10003;</span> Ch.8: <span class="bold">Domain Glossary</span>          <span class="dim">&mdash; 45 business terms extracted</span>
+
+<span class="teal">&#9654; Rendering Mermaid diagrams...</span>
+  <span class="ok">&#10003;</span> <span class="dim">3 diagrams: architecture, domain map, call flow</span>
+
+<span class="ok">&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;</span>
+<span class="ok">&#10003; Onboarding report generated!</span>  <span class="dim">8 chapters &middot; 3 diagrams &middot; 2.1s</span>
+
+<span class="bold">Output:</span>
+  <span class="info">.knowledge-memory/verticals/codebase/onboarding-report.md</span>
+
+<span class="dim">Share with new team members or open in any Markdown viewer.</span></div>
+    </div>
+
+    <div class="design-note">
+      <div class="label">Designer note</div>
+      <strong>8 chapters, each 1 line:</strong> Chapter title + key metric from patterns. Mermaid rendered separately. Output is single Markdown file with embedded diagrams.
+    </div>
+
+    <div class="cto-note">
+      <div class="label">CTO constraint</div>
+      <strong>Jinja2 templates:</strong> Chapters in <code>verticals/codebase/assets/onboarding/chapters/</code>. Each template reads vault patterns to personalize.
+      <strong>Mermaid:</strong> Optional. If Mermaid not installed, skip diagrams with note. <strong>Idempotent:</strong> Re-running overwrites previous report.
+    </div>
+  </section>
+
+  <!-- ════ SCREEN B: ONBOARDING REPORT OUTPUT ════ -->
+  <section class="block">
+    <h2><span class="num">B</span> Output: <code>onboarding-report.md</code> &mdash; 8 Chapters <code>MEM-M3-02</code></h2>
+    <div class="desc">Personalized Markdown report. Each chapter driven by vault patterns. Git-trackable, viewable in GitHub/VSCode.</div>
+
+    <div class="file-mock">
+      <div class="file-mock-bar">onboarding-report.md &mdash; 8 chapters</div>
+      <div class="file-mock-body"><span class="h1"># Onboarding Guide &mdash; Hyper Commerce</span>
+<span class="c">&gt; Auto-generated by KMP v1.0.0 | 13/04/2026</span>
+<span class="c">&gt; Vault: 25 patterns &middot; 6 learners &middot; Confidence &ge;60%</span>
+
+<span class="c">---</span>
+
+<span class="h2">## 1. Project Overview</span>
+
+This project has <span class="n">1,386 functions</span> across <span class="n">7 domains</span>:
+crm, ecommerce, inventory, auth, billing, pipeline, shared.
+
+<span class="s">Architecture:</span> Service-oriented. 43% service layer.
+<span class="s">Primary language:</span> Python 3.10+ with FastAPI.
+
+<span class="c">```mermaid
+graph TD
+  CRM[CRM Domain] --&gt; Auth[Auth Domain]
+  Ecommerce --&gt; Billing
+  Ecommerce --&gt; Inventory
+  Pipeline --&gt; CRM
+  Pipeline --&gt; Ecommerce
+```</span>
+
+<span class="h2">## 2. Naming Conventions</span>
+
+<span class="s">snake_case compliance:</span> <span class="n">98.2%</span> (Confidence: 94%)
+<span class="s">CRUD prefixes:</span> get_ (45%), create_ (22%), update_ (18%), delete_ (15%)
+<span class="s">Violations:</span> getCustomer, processOrder <span class="c">&mdash; see patterns.md</span>
+
+<span class="dim">... (6 more chapters)</span>
+
+<span class="h2">## 8. Domain Glossary</span>
+
+| Term | Domain | Evidence |
+|------|--------|----------|
+| Customer | CRM | 23 references |
+| Order | Ecommerce | 47 references |
+| Invoice | Billing | 12 references |
+<span class="dim">... 42 more terms</span></div>
+    </div>
+
+    <div class="po-note">
+      <div class="label">PO acceptance</div>
+      <strong>AC-1:</strong> Each chapter must cite at least 1 pattern with confidence %. <strong>AC-2:</strong> Glossary must have &ge;20 terms on HC codebase. <strong>AC-3:</strong> Markdown renders correctly in GitHub + VSCode.
+    </div>
+  </section>
+
+  <!-- ════ SCREEN C: NEW LEARNERS ════ -->
+  <section class="block">
+    <h2><span class="num">C</span> Screen: 3 New Learners &mdash; Bootstrap Output <code>MEM-M3-04/05/06</code></h2>
+    <div class="desc">Error handling, dependency injection, test patterns learners. Extends [3/5] Learn step in bootstrap.</div>
+
+    <div class="terminal">
+      <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; bootstrap with 6 learners</div></div>
+      <div class="terminal-body"><span class="bold">[3/5] Learn</span>  <span class="dim">Running 6 learners...</span>
+  <span class="info">&#9654; NamingLearner</span>          <span class="ok">done</span>  <span class="dim">12 patterns &middot; 1.1s</span>
+  <span class="info">&#9654; LayerLearner</span>           <span class="ok">done</span>  <span class="dim">8 patterns &middot; 0.8s</span>
+  <span class="info">&#9654; GitOwnershipLearner</span>    <span class="ok">done</span>  <span class="dim">5 patterns &middot; 0.6s</span>
+  <span class="teal">&#9654; ErrorHandlingLearner</span>   <span class="ok">done</span>  <span class="dim">6 patterns &middot; 0.9s</span>
+  <span class="teal">&#9654; DependencyInjLearner</span>   <span class="ok">done</span>  <span class="dim">4 patterns &middot; 0.7s</span>
+  <span class="teal">&#9654; TestPatternsLearner</span>    <span class="ok">done</span>  <span class="dim">3 patterns &middot; 0.5s</span>
+
+<span class="bold">[4/5] Commit</span>  <span class="dim">Writing patterns to vault...</span>
+  <span class="ok">&#10003;</span> <span class="bold">38 patterns</span> committed <span class="dim">(12+8+5+6+4+3)</span>
+
+<span class="dim">New in M3: ErrorHandling (try/except, custom exceptions, retry),</span>
+<span class="dim">DependencyInjection (constructor, service locator, factory),</span>
+<span class="dim">TestPatterns (fixtures, parametrize, coverage gaps)</span></div>
+    </div>
+
+    <div class="cto-note">
+      <div class="label">CTO constraint</div>
+      <strong>All 3 learners implement BaseLearner ABC</strong> &mdash; extract/cluster/score/emit pattern.
+      <strong>Confidence &ge;60%:</strong> Same threshold as M1. <strong>Evidence &ge;5:</strong> Minimum per pattern.
+      <strong>import-linter:</strong> Core &#8603; Vertical rule still enforced.
+    </div>
+  </section>
+
+  <!-- ════ SCREEN D: GLOSSARY ════ -->
+  <section class="block">
+    <h2><span class="num">D</span> Screen: <code>glossary</code> &mdash; Business Term Extraction <code>MEM-M3-07</code></h2>
+    <div class="desc">Auto-extract domain terminology from function names, module names, and comments. Stored in SQLite.</div>
+
+    <div class="terminal">
+      <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; glossary output</div></div>
+      <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory glossary</span>
+
+<span class="heading">Knowledge Memory &mdash; Domain Glossary</span>
+
+  <span class="bold">Term             Domain        Evidence  Confidence</span>
+  <span class="info">Customer</span>         crm              23     <span class="conf">92%</span>
+  <span class="info">Order</span>            ecommerce        47     <span class="conf">96%</span>
+  <span class="info">Invoice</span>          billing          12     <span class="conf">85%</span>
+  <span class="info">Pipeline</span>         pipeline         18     <span class="conf">88%</span>
+  <span class="info">Authentication</span>   auth             31     <span class="conf">94%</span>
+  <span class="info">Inventory</span>        inventory        15     <span class="conf">82%</span>
+  <span class="dim">... 39 more terms</span>
+
+  <span class="bold">Total:</span> 45 terms across 7 domains
+  <span class="dim">Stored in:</span> <span class="info">.knowledge-memory/verticals/codebase/vault.db</span> <span class="dim">(glossary table)</span></div>
+    </div>
+  </section>
+
+  <!-- ════ SCREEN E: INSIGHTS DASHBOARD ════ -->
+  <section class="block">
+    <h2><span class="num">E</span> Screen: <code>codebase-memory insights</code> &mdash; HTML Dashboard <code>MEM-M3-10/11</code></h2>
+    <div class="desc">Interactive HTML insights viewer. Pattern heatmap, learner efficiency, ROI metrics. Single-file export.</div>
+
+    <div class="terminal">
+      <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; insights command</div></div>
+      <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory insights --html</span>
+
+<span class="heading">Knowledge Memory &mdash; Insights Dashboard</span>
+
+<span class="teal">&#9654; Collecting metrics...</span>
+  <span class="ok">&#10003;</span> Patterns: 38 <span class="dim">(6 learners)</span>
+  <span class="ok">&#10003;</span> Quick Wins: 10 <span class="dim">(5 structure + 3 patterns + 2 risks)</span>
+  <span class="ok">&#10003;</span> LLM usage: 15 calls <span class="dim">($0.046 total)</span>
+  <span class="ok">&#10003;</span> ROI estimate: <span class="ok">$240 saved</span> <span class="dim">(8h onboarding time reduced)</span>
+
+<span class="ok">&#10003; Dashboard exported!</span>
+  <span class="info">.knowledge-memory/verticals/codebase/insights.html</span>
+
+<span class="dim">Open in browser to view interactive charts.</span></div>
+    </div>
+
+    <div class="design-note">
+      <div class="label">Designer note</div>
+      <strong>Single-file HTML:</strong> No external JS/CSS dependencies. Self-contained with inline charts (CSS-only bars + percentage badges).
+      <strong>Sections:</strong> (1) Pattern confidence heatmap, (2) Learner efficiency, (3) ROI calculator, (4) Usage timeline.
+    </div>
+
+    <div class="po-note">
+      <div class="label">PO acceptance</div>
+      <strong>ROI formula:</strong> (onboarding_hours_saved &times; hourly_rate) - (token_cost). Default hourly_rate=$30.
+      <strong>AC:</strong> Dashboard must load in &lt;2s, work offline, render in Chrome/Firefox/Safari.
+    </div>
+  </section>
+
+  <!-- ════ SCREEN F: ROI CALCULATOR ════ -->
+  <section class="block">
+    <h2><span class="num">F</span> Screen: ROI Calculator &mdash; Telemetry <code>MEM-M3-08/09</code></h2>
+    <div class="desc">Local-only telemetry. Track usage, calculate ROI. Privacy-safe (no cloud sync).</div>
+
+    <div class="terminal">
+      <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; ROI summary</div></div>
+      <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory roi</span>
+
+<span class="heading">Knowledge Memory &mdash; ROI Report</span>
+
+  <span class="bold">Metric                    Value</span>
+  Onboarding reports generated    3
+  New dev time saved (est.)       8h
+  LLM token cost                  $0.046
+  Hourly rate (config)            $30/h
+  <span class="dim">&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;</span>
+  <span class="ok">Estimated ROI:            $239.95</span>
+  <span class="ok">Return multiple:          5,216x</span>
+
+<span class="dim">All data stored locally in .knowledge-memory/core.db</span>
+<span class="dim">No data sent externally. Privacy-safe.</span></div>
+    </div>
+
+    <div class="cto-note">
+      <div class="label">CTO constraint</div>
+      <strong>Local-only telemetry:</strong> Principle 1 &mdash; "Local-first, always". No cloud sync, no analytics endpoints.
+      <strong>Storage:</strong> <code>usage_log</code> + <code>roi_metrics</code> tables in core.db (existing SQLite).
+      <strong>Move to Core:</strong> <code>core/telemetry/logger.py</code> + <code>core/telemetry/roi.py</code> (currently stub).
+    </div>
+  </section>
+
+  <!-- ════ SECTION G: TASK BOARD ════ -->
+  <section class="block">
+    <h2><span class="num">G</span> M3 Sprint Task Board &mdash; 13 tasks &middot; 21 SP</h2>
+    <div class="desc">2-week sprint. Onboarding + 3 learners (week 1), insights + ROI + dogfood (week 2).</div>
+
+    <div class="card">
+      <table class="spec-table">
+        <thead><tr><th>ID</th><th>Task</th><th>SP</th><th>Week</th><th>Category</th></tr></thead>
+        <tbody>
+          <tr><td><code>MEM-M3-01</code></td><td><code>commands/onboard.py</code> + Jinja2 templating</td><td>3</td><td>W1</td><td><span class="badge onboard">Onboard</span></td></tr>
+          <tr><td><code>MEM-M3-02</code></td><td>8-chapter Markdown template</td><td>2</td><td>W1</td><td><span class="badge onboard">Onboard</span></td></tr>
+          <tr><td><code>MEM-M3-03</code></td><td>Mermaid diagram integration</td><td>1</td><td>W1</td><td><span class="badge onboard">Onboard</span></td></tr>
+          <tr><td><code>MEM-M3-04</code></td><td><code>ErrorHandlingLearner</code> (try/except, custom exceptions)</td><td>2</td><td>W1</td><td><span class="badge ml">ML</span></td></tr>
+          <tr><td><code>MEM-M3-05</code></td><td><code>DependencyInjectionLearner</code></td><td>2</td><td>W1</td><td><span class="badge ml">ML</span></td></tr>
+          <tr><td><code>MEM-M3-06</code></td><td><code>TestPatternsLearner</code></td><td>1</td><td>W1</td><td><span class="badge ml">ML</span></td></tr>
+          <tr><td><code>MEM-M3-07</code></td><td><code>glossary.py</code> business term extractor</td><td>2</td><td>W1</td><td><span class="badge core">Core</span></td></tr>
+          <tr><td><code>MEM-M3-08</code></td><td><code>core/telemetry/logger.py</code> (move to Core)</td><td>1</td><td>W2</td><td><span class="badge core">Core</span></td></tr>
+          <tr><td><code>MEM-M3-09</code></td><td><code>roi_calculator.py</code></td><td>1</td><td>W2</td><td><span class="badge core">Core</span></td></tr>
+          <tr><td><code>MEM-M3-10</code></td><td><code>insights_html.py</code> dashboard exporter</td><td>2</td><td>W2</td><td><span class="badge cli">Output</span></td></tr>
+          <tr><td><code>MEM-M3-11</code></td><td><code>commands/insights.py</code> CLI</td><td>1</td><td>W2</td><td><span class="badge cli">CLI</span></td></tr>
+          <tr><td><code>MEM-M3-12</code></td><td>Dogfood HC + CTO acceptance gate</td><td>1</td><td>W2</td><td><span class="badge qa">QA</span></td></tr>
+          <tr><td><code>MEM-M3-13</code></td><td>Tester regression M1 + M2</td><td>2</td><td>W2</td><td><span class="badge qa">QA</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ════ SECTION H: DESIGN DECISIONS ════ -->
+  <section class="block">
+    <h2><span class="num">H</span> Design Decisions from PO + CTO + Designer Meeting</h2>
+    <div class="desc">3-way meeting 13/04/2026. Decisions locked for M3 implementation.</div>
+
+    <div class="card">
+      <table class="spec-table">
+        <thead><tr><th>#</th><th>Decision</th><th>Owner</th><th>Rationale</th></tr></thead>
+        <tbody>
+          <tr><td>D-M3-01</td><td><strong>Jinja2 for templates (not string format)</strong></td><td>CTO</td><td>Flexible, extensible, handles conditionals. Light dependency.</td></tr>
+          <tr><td>D-M3-02</td><td><strong>8 fixed chapters (not dynamic)</strong></td><td>PO</td><td>Consistent output across projects. Each chapter maps to 1-2 learners.</td></tr>
+          <tr><td>D-M3-03</td><td><strong>Mermaid optional (graceful skip)</strong></td><td>CTO</td><td>Not all envs have Mermaid CLI. Skip with note if not installed.</td></tr>
+          <tr><td>D-M3-04</td><td><strong>Telemetry local-only (no cloud)</strong></td><td>CTO + PO</td><td>Privacy-first. SQLite only. No analytics endpoints. Principle 1.</td></tr>
+          <tr><td>D-M3-05</td><td><strong>Insights HTML single-file</strong></td><td>Designer</td><td>No external deps. CSS-only charts. Works offline. &lt;2s load.</td></tr>
+          <tr><td>D-M3-06</td><td><strong>ROI default: $30/h hourly rate</strong></td><td>PO</td><td>Configurable in config.yaml. Conservative default for enterprise pitch.</td></tr>
+          <tr><td>D-M3-07</td><td><strong>Lifecycle commands NOT in M3</strong></td><td>CTO</td><td>Deferred to M4. State management requires vault infra maturity.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<div id="footer">
+  <div class="version-badge"><div class="dot"></div>KMP M3 Design Preview v1.0 &middot; 13/04/2026</div>
+  <span style="font-size:12px;color:var(--text-secondary);">PO + CTO + Designer &middot; 8 screens (A&ndash;H) &middot; 13 tasks &middot; 21 SP</span>
+  <div class="approval"><input type="checkbox" id="ceo-approve"><label for="ceo-approve">CEO Approved</label></div>
+</div>
+
+</body>
+</html>
