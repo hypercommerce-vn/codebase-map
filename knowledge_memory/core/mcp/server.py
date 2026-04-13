@@ -41,11 +41,17 @@ class MCPServer:
         self._initialized = False
 
     def discover_tools(self) -> None:
-        """Import vertical packages to trigger @register_tool decorators."""
+        """Import vertical packages to trigger @register_tool decorators.
+
+        Uses reload() if module already imported (e.g., after clear_registry).
+        """
         for v in self._verticals:
             module_name = f"knowledge_memory.verticals.{v}.mcp_tools"
             try:
-                importlib.import_module(module_name)
+                mod = importlib.import_module(module_name)
+                # Re-trigger decorators if module was already cached
+                if module_name in sys.modules:
+                    importlib.reload(mod)
                 logger.info("Loaded MCP tools from vertical: %s", v)
             except ImportError as e:
                 logger.warning("No MCP tools for vertical '%s': %s", v, e)

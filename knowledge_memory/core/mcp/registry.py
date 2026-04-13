@@ -52,8 +52,16 @@ def register_resource(uri: str):
     """
 
     def deco(cls: type[BaseMCPResource]) -> type[BaseMCPResource]:
-        instance = cls()
-        instance.uri = uri
+        # Preserve class-level name/description since @dataclass __init__
+        # uses defaults. Pass known values so they don't get wiped.
+        init_kwargs: dict[str, str] = {"uri": uri}
+        if hasattr(cls, "name") and cls.name:
+            init_kwargs["name"] = cls.name
+        if hasattr(cls, "description") and cls.description:
+            init_kwargs["description"] = cls.description
+        if hasattr(cls, "mime_type") and cls.mime_type != "text/plain":
+            init_kwargs["mime_type"] = cls.mime_type
+        instance = cls(**init_kwargs)
         RESOURCES[uri] = instance
         logger.debug("Registered MCP resource: %s", uri)
         return cls

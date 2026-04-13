@@ -344,3 +344,227 @@ class TestCodebaseMCPTools:
     def test_all_four_tools_registered(self):
         expected = {"find_function", "explain_module", "pattern_check", "impact"}
         assert expected.issubset(set(TOOLS.keys()))
+
+
+# ══════════════════════════════════════════════════
+# Resource Registry + Server resource/read tests
+# ══════════════════════════════════════════════════
+
+
+class TestResourceRegistry:
+    """Tests for register_resource, list_resources, and server resources/read."""
+
+    def setup_method(self):
+        clear_registry()
+
+    def test_register_resource_decorator(self):
+        from knowledge_memory.core.mcp.registry import RESOURCES, register_resource
+        from knowledge_memory.core.mcp.tool_base import BaseMCPResource
+
+        @register_resource("patterns://test")
+        class TestResource(BaseMCPResource):
+            name = "test-patterns"
+            description = "Test patterns resource"
+            mime_type = "text/plain"
+
+            def read(self) -> str:
+                return "pattern data here"
+
+        assert "patterns://test" in RESOURCES
+        assert RESOURCES["patterns://test"].uri == "patterns://test"
+
+    def test_list_resources(self):
+        from knowledge_memory.core.mcp.registry import list_resources, register_resource
+        from knowledge_memory.core.mcp.tool_base import BaseMCPResource
+
+        @register_resource("vault://codebase")
+        class VaultResource(BaseMCPResource):
+            name = "vault-codebase"
+            description = "Codebase vault"
+            mime_type = "application/json"
+
+            def read(self) -> str:
+                return '{"patterns": 25}'
+
+        result = list_resources()
+        assert len(result) >= 1
+        uris = [r["uri"] for r in result]
+        assert "vault://codebase" in uris
+        entry = [r for r in result if r["uri"] == "vault://codebase"][0]
+        assert entry["name"] == "vault-codebase"
+        assert entry["mimeType"] == "application/json"
+
+    def test_server_resources_list(self):
+        from knowledge_memory.core.mcp.registry import register_resource
+        from knowledge_memory.core.mcp.tool_base import BaseMCPResource
+
+        @register_resource("test://res")
+        class Res(BaseMCPResource):
+            name = "res"
+            description = "A resource"
+
+            def read(self) -> str:
+                return "content"
+
+        server = MCPServer(verticals=[])
+        server._initialized = True
+        resp = server.handle_request(
+            {"jsonrpc": "2.0", "id": 1, "method": "resources/list", "params": {}}
+        )
+        assert "result" in resp
+        uris = [r["uri"] for r in resp["result"]["resources"]]
+        assert "test://res" in uris
+
+    def test_server_resources_read_success(self):
+        from knowledge_memory.core.mcp.registry import register_resource
+        from knowledge_memory.core.mcp.tool_base import BaseMCPResource
+
+        @register_resource("data://hello")
+        class HelloResource(BaseMCPResource):
+            name = "hello"
+            description = "Hello"
+            mime_type = "text/plain"
+
+            def read(self) -> str:
+                return "Hello from resource!"
+
+        server = MCPServer(verticals=[])
+        server._initialized = True
+        resp = server.handle_request(
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "resources/read",
+                "params": {"uri": "data://hello"},
+            }
+        )
+        assert "result" in resp
+        contents = resp["result"]["contents"]
+        assert len(contents) == 1
+        assert contents[0]["text"] == "Hello from resource!"
+        assert contents[0]["uri"] == "data://hello"
+        assert contents[0]["mimeType"] == "text/plain"
+
+    def test_server_resources_read_not_found(self):
+        server = MCPServer(verticals=[])
+        server._initialized = True
+        resp = server.handle_request(
+            {
+                "jsonrpc": "2.0",
+                "id": 3,
+                "method": "resources/read",
+                "params": {"uri": "nonexistent://xyz"},
+            }
+        )
+        assert "error" in resp
+        assert resp["error"]["code"] == -32602
+
+    def test_server_resources_read_error(self):
+        from knowledge_memory.core.mcp.registry import register_resource
+        from knowledge_memory.core.mcp.tool_base import BaseMCPResource
+
+        @register_resource("broken://res")
+        class BrokenResource(BaseMCPResource):
+            name = "broken"
+            description = "Broken"
+
+            def read(self) -> str:
+                raise RuntimeError("disk error")
+
+        server = MCPServer(verticals=[])
+        server._initialized = True
+        resp = server.handle_request(
+            {
+                "jsonrpc": "2.0",
+                "id": 4,
+                "method": "resources/read",
+                "params": {"uri": "broken://res"},
+            }
+        )
+        assert "error" in resp
+        assert "disk error" in resp["error"]["message"]
+
+
+# ══════════════════════════════════════════════════
+# Server discover_tools test
+# ══════════════════════════════════════════════════
+
+
+class TestServerDiscovery:
+    """Test server discover_tools() with real vertical import."""
+
+    def setup_method(self):
+        clear_registry()
+
+    def test_discover_codebase_tools(self):
+        server = MCPServer(verticals=["codebase"])
+        server.discover_tools()
+        assert server._initialized is True
+        assert "find_function" in TOOLS
+        assert "explain_module" in TOOLS
+        assert "pattern_check" in TOOLS
+        assert "impact" in TOOLS
+        assert len(TOOLS) >= 4
+
+    def test_discover_unknown_vertical_no_crash(self):
+        server = MCPServer(verticals=["nonexistent_vertical_xyz"])
+        server.discover_tools()
+        assert server._initialized is True
+        # Should log warning but not crash
+
+    def test_discover_then_handle_request(self):
+        """End-to-end: discover → list tools → call tool."""
+        from knowledge_memory.verticals.codebase import mcp_tools
+
+        server = MCPServer(verticals=["codebase"])
+        server.discover_tools()
+
+        # Configure AFTER discover (reload resets module globals)
+        mcp_tools.configure_tools(
+            nodes=_sample_nodes(),
+            edges=_sample_edges(),
+        )
+
+        # List tools
+        resp = server.handle_request(
+            {"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}
+        )
+        names = [t["name"] for t in resp["result"]["tools"]]
+        assert "find_function" in names
+
+        # Call tool
+        resp = server.handle_request(
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {"name": "find_function", "arguments": {"name": "login"}},
+            }
+        )
+        assert "result" in resp
+        assert not resp["result"].get("isError", False)
+
+    def test_server_tool_call_exception_handled(self):
+        """Tool that throws exception → server returns error gracefully."""
+
+        @register_tool("crasher")
+        class CrasherTool(BaseMCPTool):
+            description = "Crashes on purpose"
+            input_schema = []
+
+            def execute(self, **kwargs):
+                raise ValueError("Intentional crash for testing")
+
+        server = MCPServer(verticals=[])
+        server._initialized = True
+        resp = server.handle_request(
+            {
+                "jsonrpc": "2.0",
+                "id": 99,
+                "method": "tools/call",
+                "params": {"name": "crasher", "arguments": {}},
+            }
+        )
+        assert "result" in resp
+        assert resp["result"]["isError"] is True
+        assert "Intentional crash" in resp["result"]["content"][0]["text"]
