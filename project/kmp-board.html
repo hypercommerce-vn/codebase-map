@@ -183,7 +183,7 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
     <div class="nav-section-header">KMP SPRINTS</div>
     <div class="nav-items">
       <a class="nav-item active" href="#sprint-m3">
-        <span class="nav-item-icon">&#128293;</span> Sprint M3
+        <span class="nav-item-icon">&#10003;</span> Sprint M3
         <span class="nav-item-badge">21 SP</span>
       </a>
       <a class="nav-item" href="#sprint-m2">
@@ -262,9 +262,9 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
     <h1>Knowledge Memory Platform — Project Board</h1>
     <p>Knowledge OS for every domain. Local-first, BYOK, open vault format. CEO-approved 08/04/2026.</p>
     <div class="hero-badges">
-      <span class="hero-badge">&#128293; Sprint M3 ACTIVE &middot; Onboarding + Polish &middot; 17/21 SP (81%)</span>
-      <span class="hero-badge">M0 &#10003; (8 SP) &middot; M1 &#10003; (26 SP) &middot; M2 &#10003; (28 SP) &middot; Total: 79 SP shipped</span>
-      <span class="hero-badge">832 tests green &middot; 90 PRs &middot; All CTO 100/100</span>
+      <span class="hero-badge">&#10003; Sprint M3 COMPLETE &middot; Onboarding + Polish &middot; 21/21 SP</span>
+      <span class="hero-badge">M0 &#10003; (8) &middot; M1 &#10003; (26) &middot; M2 &#10003; (28) &middot; M3 &#10003; (21) &middot; Total: 83 SP</span>
+      <span class="hero-badge">865 tests green &middot; 91 PRs &middot; All CTO 100/100</span>
       <span class="hero-badge">Repo PRIVATE &middot; 14/04/2026</span>
     </div>
   </div>
@@ -289,10 +289,10 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
   </table>
 
   <!-- Sprint M3 Task Board (ACTIVE) -->
-  <h2 id="sprint-m3"><span class="h2-icon">&#128293;</span> Sprint M3 &mdash; Onboarding + Polish <span class="badge active" style="font-size:12px;margin-left:8px;">5/21 SP &middot; Day 1</span></h2>
+  <h2 id="sprint-m3"><span class="h2-icon">&#10003;</span> Sprint M3 &mdash; Onboarding + Polish <span class="badge done" style="font-size:12px;margin-left:8px;">21/21 SP &middot; COMPLETE</span></h2>
 
-  <div class="progress-bar"><div class="progress-fill" style="width:81%;background:#2dd4bf"></div></div>
-  <p style="font-size:12px;color:var(--text-secondary);margin-bottom:16px;">17/21 SP &middot; 10/13 tasks done &middot; Day 4 (W2) &middot; 832 tests</p>
+  <div class="progress-bar"><div class="progress-fill" style="width:100%;background:#15803d"></div></div>
+  <p style="font-size:12px;color:var(--text-secondary);margin-bottom:16px;">21/21 SP &middot; 13/13 tasks done &middot; 5 PRs (#86-#91) &middot; 865 tests &middot; COMPLETE 14/04/2026</p>
 
   <table>
     <thead><tr><th>ID</th><th>Task</th><th>SP</th><th>Week</th><th>PR</th><th>Status</th></tr></thead>
@@ -339,15 +339,15 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
       </tr>
       <tr>
         <td><code>MEM-M3-11</code></td><td><code>commands/insights.py</code> CLI</td>
-        <td>1</td><td>W2</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+        <td>1</td><td>W2</td><td>PR #91</td><td><span class="badge done">&#10003;</span></td>
       </tr>
       <tr>
         <td><code>MEM-M3-12</code></td><td>Dogfood HC + CTO acceptance gate</td>
-        <td>1</td><td>W2</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+        <td>1</td><td>W2</td><td>PR #91</td><td><span class="badge done">&#10003;</span></td>
       </tr>
       <tr>
         <td><code>MEM-M3-13</code></td><td>Tester regression M1 + M2</td>
-        <td>2</td><td>W2</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+        <td>2</td><td>W2</td><td>PR #91</td><td><span class="badge done">&#10003;</span></td>
       </tr>
     </tbody>
   </table>
@@ -1163,6 +1163,41 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
         <td>100/100 SHIPIT</td>
         <td><span class="badge merged">&#10003; Merged</span></td>
       </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/87" target="_blank">#87</a></td>
+        <td>fix(board): sync kmp-board + board.html for M3 sprint (SSOT)</td>
+        <td><code>chore/kmp-m3-board-sync</code></td>
+        <td>&mdash;</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/88" target="_blank">#88</a></td>
+        <td>feat(learners): M3 Day 2 &mdash; DI + TestPatterns + templates</td>
+        <td><code>feat/kmp-m3-day2</code></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/89" target="_blank">#89</a></td>
+        <td>feat(onboard): M3 Day 3 &mdash; Mermaid + Glossary (W1 complete)</td>
+        <td><code>feat/kmp-m3-day3</code></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/90" target="_blank">#90</a></td>
+        <td>feat(telemetry): M3 Day 4 &mdash; Telemetry + ROI + Insights HTML</td>
+        <td><code>feat/kmp-m3-day4</code></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/91" target="_blank">#91</a></td>
+        <td>feat(insights): M3 Day 5 &mdash; Insights CLI + Dogfood + Regression (SPRINT COMPLETE)</td>
+        <td><code>feat/kmp-m3-day5</code></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -1305,6 +1340,10 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
       <div class="tl-date">14/04/2026</div>
       <div class="tl-content"><strong>M3 Day 4 — Telemetry + ROI + Insights (W2 start)</strong> &mdash; MEM-M3-08: TelemetryLogger (local-only, privacy-safe, event tracking, summary). MEM-M3-09: ROICalculator (hours saved &times; hourly rate - token cost, format_roi). MEM-M3-10: export_insights_html (single-file dashboard, pattern heatmap, learner cards, ROI section, usage table, CSS-only charts). 22 new tests, 832 total. 17/21 SP (81%).</div>
     </div>
+    <div class="tl-item">
+      <div class="tl-date">14/04/2026</div>
+      <div class="tl-content"><strong>M3 Day 5 — Insights CLI + Dogfood + Regression (SPRINT COMPLETE)</strong> &mdash; MEM-M3-11: InsightsEngine + format_insights_result (terminal + HTML export). MEM-M3-12: 6 dogfood acceptance tests (6 learners, onboard pipeline, insights E2E, glossary, mermaid, telemetry privacy). MEM-M3-13: 20 regression tests (8 M1 + 12 M2 imports + contracts). Sprint 21/21 SP (100%). 33 new tests, 865 total.</div>
+    </div>
   </div>
 
   <!-- Specs & Design Refs -->
@@ -1339,7 +1378,7 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
 <!-- Footer -->
 <div class="footer">
   <span>KMP Project Board &middot; Knowledge Memory Platform &middot; Hyper Commerce</span>
-  <span>Updated: 14/04/2026 &middot; Sprint M3 &#128293; ACTIVE (17/21 SP, Day 4) &middot; M2 &#10003; (28 SP) &middot; M1 &#10003; (26 SP) &middot; M0 &#10003; (8 SP) &middot; 832 tests &middot; 79 SP shipped &middot; Repo PRIVATE</span>
+  <span>Updated: 14/04/2026 &middot; Sprint M3 &#10003; COMPLETE (21/21 SP, 5 PRs, 865 tests) &middot; M2 &#10003; (28 SP) &middot; M1 &#10003; (26 SP) &middot; M0 &#10003; (8 SP) &middot; 83 SP total &middot; Repo PRIVATE</span>
 </div>
 
 <script>
