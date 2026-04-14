@@ -1,6 +1,16 @@
+# HC-AI | ticket: MEM-M3-08
 """Telemetry — privacy-safe local usage logging and ROI tracking.
 
-See architecture.md §3. Stub package for M0.
+Design decision D-M3-04: Local-only, no cloud sync. SQLite storage.
 """
 
-# HC-AI | ticket: KMP-M0-01
+from knowledge_memory.core.telemetry.logger import TelemetryEvent, TelemetryLogger
+from knowledge_memory.core.telemetry.roi import ROICalculator, ROIMetrics, format_roi
+
+__all__ = [
+    "TelemetryLogger",
+    "TelemetryEvent",
+    "ROICalculator",
+    "ROIMetrics",
+    "format_roi",
+]
