@@ -57,9 +57,7 @@ def _build_parser() -> argparse.ArgumentParser:
     bs.add_argument(
         "--resume", action="store_true", help="Resume interrupted bootstrap"
     )
-    bs.add_argument(
-        "--force", action="store_true", help="Force re-initialize vault"
-    )
+    bs.add_argument("--force", action="store_true", help="Force re-initialize vault")
     bs.add_argument(
         "--include",
         default="backend/**/*.py",
@@ -129,6 +127,7 @@ def _console():
     """Get a rich Console instance."""
     try:
         from rich.console import Console
+
         return Console()
     except ImportError:
         return None
@@ -175,10 +174,7 @@ def _open_vault(root: Path):
     vault = CodebaseVault()
     vault_dir = root / ".knowledge-memory"
     if not vault_dir.exists():
-        _error(
-            f"Vault not found at {vault_dir}.\n"
-            "  Run: codebase-memory init"
-        )
+        _error(f"Vault not found at {vault_dir}.\n" "  Run: codebase-memory init")
         return None
     vault.open(root)
     return vault
@@ -454,7 +450,9 @@ def _cmd_glossary(root: Path, args: argparse.Namespace) -> int:
 
         for t in terms[: args.limit]:
             conf_style = (
-                "green" if t.confidence >= 80 else "yellow" if t.confidence >= 60 else "red"
+                "green"
+                if t.confidence >= 80
+                else "yellow" if t.confidence >= 60 else "red"
             )
             table.add_row(
                 t.term,
@@ -473,7 +471,9 @@ def _cmd_glossary(root: Path, args: argparse.Namespace) -> int:
     else:
         print(f"=== Glossary ({len(terms)} terms) ===\n")
         for t in terms[: args.limit]:
-            print(f"  {t.term:<30} {t.domain:<15} {t.evidence_count:>5}  {t.confidence:.0f}%")
+            print(
+                f"  {t.term:<30} {t.domain:<15} {t.evidence_count:>5}  {t.confidence:.0f}%"
+            )
 
     return 0
 
@@ -509,6 +509,7 @@ def _cmd_insights(root: Path, args: argparse.Namespace) -> int:
         # Auto-open in browser
         try:
             import webbrowser
+
             webbrowser.open(f"file://{result.html_path}")
         except Exception:
             pass
@@ -579,5 +580,6 @@ def main(argv: list[str] | None = None) -> int:
         _error(f"Unexpected error: {exc}")
         if args.verbose:
             import traceback
+
             traceback.print_exc()
         return 1
