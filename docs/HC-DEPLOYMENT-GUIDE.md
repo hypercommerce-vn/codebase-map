@@ -10,15 +10,15 @@
 ## Quick Start (5 phút)
 
 ```bash
-# 1. Install codebase-map (CBM)
+# 1. Install CBM + KMP (from local clone — repo is PRIVATE)
+cd /Users/pro/Projects/codebase-map
+pip install -e ".[dev]"
+
+# 2. Go to HC project
 cd /path/to/HyperCommerce
-pipx install "git+ssh://git@github.com/hypercommerce-vn/codebase-map.git"
 
-# 2. Generate function graph
+# 3. Generate function graph
 codebase-map generate -c codebase-map.yaml
-
-# 3. Install KMP (cùng repo)
-pip install -e "/path/to/codebase-map[dev]"
 
 # 4. Init vault
 codebase-memory init
@@ -35,7 +35,28 @@ codebase-memory ask "How is customer authentication handled?"
 
 ## Phần 1: Codebase Map (CBM) trên HC
 
-### 1.1 Config file
+### 1.1 Installation (repo PRIVATE)
+
+```bash
+# CEO / local dev (already cloned):
+cd /Users/pro/Projects/codebase-map
+pip install -e ".[dev]"
+
+# Team member (cần SSH key đã add vào GitHub):
+pip install "git+ssh://git@github.com/hypercommerce-vn/codebase-map.git[dev]"
+
+# Hoặc dùng PAT (Personal Access Token):
+pip install "git+https://<GITHUB_PAT>@github.com/hypercommerce-vn/codebase-map.git[dev]"
+
+# Verify:
+codebase-map --version
+codebase-memory --help 2>/dev/null || echo "KMP commands available via python -m"
+```
+
+> **Note:** Repo PRIVATE — mọi team member cần SSH key hoặc PAT.
+> Xem chi tiết: `docs/ONBOARDING.md`
+
+### 1.2 Config file
 
 Tạo `codebase-map.yaml` tại HC repo root:
 
@@ -61,7 +82,7 @@ graph:
   group_by: module
 ```
 
-### 1.2 Generate graph
+### 1.3 Generate graph
 
 ```bash
 # Full generate (JSON + interactive HTML)
@@ -72,7 +93,7 @@ codebase-map summary -f docs/function-map/graph.json
 # Expected: ~1,386 nodes · ~8,285 edges · 7 domains
 ```
 
-### 1.3 Dual-Snapshot Diff (v2.2)
+### 1.4 Dual-Snapshot Diff (v2.2)
 
 ```bash
 # Create baseline snapshot
@@ -91,7 +112,7 @@ codebase-map snapshot-diff \
   -c codebase-map.yaml
 ```
 
-### 1.4 CI Integration (đã có sẵn)
+### 1.5 CI Integration (đã có sẵn)
 
 HC repo đã có 4 workflows:
 - `ci.yml` — lint + test + generate + notify
@@ -329,7 +350,7 @@ codebase-map snapshot-diff --baseline main --current feature-branch --format tex
 
 | Problem | Solution |
 |---------|----------|
-| `codebase-map: command not found` | `pipx install "git+ssh://..."` hoặc `pip install -e .` |
+| `codebase-map: command not found` | `cd /path/to/codebase-map && pip install -e ".[dev]"` (repo PRIVATE, cài từ local clone) |
 | `Vault not initialized` | Run `codebase-memory init` |
 | `No LLM provider configured` | Set `llm.provider` in config.yaml + export API key |
 | `0 patterns after bootstrap` | Check scan scope in config.yaml, ensure Python files exist |
