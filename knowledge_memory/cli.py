@@ -1,5 +1,7 @@
 # HC-AI | ticket: KMP-CLI-01
-"""CLI entry point — codebase-memory init|bootstrap|summary|ask|why|impact|onboard|glossary|insights.
+"""CLI entry point for codebase-memory.
+
+Commands: init|bootstrap|summary|ask|why|impact|onboard|glossary|insights.
 
 Provides a rich terminal interface for the Knowledge Memory Platform.
 Uses existing engine modules + cli_output.py for formatted output.
@@ -9,9 +11,7 @@ from __future__ import annotations
 
 import argparse
 import logging
-import os
 import sys
-import time
 from pathlib import Path
 
 # HC-AI | ticket: KMP-CLI-01
@@ -33,7 +33,10 @@ def _build_parser() -> argparse.ArgumentParser:
     """Build the CLI argument parser with all subcommands."""
     parser = argparse.ArgumentParser(
         prog="codebase-memory",
-        description="Knowledge Memory Platform — learn patterns, ask questions, analyze impact.",
+        description=(
+            "Knowledge Memory Platform — learn patterns, "
+            "ask questions, analyze impact."
+        ),
     )
     parser.add_argument(
         "--version", action="version", version=f"codebase-memory {_VERSION}"
@@ -472,7 +475,8 @@ def _cmd_glossary(root: Path, args: argparse.Namespace) -> int:
         print(f"=== Glossary ({len(terms)} terms) ===\n")
         for t in terms[: args.limit]:
             print(
-                f"  {t.term:<30} {t.domain:<15} {t.evidence_count:>5}  {t.confidence:.0f}%"
+                f"  {t.term:<30} {t.domain:<15}"
+                f" {t.evidence_count:>5}  {t.confidence:.0f}%"
             )
 
     return 0
