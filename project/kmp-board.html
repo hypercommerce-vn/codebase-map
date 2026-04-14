@@ -811,6 +811,74 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
 
   <div class="issue-card">
     <div class="issue-card-header">
+      <span class="issue-card-title">SEC-01: Add html.escape() in insights_html.py</span>
+      <span class="badge issue">security</span>
+    </div>
+    <div class="issue-card-body">
+      Pattern names and categories are injected into HTML via f-strings without <code>html.escape()</code>. Currently safe (learner-generated names, local file), but should add escaping for defense-in-depth against future non-Python parsers that may produce identifiers with HTML metacharacters.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: Security audit 14/04/2026 (CTO)</span>
+      <span>&middot;</span>
+      <span>Priority: Low (non-blocking)</span>
+      <span>&middot;</span>
+      <span>Action: Add <code>html.escape()</code> to all dynamic values in insights_html.py</span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">SEC-02: Add -- separator in git subprocess calls</span>
+      <span class="badge issue">security</span>
+    </div>
+    <div class="issue-card-body">
+      <code>codebase_map/graph/diff.py:164</code> passes <code>ref</code> argument directly to <code>subprocess.run(["git", "diff", ..., ref])</code>. While shell=False prevents injection, a malicious ref starting with <code>-</code> could be interpreted as a git flag. Add <code>--</code> separator before positional args.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: Security audit 14/04/2026 (CTO)</span>
+      <span>&middot;</span>
+      <span>Priority: Low (non-blocking)</span>
+      <span>&middot;</span>
+      <span>Action: Add <code>["git", "diff", ..., "--", ref]</code> in diff.py</span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">SEC-03: Pass PR title via env var in ci.yml</span>
+      <span class="badge issue">security</span>
+    </div>
+    <div class="issue-card-body">
+      Telegram notify step uses <code>${{ github.event.pull_request.title }}</code> directly in shell <code>run:</code> block. While repo is PRIVATE (only trusted team), best practice is to pass via <code>env:</code> variable to prevent shell interpolation of PR titles with special characters.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: Security audit 14/04/2026 (CTO)</span>
+      <span>&middot;</span>
+      <span>Priority: Low (non-blocking, private repo)</span>
+      <span>&middot;</span>
+      <span>Action: Use <code>env: PR_TITLE: ${{ github.event.pull_request.title }}</code></span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
+      <span class="issue-card-title">SEC-04: Add MCP tool argument schema validation</span>
+      <span class="badge issue">security</span>
+    </div>
+    <div class="issue-card-body">
+      <code>server.py:117</code> passes <code>arguments</code> from JSON-RPC request directly to <code>tool.execute(**arguments)</code> without validating against <code>tool.input_schema</code>. Individual tools validate required params, but no centralized enforcement of param names/types. Add schema validation before dispatch.
+    </div>
+    <div class="issue-card-meta">
+      <span>Source: Security audit 14/04/2026 (CTO)</span>
+      <span>&middot;</span>
+      <span>Priority: Low (non-blocking)</span>
+      <span>&middot;</span>
+      <span>Action: Add schema validation in <code>_handle_tool_call()</code> before <code>execute()</code></span>
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-card-header">
       <span class="issue-card-title">KMP-ISSUE-10: Node/edge extraction in _step_parse() could be helper</span>
       <span class="badge issue">refactor</span>
     </div>
