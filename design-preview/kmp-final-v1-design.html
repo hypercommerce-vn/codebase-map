@@ -298,6 +298,17 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
   <h1 class="screen-title">KMP &mdash; Knowledge Memory Platform</h1>
   <p class="screen-sub">Interactive design preview. Click any command to see its terminal mockup with seed data.</p>
 
+  <details class="user-hint" open>
+    <summary>User Guide &mdash; Getting Started with KMP</summary>
+    <div class="hint-section"><div class="hint-label">What is KMP?</div><div class="hint-body">Knowledge Memory Platform learns patterns from your codebase &mdash; naming conventions, architecture layers, error handling, ownership &mdash; then lets you <strong>ask questions</strong>, <strong>analyze impact</strong>, and <strong>onboard new developers</strong> using AI. Think of it as institutional knowledge, automated.</div></div>
+    <div class="hint-section"><div class="hint-label">Quick start (3 commands)</div><div class="hint-body"><ul>
+      <li><code>codebase-memory init</code> &mdash; create vault in your project</li>
+      <li><code>codebase-memory bootstrap</code> &mdash; scan code + learn patterns</li>
+      <li><code>codebase-memory ask "How does auth work?"</code> &mdash; get AI answers</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Explore this dashboard</div><div class="hint-body">Click any card below or use the sidebar to see terminal mockups for each command. Each screen has a 💡 User Guide with quality indicators and tips.</div></div>
+  </details>
+
   <!-- Sprint Cards -->
   <div class="overview-grid">
     <div class="ov-card" onclick="showScreen('m0-init')">
@@ -361,6 +372,13 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
 <div class="screen" id="screen-architecture">
   <h1 class="screen-title">Architecture &mdash; CBM + KMP Integration</h1>
   <p class="screen-sub">CBM = stateless data generator (free OSS). KMP = stateful knowledge engine (freemium). CTO-approved boundary.</p>
+
+  <details class="user-hint">
+    <summary>User Guide &mdash; How the two tools work together</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body"><strong>Codebase Map (CBM)</strong> parses your code into a function dependency graph (nodes + edges). <strong>KMP</strong> imports that graph, learns patterns, and provides AI-powered Q&amp;A. CBM is the &ldquo;data generator&rdquo;, KMP is the &ldquo;intelligence layer&rdquo;.</div></div>
+    <div class="hint-section"><div class="hint-label">How to use</div><div class="hint-body">You don&rsquo;t need to manage the integration manually. <code>codebase-memory bootstrap</code> handles both CBM graph generation and KMP learning in one pipeline. The <code>impact</code> command internally calls CBM&rsquo;s dual-snapshot diff engine.</div></div>
+    <div class="hint-section"><div class="hint-label purple">Key principle</div><div class="hint-body">CBM is 100% free and open source. KMP adds AI intelligence on top. Lifecycle commands (state management) live in KMP, not CBM. This keeps CBM lean and focused.</div></div>
+  </details>
 
   <div class="arch-box"><span class="layer-label">&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;</span>
 <span class="layer-label">&#9474;</span>  <span class="cbm">CODEBASE-MAP v2.2 (standalone, free, OSS)</span>                 <span class="layer-label">&#9474;</span>
@@ -435,6 +453,16 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
   <h1 class="screen-title"><span class="sprint-tag m0">M0</span> vault-format-spec.md</h1>
   <p class="screen-sub">Public spec for vault directory structure. KMP-M0-07.</p>
 
+  <details class="user-hint">
+    <summary>User Guide &mdash; Vault format explained</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Defines the <code>.knowledge-memory/</code> directory structure: SQLite databases (core.db, vault.db), config files, pattern storage, snapshots, and indexes. This spec is public so third-party tools can read KMP vaults.</div></div>
+    <div class="hint-section"><div class="hint-label">How to use</div><div class="hint-body">You don&rsquo;t edit vault files directly &mdash; KMP manages them. This spec is for tool developers building integrations. If you need to inspect vault data, use <code>codebase-memory summary</code>.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> All REQUIRED files present after init (core.db, config.yaml, vault.db)</li>
+      <li><span class="bad">Bad:</span> Missing files &mdash; run <code>codebase-memory init</code> again</li>
+    </ul></div></div>
+  </details>
+
   <div class="file-mock">
     <div class="file-mock-bar">docs/vault-format-spec.md</div>
     <div class="file-mock-body"><span class="h1"># Vault Format Specification v1</span>
@@ -465,6 +493,16 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
 <div class="screen" id="screen-m0-license">
   <h1 class="screen-title"><span class="sprint-tag m0">M0</span> Dual License Check</h1>
   <p class="screen-sub">MIT (Core) + LICENSE-PRO (Commercial). CI gate enforces presence. KMP-M0-08.</p>
+
+  <details class="user-hint">
+    <summary>User Guide &mdash; Licensing model</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">KMP uses dual licensing: <strong>MIT</strong> for Core (free, open source) and <strong>LICENSE-PRO</strong> for commercial features (paid). CI automatically checks both files exist on every PR.</div></div>
+    <div class="hint-section"><div class="hint-label">How to use</div><div class="hint-body">Core features (init, bootstrap, patterns, quick-wins) are free forever. Pro features (advanced insights, team analytics, SaaS dashboard) require a commercial license. Check CI status for license compliance.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> Both LICENSE and LICENSE-PRO present, CI check passes</li>
+      <li><span class="bad">Bad:</span> Missing license file &mdash; CI will block PR merge</li>
+    </ul></div></div>
+  </details>
 
   <div class="two-col">
     <div class="card">
@@ -610,6 +648,17 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
   <h1 class="screen-title"><span class="sprint-tag m1">M1</span> patterns.md Output</h1>
   <p class="screen-sub">Human-readable Markdown. 25 patterns grouped by learner. Git-trackable.</p>
 
+  <details class="user-hint">
+    <summary>User Guide &mdash; Reading patterns.md</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Auto-generated Markdown file listing all discovered patterns, grouped by learner (Naming, Layer, Ownership, ErrorHandling, DI, TestPatterns). Each pattern shows confidence % and evidence count. Commit to your repo for team reference.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> 25+ patterns, all &ge;60% confidence, evidence paths link to real code</li>
+      <li><span class="good">Good:</span> 15-25 patterns, most above threshold</li>
+      <li><span class="bad">Bad:</span> &lt;10 patterns &mdash; expand scan scope or lower threshold in config.yaml</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Pro tip</div><div class="hint-body">Commit <code>patterns.md</code> to your repo and add to PR template. Reviewers can reference patterns during code review.</div></div>
+  </details>
+
   <div class="file-mock">
     <div class="file-mock-bar">patterns.md &mdash; 25 patterns</div>
     <div class="file-mock-body"><span class="h1"># Codebase Patterns</span>
@@ -646,6 +695,17 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
 <div class="screen" id="screen-m1-summary">
   <h1 class="screen-title"><span class="sprint-tag m1">M1</span> <code>codebase-memory summary</code></h1>
   <p class="screen-sub">Quick vault status check. Pattern count, last bootstrap, snapshot count.</p>
+
+  <details class="user-hint">
+    <summary>User Guide &mdash; Checking vault health</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Shows vault status at a glance: pattern count, snapshot count, last bootstrap time, corpus stats (nodes/edges/files). Use to verify bootstrap ran correctly or check if vault is stale.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> 25+ patterns, last bootstrap &lt;24h ago, 1000+ nodes</li>
+      <li><span class="good">Good:</span> 10+ patterns, bootstrap &lt;1 week ago</li>
+      <li><span class="normal">Normal:</span> Few patterns, old bootstrap &mdash; run <code>bootstrap</code> to refresh</li>
+      <li><span class="bad">Bad:</span> 0 patterns or "Vault not initialized" &mdash; run <code>init</code> first</li>
+    </ul></div></div>
+  </details>
 
   <div class="terminal">
     <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; vault summary</div></div>
@@ -830,6 +890,18 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
   <h1 class="screen-title"><span class="sprint-tag m2">M2</span> MCP Server + 4 Tools</h1>
   <p class="screen-sub">MCP server for Claude Code, Cursor, AI agents. Registry pattern: <code>@register_tool</code>.</p>
 
+  <details class="user-hint">
+    <summary>User Guide &mdash; Connecting AI agents to your vault</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Exposes 4 tools via MCP protocol so AI agents (Claude Code, Cursor, etc.) can query your codebase vault: <strong>find_function</strong> (search by name), <strong>explain_module</strong> (describe structure), <strong>pattern_check</strong> (validate conventions), <strong>impact</strong> (change analysis).</div></div>
+    <div class="hint-section"><div class="hint-label">How to use</div><div class="hint-body"><code>codebase-memory mcp serve</code> starts the server on stdio. Configure in your AI tool&rsquo;s MCP settings (e.g., Claude Code <code>.claude/settings.json</code> or Cursor MCP config).</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> 4 tools + 2 resources registered, AI agent can call find_function</li>
+      <li><span class="good">Good:</span> Server starts but some tools return empty (vault needs bootstrap)</li>
+      <li><span class="bad">Bad:</span> Connection refused &mdash; check stdio transport config in AI tool</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Best setup</div><div class="hint-body">Run <code>bootstrap</code> first so tools have data. The <code>pattern_check</code> tool is especially useful during code review &mdash; AI can validate new functions against your team&rsquo;s conventions.</div></div>
+  </details>
+
   <div class="terminal">
     <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; MCP server</div></div>
     <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory mcp serve</span>
@@ -882,6 +954,18 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
   <h1 class="screen-title"><span class="sprint-tag m2">M2</span> LLM Provider Configuration</h1>
   <p class="screen-sub">BYOK multi-LLM. Anthropic first, then OpenAI + Gemini. Factory pattern.</p>
 
+  <details class="user-hint">
+    <summary>User Guide &mdash; Setting up your LLM provider</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">KMP supports 3 LLM providers: <strong>Anthropic</strong> (Claude), <strong>OpenAI</strong> (GPT), <strong>Google</strong> (Gemini). BYOK = Bring Your Own Key. Your API key stays in env vars, never stored in code or vault.</div></div>
+    <div class="hint-section"><div class="hint-label">How to use</div><div class="hint-body">Edit <code>.knowledge-memory/config.yaml</code> &rarr; set <code>llm.provider</code> and <code>llm.api_key_env</code>. Then <code>export ANTHROPIC_API_KEY="sk-ant-..."</code>. Optional: configure <code>llm.fallback</code> for automatic provider switching on rate limits.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> Primary + fallback configured, cost tracking active</li>
+      <li><span class="good">Good:</span> Single provider configured, working</li>
+      <li><span class="bad">Bad:</span> "No LLM provider configured" &mdash; set <code>llm.provider</code> + export API key</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Cost tip</div><div class="hint-body">Gemini Flash is cheapest ($0.10/1M tokens). Claude Sonnet is best quality/cost balance. Use <code>codebase-memory usage</code> to monitor spending.</div></div>
+  </details>
+
   <div class="two-col">
     <div class="file-mock">
       <div class="file-mock-bar">.knowledge-memory/config.yaml</div>
@@ -932,6 +1016,22 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
 <div class="screen" id="screen-m2-cost">
   <h1 class="screen-title"><span class="sprint-tag m2">M2</span> <code>codebase-memory usage</code></h1>
   <p class="screen-sub">LLM cost tracking. Every call logged: provider, tokens, cost.</p>
+
+  <details class="user-hint">
+    <summary>User Guide &mdash; Monitoring LLM costs</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Every <code>ask</code>/<code>why</code> command logs: provider, model, token count (in+out), cost estimate, latency. This command shows cumulative usage across all providers with per-query average cost.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> Low avg cost (&lt;$0.005/query), reasonable token usage</li>
+      <li><span class="good">Good:</span> Moderate cost, most queries &lt;$0.01</li>
+      <li><span class="normal">Normal:</span> High cost &mdash; switch to cheaper model or reduce <code>max_tokens</code></li>
+      <li><span class="bad">Bad:</span> $0.05+/query &mdash; using expensive model for simple questions</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Save money</div><div class="hint-body"><ul>
+      <li>Use <code>gpt-4o-mini</code> or <code>gemini-2.0-flash</code> for routine questions</li>
+      <li>Reserve <code>claude-sonnet</code> or <code>gpt-4o</code> for complex architecture questions</li>
+      <li>Set <code>max_tokens: 512</code> for concise answers</li>
+    </ul></div></div>
+  </details>
 
   <div class="terminal">
     <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; usage</div></div>
@@ -999,6 +1099,18 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
 <div class="screen" id="screen-m3-glossary">
   <h1 class="screen-title" style="color:#2dd4bf;">codebase-memory glossary</h1>
   <p class="screen-sub">MEM-M3-07 &mdash; Business term extraction from function names, module names, comments.</p>
+
+  <details class="user-hint">
+    <summary>User Guide &mdash; Building your domain vocabulary</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Automatically extracts business domain terms from your function names, class names, and file paths. Builds a glossary with term &rarr; domain mapping, evidence count, and confidence. Perfect for Chapter 8 of the onboarding report.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> 30+ terms across 5+ domains, top terms match your business vocabulary</li>
+      <li><span class="good">Good:</span> 15-30 terms, some generic words mixed in</li>
+      <li><span class="bad">Bad:</span> &lt;10 terms &mdash; codebase too small or generic naming (no domain terms in code)</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Improve glossary</div><div class="hint-body">Use descriptive function names with domain terms (e.g., <code>create_customer</code> not <code>create_item</code>). The more domain-specific your code, the richer the glossary.</div></div>
+  </details>
+
   <div class="terminal"><div class="terminal-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="t-title">glossary</span></div>
   <div class="terminal-body"><span class="p">$</span> <span class="c">codebase-memory glossary</span>
 
@@ -1020,6 +1132,19 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
 <div class="screen" id="screen-m3-insights">
   <h1 class="screen-title" style="color:#2dd4bf;">codebase-memory insights --html</h1>
   <p class="screen-sub">MEM-M3-10/11 &mdash; Interactive HTML dashboard. Pattern heatmap, learner efficiency, ROI.</p>
+
+  <details class="user-hint">
+    <summary>User Guide &mdash; Visualizing your codebase knowledge</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Generates a self-contained HTML dashboard showing: pattern confidence heatmap, learner efficiency cards, ROI calculator, and LLM usage summary. Opens in any browser, works offline, no external dependencies.</div></div>
+    <div class="hint-section"><div class="hint-label">How to use</div><div class="hint-body"><code>codebase-memory insights --html</code> exports to <code>insights.html</code>. Without <code>--html</code>, shows terminal summary only. Share the HTML file with stakeholders or add to team wiki.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> Dashboard shows 25+ patterns, positive ROI, usage data from 10+ queries</li>
+      <li><span class="good">Good:</span> Dashboard renders but ROI section empty (no LLM usage yet)</li>
+      <li><span class="bad">Bad:</span> Empty dashboard &mdash; run <code>bootstrap</code> + <code>ask</code> some questions first</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Share with team</div><div class="hint-body">Export monthly and share with engineering leadership to demonstrate KMP value. ROI section quantifies time saved vs. API cost &mdash; perfect for budget justification.</div></div>
+  </details>
+
   <div class="terminal"><div class="terminal-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="t-title">insights</span></div>
   <div class="terminal-body"><span class="p">$</span> <span class="c">codebase-memory insights --html</span>
 
@@ -1041,6 +1166,23 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
 <div class="screen" id="screen-m3-roi">
   <h1 class="screen-title" style="color:#2dd4bf;">codebase-memory roi</h1>
   <p class="screen-sub">MEM-M3-08/09 &mdash; Local-only telemetry + ROI calculator. Privacy-safe.</p>
+
+  <details class="user-hint">
+    <summary>User Guide &mdash; Measuring KMP value</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Calculates return on investment: <strong>(hours saved &times; hourly rate) &minus; LLM token cost</strong>. Hours saved estimated from onboarding reports (2.5h each) + ask queries (0.1h each). Default rate: $30/h (configurable). All data stays local &mdash; privacy-safe.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> ROI &gt; $200, return multiple &gt; 1000x &mdash; tool is paying for itself</li>
+      <li><span class="good">Good:</span> ROI positive, multiple &gt; 100x</li>
+      <li><span class="normal">Normal:</span> ROI near zero &mdash; early usage, keep generating reports + asking questions</li>
+      <li><span class="bad">Bad:</span> Negative ROI &mdash; high token cost with few reports. Switch to cheaper LLM model</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Maximize ROI</div><div class="hint-body"><ul>
+      <li>Generate onboarding reports for every new team member (biggest ROI driver)</li>
+      <li>Use <code>ask</code> for code review prep instead of manual exploration</li>
+      <li>Set <code>hourly_rate</code> in config.yaml to your team&rsquo;s actual rate for accurate ROI</li>
+    </ul></div></div>
+  </details>
+
   <div class="terminal"><div class="terminal-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="t-title">roi</span></div>
   <div class="terminal-body"><span class="p">$</span> <span class="c">codebase-memory roi</span>
 
