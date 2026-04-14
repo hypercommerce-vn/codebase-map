@@ -9,6 +9,6 @@ minimal and will grow in M1+.
 
 # HC-AI | ticket: KMP-M0-01
 
-__version__ = "0.1.0-m0"
+__version__ = "1.0.0"
 
 __all__ = ["__version__"]
