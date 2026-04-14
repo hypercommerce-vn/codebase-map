@@ -182,7 +182,11 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
   <div class="nav-section">
     <div class="nav-section-header">KMP SPRINTS</div>
     <div class="nav-items">
-      <a class="nav-item active" href="#sprint-m2">
+      <a class="nav-item active" href="#sprint-m3">
+        <span class="nav-item-icon">&#128293;</span> Sprint M3
+        <span class="nav-item-badge">21 SP</span>
+      </a>
+      <a class="nav-item" href="#sprint-m2">
         <span class="nav-item-icon">&#10003;</span> Sprint M2
         <span class="nav-item-badge">28 SP</span>
       </a>
@@ -258,10 +262,10 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
     <h1>Knowledge Memory Platform — Project Board</h1>
     <p>Knowledge OS for every domain. Local-first, BYOK, open vault format. CEO-approved 08/04/2026.</p>
     <div class="hero-badges">
-      <span class="hero-badge">&#10003; Sprint M2 COMPLETE &middot; 28/28 SP &middot; 13 tasks &middot; Ask + MCP + Multi-LLM</span>
-      <span class="hero-badge">M0 &#10003; (8 SP) &middot; M1 &#10003; (26 SP) &middot; M2 &#10003; (28 SP) &middot; Total: 62 SP</span>
-      <span class="hero-badge">744 tests green &middot; 6 PRs (#78-#83) &middot; All CTO 100/100</span>
-      <span class="hero-badge">Repo PRIVATE &middot; 13/04/2026</span>
+      <span class="hero-badge">&#128293; Sprint M3 ACTIVE &middot; Onboarding + Polish &middot; 5/21 SP (Day 1 done)</span>
+      <span class="hero-badge">M0 &#10003; (8 SP) &middot; M1 &#10003; (26 SP) &middot; M2 &#10003; (28 SP) &middot; Total: 67 SP shipped</span>
+      <span class="hero-badge">765 tests green &middot; 86 PRs &middot; All CTO 100/100</span>
+      <span class="hero-badge">Repo PRIVATE &middot; 14/04/2026</span>
     </div>
   </div>
 
@@ -281,6 +285,70 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
       <tr><td><code>knowledge_memory/core/licensing/</code></td><td>Ed25519 license verification &mdash; MIT + Pro</td><td><span class="badge planned">M0-D5</span></td></tr>
       <tr><td><code>knowledge_memory/verticals/hello/</code></td><td>Reference vertical &mdash; &#8804;50 LOC proof of contract</td><td><span class="badge done">&#10003; M0</span></td></tr>
       <tr><td><code>knowledge_memory/verticals/codebase/</code></td><td>Codebase Memory vertical (first product)</td><td><span class="badge done">&#10003; M1</span></td></tr>
+    </tbody>
+  </table>
+
+  <!-- Sprint M3 Task Board (ACTIVE) -->
+  <h2 id="sprint-m3"><span class="h2-icon">&#128293;</span> Sprint M3 &mdash; Onboarding + Polish <span class="badge active" style="font-size:12px;margin-left:8px;">5/21 SP &middot; Day 1</span></h2>
+
+  <div class="progress-bar"><div class="progress-fill" style="width:24%;background:#2dd4bf"></div></div>
+  <p style="font-size:12px;color:var(--text-secondary);margin-bottom:16px;">5/21 SP &middot; 2/13 tasks done &middot; Day 1 PR #86 merged &middot; 765 tests</p>
+
+  <table>
+    <thead><tr><th>ID</th><th>Task</th><th>SP</th><th>Week</th><th>PR</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>MEM-M3-01</code></td><td><code>commands/onboard.py</code> + Jinja2 templating</td>
+        <td>3</td><td>W1</td><td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/86" target="_blank">PR #86</a></td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M3-02</code></td><td>8-chapter Markdown template</td>
+        <td>2</td><td>W1</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M3-03</code></td><td>Mermaid diagram integration</td>
+        <td>1</td><td>W1</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M3-04</code></td><td>ErrorHandlingLearner (try/except, custom exceptions)</td>
+        <td>2</td><td>W1</td><td>PR #86</td><td><span class="badge done">&#10003;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M3-05</code></td><td>DependencyInjectionLearner</td>
+        <td>2</td><td>W1</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M3-06</code></td><td>TestPatternsLearner</td>
+        <td>1</td><td>W1</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M3-07</code></td><td><code>glossary.py</code> business term extractor</td>
+        <td>2</td><td>W1</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M3-08</code></td><td><code>core/telemetry/logger.py</code> (move to Core)</td>
+        <td>1</td><td>W2</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M3-09</code></td><td><code>roi_calculator.py</code></td>
+        <td>1</td><td>W2</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M3-10</code></td><td><code>insights_html.py</code> dashboard exporter</td>
+        <td>2</td><td>W2</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M3-11</code></td><td><code>commands/insights.py</code> CLI</td>
+        <td>1</td><td>W2</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M3-12</code></td><td>Dogfood HC + CTO acceptance gate</td>
+        <td>1</td><td>W2</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+      </tr>
+      <tr>
+        <td><code>MEM-M3-13</code></td><td>Tester regression M1 + M2</td>
+        <td>2</td><td>W2</td><td>&mdash;</td><td><span class="badge planned">&#9634;</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -1072,6 +1140,29 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
         <td>100/100 SHIPIT</td>
         <td><span class="badge merged">&#10003; Merged</span></td>
       </tr>
+      <!-- Sprint M3 PRs -->
+      <tr><td colspan="5" style="background:var(--bg-muted);font-size:11px;color:var(--text-muted);text-align:center;">Sprint M3 &mdash; Onboarding + Polish (21 SP)</td></tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/84" target="_blank">#84</a></td>
+        <td>chore(sprint): close KMP Sprint M2 (28/28 SP) &mdash; board SSOT</td>
+        <td><code>chore/kmp-m2-sprint-close</code></td>
+        <td>&mdash;</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/85" target="_blank">#85</a></td>
+        <td>feat(design): KMP M3 design + Final Design v1.1</td>
+        <td><code>feat/kmp-m3-design</code></td>
+        <td>CEO &#10003;</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/86" target="_blank">#86</a></td>
+        <td>feat(onboard): M3 Day 1 &mdash; Onboard + ErrorHandlingLearner</td>
+        <td><code>feat/kmp-m3-day1</code></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge merged">&#10003; Merged</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -1236,7 +1327,7 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
 <!-- Footer -->
 <div class="footer">
   <span>KMP Project Board &middot; Knowledge Memory Platform &middot; Hyper Commerce</span>
-  <span>Updated: 13/04/2026 &middot; Sprint M2 &#10003; COMPLETE (28/28 SP, 13 tasks, 6 PRs, all 100/100) &middot; M1 &#10003; (26 SP) &middot; M0 &#10003; (8 SP) &middot; 744 tests &middot; 62 SP total &middot; Repo PRIVATE</span>
+  <span>Updated: 14/04/2026 &middot; Sprint M3 &#128293; ACTIVE (5/21 SP, Day 1) &middot; M2 &#10003; (28 SP) &middot; M1 &#10003; (26 SP) &middot; M0 &#10003; (8 SP) &middot; 765 tests &middot; 67 SP shipped &middot; Repo PRIVATE</span>
 </div>
 
 <script>
