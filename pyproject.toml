@@ -27,6 +27,7 @@ dev = [
 
 [project.scripts]
 codebase-map = "codebase_map.cli:main"
+codebase-memory = "knowledge_memory.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["codebase_map*", "knowledge_memory*"]
