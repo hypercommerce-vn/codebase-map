@@ -117,6 +117,25 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
 .arch-box .layer-label{color:var(--ai-purple);font-weight:700}
 .arch-box .component{color:var(--info)}.arch-box .arrow{color:var(--text-muted)}.arch-box .highlight{color:var(--ok);font-weight:600}.arch-box .cbm{color:var(--mcp-orange);font-weight:600}
 
+/* USER HINTS */
+.user-hint{background:linear-gradient(135deg,rgba(88,166,255,0.06),rgba(99,102,241,0.04));border:1px solid rgba(88,166,255,0.2);border-radius:10px;padding:20px;margin:20px 0;font-size:12px;line-height:1.7}
+.user-hint summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--info);display:flex;align-items:center;gap:8px;list-style:none}
+.user-hint summary::-webkit-details-marker{display:none}
+.user-hint summary::before{content:'💡';font-size:16px}
+.user-hint[open] summary{margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(88,166,255,0.15)}
+.hint-section{margin-bottom:14px}
+.hint-section:last-child{margin-bottom:0}
+.hint-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--info);margin-bottom:4px}
+.hint-label.green{color:var(--ok)}.hint-label.yellow{color:var(--warn)}.hint-label.red{color:var(--err)}.hint-label.purple{color:var(--ai-purple)}
+.hint-body{color:var(--text-secondary)}
+.hint-body ul{margin:4px 0 0 16px;padding:0}
+.hint-body li{margin-bottom:3px}
+.hint-body .perfect{color:var(--ok);font-weight:600}
+.hint-body .good{color:var(--info);font-weight:600}
+.hint-body .normal{color:var(--warn);font-weight:600}
+.hint-body .bad{color:var(--err);font-weight:600}
+.hint-body code{font-size:11px;background:var(--bg-elevated);padding:1px 5px;border-radius:3px;color:var(--info)}
+
 /* SCREEN TITLE */
 .screen-title{font-size:22px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:12px}
 .screen-sub{color:var(--text-secondary);font-size:12px;margin-bottom:24px}
@@ -376,6 +395,18 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
   <h1 class="screen-title"><span class="sprint-tag m0">M0</span> <code>codebase-memory init</code></h1>
   <p class="screen-sub">Vault initialization. Creates <code>.knowledge-memory/</code> directory + SQLite + config.</p>
 
+  <details class="user-hint">
+    <summary>User Guide &mdash; What is this?</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Initializes a Knowledge Memory vault in your project root. Creates SQLite databases, config file, and directory structure that stores learned patterns about your codebase. Run this once per project.</div></div>
+    <div class="hint-section"><div class="hint-label">How to use</div><div class="hint-body">Run <code>codebase-memory init</code> in your project root. If vault already exists, use <code>--force</code> to reinitialize (warning: destroys existing data). After init, edit <code>.knowledge-memory/config.yaml</code> to customize scan scope.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> All 6 checkmarks green, vault.db created, .gitignore updated</li>
+      <li><span class="good">Good:</span> All checkmarks but .gitignore already had the entry</li>
+      <li><span class="bad">Bad:</span> Error &mdash; usually permissions issue or disk full</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Next step</div><div class="hint-body">Run <code>codebase-memory bootstrap</code> to start learning patterns from your code.</div></div>
+  </details>
+
   <div class="terminal">
     <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; ~/Projects/hypercommerce</div></div>
     <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory init</span>
@@ -462,6 +493,23 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
   <h1 class="screen-title"><span class="sprint-tag m1">M1</span> <code>codebase-memory bootstrap</code></h1>
   <p class="screen-sub">5-step pipeline: Parse &rarr; Snapshot &rarr; Learn &rarr; Commit &rarr; Quick Wins. SLA: &le;5 min for 100K LOC.</p>
 
+  <details class="user-hint">
+    <summary>User Guide &mdash; What is this?</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Scans your entire codebase using AST parsing, then runs 6 learners to discover patterns (naming conventions, architecture layers, error handling, DI, testing, ownership). Produces <code>patterns.md</code> + <code>quick-wins.md</code> with actionable insights.</div></div>
+    <div class="hint-section"><div class="hint-label">How to use</div><div class="hint-body">Run <code>codebase-memory bootstrap</code> after init. Use <code>--resume</code> to continue after Ctrl+C. Runs automatically on first time; re-run to refresh after code changes.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> 25+ patterns, all 6 learners pass, &lt;5 min, 10 quick wins generated</li>
+      <li><span class="good">Good:</span> 15-25 patterns, 5/6 learners (1 skipped), &lt;5 min</li>
+      <li><span class="normal">Normal:</span> 5-15 patterns &mdash; small codebase or few conventions established</li>
+      <li><span class="bad">Bad:</span> 0 patterns &mdash; check scan scope in config.yaml, ensure Python files exist</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Improve results</div><div class="hint-body"><ul>
+      <li>Expand scan scope in <code>config.yaml</code> (include more directories)</li>
+      <li>Ensure git history has 50+ commits for ownership patterns</li>
+      <li>Lower confidence threshold from 60% to 40% for exploratory analysis</li>
+    </ul></div></div>
+  </details>
+
   <div class="terminal">
     <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; ~/Projects/hypercommerce</div></div>
     <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory bootstrap</span>
@@ -504,6 +552,19 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
 <div class="screen" id="screen-m1-quickwins">
   <h1 class="screen-title"><span class="sprint-tag m1">M1</span> Quick Wins &mdash; 10 Insights</h1>
   <p class="screen-sub">5 Structure + 3 Patterns + 2 Risks. Deterministic: same codebase = same output.</p>
+
+  <details class="user-hint">
+    <summary>User Guide &mdash; Reading Quick Wins</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Generates 10 actionable insights from your vault patterns. Fixed ratio: 5 architecture structure + 3 naming/pattern + 2 risk items. Each insight includes confidence score and evidence file paths. Saved to <code>quick-wins.md</code>.</div></div>
+    <div class="hint-section"><div class="hint-label">How to read</div><div class="hint-body">Each insight shows: number, title, description, evidence path, confidence %. Green confidence (&ge;80%) = high certainty. Yellow (60-79%) = review suggested. Red = risk item (always important regardless of %).</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> 10 insights, all &ge;70% confidence, clear evidence paths</li>
+      <li><span class="good">Good:</span> 8-10 insights, 2-3 below 70% &mdash; codebase has some unconventional areas</li>
+      <li><span class="normal">Normal:</span> 5-7 insights &mdash; small project, fewer patterns to detect</li>
+      <li><span class="bad">Bad:</span> &lt;5 insights or all &lt;60% &mdash; scan scope too narrow or project too small</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Improve results</div><div class="hint-body">Focus on risk items first (items 9-10). God classes &gt;30 methods should be split. Single-owner domains need pair programming or knowledge transfer sessions.</div></div>
+  </details>
 
   <div class="terminal">
     <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; Quick Wins (inline after bootstrap step 5)</div></div>
@@ -613,6 +674,23 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
   <h1 class="screen-title"><span class="sprint-tag m2">M2</span> <code>codebase-memory ask</code></h1>
   <p class="screen-sub">Natural language Q&amp;A. RAG retrieves context from vault, LLM generates answer with citations.</p>
 
+  <details class="user-hint">
+    <summary>User Guide &mdash; How to ask questions</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Ask any question about your codebase in natural language. Uses BM25 + graph proximity to find relevant context from vault patterns and function data, then sends to your configured LLM provider for an answer with file:line citations.</div></div>
+    <div class="hint-section"><div class="hint-label">How to use</div><div class="hint-body">Run <code>codebase-memory ask "How is authentication handled?"</code>. Use <code>--stream</code> for real-time output. Requires LLM provider configured in <code>config.yaml</code> (BYOK: your own API key).</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> 3+ citations, answer references specific files/lines, &lt;5s response</li>
+      <li><span class="good">Good:</span> 1-2 citations, answer is relevant but generic</li>
+      <li><span class="normal">Normal:</span> 0 citations, answer from LLM knowledge only (vault context not matched)</li>
+      <li><span class="bad">Bad:</span> "Not enough context" &mdash; run bootstrap first or rephrase question</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Better answers</div><div class="hint-body"><ul>
+      <li>Be specific: "How does auth middleware validate JWT tokens?" &gt; "How does auth work?"</li>
+      <li>Use function names: "What does OrderService.submit_order do?"</li>
+      <li>Re-run bootstrap after code changes for fresh context</li>
+    </ul></div></div>
+  </details>
+
   <div class="terminal">
     <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; ~/Projects/hypercommerce</div></div>
     <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory ask "How is authentication handled in this project?"</span>
@@ -659,6 +737,18 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
   <h1 class="screen-title"><span class="sprint-tag m2">M2</span> <code>codebase-memory why</code></h1>
   <p class="screen-sub">Explain why two modules are connected. Call graph analysis + pattern references.</p>
 
+  <details class="user-hint">
+    <summary>User Guide &mdash; Understanding dependencies</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Finds all call paths between two functions/modules using BFS on the call graph. Shows direct, transitive, and shared-module paths. Detects cross-domain coupling and references related patterns.</div></div>
+    <div class="hint-section"><div class="hint-label">How to use</div><div class="hint-body"><code>codebase-memory why "OrderService calls BillingService"</code>. Names are fuzzy-matched &mdash; partial names work.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> Multiple paths found, cross-domain note with suggestion</li>
+      <li><span class="good">Good:</span> 1 direct path found</li>
+      <li><span class="bad">Bad:</span> "No path found" &mdash; names may be wrong, try partial match</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Act on results</div><div class="hint-body">Cross-domain coupling (e.g., order&rarr;billing) often indicates need for shared interface or event bus. Check architecture note in output for specific suggestions.</div></div>
+  </details>
+
   <div class="terminal">
     <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; why command</div></div>
     <div class="terminal-body"><span class="prompt">$</span> <span class="cmd">codebase-memory why "OrderService calls BillingService"</span>
@@ -687,6 +777,23 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
 <div class="screen" id="screen-m2-impact">
   <h1 class="screen-title"><span class="sprint-tag m2">M2</span> <code>codebase-memory impact</code></h1>
   <p class="screen-sub">Change impact analysis. Uses vault call graph + CBM dual-snapshot engine.</p>
+
+  <details class="user-hint">
+    <summary>User Guide &mdash; Before you change code</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Predicts the impact of modifying a function. Finds all callers (direct + transitive), classifies risk (HIGH=route/middleware, MEDIUM=service, LOW=test), and recommends testing strategy. Optionally integrates with CBM dual-snapshot diff.</div></div>
+    <div class="hint-section"><div class="hint-label">How to use</div><div class="hint-body"><code>codebase-memory impact "auth/service.py:authenticate"</code>. Use <code>--depth 2</code> for transitive callers. Accepts function name or file:function format.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> Risk level shown, callers listed with file paths, recommendation given</li>
+      <li><span class="good">Good:</span> Callers found but risk assessment is MEDIUM (ambiguous impact)</li>
+      <li><span class="normal">Normal:</span> LOW risk &mdash; function has few callers, safe to modify</li>
+      <li><span class="bad">Bad:</span> HIGH risk with 10+ route callers &mdash; add integration tests before touching</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Reduce risk</div><div class="hint-body"><ul>
+      <li>Always add tests for HIGH-risk function callers before modifying</li>
+      <li>Consider extracting shared interface if function has 10+ cross-domain callers</li>
+      <li>Use <code>--depth 3</code> to see full blast radius before major refactors</li>
+    </ul></div></div>
+  </details>
 
   <div class="terminal">
     <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div><div class="terminal-title">Terminal &mdash; impact command</div></div>
@@ -846,6 +953,24 @@ code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--bg-el
 <div class="screen" id="screen-m3-onboard">
   <h1 class="screen-title" style="color:#2dd4bf;">codebase-memory onboard</h1>
   <p class="screen-sub">MEM-M3-01/02/03 &mdash; Auto-generate personalized 8-chapter onboarding report from vault patterns.</p>
+
+  <details class="user-hint">
+    <summary>User Guide &mdash; Onboarding new developers</summary>
+    <div class="hint-section"><div class="hint-label">What it does</div><div class="hint-body">Generates a personalized 8-chapter onboarding guide from your vault patterns. Covers: project overview, naming, layers, error handling, testing, DI, ownership, glossary. Each chapter is tailored to YOUR codebase, not generic advice. Includes Mermaid architecture diagrams.</div></div>
+    <div class="hint-section"><div class="hint-label">How to use</div><div class="hint-body"><code>codebase-memory onboard</code>. Output saved to <code>onboarding-report.md</code>. Share with new team members, commit to repo, or render in GitHub/VSCode. Re-run after significant code changes.</div></div>
+    <div class="hint-section"><div class="hint-label green">Result quality</div><div class="hint-body"><ul>
+      <li><span class="perfect">Perfect:</span> 8 chapters with content, 3 diagrams, 20+ patterns cited, glossary has 30+ terms</li>
+      <li><span class="good">Good:</span> 6-8 chapters, some show "no patterns detected" (missing learners)</li>
+      <li><span class="normal">Normal:</span> Report generated but thin content &mdash; run bootstrap with more learners</li>
+      <li><span class="bad">Bad:</span> Empty chapters &mdash; vault has &lt;5 patterns, bootstrap needed</li>
+    </ul></div></div>
+    <div class="hint-section"><div class="hint-label purple">Best practices</div><div class="hint-body"><ul>
+      <li>Commit <code>onboarding-report.md</code> to your repo for easy access</li>
+      <li>Update quarterly or after major refactors</li>
+      <li>Pair new devs with the report + a domain expert for first week</li>
+    </ul></div></div>
+  </details>
+
   <div class="terminal"><div class="terminal-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="t-title">onboard</span></div>
   <div class="terminal-body"><span class="p">$</span> <span class="c">codebase-memory onboard</span>
 
