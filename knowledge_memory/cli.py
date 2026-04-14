@@ -227,12 +227,12 @@ def _cmd_bootstrap(root: Path, args: argparse.Namespace) -> int:
     from knowledge_memory.verticals.codebase.cli_output import (
         format_bootstrap_complete,
         format_bootstrap_header,
+        format_quick_wins_inline,
         format_step_progress,
         format_step_result,
         format_vault_info,
     )
     from knowledge_memory.verticals.codebase.quick_wins import generate_quick_wins
-    from knowledge_memory.verticals.codebase.cli_output import format_quick_wins_inline
 
     # Header
     print(format_bootstrap_header())
@@ -520,8 +520,8 @@ def _cmd_insights(root: Path, args: argparse.Namespace) -> int:
 # HC-AI | ticket: KMP-CLI-01
 def _cmd_quick_wins(root: Path) -> int:
     """Show quick wins."""
-    from knowledge_memory.verticals.codebase.quick_wins import generate_quick_wins
     from knowledge_memory.verticals.codebase.cli_output import format_quick_wins_inline
+    from knowledge_memory.verticals.codebase.quick_wins import generate_quick_wins
 
     vault = _open_vault(root)
     if not vault:
