@@ -1,0 +1,36 @@
+# HC-AI | ticket: KMP-MCP-01
+# Docker build context exclusions
+
+# VCS
+.git
+.gitignore
+
+# Python
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+dist/
+build/
+.coverage
+htmlcov/
+
+# IDE
+.vscode
+.idea
+*.swp
+
+# Docs & specs (not needed in image)
+docs/
+specs/
+agents/
+design-preview/
+claudeconfigbackup/
+
+# Tests (dev-only)
+tests/
+
+# CI/CD config
+.github/
+.pre-commit-config.yaml
