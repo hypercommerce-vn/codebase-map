@@ -31,7 +31,7 @@ def test_core_subpackages_importable(module_name):
 def test_top_level_version():
     import knowledge_memory
 
-    assert knowledge_memory.__version__ == "0.1.0-m0"
+    assert knowledge_memory.__version__ == "1.0.0"
 
 
 def test_pattern_dataclass():
