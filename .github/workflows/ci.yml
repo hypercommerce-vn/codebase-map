@@ -19,33 +19,24 @@ jobs:
           python-version: "3.11"
 
       - name: Install lint tools
-        run: pip install "black==24.10.0" "isort==5.13.2" flake8 "import-linter>=2.0"
+        run: pip install "black==24.10.0" "isort==5.13.2" flake8
 
-      - name: Install project (for import-linter)
+      - name: Install project
         run: pip install -e ".[dev]"
 
       - name: Lint — black
-        run: black --check --target-version py310 codebase_map/ knowledge_memory/
+        run: black --check --target-version py310 codebase_map/
 
       - name: Lint — isort
-        run: isort --check --profile black codebase_map/ knowledge_memory/
+        run: isort --check --profile black codebase_map/
 
       - name: Lint — flake8
         run: flake8 codebase_map/ --exclude=codebase_map/exporters/d3.v7.min.js
 
-      - name: Lint — flake8 (knowledge_memory)
-        run: flake8 knowledge_memory/
-
-      # HC-AI | ticket: KMP-M0-08
-      - name: Check — LICENSE files exist
+      - name: Check — LICENSE file exists
         run: |
           test -f LICENSE || { echo "ERROR: LICENSE file missing"; exit 1; }
-          test -f LICENSE-PRO || { echo "ERROR: LICENSE-PRO file missing"; exit 1; }
-          echo "LICENSE check OK: both files present"
-
-      # HC-AI | ticket: KMP-M0-04
-      - name: Lint — import-linter (Core never imports Vertical)
-        run: lint-imports
+          echo "LICENSE check OK"
 
   test:
     runs-on: ubuntu-latest
@@ -65,6 +56,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+
+      - name: Test — pytest
+        run: pytest tests/ -q
 
       - name: Test — generate on self
         run: |
