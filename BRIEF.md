@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 4.0 | Cập nhật: 16/04/2026 (Repo split — CBM standalone public OSS)
+> Version: 4.2 | Cập nhật: 19/04/2026 (CBM-INT-S1 KICKOFF — CEO 5/5 approved A1-A5, Day 1 Mon 20/04)
 
 ---
 
@@ -117,9 +117,85 @@ codebase-map/
 
 ---
 
-## ⚡ NEXT ACTIONS
+## 🚀 INITIATIVE ĐANG MỞ — CBM Claude Integration (2026-04-16)
 
-- [ ] Make repo public (unlimited free CI)
-- [ ] Update `docs/HC-DEPLOYMENT-GUIDE.md` in KMP repo với PyPI install path
-- [ ] Publish to PyPI (future): `pipx install codebase-map`
-- [ ] Community release notes
+**Mục tiêu:** Biến CBM từ tool nội bộ thành OSS dev tool chủ lực, tích hợp vào hệ sinh thái Claude (Claude Code + Cowork + Desktop) qua 3 pha: PyPI+Skill → MCP server → Plugin Marketplace. Làm funnel cho KMP (Open Core model).
+
+**7 tài liệu chiến lược** trong `docs/active/cbm-claude-integration/`:
+
+1. `Strategy_Memo_CBM_Claude_Integration.md` — 4 path phân tích, khuyến nghị Path D (combo 3 phase), risk register
+2. `Technical_Plan_CBM_Claude_Integration.md` — Phase 1 PyPI+Skill (5 SP) + Phase 2 MCP (8 SP) + Phase 3 Plugin (5 SP) = **18 SP total**
+3. `Language_Coverage_Analysis.md` — CBM Python+TS cover 38% dev; thêm JS+Java = 75% (13 SP)
+4. `Project_Archetype_GTM_Strategy.md` — AI Agent + SaaS B2B là Tier 1 (CBM cover 100%, launch ngay)
+5. `CBM_UI_Preview_Integration.md` — UI v2.0 tái sử dụng 100% qua multi-view MCP adapter
+6. `Open_Source_Publishing_Strategy.md` — **Open Core confirmed**: CBM public + KMP private, ROI 17x
+7. `Phase2_MCP_Explainer.md` — Slash Command vs MCP auto-invoke (retention 15% → 50%)
+
+**Expected ROI:** ~$86k ARR năm 1 vs $5k cost (17x).
+
+**CEO decisions (chốt 18/04/2026 — full 7/7):**
+
+- **D1 = MIT** giữ nguyên license
+- **D2 = 2 archetype** — AI Agent + SaaS B2B (Python+TS 100% cover)
+- **D3 = Song song** — Claude Integration chạy cùng CBM-LANG-P1 (JS+Java)
+- **D4 = Java** (implicit từ D3)
+- **D5 = Pack bundle** — Ship 2 pack: AI Agent Knowledge Pack + SaaS Onboarding Pack
+- **D6 = TechLead lead + CEO review weekly** maintain repo public
+- **D7 = 70% coverage** qua Phương án B (JS+Java = 75%)
+
+**Tổng scope:** 33 SP (Claude Integration 20 SP + Language 13 SP), song song 2 track.
+
+**Capacity Option B:** 1 TechLead full-time + AI pair → **5 tuần** (launch Sat 23/05/2026), 0 chi phí thêm.
+
+---
+
+## ✅ CEO KICKOFF APPROVALS — 5/5 (19/04/2026)
+
+| # | Action | Status | Evidence |
+|---|--------|:------:|----------|
+| A1 | PyPI API token upload | ✅ Done | `PYPI_API_TOKEN` secret trong repo (created 18/04 16:58) |
+| A2 | Make repo public | ✅ Done | `visibility: PUBLIC` verified qua `gh repo view` |
+| A3 | TechLead full-time 5 tuần | ✅ Confirmed | Option B capacity locked |
+| A4 | Tester role | ✅ Claude | AI pair play Tester Day 4-5 |
+| A5 | Weekly review cadence | ✅ Sun 17:00 | G1-G5 cố định Sunday |
+
+---
+
+## 🚀 CBM-INT-S1 LIVE — Day 1 Mon 20/04/2026
+
+**Sprint goal:** PyPI + Claude Skill + 3 slash commands (5 SP · 6 tasks) · Gate G1 Sun 26/04
+
+**Schedule:**
+- Day 0 (Sun 19/04 — today): Pre-flight B1-B4 blockers
+- Day 1 (Mon 20/04): CBM-INT-101 PyPI publish
+- Day 2 (Tue 21/04): CBM-INT-102 SKILL.md
+- Day 3 (Wed 22/04): CBM-INT-103/104/105 slash commands
+- Day 4 (Thu 23/04): CBM-INT-106 integration test (Tester = Claude)
+- Day 5 (Fri 24/04): QUICKSTART.md + v2.3.0 tag dry-run
+- Buffer Sat 25/04 · **Gate G1 Sun 26/04 17:00**
+
+---
+
+## ⚡ NEXT ACTIONS (Sun 19/04 — pre-flight)
+
+**Pre-flight blockers — phải close trước Mon 20/04 09:00:**
+- [ ] **B1** SECURITY.md — TechLead viết (template GitHub OSS)
+- [ ] **B2** Git history audit — TechLead delegated: `gitleaks detect --source . --log-opts="--all"` hoặc `trufflehog git file://. --only-verified`
+- [ ] **B3** CONTRIBUTING.md — TechLead viết
+- [ ] **B4** Issue + PR templates — TechLead viết `.github/ISSUE_TEMPLATE/*.md` + `.github/pull_request_template.md`
+
+**CEO actions:**
+- [ ] **Tạo Telegram group "CBM-INT-S1 Daily"** — add CEO + TechLead + PM forward Claude
+- [ ] **Sign-off pre-flight** Sun 19/04 19:00
+
+**Post-sprint (sau G1):**
+- [ ] Launch day marketing: HN / Reddit / Viblo / Zalo communities
+- [ ] Update `docs/HC-DEPLOYMENT-GUIDE.md` trong KMP repo với PyPI install path
+
+---
+
+## 📌 REFERENCES
+
+- **Sprint briefing:** `docs/active/cbm-claude-integration/CBM-INT-S1-KICKOFF.md`
+- **Technical Plan:** `docs/active/cbm-claude-integration/Technical_Plan_CBM_Claude_Integration.md` §1
+- **Board SSOT:** `project/board.html#cbm-int-s1`
