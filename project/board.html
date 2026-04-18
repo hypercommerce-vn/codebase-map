@@ -1524,7 +1524,11 @@ a:hover { text-decoration: underline; }
     </div>
     <div class="tl-item">
       <div class="tl-date">19/04/2026</div>
-      <div class="tl-content"><strong>🚀 CBM-INT-S1 Day 0 (Sun 19/04) — Pre-flight execution</strong> — TechLead delegated B2 git history audit (gitleaks/trufflehog scan). SECURITY.md + CONTRIBUTING.md + PR/issue templates soạn today. CEO tạo Telegram group "CBM-INT-S1 Daily". PR <code>chore/cbm-int-s1-kickoff-prep</code> open cho board + BRIEF sync.</div>
+      <div class="tl-content"><strong>🚀 CBM-INT-S1 Day 0 (Sun 19/04) — Pre-flight execution</strong> — TechLead delegated B2 git history audit (gitleaks/trufflehog scan). SECURITY.md + CONTRIBUTING.md + PR/issue templates soạn today. CEO tạo Telegram group "CBM-INT-S1 Daily". PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/104" target="_blank">#104</a> merged — board + BRIEF sync.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>✅ B2 GIT HISTORY AUDIT CLEAN</strong> — CTO agent chạy <code>gitleaks v8.30.1</code> (full ruleset 200+ patterns) + manual regex sweep cho 12 secret family patterns. Scan scope: 53 refs (21 local + 32 remote), <strong>168 unique commits</strong>, 3.22 MB blob data, 733ms runtime. <strong>Zero credential findings.</strong> 2 LOW non-blocker: laptop hostname trong committer email + 2 commits legacy <code>git@stash</code> từ monorepo era — không warrant history rewrite. Day 1 Mon 20/04 UNBLOCKED. Risk downgrade 🔴9 → 🟡4. <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-B2-Git-Audit-Report.md" target="_blank">Full B2 report ↗</a></div>
     </div>
   </div>
 
@@ -1709,7 +1713,7 @@ a:hover { text-decoration: underline; }
   <div style="padding:12px 14px; background:linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-left:4px solid #10b981; border-radius:8px; margin:14px 0 10px; font-size:12px; color:#064e3b; line-height:1.7;">
     <strong>✅ Pre-flight confirmed (19/04/2026):</strong> A1 PyPI token ✅ (<code>PYPI_API_TOKEN</code> secret added) · A2 Repo PUBLIC ✅ · A3 TechLead full-time 5 tuần ✅ · A4 Tester = Claude ✅ · A5 Sunday 17:00 weekly review ✅
     <br>
-    <strong>⚠️ Open blockers:</strong> B1 <code>SECURITY.md</code> · B2 Git history audit (TechLead delegated 19/04) · B3 <code>CONTRIBUTING.md</code> · B4 PR/issue templates — all must close before Day 1 Mon 20/04 09:00
+    <strong>⚠️ Pre-flight blockers:</strong> ✅ <strong>B2 Git history audit CLEAN</strong> (CTO scan gitleaks v8.30.1 · 168 commits · 0 findings · 19/04) · ⏳ B1 <code>SECURITY.md</code> · ⏳ B3 <code>CONTRIBUTING.md</code> · ⏳ B4 PR/issue templates — 3 còn lại close trước Day 1 Mon 20/04 09:00 · <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-B2-Git-Audit-Report.md" target="_blank">B2 full report ↗</a>
   </div>
 
   <div style="padding:12px 14px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left:4px solid #f59e0b; border-radius:8px; margin:0 0 16px; font-size:13px; color:#78350f; line-height:1.7;">
@@ -1815,9 +1819,9 @@ a:hover { text-decoration: underline; }
         <td>Day 0 (Sun 19/04) check trước · Fallback: <code>cbm-graph</code> hoặc <code>codebase-map-hc</code> · Decision 30 phút</td>
       </tr>
       <tr>
-        <td><strong>Repo public chưa có SECURITY.md + git history audit</strong> (B1 + B2)</td>
-        <td><span style="color:#ef4444;">🔴 3×3=9</span></td>
-        <td>Day 0 (Sun 19/04) TechLead delegated: gitleaks/trufflehog scan git history · Viết SECURITY.md + CONTRIBUTING.md · Nếu leak: rotate secrets + BFG cleanup · MUST close trước Day 1 Mon 09:00</td>
+        <td><strong>Repo public chưa có SECURITY.md</strong> (B1) · <del>B2 git history audit</del> ✅ CLEAN</td>
+        <td><span style="color:#f59e0b;">🟡 2×2=4</span> <em>(downgrade từ 🔴9 sau B2 CLEAN)</em></td>
+        <td>✅ <strong>B2 DONE 19/04:</strong> CTO gitleaks v8.30.1 scan 168 commits · 0 credential findings · 2 LOW non-blocker (hostname + legacy stash email) — no rewrite needed · <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-B2-Git-Audit-Report.md" target="_blank">Full report</a> · ⏳ B1 TechLead viết SECURITY.md trước Day 1</td>
       </tr>
       <tr>
         <td>Claude Skill trigger không fire (SKILL.md description không match)</td>
@@ -1857,7 +1861,7 @@ a:hover { text-decoration: underline; }
   </ul>
 
   <p style="margin-top:14px; padding:10px 14px; background:var(--bg-muted); border-radius:6px; font-size:12px; color:var(--text-muted);">
-    <strong>PM Note (19/04):</strong> CEO approved 5/5 A1-A5. A1 PyPI token ✅ verified · A2 Repo PUBLIC ✅ verified. Tester role = Claude (A4). Sprint này là critical path đầu tiên cho Claude Integration initiative — fail G1 → slip toàn bộ timeline launch Sat 23/05/2026. Daily standup 9:00 (Telegram group "CBM-INT-S1 Daily" — CEO tạo hôm nay). Weekly CEO review Sun 17:00. <strong>Blocker tracking ưu tiên B2 git history audit (TechLead, Sun 19/04).</strong>
+    <strong>PM Note (19/04):</strong> CEO approved 5/5 A1-A5 ✅. ✅ <strong>B2 git history audit CLEAN</strong> (CTO gitleaks scan 19/04, 168 commits 0 findings — Day 1 unblocked). ⏳ Còn B1 SECURITY.md · B3 CONTRIBUTING.md · B4 templates (TechLead, trước Mon 09:00) · CEO tạo Telegram group. Sprint là critical path đầu tiên cho Claude Integration initiative — fail G1 → slip toàn bộ timeline launch Sat 23/05/2026. Daily standup 9:00 (Telegram). Weekly CEO review Sun 17:00.
   </p>
 
 </div><!-- /page-board -->
