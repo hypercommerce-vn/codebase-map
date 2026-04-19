@@ -707,8 +707,8 @@ a:hover { text-decoration: underline; }
         <span class="badge active" style="background:#f59e0b;color:#fff;">🚀 KICKOFF</span>
       </div>
       <p>Publish PyPI (<code>pipx install codebase-map</code>), Claude Code Skill manifest, 3 slash commands (<code>/cbm-onboard</code>, <code>/cbm-impact</code>, <code>/cbm-diff</code>), QUICKSTART guide. <a href="#cbm-int-s1"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/Technical_Plan_CBM_Claude_Integration.md" target="_blank">Tech Plan →</a></p>
-      <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#f59e0b"></div></div>
-      <div class="progress-label">0/5 SP · 6 tasks (INT-101→106) · 20/04 → 26/04/2026 · Gate G1 Sun 26/04 · TechLead full-time + Tester (Claude) + AI pair</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:40%;background:#10b981"></div></div>
+      <div class="progress-label">2/5 SP · Day 1+2 ✅ MERGED (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a> PyPI v2.2.1 · <a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a> SKILL.md) · Day 3-5 ⏳ (3 slash commands + test + QUICKSTART) · 2 ngày sớm schedule</div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #f59e0b;">
@@ -1347,7 +1347,48 @@ a:hover { text-decoration: underline; }
         <td>feat(diff): CBM-P2 Day 2 — output formatters + CLI snapshot-diff</td>
         <td><code>feat/cbm-phase2-day2</code></td>
         <td>100/100 SHIPIT</td>
-        <td><span class="badge active">🔄 Open</span></td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:var(--bg-muted);">
+        <td colspan="5" style="text-align:center; font-style:italic; color:var(--text-muted); font-size:12px;">— Repo split 16-18/04/2026 · KMP moved to separate repo · PRs #73-#103 related to CBM-P2 closure + KMP split (see git log) —</td>
+      </tr>
+      <tr style="background:#fef3c7;">
+        <td colspan="5" style="text-align:center; font-weight:600; font-size:12px; color:#78350f;">━━━ 🚀 CBM-INT-S1 Sprint (Day 0-2) — 19/04/2026 ━━━</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/104" target="_blank">#104</a></td>
+        <td>chore(sprint): CBM-INT-S1 kickoff prep — CEO 5/5 approvals + calendar fix</td>
+        <td><code>chore/cbm-int-s1-kickoff-prep</code></td>
+        <td>CEO merged</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/105" target="_blank">#105</a></td>
+        <td>security: B2 git history audit CLEAN — Day 1 unblocked</td>
+        <td><code>security/b2-git-history-audit</code></td>
+        <td>CTO gitleaks · 0 findings</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/106" target="_blank">#106</a></td>
+        <td>chore(oss): B1 SECURITY + B3 CONTRIBUTING + B4 templates — pre-flight 100% complete</td>
+        <td><code>chore/b1-b3-b4-community-health</code></td>
+        <td>CTO · 6 files</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a></td>
+        <td>feat(pypi): CBM-INT-101 — publish codebase-map v2.2.1 to PyPI</td>
+        <td><code>feat/cbm-int-101-pypi-publish</code></td>
+        <td>TechLead · 158 tests PASS</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a></td>
+        <td>feat(skill): CBM-INT-102 — Claude Code Skill for codebase-map</td>
+        <td><code>feat/cbm-int-102-claude-skill</code></td>
+        <td>TechLead · 197 lines · 11 triggers</td>
+        <td><span class="badge merged">✅ Merged</span></td>
       </tr>
     </tbody>
   </table>
@@ -1533,6 +1574,18 @@ a:hover { text-decoration: underline; }
     <div class="tl-item">
       <div class="tl-date">19/04/2026</div>
       <div class="tl-content"><strong>✅ B1 + B3 + B4 COMMUNITY HEALTH SHIPPED</strong> — CTO agent tạo 6 files: <code>SECURITY.md</code> (102 dòng, supported versions v2.2.x, GHSA private inbox hypercdp@gmail.com, 48h ACK + 7d triage, scope rõ ràng) · <code>CONTRIBUTING.md</code> (165 dòng, dev setup + lint gate + PR workflow + architecture principles) · <code>.github/ISSUE_TEMPLATE/</code> bug_report + feature_request + config.yml · <code>.github/pull_request_template.md</code>. GitHub Discussions ENABLED. <strong>PRE-FLIGHT 100% COMPLETE</strong> — Day 1 ready.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-101 Day 1 MERGED — PyPI v2.2.1 ready</strong> — TechLead agent: pyproject.toml v2.2.1 + enhanced metadata, <code>__init__.py</code> stale version fix (1.0.0→2.2.1), <code>.github/workflows/publish-pypi.yml</code> (tag trigger, OIDC-ready). Build sdist 166KB + wheel 174KB, d3 bundled, twine check PASS, lint PASS, 158/158 tests PASS. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a> MERGED 09:26 UTC. ⚠️ Tag <code>v2.2.1</code> chưa push (CEO action) → PyPI vẫn 404.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-102 Day 2 MERGED — Claude Code Skill shipped</strong> — TechLead agent parallel với Day 1: <code>integrations/claude-code/skills/codebase-map/SKILL.md</code> 197 dòng (< 500 limit), frontmatter YAML valid, desc 444 chars, 11 trigger phrases ("impact"/"callers"/"who calls"/"dependency graph"/"onboard this repo"/"what breaks if I change X"/"blast radius"/"API endpoints in this project"/"diff vs main"/"before/after refactor"/"is this safe to delete"), 7 body sections, commands verified vs CBM v2.2.1 CLI. Fixture <code>TRIGGER_TEST_PROMPTS.md</code> (10 pos + 5 neg) cho dry-run ≥8/10 target. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a> MERGED 09:38 UTC.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>📊 Sprint CBM-INT-S1 — 2/5 SP (40%) DONE in 1 day</strong> — Day 1+Day 2 song song thay vì tuần tự → 2 ngày sớm schedule gốc. Day 3 CBM-INT-103/104/105 (3 slash commands, 2 SP) starting. CEO decision ghi nhận: bỏ Telegram, track full qua board SSOT + PR history. ⏳ Outstanding: CEO tag <code>v2.2.1</code> push để trigger PyPI publish (workflow publish-pypi.yml đã sẵn sàng).</div>
     </div>
   </div>
 
@@ -1733,21 +1786,21 @@ a:hover { text-decoration: underline; }
       <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>Owner</th><th>DoD / Output</th><th>Status</th></tr>
     </thead>
     <tbody>
-      <tr style="background:#fef3c7;">
+      <tr style="background:#d1fae5;">
         <td><code>CBM-INT-101</code></td>
         <td>Publish <code>codebase-map</code> lên PyPI — pyproject.toml v2.2.1 + publish-pypi.yml workflow + build verify. Tag push trigger CI auto-upload.</td>
-        <td>1</td><td>Day 1 (Sun 19/04 early start)</td>
+        <td>1</td><td>Day 1 ✅ (Sun 19/04 early start)</td>
         <td>TechLead</td>
-        <td>✅ PyPI name FREE · ✅ pyproject.toml v2.2.1 + metadata · ✅ <code>__init__.py</code> version fix 1.0.0→2.2.1 · ✅ workflow OIDC-ready · ✅ build 174KB wheel + twine check PASS · ✅ lint PASS · ✅ 158/158 tests · ✅ README PyPI install docs · <strong>PR pending</strong></td>
-        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
+        <td>✅ PyPI name FREE · ✅ pyproject.toml v2.2.1 + metadata · ✅ <code>__init__.py</code> version fix 1.0.0→2.2.1 · ✅ workflow OIDC-ready · ✅ build 174KB wheel + twine check PASS · ✅ lint PASS · ✅ 158/158 tests · ✅ README PyPI install docs · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a> MERGED · ⚠️ tag v2.2.1 PENDING CEO</td>
+        <td><span class="badge merged">✅ Merged</span></td>
       </tr>
-      <tr style="background:#fef3c7;">
+      <tr style="background:#d1fae5;">
         <td><code>CBM-INT-102</code></td>
         <td>Viết <code>SKILL.md</code> cho Claude Code — prerequisite check, workflow mô tả, slash command mapping, rule to trigger khi nhắc "impact"/"breaks"/"refactor"</td>
-        <td>1</td><td>Day 2 (Sun 19/04 — parallel Day 1)</td>
+        <td>1</td><td>Day 2 ✅ (Sun 19/04 — parallel Day 1)</td>
         <td>TechLead + CTO review (PR gate)</td>
-        <td>✅ <code>SKILL.md</code> 197 dòng (< 500 limit) · ✅ frontmatter YAML valid (name=codebase-map, desc 444 chars) · ✅ 11 trigger phrases · ✅ 7 sections (Intro + Prereq + Workflow + Commands + Dual-snapshot + Rules + When not to use) · ✅ TRIGGER_TEST_PROMPTS.md (10 pos + 5 neg) · Commands verified against CBM v2.2.1 CLI · <strong>PR pending</strong></td>
-        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
+        <td>✅ <code>SKILL.md</code> 197 dòng (< 500 limit) · ✅ frontmatter YAML valid (name=codebase-map, desc 444 chars) · ✅ 11 trigger phrases · ✅ 7 sections · ✅ TRIGGER_TEST_PROMPTS.md (10 pos + 5 neg) · Commands verified against CBM v2.2.1 CLI · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
       </tr>
       <tr>
         <td><code>CBM-INT-103</code></td>
@@ -1791,9 +1844,9 @@ a:hover { text-decoration: underline; }
     </thead>
     <tbody>
       <tr style="background:#d1fae5;"><td>Day 0</td><td>Sun 19/04 ✅</td><td>—</td><td>Pre-flight B1-B4 DONE</td><td>✅ CEO 5/5 A1-A5 · B1 SECURITY.md · B2 audit CLEAN · B3 CONTRIBUTING.md · B4 templates · Discussions enabled. 3 PRs merged (#104 #105 #106)</td><td>Pre-flight CLOSED</td></tr>
-      <tr style="background:#fef3c7;"><td>Day 1</td><td>Sun 19/04 (early start)</td><td>1</td><td>CBM-INT-101 🔄 IN PROGRESS</td><td>PyPI publish — pyproject.toml v2.2.1 + publish-pypi.yml workflow + build verify → tag triggers CI auto-upload</td><td>TechLead running</td></tr>
-      <tr><td>Day 2</td><td>Mon 20/04</td><td>1</td><td>CBM-INT-102</td><td>SKILL.md viết + CTO review trigger rules</td><td>Board check-in</td></tr>
-      <tr><td>Day 3</td><td>Tue 21/04</td><td>2</td><td>CBM-INT-103, 104, 105</td><td>3 slash commands — onboard + impact + diff</td><td>Board check-in</td></tr>
+      <tr style="background:#d1fae5;"><td>Day 1</td><td>Sun 19/04 ✅</td><td>1</td><td>CBM-INT-101 ✅ MERGED</td><td>PyPI publish — pyproject.toml v2.2.1 + publish-pypi.yml workflow + build verify. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a></td><td>⚠️ tag v2.2.1 pending CEO</td></tr>
+      <tr style="background:#d1fae5;"><td>Day 2</td><td>Sun 19/04 ✅</td><td>1</td><td>CBM-INT-102 ✅ MERGED</td><td>SKILL.md 197 dòng · 11 trigger phrases · TRIGGER_TEST_PROMPTS fixture. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a></td><td>Parallel Day 1 — 2 ngày sớm</td></tr>
+      <tr style="background:#fef3c7;"><td>Day 3</td><td>Sun 19/04 (early start)</td><td>2</td><td>CBM-INT-103, 104, 105 🔄 NEXT</td><td>3 slash commands — /cbm-onboard + /cbm-impact + /cbm-diff</td><td>Starting now</td></tr>
       <tr><td>Day 4</td><td>Wed 22/04</td><td>0.5</td><td>CBM-INT-106 (phần 1)</td><td>Integration test matrix — Tester (Claude) chạy 5 case</td><td>Board check-in</td></tr>
       <tr><td>Day 5</td><td>Thu 23/04</td><td>0.5</td><td>CBM-INT-106 (phần 2)</td><td>QUICKSTART.md + tag v2.3.0 dry-run + launch prep</td><td>Sprint demo · Board final</td></tr>
       <tr style="background:var(--bg-muted);"><td>Buffer</td><td>Sat 25/04</td><td>—</td><td>Fix blockers</td><td>Buffer nếu Day 5 slip</td><td>—</td></tr>
@@ -1865,7 +1918,7 @@ a:hover { text-decoration: underline; }
   </ul>
 
   <p style="margin-top:14px; padding:10px 14px; background:var(--bg-muted); border-radius:6px; font-size:12px; color:var(--text-muted);">
-    <strong>PM Note (19/04):</strong> CEO approved 5/5 A1-A5 ✅. ✅ Pre-flight B1-B4 ALL CLOSED (3 PRs #104 #105 #106 merged). ✅ GitHub Discussions enabled. <strong>CEO decision 19/04: Skip Telegram group — track toàn bộ sprint qua board.html (SSOT) + PR history + timeline events.</strong> Day 1 CBM-INT-101 PyPI publish early-start Sun 19/04 (thay vì Mon 20/04 per Technical Plan). Sprint là critical path đầu tiên cho Claude Integration initiative — fail G1 → slip toàn bộ timeline launch Sat 23/05/2026. Weekly CEO review Sun 17:00 qua board.
+    <strong>PM Note (19/04 update):</strong> <strong>Sprint 2/5 SP DONE in 1 day (40% complete)</strong>. CEO approved 5/5 A1-A5 ✅. Pre-flight B1-B4 CLOSED (3 PRs #104 #105 #106). Day 1 CBM-INT-101 PyPI v2.2.1 PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a> MERGED. Day 2 CBM-INT-102 SKILL.md PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a> MERGED. <strong>CEO tracking decision: board.html SSOT only (no Telegram).</strong> Day 3 CBM-INT-103/104/105 (3 slash commands, 2 SP) starting now. ⚠️ <strong>CEO action pending:</strong> push tag <code>v2.2.1</code> → trigger PyPI publish workflow (PyPI still 404 until then). Weekly CEO review Sun 17:00 qua board.
   </p>
 
 </div><!-- /page-board -->
@@ -2058,7 +2111,7 @@ a:hover { text-decoration: underline; }
 <!-- Footer -->
 <div class="footer">
   <span>Codebase Map — Project Board · Hyper Commerce · CEO: Đoàn Đình Tỉnh</span>
-  <span>Updated: 19/04/2026 · CBM v2.2 ✅ (85 SP shipped) · 🚀 CBM-INT-S1 LIVE · Day 1 Mon 20/04/2026 · Launch Sat 23/05/2026 · CEO 7/7 D1-D7 + 5/5 A1-A5 ✅ · Option B: TechLead + Tester=Claude + AI pair · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
+  <span>Updated: 19/04/2026 · CBM v2.2 ✅ · 🚀 CBM-INT-S1 LIVE · <strong>2/5 SP DONE in Day 0 (40%)</strong> · Day 1 #107 ✅ · Day 2 #108 ✅ · Day 3 🔄 starting · Launch Sat 23/05/2026 · Pre-flight 4/4 ✅ · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
 </div>
 
 <!-- ═══════════════════════════════════════
