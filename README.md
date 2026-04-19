@@ -10,17 +10,22 @@ Parse your codebase into a function dependency graph (nodes = functions/classes,
 
 ## Install
 
-### From PyPI (future)
+**From PyPI (recommended for v2.2.1+):**
+
 ```bash
-pipx install codebase-map
+pipx install codebase-map     # Isolated install (recommended)
+# or
+pip install codebase-map
 ```
 
-### From GitHub (current)
+**From source (latest main):**
+
 ```bash
 pipx install "git+https://github.com/hypercommerce-vn/codebase-map.git"
 ```
 
-### For development
+**For development:**
+
 ```bash
 git clone git@github.com:hypercommerce-vn/codebase-map.git
 cd codebase-map
@@ -28,8 +33,9 @@ pip install -e ".[dev]"
 ```
 
 Verify:
+
 ```bash
-codebase-map --version  # 2.2.0
+codebase-map --version
 ```
 
 ---

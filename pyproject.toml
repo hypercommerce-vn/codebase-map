@@ -4,13 +4,24 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "codebase-map"
-version = "1.0.0"
-description = "Standalone function dependency graph generator for any codebase"
+version = "2.2.1"
+description = "Function dependency graph generator for Python and TypeScript — works great with Claude Code."
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
     {name = "Hyper Commerce", email = "hypercdp@gmail.com"},
+]
+keywords = ["codebase", "dependency-graph", "ast", "claude", "ai-coding"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Documentation",
+    "Topic :: Software Development :: Quality Assurance",
 ]
 dependencies = [
     "pyyaml>=6.0",
@@ -25,11 +36,19 @@ dev = [
     "flake8>=7.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/hypercommerce-vn/codebase-map"
+Issues = "https://github.com/hypercommerce-vn/codebase-map/issues"
+Repository = "https://github.com/hypercommerce-vn/codebase-map"
+
 [project.scripts]
 codebase-map = "codebase_map.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["codebase_map*"]
+
+[tool.setuptools.package-data]
+codebase_map = ["exporters/d3.v7.min.js"]
 
 [tool.black]
 target-version = ["py310"]

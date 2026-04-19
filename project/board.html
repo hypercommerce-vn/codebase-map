@@ -1524,7 +1524,7 @@ a:hover { text-decoration: underline; }
     </div>
     <div class="tl-item">
       <div class="tl-date">19/04/2026</div>
-      <div class="tl-content"><strong>🚀 CBM-INT-S1 Day 0 (Sun 19/04) — Pre-flight execution</strong> — TechLead delegated B2 git history audit (gitleaks/trufflehog scan). SECURITY.md + CONTRIBUTING.md + PR/issue templates soạn today. CEO tạo Telegram group "CBM-INT-S1 Daily". PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/104" target="_blank">#104</a> merged — board + BRIEF sync.</div>
+      <div class="tl-content"><strong>🚀 CBM-INT-S1 Day 0 (Sun 19/04) — Pre-flight execution</strong> — TechLead delegated B2 git history audit (gitleaks/trufflehog scan). SECURITY.md + CONTRIBUTING.md + PR/issue templates soạn today. <strong>CEO quyết định: bỏ Telegram group, track toàn bộ sprint qua board.html (SSOT).</strong> PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/104" target="_blank">#104</a> merged — board + BRIEF sync.</div>
     </div>
     <div class="tl-item">
       <div class="tl-date">19/04/2026</div>
@@ -1733,13 +1733,13 @@ a:hover { text-decoration: underline; }
       <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>Owner</th><th>DoD / Output</th><th>Status</th></tr>
     </thead>
     <tbody>
-      <tr>
+      <tr style="background:#fef3c7;">
         <td><code>CBM-INT-101</code></td>
-        <td>Publish <code>codebase-map</code> lên PyPI — update <code>pyproject.toml</code> v2.2.1, build + twine upload, verify <code>pipx install</code></td>
-        <td>1</td><td>Day 1 (Mon 20/04)</td>
+        <td>Publish <code>codebase-map</code> lên PyPI — pyproject.toml v2.2.1 + publish-pypi.yml workflow + build verify. Tag push trigger CI auto-upload.</td>
+        <td>1</td><td>Day 1 (Sun 19/04 early start)</td>
         <td>TechLead</td>
-        <td>Package <a href="https://pypi.org/project/codebase-map/" target="_blank">pypi.org/project/codebase-map</a> v2.2.1 · README render correct · pipx install macOS+Linux+WSL pass</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ PyPI name FREE · ✅ pyproject.toml v2.2.1 + metadata · ✅ <code>__init__.py</code> version fix 1.0.0→2.2.1 · ✅ workflow OIDC-ready · ✅ build 174KB wheel + twine check PASS · ✅ lint PASS · ✅ 158/158 tests · ✅ README PyPI install docs · <strong>PR pending</strong></td>
+        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
       <tr>
         <td><code>CBM-INT-102</code></td>
@@ -1790,12 +1790,12 @@ a:hover { text-decoration: underline; }
       <tr><th>Day</th><th>Date</th><th>SP</th><th>Tasks</th><th>Focus</th><th>CEO touchpoint</th></tr>
     </thead>
     <tbody>
-      <tr style="background:#fef3c7;"><td>Day 0</td><td>Sun 19/04</td><td>—</td><td>Pre-flight B1-B4</td><td>CEO 5/5 approval · TechLead chạy git history audit · SECURITY.md + CONTRIBUTING.md soạn · Telegram group tạo</td><td>CEO approve 19:00</td></tr>
-      <tr><td>Day 1</td><td>Mon 20/04</td><td>1</td><td>CBM-INT-101</td><td>PyPI publish — build → twine upload → verify pipx install</td><td>Standup 9:00</td></tr>
-      <tr><td>Day 2</td><td>Tue 21/04</td><td>1</td><td>CBM-INT-102</td><td>SKILL.md viết + CTO review trigger rules</td><td>Standup 9:00</td></tr>
-      <tr><td>Day 3</td><td>Wed 22/04</td><td>2</td><td>CBM-INT-103, 104, 105</td><td>3 slash commands — onboard + impact + diff</td><td>Standup 9:00 · Mid-week check-in 17:00</td></tr>
-      <tr><td>Day 4</td><td>Thu 23/04</td><td>0.5</td><td>CBM-INT-106 (phần 1)</td><td>Integration test matrix — Tester (Claude) chạy 5 case</td><td>Standup 9:00</td></tr>
-      <tr><td>Day 5</td><td>Fri 24/04</td><td>0.5</td><td>CBM-INT-106 (phần 2)</td><td>QUICKSTART.md + tag v2.3.0 dry-run + launch prep</td><td>Standup 9:00 · Sprint demo 17:00</td></tr>
+      <tr style="background:#d1fae5;"><td>Day 0</td><td>Sun 19/04 ✅</td><td>—</td><td>Pre-flight B1-B4 DONE</td><td>✅ CEO 5/5 A1-A5 · B1 SECURITY.md · B2 audit CLEAN · B3 CONTRIBUTING.md · B4 templates · Discussions enabled. 3 PRs merged (#104 #105 #106)</td><td>Pre-flight CLOSED</td></tr>
+      <tr style="background:#fef3c7;"><td>Day 1</td><td>Sun 19/04 (early start)</td><td>1</td><td>CBM-INT-101 🔄 IN PROGRESS</td><td>PyPI publish — pyproject.toml v2.2.1 + publish-pypi.yml workflow + build verify → tag triggers CI auto-upload</td><td>TechLead running</td></tr>
+      <tr><td>Day 2</td><td>Mon 20/04</td><td>1</td><td>CBM-INT-102</td><td>SKILL.md viết + CTO review trigger rules</td><td>Board check-in</td></tr>
+      <tr><td>Day 3</td><td>Tue 21/04</td><td>2</td><td>CBM-INT-103, 104, 105</td><td>3 slash commands — onboard + impact + diff</td><td>Board check-in</td></tr>
+      <tr><td>Day 4</td><td>Wed 22/04</td><td>0.5</td><td>CBM-INT-106 (phần 1)</td><td>Integration test matrix — Tester (Claude) chạy 5 case</td><td>Board check-in</td></tr>
+      <tr><td>Day 5</td><td>Thu 23/04</td><td>0.5</td><td>CBM-INT-106 (phần 2)</td><td>QUICKSTART.md + tag v2.3.0 dry-run + launch prep</td><td>Sprint demo · Board final</td></tr>
       <tr style="background:var(--bg-muted);"><td>Buffer</td><td>Sat 25/04</td><td>—</td><td>Fix blockers</td><td>Buffer nếu Day 5 slip</td><td>—</td></tr>
       <tr style="background:var(--c-green-bg);"><td>Gate G1</td><td>Sun 26/04</td><td>—</td><td>Review + Retro</td><td>CEO review 17:00 · Sign-off G1 · Retro 18:00</td><td><strong>🎯 Gate G1 Sun 17:00</strong></td></tr>
     </tbody>
@@ -1865,7 +1865,7 @@ a:hover { text-decoration: underline; }
   </ul>
 
   <p style="margin-top:14px; padding:10px 14px; background:var(--bg-muted); border-radius:6px; font-size:12px; color:var(--text-muted);">
-    <strong>PM Note (19/04):</strong> CEO approved 5/5 A1-A5 ✅. ✅ <strong>B2 git history audit CLEAN</strong> (CTO gitleaks scan 19/04, 168 commits 0 findings — Day 1 unblocked). ⏳ Còn B1 SECURITY.md · B3 CONTRIBUTING.md · B4 templates (TechLead, trước Mon 09:00) · CEO tạo Telegram group. Sprint là critical path đầu tiên cho Claude Integration initiative — fail G1 → slip toàn bộ timeline launch Sat 23/05/2026. Daily standup 9:00 (Telegram). Weekly CEO review Sun 17:00.
+    <strong>PM Note (19/04):</strong> CEO approved 5/5 A1-A5 ✅. ✅ Pre-flight B1-B4 ALL CLOSED (3 PRs #104 #105 #106 merged). ✅ GitHub Discussions enabled. <strong>CEO decision 19/04: Skip Telegram group — track toàn bộ sprint qua board.html (SSOT) + PR history + timeline events.</strong> Day 1 CBM-INT-101 PyPI publish early-start Sun 19/04 (thay vì Mon 20/04 per Technical Plan). Sprint là critical path đầu tiên cho Claude Integration initiative — fail G1 → slip toàn bộ timeline launch Sat 23/05/2026. Weekly CEO review Sun 17:00 qua board.
   </p>
 
 </div><!-- /page-board -->
