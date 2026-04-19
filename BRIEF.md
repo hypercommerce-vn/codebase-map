@@ -186,8 +186,8 @@ codebase-map/
 - [x] **+** GitHub Discussions ENABLED via `gh api`
 
 **CEO actions:**
-- [ ] **Tạo Telegram group "CBM-INT-S1 Daily"** — add CEO + TechLead + PM forward Claude
-- [ ] **Sign-off pre-flight** Sun 19/04 19:00
+- [x] ✅ 3 PRs merged (#104 #105 #106) — pre-flight complete
+- [x] ✅ CEO decision 19/04: **Skip Telegram — track sprint qua board.html SSOT** + PR history + timeline events
 
 **Post-sprint (sau G1):**
 - [ ] Launch day marketing: HN / Reddit / Viblo / Zalo communities
