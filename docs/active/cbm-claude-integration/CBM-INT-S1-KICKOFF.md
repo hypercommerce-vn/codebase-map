@@ -2,9 +2,10 @@
 
 > **From:** PM (Claude)
 > **To:** TechLead · CTO · CEO
-> **Status:** 🟢 LIVE — Day 1 Mon 20/04/2026
+> **Status:** 🎉 **4.5/5 SP (90%) DONE in Day 0** — Day 5 remaining
 > **Sprint:** CBM-INT-S1 (PyPI + Claude Skill + Slash Commands) · 5 SP · 1 tuần
-> **Paired docs:** [Technical Plan §1](./Technical_Plan_CBM_Claude_Integration.md) · [Strategy Memo](./Strategy_Memo_CBM_Claude_Integration.md)
+> **Milestone:** v2.2.1 LIVE trên PyPI 19/04/2026 — `pipx install codebase-map`
+> **Paired docs:** [Technical Plan §1](./Technical_Plan_CBM_Claude_Integration.md) · [Strategy Memo](./Strategy_Memo_CBM_Claude_Integration.md) · [Day 4 Test Report](./CBM-INT-S1-Day4-Test-Report.md)
 
 ---
 
@@ -59,16 +60,19 @@ Sun 26/04 ─ Gate G1: CEO review 17:00 · Retro 18:00
 
 ---
 
-## 4. Task Breakdown (6 tasks · 5 SP)
+## 4. Task Breakdown (6 tasks · 5 SP) — Execution Status
 
-| Task | SP | Day | Owner | Output |
-|------|:--:|:---:|-------|--------|
-| CBM-INT-101 | 1 | D1 Mon 20/04 | TechLead | Package `codebase-map` v2.2.1 trên pypi.org |
-| CBM-INT-102 | 1 | D2 Tue 21/04 | TechLead + CTO review | `integrations/claude-code/skills/codebase-map/SKILL.md` |
-| CBM-INT-103 | 1 | D3 Wed 22/04 | TechLead | `commands/cbm-onboard.md` |
-| CBM-INT-104 | 0.5 | D3 Wed 22/04 | TechLead | `commands/cbm-impact.md` |
-| CBM-INT-105 | 0.5 | D3 Wed 22/04 | TechLead | `commands/cbm-diff.md` |
-| CBM-INT-106 | 1 | D4-5 Thu-Fri | Tester (Claude) + TechLead | QUICKSTART.md + test matrix 5/5 pass + v2.3.0 tag dry-run |
+| Task | SP | Scheduled | Actual | Owner | PR | Status |
+|------|:--:|:---------:|:------:|-------|:--:|:------:|
+| CBM-INT-101 PyPI v2.2.1 | 1 | D1 Mon 20/04 | Sun 19/04 | TechLead | [#107](https://github.com/hypercommerce-vn/codebase-map/pull/107) + [#112](https://github.com/hypercommerce-vn/codebase-map/pull/112) | ✅ LIVE on PyPI |
+| CBM-INT-102 SKILL.md | 1 | D2 Tue 21/04 | Sun 19/04 | TechLead + CTO | [#108](https://github.com/hypercommerce-vn/codebase-map/pull/108) | ✅ Merged |
+| CBM-INT-103 /cbm-onboard | 1 | D3 Wed 22/04 | Sun 19/04 | TechLead | [#110](https://github.com/hypercommerce-vn/codebase-map/pull/110) | ✅ Merged |
+| CBM-INT-104 /cbm-impact | 0.5 | D3 Wed 22/04 | Sun 19/04 | TechLead | [#110](https://github.com/hypercommerce-vn/codebase-map/pull/110) | ✅ Merged |
+| CBM-INT-105 /cbm-diff | 0.5 | D3 Wed 22/04 | Sun 19/04 | TechLead | [#110](https://github.com/hypercommerce-vn/codebase-map/pull/110) | ✅ Merged |
+| CBM-INT-106 part 1 test | 0.5 | D4 Thu 23/04 | Sun 19/04 | Tester (Claude) | [#111](https://github.com/hypercommerce-vn/codebase-map/pull/111) | ✅ 5/5 PASS |
+| CBM-INT-106 part 2 QUICKSTART | 0.5 | D5 Fri 24/04 | ⏳ pending | TechLead + AI pair | — | ⏳ Day 5 |
+
+**Pace:** 4.5/5 SP (90%) in Day 0 (Sun 19/04) — 4 days ahead of original schedule.
 
 Task-level DoD chi tiết: xem [Technical Plan §1](./Technical_Plan_CBM_Claude_Integration.md#1-phase-1--pypi--skill--slash-commands-5-sp--tuần-1).
 
