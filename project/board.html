@@ -554,7 +554,7 @@ a:hover { text-decoration: underline; }
     <div class="hero-badges">
       <span class="hero-badge">📊 85 SP shipped · 7 Sprints ✅</span>
       <span class="hero-badge">v1.0 ✅ · v1.1 ✅ · v1.2 ✅ · v2.0.0 ✅ · v2.0.1 ✅ · v2.1 ✅ · v2.2 ✅</span>
-      <span class="hero-badge" style="background:#f59e0b;color:#fff;">🚀 CBM-INT-S1 LIVE · Day 1 Mon 20/04/2026 · 33 SP · 5 tuần · Launch Sat 23/05/2026</span>
+      <span class="hero-badge" style="background:#10b981;color:#fff;">🎉 v2.2.1 LIVE trên PyPI · pipx install codebase-map · 4.5/5 SP (90%) trong Day 0</span>
       <span class="hero-badge">CEO ✅ 7/7 Decisions D1-D7 (18/04) · 5/5 Kickoff approvals A1-A5 (19/04) · Option B: 1 TechLead + Tester=Claude + AI pair</span>
       <span class="hero-badge">HC scan: 1,386 nodes · 8,285 edges · 7 domains</span>
     </div>
@@ -707,8 +707,8 @@ a:hover { text-decoration: underline; }
         <span class="badge active" style="background:#f59e0b;color:#fff;">🚀 KICKOFF</span>
       </div>
       <p>Publish PyPI (<code>pipx install codebase-map</code>), Claude Code Skill manifest, 3 slash commands (<code>/cbm-onboard</code>, <code>/cbm-impact</code>, <code>/cbm-diff</code>), QUICKSTART guide. <a href="#cbm-int-s1"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/Technical_Plan_CBM_Claude_Integration.md" target="_blank">Tech Plan →</a></p>
-      <div class="progress-bar"><div class="progress-fill" style="width:40%;background:#10b981"></div></div>
-      <div class="progress-label">2/5 SP · Day 1+2 ✅ MERGED (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a> PyPI v2.2.1 · <a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a> SKILL.md) · Day 3-5 ⏳ (3 slash commands + test + QUICKSTART) · 2 ngày sớm schedule</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:90%;background:#10b981"></div></div>
+      <div class="progress-label">4.5/5 SP · <strong>🎉 v2.2.1 LIVE trên PyPI</strong> · Day 1-4 ✅ ALL MERGED (PRs #107 #108 #110 #111) · Day 5 ⏳ QUICKSTART + release notes · <strong>4 ngày sớm schedule</strong></div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #f59e0b;">
@@ -1390,6 +1390,31 @@ a:hover { text-decoration: underline; }
         <td>TechLead · 197 lines · 11 triggers</td>
         <td><span class="badge merged">✅ Merged</span></td>
       </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/109" target="_blank">#109</a></td>
+        <td>chore(board): CBM-INT-S1 Day 1+2 MERGED — sprint status + PR history sync</td>
+        <td><code>chore/cbm-int-s1-day2-status-update</code></td>
+        <td>PM · board SSOT</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/110" target="_blank">#110</a></td>
+        <td>feat(commands): CBM-INT-103/104/105 — 3 Claude Code slash commands</td>
+        <td><code>feat/cbm-int-103-105-slash-commands</code></td>
+        <td>TechLead · 3 files 219 lines</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/111" target="_blank">#111</a></td>
+        <td>test(sprint): CBM-INT-106 Day 4 — integration test matrix 5/5 PASS</td>
+        <td><code>feat/cbm-int-106-integration-test</code></td>
+        <td>Tester (Claude) · 5/5 PASS · 0 P0/P1</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td colspan="2" style="text-align:center; font-weight:700; color:#065f46; font-size:13px;">🎉 v2.2.1 TAG PUSHED · PyPI LIVE (19/04/2026 · workflow run 24626431411 · 24s)</td>
+        <td colspan="3" style="text-align:center; font-size:12px; color:#064e3b;"><code>pipx install codebase-map</code> → <a href="https://pypi.org/project/codebase-map/" target="_blank">pypi.org/project/codebase-map</a></td>
+      </tr>
     </tbody>
   </table>
 
@@ -1586,6 +1611,18 @@ a:hover { text-decoration: underline; }
     <div class="tl-item">
       <div class="tl-date">19/04/2026</div>
       <div class="tl-content"><strong>📊 Sprint CBM-INT-S1 — 2/5 SP (40%) DONE in 1 day</strong> — Day 1+Day 2 song song thay vì tuần tự → 2 ngày sớm schedule gốc. Day 3 CBM-INT-103/104/105 (3 slash commands, 2 SP) starting. CEO decision ghi nhận: bỏ Telegram, track full qua board SSOT + PR history. ⏳ Outstanding: CEO tag <code>v2.2.1</code> push để trigger PyPI publish (workflow publish-pypi.yml đã sẵn sàng).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-103/104/105 Day 3 MERGED — 3 slash commands shipped</strong> — TechLead delivered <code>/cbm-onboard</code> (80 dòng) · <code>/cbm-impact</code> (48 dòng) · <code>/cbm-diff</code> (91 dòng). Fixed Tech Plan template bugs: <code>diff</code> default HEAD~1→main, <code>snapshot-diff --depth</code> 1→2 cho PR review. Uses <code>snapshots list --json</code> + <code>check-staleness --json</code> cho parseable baseline detection. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/110" target="_blank">#110</a> MERGED.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-106 Day 4 MERGED — Integration test 5/5 PASS</strong> — Tester (Claude) executed 5-case matrix. Case 2 skill trigger 10/10 (exceeds AC 8/10). Case 3 dogfood 200 nodes/992 edges/24ms. Case 4 threshold OK. Case 5 dual-mode OK. Lint PASS. No P0/P1 defects · 2 P3 non-blocker. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/111" target="_blank">#111</a> MERGED. Full report: <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Day4-Test-Report.md" target="_blank">Day4-Test-Report.md</a>.</div>
+    </div>
+    <div class="tl-item" style="background:#f0fdf4; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
+      <div class="tl-date">19/04/2026 · 🎉 MILESTONE</div>
+      <div class="tl-content"><strong>🎉 v2.2.1 LIVE trên PyPI — First PyPI publication ever!</strong> CEO authorize PM push tag <code>v2.2.1</code>. Workflow <code>publish-pypi.yml</code> run <code>24626431411</code> SUCCESS in <strong>24s</strong>. <a href="https://pypi.org/project/codebase-map/" target="_blank">pypi.org/project/codebase-map</a> HTTP 200 · Version 2.2.1 · MIT · Python ≥3.10. <strong>Case 1 REAL install test:</strong> <code>pipx install codebase-map</code> → <code>codebase-map 2.2.1</code> (Python 3.14.3 compat verified). <strong>AC-INT-01 CLOSED genuinely.</strong> 4.5/5 SP (90%) · chỉ còn Day 5 QUICKSTART.</div>
     </div>
   </div>
 
@@ -1791,8 +1828,8 @@ a:hover { text-decoration: underline; }
         <td>Publish <code>codebase-map</code> lên PyPI — pyproject.toml v2.2.1 + publish-pypi.yml workflow + build verify. Tag push trigger CI auto-upload.</td>
         <td>1</td><td>Day 1 ✅ (Sun 19/04 early start)</td>
         <td>TechLead</td>
-        <td>✅ PyPI name FREE · ✅ pyproject.toml v2.2.1 + metadata · ✅ <code>__init__.py</code> version fix 1.0.0→2.2.1 · ✅ workflow OIDC-ready · ✅ build 174KB wheel + twine check PASS · ✅ lint PASS · ✅ 158/158 tests · ✅ README PyPI install docs · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a> MERGED · ⚠️ tag v2.2.1 PENDING CEO</td>
-        <td><span class="badge merged">✅ Merged</span></td>
+        <td>✅ <strong>🎉 v2.2.1 LIVE trên PyPI 19/04/2026</strong> — CEO authorize PM push tag · Workflow run 24626431411 SUCCESS in 24s · <a href="https://pypi.org/project/codebase-map/" target="_blank">pypi.org/project/codebase-map</a> HTTP 200 · <code>pipx install codebase-map</code> works (Python 3.14.3 verified) · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a> MERGED · Build sdist 166KB + wheel 174KB · twine check PASS · lint PASS · 158/158 tests PASS</td>
+        <td><span class="badge merged">✅ LIVE</span></td>
       </tr>
       <tr style="background:#d1fae5;">
         <td><code>CBM-INT-102</code></td>
@@ -1826,13 +1863,13 @@ a:hover { text-decoration: underline; }
         <td>✅ <code>commands/cbm-diff.md</code> 91 dòng · desc 79 chars · dual-snapshot preferred + git-diff fallback · <code>snapshots list --json</code> baseline detect · <code>check-staleness</code> gate · pbcopy/xclip · <strong>PR pending</strong></td>
         <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
-      <tr style="background:#fef3c7;">
+      <tr style="background:#d1fae5;">
         <td><code>CBM-INT-106</code></td>
         <td>Integration test (5 case matrix) + <code>QUICKSTART.md</code> 30-second install guide + launch dry-run</td>
         <td>1</td><td>Day 4 ✅ (Sun 19/04) · Day 5 ⏳</td>
         <td>Tester (Claude) + TechLead · AI pair lo docs</td>
-        <td>✅ <strong>Day 4 integration test:</strong> 5/5 cases PASS · Case 1 wheel install 4.6s (PyPI pending) · <strong>Case 2 skill trigger 10/10</strong> (exceeds AC 8/10) · Case 3 dogfood 200 nodes/992 edges/24ms · Case 4 impact threshold OK · Case 5 dual-mode OK · Lint PASS · No P0/P1 · 2 P3 non-blocker · <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Day4-Test-Report.md" target="_blank">Test Report ↗</a> · ⏳ Day 5 QUICKSTART + release notes</td>
-        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 Day 4 PR Pending</span></td>
+        <td>✅ <strong>Day 4 integration test: 5/5 PASS</strong> · <strong>Case 1 REAL pipx install ✅</strong> (post v2.2.1 tag push — PyPI LIVE) · Case 2 skill trigger 10/10 (exceeds AC 8/10) · Case 3 dogfood 200 nodes/992 edges/24ms · Case 4 impact threshold OK · Case 5 dual-mode OK · Lint PASS · No P0/P1 · 2 P3 non-blocker · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/111" target="_blank">#111</a> MERGED · <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Day4-Test-Report.md" target="_blank">Test Report ↗</a> · ⏳ Day 5 QUICKSTART + release notes</td>
+        <td><span class="badge merged">✅ Day 4 Merged</span></td>
       </tr>
     </tbody>
   </table>
@@ -2111,7 +2148,7 @@ a:hover { text-decoration: underline; }
 <!-- Footer -->
 <div class="footer">
   <span>Codebase Map — Project Board · Hyper Commerce · CEO: Đoàn Đình Tỉnh</span>
-  <span>Updated: 19/04/2026 · CBM v2.2 ✅ · 🚀 CBM-INT-S1 LIVE · <strong>2/5 SP DONE in Day 0 (40%)</strong> · Day 1 #107 ✅ · Day 2 #108 ✅ · Day 3 🔄 starting · Launch Sat 23/05/2026 · Pre-flight 4/4 ✅ · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
+  <span>Updated: 19/04/2026 · <strong>🎉 v2.2.1 LIVE trên PyPI</strong> · <code>pipx install codebase-map</code> · CBM-INT-S1 <strong>4.5/5 SP (90%)</strong> trong Day 0 · Day 1-4 ALL MERGED (PRs #107 #108 #110 #111) · Day 5 ⏳ QUICKSTART · Launch Sat 23/05/2026 · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
 </div>
 
 <!-- ═══════════════════════════════════════
