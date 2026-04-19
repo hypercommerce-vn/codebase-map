@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "codebase-map"
-version = "2.2.1"
+version = "2.3.0"
 description = "Function dependency graph generator for Python and TypeScript — works great with Claude Code."
 readme = "README.md"
 requires-python = ">=3.10"
