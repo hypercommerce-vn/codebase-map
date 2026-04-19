@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 4.2 | Cập nhật: 19/04/2026 (CBM-INT-S1 KICKOFF — CEO 5/5 approved A1-A5, Day 1 Mon 20/04)
+> Version: 4.3 | Cập nhật: 19/04/2026 (CBM-INT-S1 · 2/5 SP DONE in 1 day — PRs #107 #108 merged, Day 3 starting)
 
 ---
 
@@ -161,18 +161,20 @@ codebase-map/
 
 ---
 
-## 🚀 CBM-INT-S1 LIVE — Day 1 Mon 20/04/2026
+## 🚀 CBM-INT-S1 · 2/5 SP DONE (40%) · Day 3 STARTING
 
 **Sprint goal:** PyPI + Claude Skill + 3 slash commands (5 SP · 6 tasks) · Gate G1 Sun 26/04
 
-**Schedule:**
-- Day 0 (Sun 19/04 — today): Pre-flight B1-B4 blockers
-- Day 1 (Mon 20/04): CBM-INT-101 PyPI publish
-- Day 2 (Tue 21/04): CBM-INT-102 SKILL.md
-- Day 3 (Wed 22/04): CBM-INT-103/104/105 slash commands
-- Day 4 (Thu 23/04): CBM-INT-106 integration test (Tester = Claude)
-- Day 5 (Fri 24/04): QUICKSTART.md + v2.3.0 tag dry-run
-- Buffer Sat 25/04 · **Gate G1 Sun 26/04 17:00**
+**Progress (19/04 — 1 day in):**
+- ✅ Day 0 Pre-flight B1-B4 CLOSED — PRs #104 #105 #106 merged
+- ✅ Day 1 CBM-INT-101 PyPI v2.2.1 — PR #107 MERGED (⚠️ tag pending CEO)
+- ✅ Day 2 CBM-INT-102 SKILL.md — PR #108 MERGED (parallel Day 1)
+- 🔄 Day 3 CBM-INT-103/104/105 slash commands — starting now (2 SP)
+- ⏳ Day 4 CBM-INT-106 integration test (Tester = Claude)
+- ⏳ Day 5 QUICKSTART.md + v2.3.0 tag dry-run
+- 🎯 Gate G1 Sun 26/04 17:00
+
+**Execution pace:** 2 ngày sớm so với schedule gốc (Day 1+Day 2 parallel trong 1 session).
 
 ---
 
