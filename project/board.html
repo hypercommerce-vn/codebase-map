@@ -1802,29 +1802,29 @@ a:hover { text-decoration: underline; }
         <td>✅ <code>SKILL.md</code> 197 dòng (< 500 limit) · ✅ frontmatter YAML valid (name=codebase-map, desc 444 chars) · ✅ 11 trigger phrases · ✅ 7 sections · ✅ TRIGGER_TEST_PROMPTS.md (10 pos + 5 neg) · Commands verified against CBM v2.2.1 CLI · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a> MERGED</td>
         <td><span class="badge merged">✅ Merged</span></td>
       </tr>
-      <tr>
+      <tr style="background:#fef3c7;">
         <td><code>CBM-INT-103</code></td>
         <td>Slash command <code>/cbm-onboard</code> — generate graph + summary 5 bullet cho repo lạ, chạy trên Python/TS project bất kỳ</td>
-        <td>1</td><td>Day 3 (Wed 22/04)</td>
+        <td>1</td><td>Day 3 ✅ (Sun 19/04 early start)</td>
         <td>TechLead</td>
-        <td><code>commands/cbm-onboard.md</code> · Test trên HC repo + sample repo công cộng (e.g. FastAPI) pass</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <code>commands/cbm-onboard.md</code> 80 dòng · desc 74 chars · detect Python/TS config · 5-bullet summary · graceful khi coverage missing · frontmatter YAML valid · <strong>PR pending</strong></td>
+        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
-      <tr>
+      <tr style="background:#fef3c7;">
         <td><code>CBM-INT-104</code></td>
         <td>Slash command <code>/cbm-impact</code> — wrap <code>codebase-map impact &lt;name&gt;</code>, hiện warning khi impact > 50 nodes, gợi ý test plan</td>
-        <td>0.5</td><td>Day 3 (Wed 22/04)</td>
+        <td>0.5</td><td>Day 3 ✅ (Sun 19/04 early start)</td>
         <td>TechLead</td>
-        <td><code>commands/cbm-impact.md</code> · Edge case: class không tồn tại → suggest nearest match</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <code>commands/cbm-impact.md</code> 48 dòng · desc 83 chars · compact risk-tier table · empty-arg guard · "nearest match" · <code>--depth 2</code> PR-review · <strong>PR pending</strong></td>
+        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
-      <tr>
+      <tr style="background:#fef3c7;">
         <td><code>CBM-INT-105</code></td>
         <td>Slash command <code>/cbm-diff</code> — chạy <code>codebase-map diff &lt;branch&gt;</code>, output markdown, kèm affected callers</td>
-        <td>0.5</td><td>Day 3 (Wed 22/04)</td>
+        <td>0.5</td><td>Day 3 ✅ (Sun 19/04 early start)</td>
         <td>TechLead</td>
-        <td><code>commands/cbm-diff.md</code> · Test với <code>main</code> branch trên HC repo · Markdown render trong Claude Code chat</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <code>commands/cbm-diff.md</code> 91 dòng · desc 79 chars · dual-snapshot preferred + git-diff fallback · <code>snapshots list --json</code> baseline detect · <code>check-staleness</code> gate · pbcopy/xclip · <strong>PR pending</strong></td>
+        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
       <tr>
         <td><code>CBM-INT-106</code></td>
