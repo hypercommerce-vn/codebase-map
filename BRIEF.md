@@ -179,8 +179,8 @@ codebase-map/
 ## ⚡ NEXT ACTIONS (Sun 19/04 — pre-flight)
 
 **Pre-flight blockers — phải close trước Mon 20/04 09:00:**
+- [x] **B2** ✅ **CLEAN** (19/04) — CTO gitleaks v8.30.1 scan 168 commits, 0 findings. Report: `docs/active/cbm-claude-integration/CBM-INT-S1-B2-Git-Audit-Report.md`
 - [ ] **B1** SECURITY.md — TechLead viết (template GitHub OSS)
-- [ ] **B2** Git history audit — TechLead delegated: `gitleaks detect --source . --log-opts="--all"` hoặc `trufflehog git file://. --only-verified`
 - [ ] **B3** CONTRIBUTING.md — TechLead viết
 - [ ] **B4** Issue + PR templates — TechLead viết `.github/ISSUE_TEMPLATE/*.md` + `.github/pull_request_template.md`
 
