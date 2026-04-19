@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 4.3 | Cập nhật: 19/04/2026 (CBM-INT-S1 · 2/5 SP DONE in 1 day — PRs #107 #108 merged, Day 3 starting)
+> Version: 4.4 | Cập nhật: 19/04/2026 (🎉 v2.2.1 LIVE trên PyPI · CBM-INT-S1 4.5/5 SP (90%) — chỉ còn Day 5 QUICKSTART)
 
 ---
 
@@ -161,20 +161,24 @@ codebase-map/
 
 ---
 
-## 🚀 CBM-INT-S1 · 2/5 SP DONE (40%) · Day 3 STARTING
+## 🎉 CBM-INT-S1 · 4.5/5 SP (90%) DONE · Day 5 REMAINING
 
 **Sprint goal:** PyPI + Claude Skill + 3 slash commands (5 SP · 6 tasks) · Gate G1 Sun 26/04
 
-**Progress (19/04 — 1 day in):**
+**Progress (19/04 — full Day 0 execution):**
 - ✅ Day 0 Pre-flight B1-B4 CLOSED — PRs #104 #105 #106 merged
-- ✅ Day 1 CBM-INT-101 PyPI v2.2.1 — PR #107 MERGED (⚠️ tag pending CEO)
+- ✅ Day 1 CBM-INT-101 PyPI v2.2.1 — PR #107 MERGED · **🎉 TAG PUSHED · PyPI LIVE** (PR #112)
 - ✅ Day 2 CBM-INT-102 SKILL.md — PR #108 MERGED (parallel Day 1)
-- 🔄 Day 3 CBM-INT-103/104/105 slash commands — starting now (2 SP)
-- ⏳ Day 4 CBM-INT-106 integration test (Tester = Claude)
-- ⏳ Day 5 QUICKSTART.md + v2.3.0 tag dry-run
+- ✅ Day 3 CBM-INT-103/104/105 slash commands — PR #110 MERGED
+- ✅ Day 4 CBM-INT-106 part 1 integration test 5/5 PASS — PR #111 MERGED
+- ⏳ Day 5 CBM-INT-106 part 2 — QUICKSTART.md + v2.3.0 release notes (0.5 SP)
 - 🎯 Gate G1 Sun 26/04 17:00
 
-**Execution pace:** 2 ngày sớm so với schedule gốc (Day 1+Day 2 parallel trong 1 session).
+**Package LIVE:** `pipx install codebase-map` → https://pypi.org/project/codebase-map/
+
+**Execution pace:** 4 ngày sớm so với schedule gốc (toàn bộ Day 1-4 trong 1 session Sun 19/04).
+
+**Real Case 1 test:** `pipx install codebase-map` PASSED on Python 3.14.3, v2.2.1 confirmed.
 
 ---
 
