@@ -178,11 +178,12 @@ codebase-map/
 
 ## ⚡ NEXT ACTIONS (Sun 19/04 — pre-flight)
 
-**Pre-flight blockers — phải close trước Mon 20/04 09:00:**
-- [x] **B2** ✅ **CLEAN** (19/04) — CTO gitleaks v8.30.1 scan 168 commits, 0 findings. Report: `docs/active/cbm-claude-integration/CBM-INT-S1-B2-Git-Audit-Report.md`
-- [ ] **B1** SECURITY.md — TechLead viết (template GitHub OSS)
-- [ ] **B3** CONTRIBUTING.md — TechLead viết
-- [ ] **B4** Issue + PR templates — TechLead viết `.github/ISSUE_TEMPLATE/*.md` + `.github/pull_request_template.md`
+**Pre-flight blockers — ALL CLOSED 19/04/2026 ✅:**
+- [x] **B1** ✅ `SECURITY.md` (102 dòng) — GHSA private inbox, 48h ACK, scope rõ
+- [x] **B2** ✅ Git audit CLEAN — gitleaks v8.30.1 · 168 commits · 0 findings · Report: `docs/active/cbm-claude-integration/CBM-INT-S1-B2-Git-Audit-Report.md`
+- [x] **B3** ✅ `CONTRIBUTING.md` (165 dòng) — dev setup + lint gate + PR workflow
+- [x] **B4** ✅ `.github/ISSUE_TEMPLATE/` (bug_report + feature_request + config.yml) + `.github/pull_request_template.md`
+- [x] **+** GitHub Discussions ENABLED via `gh api`
 
 **CEO actions:**
 - [ ] **Tạo Telegram group "CBM-INT-S1 Daily"** — add CEO + TechLead + PM forward Claude
