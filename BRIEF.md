@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 4.4 | Cập nhật: 19/04/2026 (🎉 v2.2.1 LIVE trên PyPI · CBM-INT-S1 4.5/5 SP (90%) — chỉ còn Day 5 QUICKSTART)
+> Version: 4.5 | Cập nhật: 19/04/2026 (🎉 SPRINT CBM-INT-S1 COMPLETE · 5/5 SP · v2.2.1 + v2.3.0 LIVE · Retro done · Next: CBM-INT-S2)
 
 ---
 
@@ -161,24 +161,27 @@ codebase-map/
 
 ---
 
-## 🎉 CBM-INT-S1 · 4.5/5 SP (90%) DONE · Day 5 REMAINING
+## 🎉 SPRINT CBM-INT-S1 COMPLETE — 5/5 SP trong 1 ngày
 
-**Sprint goal:** PyPI + Claude Skill + 3 slash commands (5 SP · 6 tasks) · Gate G1 Sun 26/04
+**Status:** ✅ ALL 6 tasks DONE · 10 PRs merged · 158/158 tests · 0 P0/P1 defects · **2 PyPI releases LIVE**
 
-**Progress (19/04 — full Day 0 execution):**
-- ✅ Day 0 Pre-flight B1-B4 CLOSED — PRs #104 #105 #106 merged
-- ✅ Day 1 CBM-INT-101 PyPI v2.2.1 — PR #107 MERGED · **🎉 TAG PUSHED · PyPI LIVE** (PR #112)
-- ✅ Day 2 CBM-INT-102 SKILL.md — PR #108 MERGED (parallel Day 1)
-- ✅ Day 3 CBM-INT-103/104/105 slash commands — PR #110 MERGED
-- ✅ Day 4 CBM-INT-106 part 1 integration test 5/5 PASS — PR #111 MERGED
-- ⏳ Day 5 CBM-INT-106 part 2 — QUICKSTART.md + v2.3.0 release notes (0.5 SP)
-- 🎯 Gate G1 Sun 26/04 17:00
+**Packages LIVE:**
+- `pipx install codebase-map` → [v2.2.1](https://pypi.org/project/codebase-map/2.2.1/) (first publication)
+- `pipx install codebase-map==2.3.0` → [v2.3.0](https://pypi.org/project/codebase-map/2.3.0/) (Claude Code integration)
 
-**Package LIVE:** `pipx install codebase-map` → https://pypi.org/project/codebase-map/
+**Timeline (all Sun 19/04/2026):**
+- ✅ Day 0 Pre-flight B1-B4 — PRs #104 #105 #106
+- ✅ Day 1 CBM-INT-101 PyPI v2.2.1 — PR #107 · tag v2.2.1 · PyPI LIVE (PR #112)
+- ✅ Day 2 CBM-INT-102 SKILL.md — PR #108 (197 lines · 11 triggers)
+- ✅ Day 3 CBM-INT-103/104/105 slash commands — PR #110
+- ✅ Day 4 CBM-INT-106 part 1 test 5/5 PASS — PR #111
+- ✅ Day 5 CBM-INT-106 part 2 QUICKSTART + v2.3.0 — PR #114 · tag v2.3.0 · PyPI LIVE
+- ✅ Status sync PR #113 · Retro doc PR #115
+- 🎯 Gate G1 Sun 26/04 — ceremony formality (sprint already closed)
 
-**Execution pace:** 4 ngày sớm so với schedule gốc (toàn bộ Day 1-4 trong 1 session Sun 19/04).
+**Retro:** [`docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md`](docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md) — Start/Stop/Continue + 8 action items for CBM-INT-S2
 
-**Real Case 1 test:** `pipx install codebase-map` PASSED on Python 3.14.3, v2.2.1 confirmed.
+**Pace:** 5 ngày sớm so với schedule gốc. Sprint planned 20-26/04, executed in 1 day (19/04).
 
 ---
 
