@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "codebase-map"
-version = "2.3.0"
+version = "2.4.0"
 description = "Function dependency graph generator for Python and TypeScript — works great with Claude Code."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -46,6 +46,8 @@ Repository = "https://github.com/hypercommerce-vn/codebase-map"
 
 [project.scripts]
 codebase-map = "codebase_map.cli:main"
+# HC-AI | ticket: FDD-TOOL-CODEMAP — MCP server entry (CBM-INT-207)
+cbm-mcp = "mcp_server.server:main"
 
 [tool.setuptools.packages.find]
 include = ["codebase_map*", "mcp_server*"]

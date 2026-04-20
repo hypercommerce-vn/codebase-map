@@ -7,5 +7,5 @@ the server skeleton; concrete tools ship in CBM-INT-202 through CBM-INT-205,
 and the graph cache is completed in CBM-INT-206.
 """
 
-__version__ = "0.1.0"
+__version__ = "2.4.0"
 __all__ = ["server"]

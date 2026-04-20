@@ -2,7 +2,7 @@
 
 > **Standalone function dependency graph generator** for Python (and TypeScript) projects.
 > Output: interactive HTML + JSON. **100% offline · zero CDN.**
-> **License:** MIT · **Version:** 2.2.0
+> **License:** MIT · **Version:** 2.4.0
 
 Parse your codebase into a function dependency graph (nodes = functions/classes, edges = call relationships). Foundation for understanding large codebases, PR impact analysis, and dual-snapshot diff.
 
@@ -31,6 +31,30 @@ git clone git@github.com:hypercommerce-vn/codebase-map.git
 cd codebase-map
 pip install -e ".[dev]"
 ```
+
+**For MCP server (Claude Desktop / Cowork / Claude Code):**
+
+```bash
+pipx install "codebase-map[mcp]"
+cbm-mcp          # stdio MCP server (blocks — this is expected)
+```
+
+Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "codebase-map": {
+      "command": "cbm-mcp"
+    }
+  }
+}
+```
+
+5 tools auto-invoke: `cbm_query`, `cbm_search`, `cbm_impact`,
+`cbm_snapshot_diff`, `cbm_api_catalog`. See
+[`integrations/mcp/README.md`](integrations/mcp/README.md) for the full
+walkthrough.
 
 Verify:
 
@@ -225,4 +249,4 @@ Built by [Hyper Commerce](https://github.com/hypercommerce-vn) for internal use,
 
 ---
 
-*Version 2.2.0 · Published 2026-04-16*
+*Version 2.4.0 · Published 2026-04-20*
