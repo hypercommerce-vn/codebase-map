@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 5.0 | Cập nhật: 20/04/2026 (🎉 S1 + S2 BOTH SEALED · v2.4.0 LIVE · 5 MCP tools via pipx install codebase-map[mcp] · Retro + Verify done · Next: CBM-INT-S3)
+> Version: 5.1 | Cập nhật: 21/04/2026 (🎉 S1+S2 SEALED · 🚀 S3 LIVE Day 1 — Plugin + 2 Packs · FINAL sprint · 20 ngày sớm schedule)
 
 ---
 
@@ -183,6 +183,37 @@ codebase-map/
 
 **S2 Retro:** `docs/active/cbm-claude-integration/CBM-INT-S2-Retrospective.md` (10 sections · 4 S2-specific + 6 AI carried from S1)
 **S2 Verify:** `docs/active/cbm-claude-integration/CBM-INT-S2-Verification-Report.md` (L1 5/5 + L2A 5/5 + L2B cache bench + L2C 12/12)
+
+---
+
+## 🚀 SPRINT CBM-INT-S3 · LIVE Day 1 Tue 21/04/2026 (FINAL sprint)
+
+**Sprint goal:** Đóng gói CBM thành Claude Plugin 1-click install (Cowork) · 2 Archetype Packs (AI Agent + SaaS per CEO D5) · Launch marketing. **Final sprint của Claude Integration initiative.**
+
+**Timeline (fast-track, 20 ngày sớm original Mon 11/05):**
+- Day 1 Tue 21/04 — CBM-INT-301 Plugin manifest + bundle · CBM-INT-302 Post-install hook (2 SP)
+- Day 2 Wed 22/04 — CBM-INT-303 Publish marketplace `hypercommerce-vn/claude-plugins` (1 SP)
+- Day 3 Thu 23/04 — CBM-INT-304 Cowork variant (AI Agent Knowledge Pack + SaaS Onboarding Pack, bilingual EN/VI) (1.5 SP)
+- Day 4 Fri 24/04 — CBM-INT-305 Launch blog 800 words + Loom demo video 2 min (0.5 SP)
+- Day 5 Sat 25/04 — 🚀 LAUNCH — HN/Reddit/Viblo/Zalo posts
+- Gate G5 Sun 26/04 — CEO review · LAUNCH retro · Initiative complete
+
+**Kickoff brief:** `docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md`
+
+**AC-S3-01→07:** Plugin install < 30s (Claude Code + Cowork) · Post-install hook macOS/Linux/WSL · 2 Packs installable · Blog 100+ views 48h · Demo video 100+ views tuần đầu · Lint + 158/158 no regression
+
+**Rule #S2-1 applied:** Feature PRs skip `project/board.html` progress label. PM ships separate status sync after each feature merge. Addresses S2's 3 recurring conflicts.
+
+## 📋 Pre-S3 Backlog
+
+- [ ] **AI-#1** PyPI OIDC Trusted Publisher (S3 Day 1 recommended)
+- [ ] **AI-#7** GitHub Settings (secret scanning · Dependabot · branch protection) — CEO action, not blocking
+- [ ] S2-2 Live Claude Desktop dry-run (AC-S2-03 deferred)
+- [ ] S2-3 Remove redundant `mcp_server/__init__.py __version__` (S3 Day 1 cleanup)
+- [ ] AI-#2 Test `__version__` == pyproject (S3 Day 1)
+- [ ] AI-#4 PyPI release runbook doc (S3 Day 2)
+- [ ] AI-#5 Linux + WSL pipx smoke tests (S3 Day 4)
+- [ ] AI-#9, AI-#10 P3 UX improvements (backlog)
 
 ## 🧹 AI-#6 CLEANUP COMPLETE (20/04)
 
