@@ -72,7 +72,7 @@ git diff main..HEAD
 | CTO Dim C < 20/25 | ❌ **AUTO BLOCK** | Parser accuracy — phải fix |
 | Impact zone > 50 | ⚠️ **WARN** | Cân nhắc split PR trước khi push |
 
-**Report lưu:** `docs/reviews/ReviewGate_Local_{branch}_{date}.md`
+**Report lưu:** `docs/reference/reviews/ReviewGate_Local_{branch}_{date}.md`
 
 ---
 
@@ -271,7 +271,7 @@ Nếu PR không có HTML changes: Final Score = CTO Score (Designer skip)
 3. **Max 3 vòng** — vòng 3 mà < 90% → thông báo khẩn CEO
 4. **CTO Dim C AUTO BLOCK** — parser accuracy non-negotiable
 5. **Song song** — CTO + Designer review cùng lúc (sau Tester PASS)
-6. **Report lưu** — `docs/reviews/ReviewGate_PR{XX}_Round{N}_{date}.md`
+6. **Report lưu** — `docs/reference/reviews/ReviewGate_PR{XX}_Round{N}_{date}.md`
 7. **2-tier mandatory từ CM-S3** — Local Pre-flight TRƯỚC push, Remote Full SAU push (CEO Decision 07/04/2026)
 
 ---

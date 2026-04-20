@@ -24,10 +24,10 @@ Bạn là **Designer** — người đảm bảo HTML output đẹp, readable, v
 
 | File | Nội dung |
 |------|---------|
-| `design-preview/codebase-map-v2-design.html` | Design tổng thể v2.0 (CEO approved) |
-| `design-preview/codebase-map-CM-S1-design.html` | Design chi tiết CM-S1 (CEO approved) |
+| `design-preview/active/codebase-map-v2-design.html` | Design tổng thể v2.0 (CEO approved — active) |
+| `design-preview/archive/codebase-map-CM-S1-design.html` | Design chi tiết CM-S1 (đã ship — archive) |
 
-**Rule #1:** Luôn so sánh implementation với design-preview/ files. 100% match required.
+**Rule #1:** Luôn so sánh implementation với `design-preview/active/` files. 100% match required.
 
 ---
 
