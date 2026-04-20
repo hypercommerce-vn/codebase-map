@@ -84,6 +84,23 @@ affected callers grouped by domain, and a suggested test plan. Paste it into
 the PR description. (Skipping the `baseline` snapshot falls back to a
 shallower git-diff mode — still useful, but lighter.)
 
+## Alternative: MCP server (Claude Desktop / Cowork)
+
+Prefer MCP tool calls over slash commands? CBM v2.4.0+ ships an MCP server
+with 5 auto-invoke tools (`cbm_query`, `cbm_search`, `cbm_impact`,
+`cbm_snapshot_diff`, `cbm_api_catalog`). Install with the `[mcp]` extra:
+
+```bash
+pipx install "codebase-map[mcp]"
+```
+
+Then wire `cbm-mcp` into your Claude Desktop config — see
+[`integrations/mcp/README.md`](../mcp/README.md) for the full walkthrough.
+
+The MCP path is **complementary** to the slash commands. Use MCP when Claude
+invokes tools conversationally; use slash commands for deterministic,
+explicit workflows.
+
 ## Troubleshooting
 
 **`codebase-map: command not found`** — `pipx` installs into

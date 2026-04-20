@@ -718,8 +718,8 @@ a:hover { text-decoration: underline; }
         <span class="badge active" style="background:#f59e0b;color:#fff;">🚀 KICKOFF Mon 20/04</span>
       </div>
       <p>MCP server Python (reuse codebase_map package) với 5 auto-invoke tools: <code>cbm_query</code>, <code>cbm_search</code>, <code>cbm_impact</code>, <code>cbm_snapshot_diff</code>, <code>cbm_api_catalog</code> · Graph cache mtime invalidation · PyPI <code>codebase-map-mcp</code>. Retention 15% → 50%. <a href="#cbm-int-s2"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">Kickoff brief →</a></p>
-      <div class="progress-bar"><div class="progress-fill" style="width:81.25%;background:#f59e0b"></div></div>
-      <div class="progress-label">6.5/8 SP · Day 1 ✅ scaffold (#121) · Day 2 ✅ 3 tools (#124) · Day 3 ✅ snapshot_diff (#125) · Day 4 ✅ api_catalog + cache 40× speedup (#128) · Day 5 🔄 STARTING — PyPI publish + tests</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%;background:#10b981"></div></div>
+      <div class="progress-label"><strong>8/8 SP · 🎉 SPRINT COMPLETE</strong> · All 5 MCP tools LIVE · PyPI v2.4.0 ready · Cache 40× speedup · Day 1-5 ALL DONE · <strong>5 ngày sớm schedule gốc</strong></div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #f59e0b;">
@@ -2194,21 +2194,21 @@ a:hover { text-decoration: underline; }
         <td>✅ <code>graph_cache.py</code> 72 LoC · Thread-safe · mtime invalidation · <strong>Benchmark:</strong> Cold 2.8ms · Hot 0.071ms (<strong>40× speedup</strong>, AC-S2-02 closed) · 4 tools migrated · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/128" target="_blank">#128</a> MERGED</td>
         <td><span class="badge merged">✅ Merged</span></td>
       </tr>
-      <tr>
+      <tr style="background:#fef3c7;">
         <td><code>CBM-INT-207</code></td>
         <td>PyPI publish <code>codebase-map-mcp</code> — entry point <code>cbm-mcp</code> · OIDC trusted publisher</td>
-        <td>1</td><td>Day 5 (Fri 24/04)</td>
+        <td>1</td><td>Day 5 ✅ (Mon 20/04)</td>
         <td>TechLead</td>
-        <td>Package visible pypi.org · <code>pipx install codebase-map-mcp</code> works · Entry point callable · AI-#1 OIDC configured (drop token secret)</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <strong>Path A</strong> chosen (entry point in codebase-map[mcp], single package vs separate) · Version bump 2.3.0 → 2.4.0 (3 files synced) · Entry <code>cbm-mcp</code> callable, blocks on stdio correctly · Build wheel 181KB + sdist 170KB, twine PASS · Release notes <code>v2.4.0.md</code> 102 dòng · README + QUICKSTART MCP sections added · <strong>PR pending</strong></td>
+        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
-      <tr>
+      <tr style="background:#fef3c7;">
         <td><code>CBM-INT-208</code></td>
         <td>Integration test + Claude Desktop config docs + MCP registry submission</td>
-        <td>0.5</td><td>Day 5 (Fri 24/04)</td>
+        <td>0.5</td><td>Day 5 ✅ (Mon 20/04)</td>
         <td>Tester (Claude) + TechLead</td>
-        <td>MCP Inspector passes 5 tools · Claude Desktop config example tested · Anthropic MCP registry PR opened · <code>integrations/mcp/README.md</code></td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <strong>5/5 tools smoke test PASS</strong> · Day 5 test report · Cache benchmark re-verified (cold 2.91ms · hot 0.24ms · 12.1× speedup on 200-node graph) · <code>integrations/mcp/README.md</code> 120 dòng (install + Claude Desktop config + tool reference + troubleshooting) · <code>integrations/mcp/REGISTRY_SUBMISSION.md</code> prep (fork+PR process, metadata, CEO action post-launch) · <strong>PR pending</strong></td>
+        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
     </tbody>
   </table>
