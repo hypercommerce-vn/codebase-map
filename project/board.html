@@ -719,7 +719,7 @@ a:hover { text-decoration: underline; }
       </div>
       <p>MCP server Python (reuse codebase_map package) với 5 auto-invoke tools: <code>cbm_query</code>, <code>cbm_search</code>, <code>cbm_impact</code>, <code>cbm_snapshot_diff</code>, <code>cbm_api_catalog</code> · Graph cache mtime invalidation · PyPI <code>codebase-map-mcp</code>. Retention 15% → 50%. <a href="#cbm-int-s2"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">Kickoff brief →</a></p>
       <div class="progress-bar"><div class="progress-fill" style="width:81.25%;background:#f59e0b"></div></div>
-      <div class="progress-label">6.5/8 SP · Day 1 ✅ scaffold (#121) · Day 2 ✅ 3 tools (#124) · Day 3 ✅ snapshot_diff (#125) · Day 4 🔄 api_catalog + cache PR pending (40× cache speedup) · Day 5 ⏳ · Fast-track</div>
+      <div class="progress-label">6.5/8 SP · Day 1 ✅ scaffold (#121) · Day 2 ✅ 3 tools (#124) · Day 3 ✅ snapshot_diff (#125) · Day 4 ✅ api_catalog + cache 40× speedup (#128) · Day 5 🔄 STARTING — PyPI publish + tests</div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #f59e0b;">
@@ -1521,6 +1521,27 @@ a:hover { text-decoration: underline; }
         <td>TechLead · 138 LoC · 6/6 smoke tests</td>
         <td><span class="badge merged">✅ Merged</span></td>
       </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/126" target="_blank">#126</a></td>
+        <td>chore(board): CBM-INT-S2 Day 2+3 merged — status sync (5/8 SP 62.5%)</td>
+        <td><code>chore/cbm-int-s2-day3-status-sync</code></td>
+        <td>PM · board + BRIEF v4.8</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td>#127</td>
+        <td>feat(mcp): CBM-INT-205 + 206 — superseded by #128 (merge conflict)</td>
+        <td><code>feat/cbm-int-205-206-api-catalog-graph-cache</code></td>
+        <td>Closed · see #128</td>
+        <td><span class="badge" style="background:#e5e7eb;color:#6b7280;">❌ Closed</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/128" target="_blank">#128</a></td>
+        <td>feat(mcp): CBM-INT-205 + 206 — cbm_api_catalog + graph cache (Day 4, rebased v2)</td>
+        <td><code>feat/cbm-int-205-206-v2</code></td>
+        <td>TechLead · 2 new files · 40× cache</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -1765,6 +1786,10 @@ a:hover { text-decoration: underline; }
     <div class="tl-item">
       <div class="tl-date">20/04/2026</div>
       <div class="tl-content"><strong>✅ CBM-INT-204 Day 3 MERGED — cbm_snapshot_diff (MOST COMPLEX tool)</strong> — TechLead 138 LoC (budget 150) · <strong>pure Python API no subprocess</strong>: <code>SnapshotManager.load()</code> handles label↔path duality + <code>SnapshotDiff.compute()</code> engine + <code>diff_formatter</code> multi-format. 5 flags all wired: baseline/current/depth/breaking_only/test_plan/format. Defaults depth=2 + format=markdown match slash cmd. 6/6 smoke tests PASS (markdown · breaking_only filter · bad label graceful · json · text · test_plan). TOOL_REGISTRY 4 keys. 158/158 tests · Lint clean. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/125" target="_blank">#125</a> MERGED. <strong>Sprint progress 5/8 SP (62.5%) — most complex task done smoothly.</strong></div>
+    </div>
+    <div class="tl-item" style="background:#d1fae5; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
+      <div class="tl-date">20/04/2026 · 🎯 5/5 MCP TOOLS COMPLETE</div>
+      <div class="tl-content"><strong>✅ CBM-INT-205 + 206 Day 4 MERGED — api_catalog + GraphCache (40× speedup)</strong> — TechLead delivered 2 tasks: <code>api_catalog.py</code> 96 LoC (reuse <code>APICatalog.from_graph().filter()</code>, 4 params: graph_file/method/domain/format) + <code>graph_cache.py</code> 72 LoC (replaces D1 stub, thread-safe Lock, mtime-based invalidation, CACHE singleton). <strong>Benchmark AC-S2-02 CLOSED:</strong> Cold 2.8ms · Hot 0.071ms (<strong>40× cache speedup</strong>, well under 100ms target). 4 tools migrated to shared CACHE (snapshot_diff untouched — uses SnapshotManager). <strong>TOOL_REGISTRY 5 keys — all 5 MCP tools per Tech Plan §2 LIVE!</strong> PR #127 had conflict với #126, closed + replaced by PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/128" target="_blank">#128</a> MERGED. 158/158 tests · lint clean. <strong>Sprint 6.5/8 SP (81.25%) — only Day 5 PyPI publish + docs remaining.</strong></div>
     </div>
   </div>
 
@@ -2153,21 +2178,21 @@ a:hover { text-decoration: underline; }
         <td>✅ <code>snapshot_diff.py</code> 138 LoC · <strong>Python API no subprocess</strong> (<code>SnapshotManager.load()</code> + <code>SnapshotDiff.compute()</code> + <code>diff_formatter</code>) · 6/6 smoke tests PASS · TOOL_REGISTRY 4 keys · default depth=2 format=markdown · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/125" target="_blank">#125</a> MERGED</td>
         <td><span class="badge merged">✅ Merged</span></td>
       </tr>
-      <tr style="background:#fef3c7;">
+      <tr style="background:#d1fae5;">
         <td><code>CBM-INT-205</code></td>
         <td>Tool <code>cbm_api_catalog</code> — method + domain filters</td>
-        <td>0.5</td><td>Day 4 ✅ (Mon 20/04 parallel)</td>
+        <td>0.5</td><td>Day 4 ✅ (Mon 20/04)</td>
         <td>TechLead</td>
-        <td>✅ <code>api_catalog.py</code> 96 LoC · Reuse <code>APICatalog.from_graph().filter()</code> · Params: graph_file · method (GET/POST/PUT/DELETE/PATCH/empty) · domain · format (text/json) · Empty-result message includes active filters · <strong>PR pending</strong></td>
-        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
+        <td>✅ <code>api_catalog.py</code> 96 LoC · Reuse <code>APICatalog.from_graph().filter()</code> · 4 params · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/128" target="_blank">#128</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
       </tr>
-      <tr style="background:#fef3c7;">
+      <tr style="background:#d1fae5;">
         <td><code>CBM-INT-206</code></td>
         <td>Graph cache manager — <code>graph_cache.py</code> mtime-based invalidation · lazy load</td>
-        <td>1</td><td>Day 4 ✅ (Mon 20/04 parallel)</td>
+        <td>1</td><td>Day 4 ✅ (Mon 20/04)</td>
         <td>TechLead</td>
-        <td>✅ <code>graph_cache.py</code> 72 LoC (replaces D1 stub) · Thread-safe <code>Lock()</code> · mtime invalidation · <code>CACHE</code> singleton + <code>DEFAULT_GRAPH_FILE</code> · <strong>Benchmark:</strong> Cold 2.8ms · Hot 0.071ms (<strong>40× speedup</strong>, well under 100ms target) · 4 tools migrated (query/search/impact/api_catalog) · snapshot_diff untouched (uses SnapshotManager) · <strong>PR pending</strong></td>
-        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
+        <td>✅ <code>graph_cache.py</code> 72 LoC · Thread-safe · mtime invalidation · <strong>Benchmark:</strong> Cold 2.8ms · Hot 0.071ms (<strong>40× speedup</strong>, AC-S2-02 closed) · 4 tools migrated · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/128" target="_blank">#128</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
       </tr>
       <tr>
         <td><code>CBM-INT-207</code></td>
@@ -2449,7 +2474,7 @@ a:hover { text-decoration: underline; }
 <!-- Footer -->
 <div class="footer">
   <span>Codebase Map — Project Board · Hyper Commerce · CEO: Đoàn Đình Tỉnh</span>
-  <span>Updated: 20/04/2026 · <strong>🎉 S1 SEALED · 🚀 S2 Day 1+2+3 ✅ MERGED (5/8 SP 62.5%)</strong> · TOOL_REGISTRY 4 tools (query/search/impact/snapshot_diff) · 22 PRs merged tổng · 158/158 tests · Day 4 starting — api_catalog + graph cache · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">S2 brief ↗</a> · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
+  <span>Updated: 20/04/2026 · <strong>🎉 S1 SEALED · 🚀 S2 Day 1-4 ✅ MERGED (6.5/8 SP 81.25%)</strong> · <strong>5/5 MCP tools LIVE</strong> (query/search/impact/snapshot_diff/api_catalog) · Cache 40× speedup · 24 PRs merged tổng · 158/158 tests · Day 5 starting — PyPI publish + tests · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">S2 brief ↗</a> · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
 </div>
 
 <!-- ═══════════════════════════════════════
