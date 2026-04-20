@@ -109,6 +109,12 @@ async def _run() -> None:
 
 def main() -> None:
     """Synchronous entry point invoked by ``python -m mcp_server``."""
+    # Import tool package here (not at module top) so tool modules can freely
+    # ``import mcp_server.server`` during their self-registration without
+    # causing a circular import. By ``main()`` time the server module is
+    # fully initialised.
+    import mcp_server.tools  # noqa: F401  (triggers tool registration)
+
     asyncio.run(_run())
 
 
