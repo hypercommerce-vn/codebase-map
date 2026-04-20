@@ -555,7 +555,7 @@ a:hover { text-decoration: underline; }
       <span class="hero-badge">📊 85 SP shipped · 7 Sprints ✅</span>
       <span class="hero-badge">v1.0 ✅ · v1.1 ✅ · v1.2 ✅ · v2.0.0 ✅ · v2.0.1 ✅ · v2.1 ✅ · v2.2 ✅</span>
       <span class="hero-badge" style="background:#10b981;color:#fff;">🎉 S1 SEALED · 5/5 SP · v2.2.1 + v2.3.0 LIVE · E2E 20/20 PASS</span>
-      <span class="hero-badge" style="background:#f59e0b;color:#fff;">🚀 S2 LIVE · Day 1 Mon 20/04 · MCP Server 8 SP · 7 ngày sớm schedule</span>
+      <span class="hero-badge" style="background:#10b981;color:#fff;">🎉 S2 SEALED · 8/8 SP · v2.4.0 LIVE · 5 MCP tools · 40× cache · 8.5 ngày sớm schedule</span>
       <span class="hero-badge">CEO ✅ 7/7 Decisions D1-D7 (18/04) · 5/5 Kickoff approvals A1-A5 (19/04) · Option B: 1 TechLead + Tester=Claude + AI pair</span>
       <span class="hero-badge">HC scan: 1,386 nodes · 8,285 edges · 7 domains</span>
     </div>
@@ -719,7 +719,7 @@ a:hover { text-decoration: underline; }
       </div>
       <p>MCP server Python (reuse codebase_map package) với 5 auto-invoke tools: <code>cbm_query</code>, <code>cbm_search</code>, <code>cbm_impact</code>, <code>cbm_snapshot_diff</code>, <code>cbm_api_catalog</code> · Graph cache mtime invalidation · PyPI <code>codebase-map-mcp</code>. Retention 15% → 50%. <a href="#cbm-int-s2"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">Kickoff brief →</a></p>
       <div class="progress-bar"><div class="progress-fill" style="width:100%;background:#10b981"></div></div>
-      <div class="progress-label"><strong>8/8 SP · 🎉 SPRINT COMPLETE</strong> · All 5 MCP tools LIVE · PyPI v2.4.0 ready · Cache 40× speedup · Day 1-5 ALL DONE · <strong>5 ngày sớm schedule gốc</strong></div>
+      <div class="progress-label"><strong>🎉 8/8 SP · SPRINT SEALED</strong> · PyPI v2.4.0 LIVE · 5 MCP tools live (<code>cbm-mcp</code> entry) · Cache 40× speedup · 18/20 E2E PASS · <strong>8.5 ngày sớm schedule</strong></div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #f59e0b;">
@@ -1542,6 +1542,31 @@ a:hover { text-decoration: underline; }
         <td>TechLead · 2 new files · 40× cache</td>
         <td><span class="badge merged">✅ Merged</span></td>
       </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/129" target="_blank">#129</a></td>
+        <td>chore(board): CBM-INT-S2 Day 4 merged — status sync (6.5/8 SP 81.25%)</td>
+        <td><code>chore/cbm-int-s2-day4-status-sync</code></td>
+        <td>PM · board + BRIEF v4.9</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td>#130</td>
+        <td>feat(release): CBM-INT-207 + 208 — superseded by #131 (merge conflict)</td>
+        <td><code>feat/cbm-int-207-208-pypi-publish-docs</code></td>
+        <td>Closed · see #131</td>
+        <td><span class="badge" style="background:#e5e7eb;color:#6b7280;">❌ Closed</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/131" target="_blank">#131</a></td>
+        <td>feat(release): CBM-INT-207 + 208 — MCP PyPI + docs (Day 5 rebased v2) — 🎉 SPRINT COMPLETE</td>
+        <td><code>feat/cbm-int-207-208-v2</code></td>
+        <td>TechLead · Path A packaging · v2.4.0 · <code>cbm-mcp</code> entry</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td colspan="2" style="text-align:center; font-weight:700; color:#065f46; font-size:13px;">🎉 v2.4.0 TAG PUSHED · PyPI LIVE (20/04/2026 · workflow run 24679777408 · 29s)</td>
+        <td colspan="3" style="text-align:center; font-size:12px; color:#064e3b;"><code>pipx install codebase-map[mcp]==2.4.0</code> → <code>cbm-mcp</code> entry + <a href="https://pypi.org/project/codebase-map/2.4.0/" target="_blank">pypi.org/project/codebase-map/2.4.0/</a></td>
+      </tr>
     </tbody>
   </table>
 
@@ -1790,6 +1815,18 @@ a:hover { text-decoration: underline; }
     <div class="tl-item" style="background:#d1fae5; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
       <div class="tl-date">20/04/2026 · 🎯 5/5 MCP TOOLS COMPLETE</div>
       <div class="tl-content"><strong>✅ CBM-INT-205 + 206 Day 4 MERGED — api_catalog + GraphCache (40× speedup)</strong> — TechLead delivered 2 tasks: <code>api_catalog.py</code> 96 LoC (reuse <code>APICatalog.from_graph().filter()</code>, 4 params: graph_file/method/domain/format) + <code>graph_cache.py</code> 72 LoC (replaces D1 stub, thread-safe Lock, mtime-based invalidation, CACHE singleton). <strong>Benchmark AC-S2-02 CLOSED:</strong> Cold 2.8ms · Hot 0.071ms (<strong>40× cache speedup</strong>, well under 100ms target). 4 tools migrated to shared CACHE (snapshot_diff untouched — uses SnapshotManager). <strong>TOOL_REGISTRY 5 keys — all 5 MCP tools per Tech Plan §2 LIVE!</strong> PR #127 had conflict với #126, closed + replaced by PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/128" target="_blank">#128</a> MERGED. 158/158 tests · lint clean. <strong>Sprint 6.5/8 SP (81.25%) — only Day 5 PyPI publish + docs remaining.</strong></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">20/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-207 + 208 Day 5 MERGED — PyPI packaging + docs + registry prep (SPRINT CLOSURE)</strong> — TechLead Path A decision (single package + <code>[mcp]</code> extra, not separate <code>codebase-map-mcp</code>): <code>pipx install codebase-map[mcp]</code> → <code>cbm-mcp</code> entry point. Version bump 2.3.0 → 2.4.0 synced across 3 files. Build wheel 181KB + sdist 170KB twine PASS. 10 files: 5 new docs (<code>v2.4.0.md</code> release notes 102 lines · <code>integrations/mcp/README.md</code> Claude Desktop 120 lines · <code>REGISTRY_SUBMISSION.md</code> prep · Day 5 test report 5/5 tools PASS) + README + QUICKSTART MCP sections. PR #130 conflict với #129, closed + replaced by PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/131" target="_blank">#131</a> MERGED. <strong>Sprint 8/8 SP (100%) COMPLETE in 1.5 days.</strong></div>
+    </div>
+    <div class="tl-item" style="background:#f0fdf4; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
+      <div class="tl-date">20/04/2026 · 🎉 MILESTONE</div>
+      <div class="tl-content"><strong>🎉 v2.4.0 LIVE trên PyPI — MCP Server shipped!</strong> CEO authorize PM push tag <code>v2.4.0</code>. Workflow <code>publish-pypi.yml</code> run <code>24679777408</code> SUCCESS in <strong>29s</strong>. PyPI simple index: <code>codebase_map-2.4.0-py3-none-any.whl</code> + tar. <strong>Real install test:</strong> <code>pipx install 'codebase-map[mcp]==2.4.0'</code> → installs 2 entries (<code>codebase-map</code> + <code>cbm-mcp</code>) · <code>cbm-mcp</code> blocks on stdio correctly (exit 0 after alarm). AC-S2-04 CLOSED genuinely.</div>
+    </div>
+    <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
+      <div class="tl-date">20/04/2026 · 🎉 SPRINT CLOSE</div>
+      <div class="tl-content"><strong>🎉 SPRINT CBM-INT-S2 SEALED — 8/8 SP (100%) in 1.5 days · 8.5 ngày sớm schedule</strong>. 13 PRs merged · 3 conflicts resolved qua Option C pattern · 5 MCP tools LIVE (query/search/impact/snapshot_diff/api_catalog) · Cache 40× speedup · 158/158 tests · 0 P0/P1/P2 defects. <strong>E2E Verification 18/20 PASS</strong> (2 deferred CEO action: live Claude Desktop dry-run + MCP registry PR submission). Retro + Verify report shipped. <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-Retrospective.md" target="_blank">Retro ↗</a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-Verification-Report.md" target="_blank">Verify Report ↗</a>. Gate G2 + G3 both rolled into this compression. Next: CBM-INT-S3 Plugin Marketplace + 2 Packs (5 SP).</div>
     </div>
   </div>
 
@@ -2474,7 +2511,7 @@ a:hover { text-decoration: underline; }
 <!-- Footer -->
 <div class="footer">
   <span>Codebase Map — Project Board · Hyper Commerce · CEO: Đoàn Đình Tỉnh</span>
-  <span>Updated: 20/04/2026 · <strong>🎉 S1 SEALED · 🚀 S2 Day 1-4 ✅ MERGED (6.5/8 SP 81.25%)</strong> · <strong>5/5 MCP tools LIVE</strong> (query/search/impact/snapshot_diff/api_catalog) · Cache 40× speedup · 24 PRs merged tổng · 158/158 tests · Day 5 starting — PyPI publish + tests · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">S2 brief ↗</a> · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
+  <span>Updated: 20/04/2026 · <strong>🎉 S1 + S2 BOTH SEALED · v2.4.0 LIVE</strong> · <strong>5/5 MCP tools</strong> via <code>pipx install codebase-map[mcp]</code> · Cache 40× speedup · 18/20 E2E PASS · 27 PRs merged tổng · 158/158 tests · Next: CBM-INT-S3 Plugin + 2 Packs · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-Retrospective.md" target="_blank">S2 Retro ↗</a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-Verification-Report.md" target="_blank">S2 Verify ↗</a> · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
 </div>
 
 <!-- ═══════════════════════════════════════
