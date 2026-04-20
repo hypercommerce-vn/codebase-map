@@ -1,4 +1,4 @@
 # HC-AI | ticket: FDD-TOOL-CODEMAP
 """codebase-map — Standalone function dependency graph generator."""
 
-__version__ = "2.3.0"
+__version__ = "2.4.0"
