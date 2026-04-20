@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 4.7 | Cập nhật: 20/04/2026 (🎉 S1 SEALED · 🚀 S2 Day 1 ✅ MCP scaffold MERGED · AI-#6 CLEANED · Day 2 starting)
+> Version: 4.8 | Cập nhật: 20/04/2026 (🎉 S1 SEALED · 🚀 S2 Day 1+2+3 MERGED · 5/8 SP (62.5%) · Day 4 starting — api_catalog + cache)
 
 ---
 
@@ -169,22 +169,19 @@ codebase-map/
 - **E2E CEO verification 20/20** (Level 1+2A+2B+2C) → Gate G1 GO ✅
 - Deliverables: PyPI package · Claude Skill · 3 slash commands · QUICKSTART · Retrospective · Verification Report
 
-## 🚀 SPRINT CBM-INT-S2 · 1/8 SP (12.5%) · Day 2 STARTING
+## 🚀 SPRINT CBM-INT-S2 · 5/8 SP (62.5%) · Day 4 STARTING
 
 **Sprint goal:** MCP Server cho CBM (Python, reuse `codebase_map` package) với 5 auto-invoke tools + graph cache + PyPI `codebase-map-mcp`. Retention 15% → 50%.
 
-**Day 1 COMPLETE (20/04):** ✅ CBM-INT-201 MCP scaffold — PR #121 MERGED
-- `mcp_server/` package 167 LoC · `mcp==1.27.0` optional extra `[mcp]`
-- `TOOL_REGISTRY` + `register_tool()` helper (D2-D4 drop-in pattern)
-- 158/158 tests PASS · lint clean
+**TOOL_REGISTRY hiện tại: 4 keys** — cbm_query · cbm_search · cbm_impact · cbm_snapshot_diff
 
 **Timeline:**
-- ✅ Day 1 Mon 20/04 — CBM-INT-201 MCP scaffold (1 SP) — PR #121
-- 🔄 Day 2 STARTING — CBM-INT-202 `cbm_query` + `cbm_search` · CBM-INT-203 `cbm_impact` (2 SP)
-- ⏳ Day 3 — CBM-INT-204 `cbm_snapshot_diff` (2 SP · most complex)
-- ⏳ Day 4 — CBM-INT-205 `cbm_api_catalog` · CBM-INT-206 graph cache (1.5 SP)
+- ✅ Day 1 (20/04) — CBM-INT-201 MCP scaffold (1 SP) — PR #121 MERGED
+- ✅ Day 2 (20/04) — CBM-INT-202 query+search · CBM-INT-203 impact (2 SP) — PR #124 MERGED (#123 closed, conflict)
+- ✅ Day 3 (20/04) — CBM-INT-204 snapshot_diff (2 SP · most complex, pure Python no subprocess) — PR #125 MERGED
+- 🔄 Day 4 STARTING — CBM-INT-205 `cbm_api_catalog` · CBM-INT-206 graph cache mtime (1.5 SP)
 - ⏳ Day 5 — CBM-INT-207 PyPI publish `codebase-map-mcp` · CBM-INT-208 tests + docs (1.5 SP)
-- 🎯 Gate G2 Sun 26/04 mid · G3 Sun 03/05 end (likely compress)
+- 🎯 Gate G2 Sun 26/04 mid · G3 Sun 03/05 end (compressing — 3 days in 1)
 
 **Kickoff brief:** `docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md`
 
