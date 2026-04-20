@@ -554,7 +554,8 @@ a:hover { text-decoration: underline; }
     <div class="hero-badges">
       <span class="hero-badge">📊 85 SP shipped · 7 Sprints ✅</span>
       <span class="hero-badge">v1.0 ✅ · v1.1 ✅ · v1.2 ✅ · v2.0.0 ✅ · v2.0.1 ✅ · v2.1 ✅ · v2.2 ✅</span>
-      <span class="hero-badge" style="background:#10b981;color:#fff;">🎉 SPRINT CBM-INT-S1 SEALED · 5/5 SP · v2.2.1 + v2.3.0 LIVE · CEO E2E 20/20 PASS · Gate G1 GO</span>
+      <span class="hero-badge" style="background:#10b981;color:#fff;">🎉 S1 SEALED · 5/5 SP · v2.2.1 + v2.3.0 LIVE · E2E 20/20 PASS</span>
+      <span class="hero-badge" style="background:#f59e0b;color:#fff;">🚀 S2 LIVE · Day 1 Mon 20/04 · MCP Server 8 SP · 7 ngày sớm schedule</span>
       <span class="hero-badge">CEO ✅ 7/7 Decisions D1-D7 (18/04) · 5/5 Kickoff approvals A1-A5 (19/04) · Option B: 1 TechLead + Tester=Claude + AI pair</span>
       <span class="hero-badge">HC scan: 1,386 nodes · 8,285 edges · 7 domains</span>
     </div>
@@ -713,12 +714,12 @@ a:hover { text-decoration: underline; }
 
     <div class="sprint-card" style="border-left: 3px solid #f59e0b;">
       <div class="sprint-card-header">
-        <h3>CBM-INT-S2 · v2.3 — MCP Server (Core Moat)</h3>
-        <span class="badge">⏳ WEEK 2-3</span>
+        <h3>CBM-INT-S2 · v2.4 — MCP Server (Core Moat) 🚀 LIVE</h3>
+        <span class="badge active" style="background:#f59e0b;color:#fff;">🚀 KICKOFF Mon 20/04</span>
       </div>
-      <p>MCP server với auto-invoke tools: <code>query_impact</code>, <code>search_code</code>, <code>api_catalog</code>, <code>pr_diff</code>. Deep-link UI v2.0 multi-view. Retention 15% → 50%.</p>
-      <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#e5e7eb"></div></div>
-      <div class="progress-label">0/8 SP · Target: 27/04 → 10/05/2026 · Gate G2/G3: MCP auto-invoke hoạt động trong Claude Code · TechLead critical path</div>
+      <p>MCP server Python (reuse codebase_map package) với 5 auto-invoke tools: <code>cbm_query</code>, <code>cbm_search</code>, <code>cbm_impact</code>, <code>cbm_snapshot_diff</code>, <code>cbm_api_catalog</code> · Graph cache mtime invalidation · PyPI <code>codebase-map-mcp</code>. Retention 15% → 50%. <a href="#cbm-int-s2"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">Kickoff brief →</a></p>
+      <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#f59e0b"></div></div>
+      <div class="progress-label">0/8 SP · Fast-track: 20/04 → ~03/05 (7 ngày sớm original 27/04) · Gate G2 Sun 26/04 (mid) · Gate G3 Sun 03/05 (end) · TechLead critical path</div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #f59e0b;">
@@ -1672,6 +1673,10 @@ a:hover { text-decoration: underline; }
       <div class="tl-date">20/04/2026 · 🏆 E2E VERIFICATION SEALED</div>
       <div class="tl-content"><strong>🏆 CEO E2E Verification: 20/20 CHECKPOINTS PASS — Gate G1 GO!</strong> CEO (tự chạy test, CTO guide) verified 4/4 sprint pillars live trên FastAPI repo thật: <strong>Level 1</strong> smoke 5/5 (pipx install · version · CLI help · PyPI 200 · dogfood FastAPI 332 nodes/1607 edges/139ms) · <strong>Level 2A</strong> skill trigger 5/5 (4 positive triggered + 1 negative correct — AC-INT-02 closed genuinely beyond heuristic) · <strong>Level 2B</strong> slash commands 3/3 (onboard smart cache skip · impact Medium tier threshold correct · <strong>/cbm-diff graceful master/main fallback</strong> ⭐) · <strong>Level 2C</strong> QUICKSTART 7/7 boxes. <strong>0 P0/P1/P2 defects.</strong> 2 P3 findings (AI-#9 config path UX, AI-#10 diff default branch) added to S2 backlog. <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Verification-Report.md" target="_blank">Verification Report ↗</a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">Retro v1.1 ↗</a>. <strong>Sprint CBM-INT-S1 OFFICIALLY SEALED.</strong></div>
     </div>
+    <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
+      <div class="tl-date">20/04/2026 · 🚀 S2 KICKOFF</div>
+      <div class="tl-content"><strong>🚀 CBM-INT-S2 KICKOFF — MCP Server 8 SP · Fast-track Mon 20/04 (7 ngày sớm schedule gốc 27/04)</strong>. CEO decision: skip Gate G1 ceremony formality, go S2 ngay. Sprint goal: Python MCP server reuse <code>codebase_map</code> package · 5 tools (<code>cbm_query</code>/<code>cbm_search</code>/<code>cbm_impact</code>/<code>cbm_snapshot_diff</code>/<code>cbm_api_catalog</code>) · graph cache mtime-based · PyPI <code>codebase-map-mcp</code>. Tasks CBM-INT-201→208. AC-S2-01→06 defined. Gate G2 mid Sun 26/04 · Gate G3 end Sun 03/05 (nominal — likely compress). Retention target 15% → 50% (slash command → MCP auto-invoke UX). <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">Kickoff brief ↗</a> · <a href="#cbm-int-s2">Task board ↓</a>. ⚠️ Pre-S2 blockers: AI-#6 44 uncommitted files · AI-#7 GitHub Settings enable.</div>
+    </div>
   </div>
 
   <!-- CM-S2 Task Board -->
@@ -1998,12 +2003,171 @@ a:hover { text-decoration: underline; }
     <li><strong>Tech Plan:</strong> <a href="../docs/active/cbm-claude-integration/Technical_Plan_CBM_Claude_Integration.md#1-phase-1--pypi--skill--slash-commands-5-sp--tuần-1" target="_blank">Technical_Plan · §1 Phase 1 (5 SP)</a></li>
     <li><strong>Strategy context:</strong> <a href="../docs/active/cbm-claude-integration/Strategy_Memo_CBM_Claude_Integration.md" target="_blank">Strategy_Memo</a></li>
     <li><strong>Initiative panel:</strong> <a href="#cbm-claude-int">Initiative Panel (cùng trang)</a> · Gate G1 exit criteria</li>
-    <li><strong>Next sprint:</strong> CBM-INT-S2 · v2.3 — MCP Server (8 SP · Week 2-3 · Mon 27/04 → Sun 10/05/2026)</li>
-    <li><strong>Kickoff briefing:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-KICKOFF.md" target="_blank">CBM-INT-S1-KICKOFF.md</a></li>
+    <li><strong>Next sprint:</strong> CBM-INT-S2 · v2.4 — MCP Server (8 SP · LIVE Mon 20/04 — 7 ngày sớm)</li>
+    <li><strong>Kickoff briefing S1:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-KICKOFF.md" target="_blank">CBM-INT-S1-KICKOFF.md</a></li>
+    <li><strong>Kickoff briefing S2:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">CBM-INT-S2-KICKOFF.md</a></li>
+    <li><strong>Verification Report S1:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Verification-Report.md" target="_blank">20/20 PASS</a></li>
+    <li><strong>Retrospective S1:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">Retro v1.1</a></li>
   </ul>
 
   <p style="margin-top:14px; padding:10px 14px; background:var(--bg-muted); border-radius:6px; font-size:12px; color:var(--text-muted);">
-    <strong>PM Note (19/04 final update — 20:xx):</strong> <strong>🎉 Sprint 4.5/5 SP (90%) DONE trong Day 0 — 4 ngày sớm schedule gốc.</strong> v2.2.1 LIVE trên PyPI (workflow run 24626431411 · 24s). All Day 1-4 PRs MERGED: #107 PyPI publish · #108 SKILL.md · #110 3 slash commands · #111 integration test 5/5 PASS · #112 v2.2.1 LIVE. CEO authorized PM push tag v2.2.1. Test Case 1 REAL pipx install verified. <strong>Day 5 ⏳ only:</strong> QUICKSTART.md + v2.3.0 release notes (0.5 SP cuối). Gate G1 Sun 26/04 17:00 on track. Weekly CEO review qua board SSOT.
+    <strong>PM Note (20/04 sprint transition):</strong> <strong>🎉 S1 SEALED — 5/5 SP · E2E verified 20/20 · Gate G1 GO · v2.2.1 + v2.3.0 LIVE trên PyPI.</strong> S1 PRs #104-#116 all merged (12 PRs · 1 day sprint · 5 days ahead). 🚀 <strong>S2 LIVE từ Mon 20/04 (fast-track 7 ngày sớm).</strong> MCP Server scaffold + 5 tools + graph cache + PyPI <code>codebase-map-mcp</code>. Gate G2 Sun 26/04 mid · G3 Sun 03/05 end (likely compress). ⚠️ Pre-S2 backlog: AI-#6 44 uncommitted files cleanup · AI-#7 GitHub Settings enable. AI-#1-5 + 9-10 nice-to-have parallel track.
+  </p>
+
+  <!-- ═══════════════════════════════════════════════════════
+       CBM-INT-S2 Task Board — NEW SPRINT KICKOFF 20/04/2026
+  ═══════════════════════════════════════════════════════ -->
+  <h2 id="cbm-int-s2" style="margin-top:40px;"><span class="h2-icon">🚀</span> CBM-INT-S2 · v2.4 — MCP Server (Core Moat) <span class="badge active" style="font-size:12px;margin-left:8px;background:#f59e0b;color:#fff;">0/8 SP · DAY 1 Mon 20/04/2026 · FAST-TRACK</span></h2>
+
+  <div style="padding:12px 14px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left:4px solid #f59e0b; border-radius:8px; margin:14px 0 16px; font-size:13px; color:#78350f; line-height:1.7;">
+    <strong>🎯 Sprint Goal:</strong> Build MCP Server (Python, reuse <code>codebase_map</code> package) expose 5 query tools cho Claude Code / Cowork / Desktop qua stdio transport. Moves Phase 1 slash-command UX → Phase 2 auto-invoke UX. Retention 15% → 50%.
+    <br>
+    <strong>📅 Duration:</strong> Mon 20/04 → Sun 03/05/2026 (fast-track, 7 ngày sớm gốc 27/04 → 10/05) · <strong>Capacity:</strong> 8 SP (TechLead full-time critical path + Tester=Claude + AI pair)
+    <br>
+    <strong>🎯 Exit criteria G3:</strong> 5 tools pass MCP Inspector · Graph 10MB < 500ms load · Claude auto-invoke 20 test questions PASS · PyPI <code>codebase-map-mcp</code> LIVE · Registry submission opened
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>Owner</th><th>DoD / Output</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>CBM-INT-201</code></td>
+        <td>MCP server scaffold — <code>mcp_server/</code> folder · <code>server.py</code> stdio entrypoint · <code>python -m mcp_server</code></td>
+        <td>1</td><td>Day 1 (Mon 20/04)</td>
+        <td>TechLead</td>
+        <td>MCP SDK installed · Server accepts connections · Empty tool list responds OK · list_tools() + call_tool() hooks wired</td>
+        <td><span class="badge">📋 Planned</span></td>
+      </tr>
+      <tr>
+        <td><code>CBM-INT-202</code></td>
+        <td>Tools <code>cbm_query</code> + <code>cbm_search</code> — JSON schema · Integrate QueryEngine · Input validation</td>
+        <td>1</td><td>Day 2 (Tue 21/04)</td>
+        <td>TechLead</td>
+        <td>2 tools in <code>mcp_server/tools/</code> · Schema pass MCP Inspector · Tests cover happy + not-found path</td>
+        <td><span class="badge">📋 Planned</span></td>
+      </tr>
+      <tr>
+        <td><code>CBM-INT-203</code></td>
+        <td>Tool <code>cbm_impact</code> — blast radius với depth param · Layer grouping</td>
+        <td>1</td><td>Day 2 (Tue 21/04)</td>
+        <td>TechLead</td>
+        <td>Depth 1/2/3 support · Response includes risk tier hint · Empty-arg edge case</td>
+        <td><span class="badge">📋 Planned</span></td>
+      </tr>
+      <tr>
+        <td><code>CBM-INT-204</code></td>
+        <td>Tool <code>cbm_snapshot_diff</code> — <strong>most complex</strong> · baseline/current labels · markdown/json output · depth · breaking_only · test_plan flags</td>
+        <td>2</td><td>Day 3 (Wed 22/04)</td>
+        <td>TechLead (critical)</td>
+        <td>All 5 flags work · Snapshot path resolution · Markdown output đủ cho PR body paste · Integration test với 2 labeled snapshots</td>
+        <td><span class="badge">📋 Planned</span></td>
+      </tr>
+      <tr>
+        <td><code>CBM-INT-205</code></td>
+        <td>Tool <code>cbm_api_catalog</code> — method + domain filters</td>
+        <td>0.5</td><td>Day 4 (Thu 23/04)</td>
+        <td>TechLead</td>
+        <td>Filter by GET/POST/... · Filter by domain · Empty result graceful</td>
+        <td><span class="badge">📋 Planned</span></td>
+      </tr>
+      <tr>
+        <td><code>CBM-INT-206</code></td>
+        <td>Graph cache manager — <code>graph_cache.py</code> mtime-based invalidation · lazy load</td>
+        <td>1</td><td>Day 4 (Thu 23/04)</td>
+        <td>TechLead</td>
+        <td>10MB graph load < 500ms · cached queries < 100ms · Auto-invalidate khi <code>codebase-map generate</code> chạy lại · Thread-safe</td>
+        <td><span class="badge">📋 Planned</span></td>
+      </tr>
+      <tr>
+        <td><code>CBM-INT-207</code></td>
+        <td>PyPI publish <code>codebase-map-mcp</code> — entry point <code>cbm-mcp</code> · OIDC trusted publisher</td>
+        <td>1</td><td>Day 5 (Fri 24/04)</td>
+        <td>TechLead</td>
+        <td>Package visible pypi.org · <code>pipx install codebase-map-mcp</code> works · Entry point callable · AI-#1 OIDC configured (drop token secret)</td>
+        <td><span class="badge">📋 Planned</span></td>
+      </tr>
+      <tr>
+        <td><code>CBM-INT-208</code></td>
+        <td>Integration test + Claude Desktop config docs + MCP registry submission</td>
+        <td>0.5</td><td>Day 5 (Fri 24/04)</td>
+        <td>Tester (Claude) + TechLead</td>
+        <td>MCP Inspector passes 5 tools · Claude Desktop config example tested · Anthropic MCP registry PR opened · <code>integrations/mcp/README.md</code></td>
+        <td><span class="badge">📋 Planned</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:20px; font-size:15px;">✅ Acceptance Criteria (Sprint-level)</h3>
+  <div class="ac-grid">
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-01:</strong> 5 tools pass schema validation (Anthropic MCP Inspector)</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-02:</strong> Graph 10MB load < 500ms · query < 100ms (benchmark)</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-03:</strong> Claude Code auto-invoke 5 tools correctly trên 20 test questions</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-04:</strong> <code>pipx install codebase-map-mcp</code> → <code>cbm-mcp</code> entry point works</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-05:</strong> MCP registry submission (PR to anthropic-mcp) opened</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-06:</strong> Lint + 158/158 existing CBM tests PASS · No regression</div>
+  </div>
+
+  <h3 style="margin-top:20px; font-size:15px;">⚠️ Sprint Risks (PM tracking)</h3>
+  <table>
+    <thead>
+      <tr><th style="width:200px;">Risk</th><th style="width:70px;">P×I</th><th>Mitigation</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>MCP protocol schema thay đổi (Anthropic side)</td>
+        <td><span style="color:#f59e0b;">🟡 2×3=6</span></td>
+        <td>Pin <code>mcp&gt;=X</code> version · semver-strict · follow Anthropic changelog weekly</td>
+      </tr>
+      <tr>
+        <td><code>cbm_snapshot_diff</code> complexity underscoped (5 flags)</td>
+        <td><span style="color:#f59e0b;">🟡 2×3=6</span></td>
+        <td>2 SP budget · TechLead prioritize D3 full day · Fallback MVP (labels only, drop breaking_only + test_plan sang S3)</td>
+      </tr>
+      <tr>
+        <td>Graph 10MB+ perf regression</td>
+        <td><span style="color:#f59e0b;">🟡 2×2=4</span></td>
+        <td>D4 benchmark · Lazy load · mtime cache; fallback stream response nếu cần</td>
+      </tr>
+      <tr>
+        <td>44 uncommitted S1 files drift → merge conflict</td>
+        <td><span style="color:#f59e0b;">🟡 2×2=4</span></td>
+        <td><strong>AI-#6 priority:</strong> PM clean before Day 3 OR isolate S2 branches strictly</td>
+      </tr>
+      <tr>
+        <td>PyPI name <code>codebase-map-mcp</code> taken</td>
+        <td><span style="color:#6366f1;">🟢 1×2=2</span></td>
+        <td>Day 1 check · Fallback <code>cbm-mcp</code> hoặc <code>cbm-mcp-server</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:20px; font-size:15px;">📋 Definition of Done (Sprint)</h3>
+  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
+    <li>✅ 8/8 tasks CBM-INT-201→208 complete với DoD</li>
+    <li>✅ 6/6 Acceptance Criteria pass</li>
+    <li>✅ <code>pipx install codebase-map-mcp</code> LIVE trên PyPI</li>
+    <li>✅ MCP Inspector validates all 5 tool schemas</li>
+    <li>✅ Claude Desktop config example tested end-to-end</li>
+    <li>✅ Benchmark thresholds met (10MB < 500ms, query < 100ms)</li>
+    <li>✅ <code>/review-gate</code> 3 tầng PASS cho tất cả PR</li>
+    <li>✅ CEO approve merge · Tag <code>v2.4.0</code> push · GitHub Release published</li>
+    <li>✅ Board SSOT + BRIEF.md updated · Retrospective done</li>
+    <li>✅ Registry submission opened (Anthropic MCP)</li>
+  </ul>
+
+  <h3 style="margin-top:20px; font-size:15px;">🔗 References</h3>
+  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
+    <li><strong>Kickoff brief:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">CBM-INT-S2-KICKOFF.md</a></li>
+    <li><strong>Tech Plan §2:</strong> <a href="../docs/active/cbm-claude-integration/Technical_Plan_CBM_Claude_Integration.md#2-phase-2--mcp-server-8-sp--tuần-2" target="_blank">Technical_Plan · Phase 2 (8 SP)</a></li>
+    <li><strong>Phase 2 Explainer:</strong> <a href="../docs/active/cbm-claude-integration/Phase2_MCP_Explainer.md" target="_blank">Phase2_MCP_Explainer.md</a> (retention 15% → 50%)</li>
+    <li><strong>S1 Retrospective v1.1:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">CBM-INT-S1-Retrospective.md</a> (AI-#1-10 action items)</li>
+    <li><strong>Next sprint:</strong> CBM-INT-S3 · v2.4 — Plugin Marketplace + 2 Packs (5 SP · Week 4-5)</li>
+  </ul>
+
+  <p style="margin-top:14px; padding:10px 14px; background:var(--bg-muted); border-radius:6px; font-size:12px; color:var(--text-muted);">
+    <strong>PM Note S2 (20/04):</strong> Sprint là core moat vs competitors (repomix/serena). Fast-track Mon 20/04 thay vì Mon 27/04 — dựa S1 velocity. Expected completion 2-3 ngày thật nếu maintain pace. Pre-S2 blocker AI-#6 (44 uncommitted files cleanup) sẽ xử lý ở PR kế tiếp sau kickoff merge.
   </p>
 
 </div><!-- /page-board -->
@@ -2196,7 +2360,7 @@ a:hover { text-decoration: underline; }
 <!-- Footer -->
 <div class="footer">
   <span>Codebase Map — Project Board · Hyper Commerce · CEO: Đoàn Đình Tỉnh</span>
-  <span>Updated: 19/04/2026 · <strong>🎉 SPRINT CBM-INT-S1 COMPLETE · 5/5 SP · v2.2.1 + v2.3.0 LIVE trên PyPI</strong> · 10 PRs merged · 158/158 tests · 0 P0/P1 · 5 ngày sớm schedule · <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">Retro ↗</a> · Next: CBM-INT-S2 MCP Server · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
+  <span>Updated: 20/04/2026 · <strong>🎉 S1 SEALED 5/5 SP · E2E 20/20 · v2.2.1+v2.3.0 LIVE · 🚀 S2 LIVE Day 1 — MCP Server 8 SP</strong> · 12 S1 PRs merged · 158/158 tests · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">S2 kickoff ↗</a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Verification-Report.md" target="_blank">S1 verify ↗</a> · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
 </div>
 
 <!-- ═══════════════════════════════════════
