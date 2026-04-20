@@ -6,4 +6,4 @@ import time. Importing this package triggers registration for all shipped
 tools — the server does ``import mcp_server.tools`` before serving requests.
 """
 
-from mcp_server.tools import impact, query, search  # noqa: F401
+from mcp_server.tools import impact, query, search, snapshot_diff  # noqa: F401
