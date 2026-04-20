@@ -718,8 +718,8 @@ a:hover { text-decoration: underline; }
         <span class="badge active" style="background:#f59e0b;color:#fff;">🚀 KICKOFF Mon 20/04</span>
       </div>
       <p>MCP server Python (reuse codebase_map package) với 5 auto-invoke tools: <code>cbm_query</code>, <code>cbm_search</code>, <code>cbm_impact</code>, <code>cbm_snapshot_diff</code>, <code>cbm_api_catalog</code> · Graph cache mtime invalidation · PyPI <code>codebase-map-mcp</code>. Retention 15% → 50%. <a href="#cbm-int-s2"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">Kickoff brief →</a></p>
-      <div class="progress-bar"><div class="progress-fill" style="width:12.5%;background:#f59e0b"></div></div>
-      <div class="progress-label">1/8 SP · Day 1 MCP scaffold PR pending · Fast-track 20/04 → ~03/05 · Gate G2 Sun 26/04 (mid) · G3 Sun 03/05 (end) · TechLead critical path</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:37.5%;background:#f59e0b"></div></div>
+      <div class="progress-label">3/8 SP · Day 1 ✅ MCP scaffold · Day 2 🔄 query+search+impact PR pending · Day 3-5 ⏳ · Fast-track · Gate G2 Sun 26/04</div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #f59e0b;">
@@ -2040,21 +2040,21 @@ a:hover { text-decoration: underline; }
         <td>✅ MCP SDK <code>mcp==1.27.0</code> pinned (optional extra <code>[mcp]</code>, not hard dep) · ✅ <code>mcp_server/</code> package 167 LoC (5 files: <code>__init__</code> 11, <code>__main__</code> 7, <code>server.py</code> 116, <code>graph_cache.py</code> stub 28, <code>tools/__init__</code> 5) · ✅ <code>TOOL_REGISTRY</code> dict + <code>register_tool()</code> helper (cleaner D2-D4 drop-in) · ✅ <code>pyproject.toml</code> packages.find include <code>mcp_server*</code> · ✅ Import OK, server blocks on stdio · ✅ <strong>158/158 tests PASS</strong> (no regression) · ✅ Lint clean (black/isort/flake8) · <strong>PR pending</strong></td>
         <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
-      <tr>
+      <tr style="background:#fef3c7;">
         <td><code>CBM-INT-202</code></td>
         <td>Tools <code>cbm_query</code> + <code>cbm_search</code> — JSON schema · Integrate QueryEngine · Input validation</td>
-        <td>1</td><td>Day 2 (Tue 21/04)</td>
+        <td>1</td><td>Day 2 ✅ (Mon 20/04 parallel)</td>
         <td>TechLead</td>
-        <td>2 tools in <code>mcp_server/tools/</code> · Schema pass MCP Inspector · Tests cover happy + not-found path</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <code>query.py</code> 67 LoC · <code>search.py</code> 79 LoC · Auto-register via <code>register_tool(TOOL, handle)</code> · QueryEngine <code>query_node(depth=3)</code> + <code>search()</code> (limit handler-side) · Smoke test PASS · <strong>PR pending</strong></td>
+        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
-      <tr>
+      <tr style="background:#fef3c7;">
         <td><code>CBM-INT-203</code></td>
         <td>Tool <code>cbm_impact</code> — blast radius với depth param · Layer grouping</td>
-        <td>1</td><td>Day 2 (Tue 21/04)</td>
+        <td>1</td><td>Day 2 ✅ (Mon 20/04 parallel)</td>
         <td>TechLead</td>
-        <td>Depth 1/2/3 support · Response includes risk tier hint · Empty-arg edge case</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <code>impact.py</code> 100 LoC · depth 1-5 · Risk tier Low(0-10)/Medium(11-50)/HIGH(51+) khớp slash cmd · Smoke test: QueryEngine → 1 node Low · <strong>PR pending</strong></td>
+        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
       <tr>
         <td><code>CBM-INT-204</code></td>
