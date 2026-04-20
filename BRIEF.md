@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 4.8 | Cập nhật: 20/04/2026 (🎉 S1 SEALED · 🚀 S2 Day 1+2+3 MERGED · 5/8 SP (62.5%) · Day 4 starting — api_catalog + cache)
+> Version: 5.0 | Cập nhật: 20/04/2026 (🎉 S1 + S2 BOTH SEALED · v2.4.0 LIVE · 5 MCP tools via pipx install codebase-map[mcp] · Retro + Verify done · Next: CBM-INT-S3)
 
 ---
 
@@ -169,25 +169,20 @@ codebase-map/
 - **E2E CEO verification 20/20** (Level 1+2A+2B+2C) → Gate G1 GO ✅
 - Deliverables: PyPI package · Claude Skill · 3 slash commands · QUICKSTART · Retrospective · Verification Report
 
-## 🚀 SPRINT CBM-INT-S2 · 6.5/8 SP (81.25%) · Day 5 STARTING
+## 🎉 SPRINT CBM-INT-S2 SEALED (20/04/2026)
 
-**Sprint goal:** MCP Server cho CBM (Python, reuse `codebase_map` package) với 5 auto-invoke tools + graph cache + PyPI `codebase-map-mcp`. Retention 15% → 50%.
+- **8/8 SP** in 1.5 calendar days (vs 10-day plan — **8.5 days early**)
+- **13 PRs merged** (11 feature + 2 status syncs · 3 superseded by v2 rebase)
+- **0 P0/P1/P2 defects** · **158/158 tests PASS** · Lint clean
+- **v2.4.0 LIVE on PyPI** — workflow 24679777408 SUCCESS 29s
+- **5 MCP tools LIVE:** `cbm_query` · `cbm_search` · `cbm_impact` · `cbm_snapshot_diff` · `cbm_api_catalog`
+- **Entry point:** `cbm-mcp` (via `pipx install codebase-map[mcp]==2.4.0`)
+- **Graph cache 40× speedup** (AC-S2-02 closed: Cold 2.8ms → Hot 0.071ms)
+- **E2E Verification: 18/20 PASS** (2 deferred: live Claude Desktop dry-run + MCP registry PR — CEO post-launch action)
+- **Docs shipped:** `v2.4.0.md` release notes · `integrations/mcp/README.md` Claude Desktop config · `REGISTRY_SUBMISSION.md` prep · Day 5 test report · Retro + Verify Report
 
-**TOOL_REGISTRY: 5/5 LIVE** — cbm_query · cbm_search · cbm_impact · cbm_snapshot_diff · cbm_api_catalog
-
-**AC-S2-02 Cache Benchmark ✅ CLOSED:** Cold 2.8ms · Hot 0.071ms · **40× speedup**
-
-**Timeline:**
-- ✅ Day 1 (20/04) — CBM-INT-201 MCP scaffold (1 SP) — PR #121
-- ✅ Day 2 (20/04) — CBM-INT-202 query+search · CBM-INT-203 impact (2 SP) — PR #124 (#123 closed, conflict)
-- ✅ Day 3 (20/04) — CBM-INT-204 snapshot_diff (2 SP · most complex) — PR #125
-- ✅ Day 4 (20/04) — CBM-INT-205 api_catalog · CBM-INT-206 graph cache (1.5 SP) — PR #128 (#127 closed, conflict)
-- 🔄 Day 5 STARTING — CBM-INT-207 PyPI publish `codebase-map-mcp` · CBM-INT-208 tests + docs (1.5 SP · sprint closure)
-- 🎯 Gate G2 Sun 26/04 mid · G3 Sun 03/05 end (compressing — 4 days in 1)
-
-**Kickoff brief:** `docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md`
-
-**AC-S2-01→06:** MCP Inspector · Graph 10MB < 500ms · Claude auto-invoke 20 questions · pipx install · Registry PR · Lint + 158/158 no regression
+**S2 Retro:** `docs/active/cbm-claude-integration/CBM-INT-S2-Retrospective.md` (10 sections · 4 S2-specific + 6 AI carried from S1)
+**S2 Verify:** `docs/active/cbm-claude-integration/CBM-INT-S2-Verification-Report.md` (L1 5/5 + L2A 5/5 + L2B cache bench + L2C 12/12)
 
 ## 🧹 AI-#6 CLEANUP COMPLETE (20/04)
 
