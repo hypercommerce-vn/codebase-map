@@ -21,8 +21,8 @@ cat project/CM-S1-TASK-BOARD.md
 Nếu có FE (HTML/D3.js) changes:
 ```bash
 # Đọc design approved
-# Mở trong browser: design-preview/codebase-map-CM-S1-design.html
-# Hoặc design tổng thể: design-preview/codebase-map-v2-design.html
+# Design active: design-preview/active/codebase-map-v2-design.html
+# Design đã ship (archive): design-preview/archive/codebase-map-CM-S1-design.html
 ```
 
 Checklist đọc spec:
@@ -187,7 +187,7 @@ Claude thực hiện (đọc chi tiết ở `.claude/commands/review-gate.md` �
 | CTO Dim C < 20/25 | ❌ AUTO BLOCK — parser accuracy phải fix |
 | Impact zone > 50 | ⚠️ WARN — cân nhắc split PR |
 
-**Report lưu:** `docs/reviews/ReviewGate_Local_{branch}_{date}.md`
+**Report lưu:** `docs/reference/reviews/ReviewGate_Local_{branch}_{date}.md`
 
 **Rule:** Local Pre-flight KHÔNG thay thế Remote Full (Mode 2). Sau khi push + CI pass, vẫn phải chạy `/review-gate PR #XX` trước CEO review.
 
