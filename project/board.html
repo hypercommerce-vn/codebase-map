@@ -719,7 +719,7 @@ a:hover { text-decoration: underline; }
       </div>
       <p>MCP server Python (reuse codebase_map package) với 5 auto-invoke tools: <code>cbm_query</code>, <code>cbm_search</code>, <code>cbm_impact</code>, <code>cbm_snapshot_diff</code>, <code>cbm_api_catalog</code> · Graph cache mtime invalidation · PyPI <code>codebase-map-mcp</code>. Retention 15% → 50%. <a href="#cbm-int-s2"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">Kickoff brief →</a></p>
       <div class="progress-bar"><div class="progress-fill" style="width:62.5%;background:#f59e0b"></div></div>
-      <div class="progress-label">5/8 SP · Day 1 ✅ scaffold · Day 2 ✅ query+search+impact (#124) · Day 3 🔄 snapshot_diff PR pending (most complex done) · Day 4-5 ⏳ · Fast-track · Gate G2 Sun 26/04</div>
+      <div class="progress-label">5/8 SP · Day 1 ✅ scaffold (#121) · Day 2 ✅ query+search+impact (#124) · Day 3 ✅ snapshot_diff (#125 · most complex done) · Day 4-5 ⏳ · Fast-track</div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #f59e0b;">
@@ -1493,6 +1493,34 @@ a:hover { text-decoration: underline; }
         <td>TechLead · 167 LoC · 158/158 tests</td>
         <td><span class="badge merged">✅ Merged</span></td>
       </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/122" target="_blank">#122</a></td>
+        <td>chore(board): CBM-INT-S2 Day 1 merged + AI-#6 cleanup complete — status sync</td>
+        <td><code>chore/cbm-int-s2-day1-status-sync</code></td>
+        <td>PM · board + BRIEF v4.7</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td>#123</td>
+        <td>feat(mcp): CBM-INT-202 + 203 — superseded by #124 (merge conflict)</td>
+        <td><code>feat/cbm-int-202-203-query-search-impact</code></td>
+        <td>Closed · see #124</td>
+        <td><span class="badge" style="background:#e5e7eb;color:#6b7280;">❌ Closed</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/124" target="_blank">#124</a></td>
+        <td>feat(mcp): CBM-INT-202 + 203 — cbm_query + cbm_search + cbm_impact (Day 2, rebased v2)</td>
+        <td><code>feat/cbm-int-202-203-v2</code></td>
+        <td>TechLead · 255 LoC · 3 tools</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/125" target="_blank">#125</a></td>
+        <td>feat(mcp): CBM-INT-204 — cbm_snapshot_diff tool (Day 3, most complex)</td>
+        <td><code>feat/cbm-int-204-mcp-snapshot-diff</code></td>
+        <td>TechLead · 138 LoC · 6/6 smoke tests</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -1729,6 +1757,14 @@ a:hover { text-decoration: underline; }
     <div class="tl-item">
       <div class="tl-date">20/04/2026</div>
       <div class="tl-content"><strong>✅ CBM-INT-201 Day 1 MERGED — MCP server scaffold</strong> — TechLead delivered <code>mcp_server/</code> package 167 LoC (server.py 116 + graph_cache.py stub 28 + 3 meta files). MCP SDK <code>mcp==1.27.0</code> pinned optional extra <code>[mcp]</code> (không phải hard dep — base install stays lean). <strong>Architecture wins:</strong> <code>TOOL_REGISTRY</code> dict + <code>register_tool()</code> helper để D2-D4 tool modules self-register không đụng <code>server.py</code>; graceful ImportError hint <code>pip install codebase-map[mcp]</code>; sync <code>main()</code> wrapper cho clean <code>python -m mcp_server</code> UX. 158/158 tests PASS · Lint clean. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/121" target="_blank">#121</a> MERGED. Sprint progress 1/8 SP (12.5%).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">20/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-202 + 203 Day 2 MERGED — 3 MCP tools (query + search + impact)</strong> — TechLead 255 LoC total: <code>query.py</code> 67 (QueryEngine.query_node) · <code>search.py</code> 79 (handler-side limit since CBM search() no kwarg) · <code>impact.py</code> 100 (risk tier Low/Medium/HIGH matching slash cmd). Auto-register pattern established D1 paid off — zero changes to <code>server.py</code> module top (1-line lazy import inside <code>main()</code> to avoid circular). Smoke tests PASS 3/3. 158/158 tests · Lint clean. <strong>Note:</strong> PR #123 had merge conflict với #122, closed + replaced by PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/124" target="_blank">#124</a> (rebased v2) MERGED. Sprint progress 3/8 SP (37.5%).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">20/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-204 Day 3 MERGED — cbm_snapshot_diff (MOST COMPLEX tool)</strong> — TechLead 138 LoC (budget 150) · <strong>pure Python API no subprocess</strong>: <code>SnapshotManager.load()</code> handles label↔path duality + <code>SnapshotDiff.compute()</code> engine + <code>diff_formatter</code> multi-format. 5 flags all wired: baseline/current/depth/breaking_only/test_plan/format. Defaults depth=2 + format=markdown match slash cmd. 6/6 smoke tests PASS (markdown · breaking_only filter · bad label graceful · json · text · test_plan). TOOL_REGISTRY 4 keys. 158/158 tests · Lint clean. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/125" target="_blank">#125</a> MERGED. <strong>Sprint progress 5/8 SP (62.5%) — most complex task done smoothly.</strong></div>
     </div>
   </div>
 
@@ -2093,29 +2129,29 @@ a:hover { text-decoration: underline; }
         <td>✅ MCP SDK <code>mcp==1.27.0</code> optional extra · ✅ 167 LoC (5 files, all ≤300) · ✅ <code>TOOL_REGISTRY</code> + <code>register_tool()</code> helper cho D2-D4 drop-in · ✅ Graceful ImportError hint · ✅ 158/158 tests PASS · ✅ Lint clean · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/121" target="_blank">#121</a> MERGED</td>
         <td><span class="badge merged">✅ Merged</span></td>
       </tr>
-      <tr style="background:#fef3c7;">
+      <tr style="background:#d1fae5;">
         <td><code>CBM-INT-202</code></td>
         <td>Tools <code>cbm_query</code> + <code>cbm_search</code> — JSON schema · Integrate QueryEngine · Input validation</td>
-        <td>1</td><td>Day 2 ✅ (Mon 20/04 parallel)</td>
+        <td>1</td><td>Day 2 ✅ (Mon 20/04)</td>
         <td>TechLead</td>
-        <td>✅ <code>query.py</code> 67 LoC · <code>search.py</code> 79 LoC · Auto-register via <code>register_tool(TOOL, handle)</code> · QueryEngine <code>query_node(depth=3)</code> + <code>search()</code> (limit handler-side) · Smoke test PASS · <strong>PR pending</strong></td>
-        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
+        <td>✅ <code>query.py</code> 67 LoC · <code>search.py</code> 79 LoC · Auto-register via <code>register_tool(TOOL, handle)</code> · QueryEngine <code>query_node(depth=3)</code> + <code>search()</code> (limit handler-side) · Smoke test PASS · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/124" target="_blank">#124</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
       </tr>
-      <tr style="background:#fef3c7;">
+      <tr style="background:#d1fae5;">
         <td><code>CBM-INT-203</code></td>
         <td>Tool <code>cbm_impact</code> — blast radius với depth param · Layer grouping</td>
-        <td>1</td><td>Day 2 ✅ (Mon 20/04 parallel)</td>
+        <td>1</td><td>Day 2 ✅ (Mon 20/04)</td>
         <td>TechLead</td>
-        <td>✅ <code>impact.py</code> 100 LoC · depth 1-5 · Risk tier Low(0-10)/Medium(11-50)/HIGH(51+) khớp slash cmd · Smoke test: QueryEngine → 1 node Low · <strong>PR pending</strong></td>
-        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
+        <td>✅ <code>impact.py</code> 100 LoC · depth 1-5 · Risk tier Low(0-10)/Medium(11-50)/HIGH(51+) khớp slash cmd · Smoke test: QueryEngine → 1 node Low · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/124" target="_blank">#124</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
       </tr>
-      <tr style="background:#fef3c7;">
+      <tr style="background:#d1fae5;">
         <td><code>CBM-INT-204</code></td>
         <td>Tool <code>cbm_snapshot_diff</code> — <strong>most complex</strong> · baseline/current labels · markdown/json output · depth · breaking_only · test_plan flags</td>
-        <td>2</td><td>Day 3 ✅ (Mon 20/04 parallel)</td>
+        <td>2</td><td>Day 3 ✅ (Mon 20/04)</td>
         <td>TechLead (critical)</td>
-        <td>✅ <code>snapshot_diff.py</code> 138 LoC (budget 150) · <strong>Python API no subprocess</strong> (clean via <code>SnapshotManager.load()</code> + <code>SnapshotDiff.compute()</code> + <code>diff_formatter</code>) · 6/6 smoke tests PASS (markdown · breaking_only · bad label graceful · json · text · test_plan) · TOOL_REGISTRY 4 keys · default depth=2 format=markdown khớp slash cmd · 158/158 tests · Lint clean · <strong>PR pending</strong></td>
-        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
+        <td>✅ <code>snapshot_diff.py</code> 138 LoC · <strong>Python API no subprocess</strong> (<code>SnapshotManager.load()</code> + <code>SnapshotDiff.compute()</code> + <code>diff_formatter</code>) · 6/6 smoke tests PASS · TOOL_REGISTRY 4 keys · default depth=2 format=markdown · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/125" target="_blank">#125</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
       </tr>
       <tr>
         <td><code>CBM-INT-205</code></td>
@@ -2413,7 +2449,7 @@ a:hover { text-decoration: underline; }
 <!-- Footer -->
 <div class="footer">
   <span>Codebase Map — Project Board · Hyper Commerce · CEO: Đoàn Đình Tỉnh</span>
-  <span>Updated: 20/04/2026 · <strong>🎉 S1 SEALED · 🚀 S2 Day 1 ✅ MCP scaffold MERGED (1/8 SP 12.5%)</strong> · 18 PRs merged tổng · AI-#6 44 files CLEANED · 158/158 tests · Day 2 starting — CBM-INT-202/203 query+search+impact · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">S2 brief ↗</a> · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
+  <span>Updated: 20/04/2026 · <strong>🎉 S1 SEALED · 🚀 S2 Day 1+2+3 ✅ MERGED (5/8 SP 62.5%)</strong> · TOOL_REGISTRY 4 tools (query/search/impact/snapshot_diff) · 22 PRs merged tổng · 158/158 tests · Day 4 starting — api_catalog + graph cache · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">S2 brief ↗</a> · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
 </div>
 
 <!-- ═══════════════════════════════════════
