@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 4.6 | Cập nhật: 20/04/2026 (🎉 S1 SEALED 5/5 SP · E2E 20/20 PASS · 🚀 S2 LIVE Day 1 — MCP Server 8 SP)
+> Version: 4.7 | Cập nhật: 20/04/2026 (🎉 S1 SEALED · 🚀 S2 Day 1 ✅ MCP scaffold MERGED · AI-#6 CLEANED · Day 2 starting)
 
 ---
 
@@ -169,31 +169,40 @@ codebase-map/
 - **E2E CEO verification 20/20** (Level 1+2A+2B+2C) → Gate G1 GO ✅
 - Deliverables: PyPI package · Claude Skill · 3 slash commands · QUICKSTART · Retrospective · Verification Report
 
-## 🚀 SPRINT CBM-INT-S2 · LIVE Day 1 Mon 20/04/2026
+## 🚀 SPRINT CBM-INT-S2 · 1/8 SP (12.5%) · Day 2 STARTING
 
 **Sprint goal:** MCP Server cho CBM (Python, reuse `codebase_map` package) với 5 auto-invoke tools + graph cache + PyPI `codebase-map-mcp`. Retention 15% → 50%.
 
-**Timeline (fast-track, 7 ngày sớm schedule gốc 27/04):**
-- Day 1 Mon 20/04: CBM-INT-201 MCP server scaffold (1 SP)
-- Day 2 Tue 21/04: CBM-INT-202 `cbm_query` + `cbm_search` · CBM-INT-203 `cbm_impact` (2 SP)
-- Day 3 Wed 22/04: CBM-INT-204 `cbm_snapshot_diff` (2 SP · most complex)
-- Day 4 Thu 23/04: CBM-INT-205 `cbm_api_catalog` · CBM-INT-206 graph cache (1.5 SP)
-- Day 5 Fri 24/04: CBM-INT-207 PyPI publish `codebase-map-mcp` · CBM-INT-208 tests + docs (1.5 SP)
-- Gate G2 Sun 26/04 mid · G3 Sun 03/05 end (likely compress based on S1 pace)
+**Day 1 COMPLETE (20/04):** ✅ CBM-INT-201 MCP scaffold — PR #121 MERGED
+- `mcp_server/` package 167 LoC · `mcp==1.27.0` optional extra `[mcp]`
+- `TOOL_REGISTRY` + `register_tool()` helper (D2-D4 drop-in pattern)
+- 158/158 tests PASS · lint clean
+
+**Timeline:**
+- ✅ Day 1 Mon 20/04 — CBM-INT-201 MCP scaffold (1 SP) — PR #121
+- 🔄 Day 2 STARTING — CBM-INT-202 `cbm_query` + `cbm_search` · CBM-INT-203 `cbm_impact` (2 SP)
+- ⏳ Day 3 — CBM-INT-204 `cbm_snapshot_diff` (2 SP · most complex)
+- ⏳ Day 4 — CBM-INT-205 `cbm_api_catalog` · CBM-INT-206 graph cache (1.5 SP)
+- ⏳ Day 5 — CBM-INT-207 PyPI publish `codebase-map-mcp` · CBM-INT-208 tests + docs (1.5 SP)
+- 🎯 Gate G2 Sun 26/04 mid · G3 Sun 03/05 end (likely compress)
 
 **Kickoff brief:** `docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md`
 
 **AC-S2-01→06:** MCP Inspector · Graph 10MB < 500ms · Claude auto-invoke 20 questions · pipx install · Registry PR · Lint + 158/158 no regression
 
-## ⚠️ PRE-S2 BACKLOG (from S1 Retro §7)
+## 🧹 AI-#6 CLEANUP COMPLETE (20/04)
 
-**Must-close parallel to S2:**
-- [ ] **AI-#6** Clean up 44 uncommitted files (docs cleanup Option B) — PM priority
-- [ ] **AI-#7** Enable GitHub secret scanning + Dependabot + branch protection — CEO
+44/44 uncommitted files addressed trong 3 PRs:
+- **#118** — 7 strategy foundation docs (CRITICAL recovery)
+- **#119** — 34 files Option B refactor (active/reference split)
+- **#120** — 3 misc path refs
 
-**Nice-to-have in S2:**
-- [ ] AI-#1 PyPI OIDC Trusted Publisher (D1)
-- [ ] AI-#2 `__version__` == pyproject test (D1)
+**Working tree CLEAN** · S2 proceeds without conflict risk.
+
+## 📋 REMAINING ACTION ITEMS (S1 Retro §7)
+
+- [ ] AI-#1 PyPI OIDC Trusted Publisher (S2 D5 during CBM-INT-207)
+- [ ] AI-#2 `__version__` == pyproject test (low priority)
 - [x] AI-#3 ✅ Live Claude Code skill trigger dry-run (done in E2E 20/04)
 - [ ] AI-#4 PyPI release runbook doc (D2)
 - [ ] AI-#5 Linux + WSL pipx smoke tests (D5)
