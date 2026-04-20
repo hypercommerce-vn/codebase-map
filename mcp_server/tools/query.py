@@ -1,9 +1,9 @@
 # HC-AI | ticket: FDD-TOOL-CODEMAP
 """MCP tool: ``cbm_query`` — full details of a function/class node.
 
-Reuses :class:`codebase_map.graph.query.QueryEngine`. For D2-D3 the graph is
-loaded fresh on every call; CBM-INT-206 (D4) will swap this for a cached
-``GraphCache`` lookup without changing the handler signature.
+Reuses :class:`codebase_map.graph.query.QueryEngine` via the shared
+``GraphCache`` singleton (CBM-INT-206) to avoid re-parsing ``graph.json``
+on every call.
 """
 
 from __future__ import annotations
@@ -12,11 +12,8 @@ from typing import Any
 
 import mcp.types as types
 
-from codebase_map.graph.query import QueryEngine
 from mcp_server import server as _server
-
-DEFAULT_GRAPH_FILE = "docs/function-map/graph.json"
-
+from mcp_server.graph_cache import CACHE, DEFAULT_GRAPH_FILE
 
 TOOL = types.Tool(
     name="cbm_query",
@@ -50,7 +47,7 @@ async def handle(arguments: dict[str, Any]) -> list[types.TextContent]:
     name = arguments["name"]
     graph_file = arguments.get("graph_file", DEFAULT_GRAPH_FILE)
 
-    engine = QueryEngine.from_json(graph_file)
+    engine = CACHE.get(graph_file)
     result = engine.query_node(name)
 
     if result is None:

@@ -7,10 +7,9 @@ from typing import Any
 
 import mcp.types as types
 
-from codebase_map.graph.query import QueryEngine
 from mcp_server import server as _server
+from mcp_server.graph_cache import CACHE, DEFAULT_GRAPH_FILE
 
-DEFAULT_GRAPH_FILE = "docs/function-map/graph.json"
 DEFAULT_DEPTH = 3
 MIN_DEPTH = 1
 MAX_DEPTH = 5
@@ -75,7 +74,7 @@ async def handle(arguments: dict[str, Any]) -> list[types.TextContent]:
     graph_file = arguments.get("graph_file", DEFAULT_GRAPH_FILE)
     depth = max(MIN_DEPTH, min(int(arguments.get("depth", DEFAULT_DEPTH)), MAX_DEPTH))
 
-    engine = QueryEngine.from_json(graph_file)
+    engine = CACHE.get(graph_file)
     affected = engine.impact(name, depth=depth)
     count = len(affected)
 

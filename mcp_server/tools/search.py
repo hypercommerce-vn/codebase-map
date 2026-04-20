@@ -7,10 +7,9 @@ from typing import Any
 
 import mcp.types as types
 
-from codebase_map.graph.query import QueryEngine
 from mcp_server import server as _server
+from mcp_server.graph_cache import CACHE, DEFAULT_GRAPH_FILE
 
-DEFAULT_GRAPH_FILE = "docs/function-map/graph.json"
 DEFAULT_LIMIT = 50
 MAX_LIMIT = 200
 
@@ -54,7 +53,7 @@ async def handle(arguments: dict[str, Any]) -> list[types.TextContent]:
     graph_file = arguments.get("graph_file", DEFAULT_GRAPH_FILE)
     limit = min(int(arguments.get("limit", DEFAULT_LIMIT)), MAX_LIMIT)
 
-    engine = QueryEngine.from_json(graph_file)
+    engine = CACHE.get(graph_file)
     results = engine.search(keyword)
     total = len(results)
     truncated = results[:limit]
