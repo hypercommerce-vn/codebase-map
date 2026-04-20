@@ -114,6 +114,10 @@
 | 6 | Clean up 44 uncommitted working-tree files (docs cleanup Option B) in dedicated chore PR | PM | **This week** (before S2 kickoff) |
 | 7 | Enable GitHub Settings: secret scanning, Dependabot, branch protection on main (still pending from B1-B4 PR) | CEO | Before S2 kickoff |
 | 8 | Update AC-INT-06 baseline from "582+" to "158+" tests across all planning docs | PM | **This commit** (part of retro) |
+| 9 | **Config path resolution UX** — Improve error message when `sources.path` not found: surface "resolved relative to config dir `<dir>`" hint; detect `/dev/fd/*` process-sub config → fallback CWD (P3) | TechLead | S2 Day 2 |
+| 10 | **`/cbm-diff` default branch auto-detect** — use `git symbolic-ref refs/remotes/origin/HEAD` instead of assuming `main`; base CLI `codebase-map diff` accept `--base auto` (P3) | TechLead | S2 Day 2 |
+
+**AI-#9 + AI-#10 added from E2E Verification 20/04/2026** (see [CBM-INT-S1-Verification-Report.md §9](./CBM-INT-S1-Verification-Report.md#9-2-p3-findings-for-cbm-int-s2-backlog)).
 
 ---
 
@@ -165,5 +169,5 @@ This sprint shipped **two PyPI releases**, **1 Claude Code integration**, and **
 
 ---
 
-*CBM-INT-S1 Retrospective v1.0 · Written 19/04/2026 · Hyper Commerce · Codebase Map*
-*Sprint duration: 1 calendar day (vs 5-day plan) · Shipped 5/5 SP · Zero P0/P1 defects · Two PyPI releases live*
+*CBM-INT-S1 Retrospective v1.1 · Updated 20/04/2026 with AI-#9 + AI-#10 from E2E Verification · Hyper Commerce · Codebase Map*
+*Sprint duration: 1 calendar day (vs 5-day plan) · Shipped 5/5 SP · Zero P0/P1 defects · Two PyPI releases live · E2E 20/20 PASS*
