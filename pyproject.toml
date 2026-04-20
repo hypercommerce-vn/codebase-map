@@ -35,6 +35,9 @@ dev = [
     "isort>=5.0",
     "flake8>=7.0",
 ]
+mcp = [
+    "mcp>=1.27.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/hypercommerce-vn/codebase-map"
@@ -45,7 +48,7 @@ Repository = "https://github.com/hypercommerce-vn/codebase-map"
 codebase-map = "codebase_map.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["codebase_map*"]
+include = ["codebase_map*", "mcp_server*"]
 
 [tool.setuptools.package-data]
 codebase_map = ["exporters/d3.v7.min.js"]
