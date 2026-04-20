@@ -118,17 +118,20 @@ codebase-map/
 | Trạng thái hiện tại | **`BRIEF.md`** |
 | FDD spec + sprint breakdown | **`specs/spec.md`** |
 | Task board CM-S1 | **`project/CM-S1-TASK-BOARD.md`** |
-| Design v2.0 tổng thể | **`design-preview/codebase-map-v2-design.html`** |
-| Design CM-S1 chi tiết | **`design-preview/codebase-map-CM-S1-design.html`** |
+| Design v2.0 tổng thể (active) | **`design-preview/active/codebase-map-v2-design.html`** |
+| Design CM-S1 chi tiết (archive) | **`design-preview/archive/codebase-map-CM-S1-design.html`** |
 | AI Agents overview | **`agents/README.md`** |
 | Slash commands | **`.claude/commands/`** |
-| CBM Dual-Snapshot proposal | **`docs/cbm-dual-snapshot/Proposal_Dual_Snapshot_CBM.md`** |
-| CBM CTO review | **`docs/cbm-dual-snapshot/CTO_Review_Dual_Snapshot.md`** |
-| CBM CI integration | **`docs/cbm-dual-snapshot/CTO_CI_Integration_Proposal.md`** |
-| CBM Phase 1 task board | **`docs/cbm-dual-snapshot/CBM-PHASE1-TASK-BOARD.md`** |
-| CBM Phase 2 task board | **`docs/cbm-dual-snapshot/CBM-PHASE2-TASK-BOARD.md`** |
-| CBM Design preview | **`docs/cbm-dual-snapshot/CBM-Dual-Snapshot-Design.html`** |
-| CBM Implementation specs | **`docs/cbm-dual-snapshot/CBM-Implementation-Specs.md`** |
+| Docs index + cấu trúc | **`docs/README.md`** |
+| Onboarding | **`docs/active/ONBOARDING.md`** |
+| CBM Claude Integration initiative | **`docs/active/cbm-claude-integration/`** (7 docs) |
+| CBM Dual-Snapshot proposal | **`docs/reference/cbm-dual-snapshot/Proposal_Dual_Snapshot_CBM.md`** |
+| CBM CTO review | **`docs/reference/cbm-dual-snapshot/CTO_Review_Dual_Snapshot.md`** |
+| CBM CI integration | **`docs/reference/cbm-dual-snapshot/CTO_CI_Integration_Proposal.md`** |
+| CBM Phase 1 task board | **`docs/reference/cbm-dual-snapshot/CBM-PHASE1-TASK-BOARD.md`** |
+| CBM Phase 2 task board | **`docs/reference/cbm-dual-snapshot/CBM-PHASE2-TASK-BOARD.md`** |
+| CBM Design preview | **`docs/reference/cbm-dual-snapshot/CBM-Dual-Snapshot-Design.html`** |
+| CBM Implementation specs | **`docs/reference/cbm-dual-snapshot/CBM-Implementation-Specs.md`** |
 
 ---
 
@@ -221,4 +224,4 @@ black --check codebase_map/ && isort --check codebase_map/ && flake8 codebase_ma
 
 ---
 
-*CLAUDE.md v1.2 — Codebase Map | Updated 11/04/2026 | Added docs/cbm-dual-snapshot + roadmap v2.1/v2.2*
+*CLAUDE.md v1.3 — Codebase Map | Updated 18/04/2026 | Refactored docs/ → active/reference + design-preview/ → active/archive*

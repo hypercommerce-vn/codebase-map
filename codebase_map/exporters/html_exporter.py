@@ -732,7 +732,7 @@ function renderApiCatalog() {{
           This is expected for Python library / CLI / worker repos, or if route decorators live outside the scanned paths.<br><br>
           Tips: make sure your <code>codebase-map.yaml</code> <code>include</code> list covers your router/controller directories,
           and that your framework's route decorators (FastAPI <code>@router.get</code>, NestJS <code>@Controller</code>, Express <code>app.get</code>) match the parser.<br><br>
-          See <code>docs/ONBOARDING.md</code> for configuration examples.
+          See <code>docs/active/ONBOARDING.md</code> for configuration examples.
         </div>
       </div>`;
     return;
