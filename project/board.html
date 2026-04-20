@@ -718,8 +718,8 @@ a:hover { text-decoration: underline; }
         <span class="badge active" style="background:#f59e0b;color:#fff;">🚀 KICKOFF Mon 20/04</span>
       </div>
       <p>MCP server Python (reuse codebase_map package) với 5 auto-invoke tools: <code>cbm_query</code>, <code>cbm_search</code>, <code>cbm_impact</code>, <code>cbm_snapshot_diff</code>, <code>cbm_api_catalog</code> · Graph cache mtime invalidation · PyPI <code>codebase-map-mcp</code>. Retention 15% → 50%. <a href="#cbm-int-s2"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">Kickoff brief →</a></p>
-      <div class="progress-bar"><div class="progress-fill" style="width:62.5%;background:#f59e0b"></div></div>
-      <div class="progress-label">5/8 SP · Day 1 ✅ scaffold (#121) · Day 2 ✅ query+search+impact (#124) · Day 3 ✅ snapshot_diff (#125 · most complex done) · Day 4-5 ⏳ · Fast-track</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:81.25%;background:#f59e0b"></div></div>
+      <div class="progress-label">6.5/8 SP · Day 1 ✅ scaffold (#121) · Day 2 ✅ 3 tools (#124) · Day 3 ✅ snapshot_diff (#125) · Day 4 🔄 api_catalog + cache PR pending (40× cache speedup) · Day 5 ⏳ · Fast-track</div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #f59e0b;">
@@ -2153,21 +2153,21 @@ a:hover { text-decoration: underline; }
         <td>✅ <code>snapshot_diff.py</code> 138 LoC · <strong>Python API no subprocess</strong> (<code>SnapshotManager.load()</code> + <code>SnapshotDiff.compute()</code> + <code>diff_formatter</code>) · 6/6 smoke tests PASS · TOOL_REGISTRY 4 keys · default depth=2 format=markdown · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/125" target="_blank">#125</a> MERGED</td>
         <td><span class="badge merged">✅ Merged</span></td>
       </tr>
-      <tr>
+      <tr style="background:#fef3c7;">
         <td><code>CBM-INT-205</code></td>
         <td>Tool <code>cbm_api_catalog</code> — method + domain filters</td>
-        <td>0.5</td><td>Day 4 (Thu 23/04)</td>
+        <td>0.5</td><td>Day 4 ✅ (Mon 20/04 parallel)</td>
         <td>TechLead</td>
-        <td>Filter by GET/POST/... · Filter by domain · Empty result graceful</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <code>api_catalog.py</code> 96 LoC · Reuse <code>APICatalog.from_graph().filter()</code> · Params: graph_file · method (GET/POST/PUT/DELETE/PATCH/empty) · domain · format (text/json) · Empty-result message includes active filters · <strong>PR pending</strong></td>
+        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
-      <tr>
+      <tr style="background:#fef3c7;">
         <td><code>CBM-INT-206</code></td>
         <td>Graph cache manager — <code>graph_cache.py</code> mtime-based invalidation · lazy load</td>
-        <td>1</td><td>Day 4 (Thu 23/04)</td>
+        <td>1</td><td>Day 4 ✅ (Mon 20/04 parallel)</td>
         <td>TechLead</td>
-        <td>10MB graph load < 500ms · cached queries < 100ms · Auto-invalidate khi <code>codebase-map generate</code> chạy lại · Thread-safe</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <code>graph_cache.py</code> 72 LoC (replaces D1 stub) · Thread-safe <code>Lock()</code> · mtime invalidation · <code>CACHE</code> singleton + <code>DEFAULT_GRAPH_FILE</code> · <strong>Benchmark:</strong> Cold 2.8ms · Hot 0.071ms (<strong>40× speedup</strong>, well under 100ms target) · 4 tools migrated (query/search/impact/api_catalog) · snapshot_diff untouched (uses SnapshotManager) · <strong>PR pending</strong></td>
+        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
       <tr>
         <td><code>CBM-INT-207</code></td>

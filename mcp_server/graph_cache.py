@@ -1,28 +1,72 @@
 # HC-AI | ticket: FDD-TOOL-CODEMAP
-"""Graph cache manager — STUB.
+"""In-memory graph cache with mtime-based invalidation for MCP server.
 
-Full implementation lands in CBM-INT-206 (D4). For Day 1 this stub exists so
-``mcp_server.server`` can import a stable symbol while the scaffold takes
-shape. Any actual use raises :class:`NotImplementedError`.
+Replaces the Day 1 stub (CBM-INT-201) with the full implementation described
+in Technical Plan §2.4. Tool handlers (``cbm_query``, ``cbm_search``,
+``cbm_impact``, ``cbm_api_catalog``) obtain a ``QueryEngine`` through the
+module-level singleton ``CACHE`` instead of re-parsing ``graph.json`` on
+every call.
+
+Invalidation is based on the file's mtime rather than a TTL: when a user
+runs ``codebase-map generate`` the file's mtime changes and the next
+``get()`` transparently reloads. Access is guarded by a ``Lock`` so
+concurrent MCP requests are safe.
 """
 
 from __future__ import annotations
 
+from pathlib import Path
+from threading import Lock
 from typing import Optional
+
+from codebase_map.graph.query import QueryEngine
+
+DEFAULT_GRAPH_FILE = "docs/function-map/graph.json"
 
 
 class GraphCache:
-    """Placeholder cache for parsed Codebase Map graph snapshots.
+    """Cache parsed graph snapshots keyed by absolute path + mtime."""
 
-    The real implementation (CBM-INT-206) will load a graph JSON from disk,
-    cache it in memory keyed by path + mtime, and expose ``QueryEngine``
-    instances to tool handlers.
-    """
-
-    def __init__(self, default_path: str) -> None:
+    def __init__(self, default_path: str = DEFAULT_GRAPH_FILE) -> None:
         self._default = default_path
+        self._cache: dict[str, tuple[float, QueryEngine]] = {}
+        self._lock = Lock()
 
-    def get(self, path: Optional[str] = None):  # pragma: no cover - stub
-        raise NotImplementedError(
-            "GraphCache.get() will be implemented in CBM-INT-206 (D4)"
-        )
+    def get(self, path: Optional[str] = None) -> QueryEngine:
+        """Return a ``QueryEngine`` for ``path`` (or the default graph).
+
+        Raises ``FileNotFoundError`` with an actionable message if the graph
+        file is missing. Reloads whenever the file's mtime has changed since
+        the cached entry was stored.
+        """
+        p = Path(path or self._default)
+        if not p.exists():
+            raise FileNotFoundError(
+                f"Graph file not found: {p}. " f"Run 'codebase-map generate' first."
+            )
+        key = str(p.resolve())
+        mtime = p.stat().st_mtime
+        with self._lock:
+            cached = self._cache.get(key)
+            if cached and cached[0] == mtime:
+                return cached[1]
+            engine = QueryEngine.from_json(p)
+            self._cache[key] = (mtime, engine)
+            return engine
+
+    def clear(self) -> None:
+        """Clear all cached graphs (useful for tests / reload CLI)."""
+        with self._lock:
+            self._cache.clear()
+
+    def stats(self) -> dict:
+        """Return cache stats for introspection / debugging."""
+        with self._lock:
+            return {
+                "cached_paths": list(self._cache.keys()),
+                "entry_count": len(self._cache),
+            }
+
+
+#: Module-level singleton shared across all tool handlers.
+CACHE = GraphCache()
