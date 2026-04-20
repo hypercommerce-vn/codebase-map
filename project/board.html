@@ -718,8 +718,8 @@ a:hover { text-decoration: underline; }
         <span class="badge active" style="background:#f59e0b;color:#fff;">🚀 KICKOFF Mon 20/04</span>
       </div>
       <p>MCP server Python (reuse codebase_map package) với 5 auto-invoke tools: <code>cbm_query</code>, <code>cbm_search</code>, <code>cbm_impact</code>, <code>cbm_snapshot_diff</code>, <code>cbm_api_catalog</code> · Graph cache mtime invalidation · PyPI <code>codebase-map-mcp</code>. Retention 15% → 50%. <a href="#cbm-int-s2"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">Kickoff brief →</a></p>
-      <div class="progress-bar"><div class="progress-fill" style="width:37.5%;background:#f59e0b"></div></div>
-      <div class="progress-label">3/8 SP · Day 1 ✅ MCP scaffold (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/121" target="_blank">#121</a>) · Day 2 🔄 query+search+impact PR pending (#123) · Day 3-5 ⏳ · Fast-track · Gate G2 Sun 26/04</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:62.5%;background:#f59e0b"></div></div>
+      <div class="progress-label">5/8 SP · Day 1 ✅ scaffold · Day 2 ✅ query+search+impact (#124) · Day 3 🔄 snapshot_diff PR pending (most complex done) · Day 4-5 ⏳ · Fast-track · Gate G2 Sun 26/04</div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #f59e0b;">
@@ -2109,13 +2109,13 @@ a:hover { text-decoration: underline; }
         <td>✅ <code>impact.py</code> 100 LoC · depth 1-5 · Risk tier Low(0-10)/Medium(11-50)/HIGH(51+) khớp slash cmd · Smoke test: QueryEngine → 1 node Low · <strong>PR pending</strong></td>
         <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
-      <tr>
+      <tr style="background:#fef3c7;">
         <td><code>CBM-INT-204</code></td>
         <td>Tool <code>cbm_snapshot_diff</code> — <strong>most complex</strong> · baseline/current labels · markdown/json output · depth · breaking_only · test_plan flags</td>
-        <td>2</td><td>Day 3 (Wed 22/04)</td>
+        <td>2</td><td>Day 3 ✅ (Mon 20/04 parallel)</td>
         <td>TechLead (critical)</td>
-        <td>All 5 flags work · Snapshot path resolution · Markdown output đủ cho PR body paste · Integration test với 2 labeled snapshots</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <code>snapshot_diff.py</code> 138 LoC (budget 150) · <strong>Python API no subprocess</strong> (clean via <code>SnapshotManager.load()</code> + <code>SnapshotDiff.compute()</code> + <code>diff_formatter</code>) · 6/6 smoke tests PASS (markdown · breaking_only · bad label graceful · json · text · test_plan) · TOOL_REGISTRY 4 keys · default depth=2 format=markdown khớp slash cmd · 158/158 tests · Lint clean · <strong>PR pending</strong></td>
+        <td><span class="badge active" style="background:#f59e0b;color:#fff;">🔄 PR Pending</span></td>
       </tr>
       <tr>
         <td><code>CBM-INT-205</code></td>
