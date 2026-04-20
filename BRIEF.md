@@ -169,19 +169,21 @@ codebase-map/
 - **E2E CEO verification 20/20** (Level 1+2A+2B+2C) → Gate G1 GO ✅
 - Deliverables: PyPI package · Claude Skill · 3 slash commands · QUICKSTART · Retrospective · Verification Report
 
-## 🚀 SPRINT CBM-INT-S2 · 5/8 SP (62.5%) · Day 4 STARTING
+## 🚀 SPRINT CBM-INT-S2 · 6.5/8 SP (81.25%) · Day 5 STARTING
 
 **Sprint goal:** MCP Server cho CBM (Python, reuse `codebase_map` package) với 5 auto-invoke tools + graph cache + PyPI `codebase-map-mcp`. Retention 15% → 50%.
 
-**TOOL_REGISTRY hiện tại: 4 keys** — cbm_query · cbm_search · cbm_impact · cbm_snapshot_diff
+**TOOL_REGISTRY: 5/5 LIVE** — cbm_query · cbm_search · cbm_impact · cbm_snapshot_diff · cbm_api_catalog
+
+**AC-S2-02 Cache Benchmark ✅ CLOSED:** Cold 2.8ms · Hot 0.071ms · **40× speedup**
 
 **Timeline:**
-- ✅ Day 1 (20/04) — CBM-INT-201 MCP scaffold (1 SP) — PR #121 MERGED
-- ✅ Day 2 (20/04) — CBM-INT-202 query+search · CBM-INT-203 impact (2 SP) — PR #124 MERGED (#123 closed, conflict)
-- ✅ Day 3 (20/04) — CBM-INT-204 snapshot_diff (2 SP · most complex, pure Python no subprocess) — PR #125 MERGED
-- 🔄 Day 4 STARTING — CBM-INT-205 `cbm_api_catalog` · CBM-INT-206 graph cache mtime (1.5 SP)
-- ⏳ Day 5 — CBM-INT-207 PyPI publish `codebase-map-mcp` · CBM-INT-208 tests + docs (1.5 SP)
-- 🎯 Gate G2 Sun 26/04 mid · G3 Sun 03/05 end (compressing — 3 days in 1)
+- ✅ Day 1 (20/04) — CBM-INT-201 MCP scaffold (1 SP) — PR #121
+- ✅ Day 2 (20/04) — CBM-INT-202 query+search · CBM-INT-203 impact (2 SP) — PR #124 (#123 closed, conflict)
+- ✅ Day 3 (20/04) — CBM-INT-204 snapshot_diff (2 SP · most complex) — PR #125
+- ✅ Day 4 (20/04) — CBM-INT-205 api_catalog · CBM-INT-206 graph cache (1.5 SP) — PR #128 (#127 closed, conflict)
+- 🔄 Day 5 STARTING — CBM-INT-207 PyPI publish `codebase-map-mcp` · CBM-INT-208 tests + docs (1.5 SP · sprint closure)
+- 🎯 Gate G2 Sun 26/04 mid · G3 Sun 03/05 end (compressing — 4 days in 1)
 
 **Kickoff brief:** `docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md`
 
