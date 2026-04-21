@@ -1,0 +1,31 @@
+{
+  "name": "codebase-map-saas",
+  "version": "0.1.0",
+  "display_name": "Codebase Map — SaaS Onboarding Pack",
+  "description": "Archetype pack for SaaS B2B engineering teams onboarding new devs on CRM, CDP, eCommerce, multi-tenant platforms. Bilingual EN/VI. Maps modules, API surface, tier/plan gating logic, multi-tenant boundaries. Wraps codebase-map MCP tools with SaaS-specific framing.",
+  "author": "Hyper Commerce",
+  "homepage": "https://github.com/hypercommerce-vn/codebase-map",
+  "license": "MIT",
+  "requires": {
+    "python": ">=3.10",
+    "claude_code": ">=1.0.0"
+  },
+  "dependencies": {
+    "pypi": ["codebase-map[mcp]>=2.4.0"]
+  },
+  "components": {
+    "skills": ["skills/codebase-map-saas/SKILL.md"],
+    "commands": [
+      "commands/saas-onboard.md",
+      "commands/saas-apis.md",
+      "commands/saas-tier-logic.md"
+    ],
+    "mcp_servers": ["mcp/config.json"]
+  },
+  "hooks": {
+    "post_install": "hooks/post-install.sh",
+    "pre_uninstall": "hooks/pre-uninstall.sh"
+  },
+  "tags": ["saas-b2b", "onboarding", "multi-tenant", "crm", "cdp", "ecommerce", "codebase", "mcp"],
+  "screenshots": []
+}

@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "hypercommerce-vn-claude-plugins",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "owner": {
     "name": "Hyper Commerce",
     "email": "hypercdp@gmail.com",
@@ -9,7 +9,7 @@
   },
   "metadata": {
     "description": "Curated plugins for Claude Code and Cowork, maintained by Hyper Commerce",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "homepage": "https://github.com/hypercommerce-vn/claude-plugins",
     "repository": "https://github.com/hypercommerce-vn/claude-plugins",
     "license": "MIT",
@@ -19,7 +19,9 @@
       "plugins",
       "mcp-servers",
       "dependency-graph",
-      "codebase-analysis"
+      "codebase-analysis",
+      "ai-agent",
+      "saas-b2b"
     ]
   },
   "plugins": [
@@ -48,6 +50,60 @@
         "typescript"
       ],
       "archetypes": ["ai-agent", "saas-b2b"],
+      "featured": true
+    },
+    {
+      "name": "codebase-map-ai-agent",
+      "source": "./plugins/codebase-map-ai-agent",
+      "description": "AI Agent Knowledge Pack — understand agent structure, tools, workflows for Claude agents, LangChain, AutoGen, CrewAI. Bilingual EN/VI. Skill + 3 slash commands (/agent-overview, /agent-impact, /agent-refactor-plan). Reuses codebase-map MCP tools.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Hyper Commerce",
+        "email": "hypercdp@gmail.com",
+        "url": "https://github.com/hypercommerce-vn"
+      },
+      "repository": "https://github.com/hypercommerce-vn/codebase-map",
+      "homepage": "https://github.com/hypercommerce-vn/codebase-map",
+      "license": "MIT",
+      "category": "explore",
+      "keywords": [
+        "ai-agent",
+        "claude-agents",
+        "langchain",
+        "autogen",
+        "crewai",
+        "multi-agent",
+        "codebase",
+        "mcp"
+      ],
+      "archetypes": ["ai-agent"],
+      "featured": true
+    },
+    {
+      "name": "codebase-map-saas",
+      "source": "./plugins/codebase-map-saas",
+      "description": "SaaS Onboarding Pack — onboard new engineers to SaaS B2B codebases (CRM, CDP, eCommerce, multi-tenant). Bilingual EN/VI. Skill + 3 slash commands (/saas-onboard, /saas-apis, /saas-tier-logic). Reuses codebase-map MCP tools.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Hyper Commerce",
+        "email": "hypercdp@gmail.com",
+        "url": "https://github.com/hypercommerce-vn"
+      },
+      "repository": "https://github.com/hypercommerce-vn/codebase-map",
+      "homepage": "https://github.com/hypercommerce-vn/codebase-map",
+      "license": "MIT",
+      "category": "explore",
+      "keywords": [
+        "saas-b2b",
+        "onboarding",
+        "multi-tenant",
+        "crm",
+        "cdp",
+        "ecommerce",
+        "codebase",
+        "mcp"
+      ],
+      "archetypes": ["saas-b2b"],
       "featured": true
     }
   ]

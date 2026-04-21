@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "codebase-map": {
+      "command": "cbm-mcp"
+    }
+  }
+}
