@@ -72,7 +72,7 @@ Claude returns a 7-bullet onboarding brief. From there:
 
 ### Domains recognized
 
-Customer / CRM · Order / Commerce · Billing / Subscription · Tenant / Multi-tenant · Auth / Access · Integrations (Stripe, Zalo, Shopify, Facebook)
+Customer / CRM · Order / Commerce · Billing / Subscription · Tenant / Multi-tenant · Auth / Access · Integrations (Stripe, Zalo, Facebook)
 
 ### Links
 
