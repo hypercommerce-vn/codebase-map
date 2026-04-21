@@ -729,8 +729,8 @@ a:hover { text-decoration: underline; }
         <span class="badge active" style="background:#f59e0b;color:#fff;">🚀 KICKOFF Tue 21/04</span>
       </div>
       <p>Cowork plugin manifest + post-install hook (pipx install CBM+MCP) · <strong>AI Agent Knowledge Pack</strong> + <strong>SaaS Onboarding Pack</strong> (CEO D5 · bilingual EN/VI) · marketplace listing · launch blog + demo video + HN/Reddit/Viblo/Zalo posts. <strong>Final sprint of initiative.</strong> <a href="#cbm-int-s3"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">Kickoff brief →</a></p>
-      <div class="progress-bar"><div class="progress-fill" style="width:40%;background:#f59e0b"></div></div>
-      <div class="progress-label">2/5 SP · Day 1 ✅ plugin bundle + hook (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a> · leverage S2 validated · ~10 min wall-clock) · Day 2-4 ⏳ · Final sprint</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:60%;background:#f59e0b"></div></div>
+      <div class="progress-label">3/5 SP · Day 1 ✅ bundle+hook (#134) · Day 2 ✅ marketplace staging (#136 · community schema) · Day 3-4 ⏳ · Rule #S2-1 validated 3 PRs · Final sprint</div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #8b5cf6;">
@@ -1592,6 +1592,20 @@ a:hover { text-decoration: underline; }
         <td>TechLead · 9 files · zero new Python · Rule #S2-1 passed</td>
         <td><span class="badge merged">✅ Merged</span></td>
       </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/135" target="_blank">#135</a></td>
+        <td>chore(board+gitignore): S3 Day 1 status sync + fix *.json blanket for plugins/</td>
+        <td><code>chore/cbm-int-s3-day1-status-sync-gitignore</code></td>
+        <td>PM · board + BRIEF v5.2 + .gitignore 3 negations</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/136" target="_blank">#136</a></td>
+        <td>feat(marketplace): CBM-INT-303 — claude-plugins repo staging (Day 2 · leverage)</td>
+        <td><code>feat/cbm-int-303-marketplace-publish</code></td>
+        <td>TechLead · 15 files · 975 insertions · community schema</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -1860,6 +1874,10 @@ a:hover { text-decoration: underline; }
     <div class="tl-item">
       <div class="tl-date">21/04/2026</div>
       <div class="tl-content"><strong>✅ CBM-INT-301 + 302 Day 1 MERGED — Plugin bundle + post-install hook (CTO leverage plan VALIDATED)</strong> — TechLead execute Day 1 trong <strong>~10 phút wall-clock</strong> (vs 40-min budget). <strong>Zero new Python</strong> — pure file assembly composing S1+S2 assets: 4 S1 files copied (SKILL.md + 3 slash commands · diff MATCHES zero drift) + 5 new files (manifest.json 31 dòng · README.md 139 dòng · mcp/config.json points to <code>cbm-mcp</code> entry · post-install.sh 44 dòng idempotent · pre-uninstall.sh 16 dòng). Hook dùng exact S2 verified command <code>pipx install 'codebase-map[mcp]>=2.4.0'</code>. <strong>Rule #S2-1 passed first test</strong> — PR không đụng board.html, PM ships separate status sync. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a> MERGED. <strong>Sprint progress 2/5 SP (40%).</strong></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">21/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-303 Day 2 MERGED — Marketplace staging (no Anthropic registry found)</strong> — TechLead research: <strong>no official Anthropic/MCP plugin registry</strong> exists (21/04/2026) — <code>anthropic/claude-plugins</code>, <code>anthropic/mcp-servers</code> both 404. Community convention verified via 3 existing marketplaces (buildwithclaude, superpowers-marketplace, cc-marketplace): schema <code>.claude-plugin/marketplace.json</code> + <code>/plugin marketplace add</code> pattern. Decision: self-host at <code>hypercommerce-vn/claude-plugins</code>. Staged 15 files (975 insertions) trong <code>claude-plugins-repo/</code>: marketplace.json + README + CONTRIBUTING + LICENSE + <strong>PUBLISH_INSTRUCTIONS.md</strong> (CEO 4-step plan) + full plugin tree copy (no drift). <strong>Rule #S2-1 validated 3rd time</strong> (3 consecutive PRs clean-split — #134 #135 #136). PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/136" target="_blank">#136</a> MERGED. <strong>Sprint progress 3/5 SP (60%).</strong></div>
     </div>
   </div>
 
@@ -2388,13 +2406,13 @@ a:hover { text-decoration: underline; }
         <td>✅ <code>post-install.sh</code> 44 dòng · idempotent · uses exact S2 verified command <code>pipx install 'codebase-map[mcp]>=2.4.0'</code> · <code>pre-uninstall.sh</code> 16 dòng · both executable mode 100755 · <code>bash -n</code> syntax PASS · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a> MERGED</td>
         <td><span class="badge merged">✅ Merged</span></td>
       </tr>
-      <tr>
+      <tr style="background:#d1fae5;">
         <td><code>CBM-INT-303</code></td>
         <td>Publish to marketplace — Tạo <code>hypercommerce-vn/claude-plugins</code> repo · marketplace.json · plugin discoverable</td>
-        <td>1</td><td>Day 2 (Wed 22/04)</td>
+        <td>1</td><td>Day 2 ✅ (Tue 21/04)</td>
         <td>TechLead + CEO</td>
-        <td>Repo public · marketplace entry valid · <code>/plugin install cbm</code> command works trong Cowork</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <strong>Staged</strong> tại <code>claude-plugins-repo/</code> (CEO pushes new public repo per PUBLISH_INSTRUCTIONS.md) · Community schema <code>.claude-plugin/marketplace.json</code> (no official Anthropic registry 21/04) · Plugin tree copy no drift · 15 files 975 insertions · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/136" target="_blank">#136</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
       </tr>
       <tr>
         <td><code>CBM-INT-304</code></td>
@@ -2678,7 +2696,7 @@ a:hover { text-decoration: underline; }
 <!-- Footer -->
 <div class="footer">
   <span>Codebase Map — Project Board · Hyper Commerce · CEO: Đoàn Đình Tỉnh</span>
-  <span>Updated: 21/04/2026 · <strong>🎉 S1+S2 SEALED · 🚀 S3 Day 1 ✅ MERGED (2/5 SP 40%)</strong> · Plugin bundle + hook shipped trong ~10 phút (CTO leverage plan validated · zero new Python) · Rule #S2-1 passed first test · 29 PRs merged · 158/158 tests · <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">S3 brief ↗</a> · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
+  <span>Updated: 21/04/2026 · <strong>🎉 S1+S2 SEALED · 🚀 S3 Day 1+2 ✅ MERGED (3/5 SP 60%)</strong> · Plugin bundle + marketplace staged · Community schema (no Anthropic registry) · CEO pushes via PUBLISH_INSTRUCTIONS · Rule #S2-1 validated 3× · 31 PRs merged · 158/158 tests · Day 3 starting — 2 Packs bilingual · <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">S3 brief ↗</a></span>
 </div>
 
 <!-- ═══════════════════════════════════════
