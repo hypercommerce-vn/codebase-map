@@ -1,0 +1,31 @@
+{
+  "name": "codebase-map",
+  "version": "2.5.0",
+  "display_name": "Codebase Map",
+  "description": "Understand any Python/TypeScript codebase at a glance. Impact analysis, API catalog, PR diff — all powered by AST + D3.js. Integrates Claude Code Skill + 3 slash commands + MCP auto-invoke.",
+  "author": "Hyper Commerce",
+  "homepage": "https://github.com/hypercommerce-vn/codebase-map",
+  "license": "MIT",
+  "requires": {
+    "python": ">=3.10",
+    "claude_code": ">=1.0.0"
+  },
+  "dependencies": {
+    "pypi": ["codebase-map[mcp]>=2.4.0"]
+  },
+  "components": {
+    "skills": ["skills/codebase-map/SKILL.md"],
+    "commands": [
+      "commands/cbm-onboard.md",
+      "commands/cbm-impact.md",
+      "commands/cbm-diff.md"
+    ],
+    "mcp_servers": ["mcp/config.json"]
+  },
+  "hooks": {
+    "post_install": "hooks/post-install.sh",
+    "pre_uninstall": "hooks/pre-uninstall.sh"
+  },
+  "tags": ["codebase", "ast", "dependency-graph", "pr-review", "onboarding", "mcp"],
+  "screenshots": []
+}

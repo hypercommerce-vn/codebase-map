@@ -19,6 +19,8 @@ test-output/
 # MCP server integration docs
 !integrations/mcp/**/*.json
 !integrations/claude-code/**/*.json
+# Marketplace staging repo (CBM-INT-303): manifest + marketplace + MCP config
+!claude-plugins-repo/**/*.json
 
 # IDE
 .vscode/

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "hypercommerce-vn-claude-plugins",
+  "version": "1.0.0",
+  "owner": {
+    "name": "Hyper Commerce",
+    "email": "hypercdp@gmail.com",
+    "url": "https://github.com/hypercommerce-vn"
+  },
+  "metadata": {
+    "description": "Curated plugins for Claude Code and Cowork, maintained by Hyper Commerce",
+    "version": "1.0.0",
+    "homepage": "https://github.com/hypercommerce-vn/claude-plugins",
+    "repository": "https://github.com/hypercommerce-vn/claude-plugins",
+    "license": "MIT",
+    "keywords": [
+      "claude-code",
+      "cowork",
+      "plugins",
+      "mcp-servers",
+      "dependency-graph",
+      "codebase-analysis"
+    ]
+  },
+  "plugins": [
+    {
+      "name": "codebase-map",
+      "source": "./plugins/codebase-map",
+      "description": "Understand any Python/TypeScript codebase at a glance. Impact analysis, API catalog, PR diff — all powered by AST + D3.js. Integrates Claude Code Skill + 3 slash commands + MCP auto-invoke (5 tools).",
+      "version": "2.5.0",
+      "author": {
+        "name": "Hyper Commerce",
+        "email": "hypercdp@gmail.com",
+        "url": "https://github.com/hypercommerce-vn"
+      },
+      "repository": "https://github.com/hypercommerce-vn/codebase-map",
+      "homepage": "https://github.com/hypercommerce-vn/codebase-map",
+      "license": "MIT",
+      "category": "explore",
+      "keywords": [
+        "codebase",
+        "ast",
+        "dependency-graph",
+        "pr-review",
+        "onboarding",
+        "mcp",
+        "python",
+        "typescript"
+      ],
+      "archetypes": ["ai-agent", "saas-b2b"],
+      "featured": true
+    }
+  ]
+}
