@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 5.1 | Cập nhật: 21/04/2026 (🎉 S1+S2 SEALED · 🚀 S3 LIVE Day 1 — Plugin + 2 Packs · FINAL sprint · 20 ngày sớm schedule)
+> Version: 5.2 | Cập nhật: 21/04/2026 (🎉 S1+S2 SEALED · 🚀 S3 Day 1 MERGED · 2/5 SP (40%) · leverage plan validated · Day 2 starting)
 
 ---
 
@@ -186,17 +186,24 @@ codebase-map/
 
 ---
 
-## 🚀 SPRINT CBM-INT-S3 · LIVE Day 1 Tue 21/04/2026 (FINAL sprint)
+## 🚀 SPRINT CBM-INT-S3 · 2/5 SP (40%) · Day 2 STARTING (FINAL sprint)
 
 **Sprint goal:** Đóng gói CBM thành Claude Plugin 1-click install (Cowork) · 2 Archetype Packs (AI Agent + SaaS per CEO D5) · Launch marketing. **Final sprint của Claude Integration initiative.**
 
+**Day 1 COMPLETE (21/04):** ✅ CBM-INT-301 + 302 — Plugin bundle + hook — PR #134 MERGED
+- 9 files under `plugins/codebase-map/` · zero new Python · ~10 min wall-clock
+- 4 S1 files copied với diff MATCHES (no drift)
+- manifest.json + mcp/config.json · post-install.sh (`pipx install codebase-map[mcp]>=2.4.0`) · pre-uninstall.sh
+- CTO leverage plan VALIDATED — S3 = distribution wrapper over S2 runtime
+- Rule #S2-1 PASSED first test (PR không đụng board.html)
+
 **Timeline (fast-track, 20 ngày sớm original Mon 11/05):**
-- Day 1 Tue 21/04 — CBM-INT-301 Plugin manifest + bundle · CBM-INT-302 Post-install hook (2 SP)
-- Day 2 Wed 22/04 — CBM-INT-303 Publish marketplace `hypercommerce-vn/claude-plugins` (1 SP)
-- Day 3 Thu 23/04 — CBM-INT-304 Cowork variant (AI Agent Knowledge Pack + SaaS Onboarding Pack, bilingual EN/VI) (1.5 SP)
-- Day 4 Fri 24/04 — CBM-INT-305 Launch blog 800 words + Loom demo video 2 min (0.5 SP)
-- Day 5 Sat 25/04 — 🚀 LAUNCH — HN/Reddit/Viblo/Zalo posts
-- Gate G5 Sun 26/04 — CEO review · LAUNCH retro · Initiative complete
+- ✅ Day 1 Tue 21/04 — CBM-INT-301 + 302 (2 SP) — PR #134 MERGED
+- 🔄 Day 2 STARTING — CBM-INT-303 Publish marketplace `hypercommerce-vn/claude-plugins` (1 SP)
+- ⏳ Day 3 Thu 23/04 — CBM-INT-304 Cowork variant 2 Archetype Packs bilingual (1.5 SP)
+- ⏳ Day 4 Fri 24/04 — CBM-INT-305 Launch blog + demo video (0.5 SP)
+- ⏳ Day 5 Sat 25/04 — 🚀 LAUNCH HN/Reddit/Viblo/Zalo
+- 🎯 Gate G5 Sun 26/04 — Initiative complete
 
 **Kickoff brief:** `docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md`
 

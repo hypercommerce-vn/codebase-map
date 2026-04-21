@@ -729,8 +729,8 @@ a:hover { text-decoration: underline; }
         <span class="badge active" style="background:#f59e0b;color:#fff;">🚀 KICKOFF Tue 21/04</span>
       </div>
       <p>Cowork plugin manifest + post-install hook (pipx install CBM+MCP) · <strong>AI Agent Knowledge Pack</strong> + <strong>SaaS Onboarding Pack</strong> (CEO D5 · bilingual EN/VI) · marketplace listing · launch blog + demo video + HN/Reddit/Viblo/Zalo posts. <strong>Final sprint of initiative.</strong> <a href="#cbm-int-s3"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">Kickoff brief →</a></p>
-      <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#f59e0b"></div></div>
-      <div class="progress-label">0/5 SP · Fast-track: 21/04 → ~25/04 (20 ngày sớm original 11/05) · Gate G4 mid · Gate G5 launch · Final sprint</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:40%;background:#f59e0b"></div></div>
+      <div class="progress-label">2/5 SP · Day 1 ✅ plugin bundle + hook (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a> · leverage S2 validated · ~10 min wall-clock) · Day 2-4 ⏳ · Final sprint</div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #8b5cf6;">
@@ -1568,6 +1568,30 @@ a:hover { text-decoration: underline; }
         <td colspan="2" style="text-align:center; font-weight:700; color:#065f46; font-size:13px;">🎉 v2.4.0 TAG PUSHED · PyPI LIVE (20/04/2026 · workflow run 24679777408 · 29s)</td>
         <td colspan="3" style="text-align:center; font-size:12px; color:#064e3b;"><code>pipx install codebase-map[mcp]==2.4.0</code> → <code>cbm-mcp</code> entry + <a href="https://pypi.org/project/codebase-map/2.4.0/" target="_blank">pypi.org/project/codebase-map/2.4.0/</a></td>
       </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/132" target="_blank">#132</a></td>
+        <td>chore(retro+verify): CBM-INT-S2 Retrospective + E2E Verification — 🎉 SPRINT SEALED</td>
+        <td><code>chore/cbm-int-s2-retro-verification</code></td>
+        <td>PM · Retro + Verify · 18/20 E2E</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#fef3c7;">
+        <td colspan="5" style="text-align:center; font-weight:600; font-size:12px; color:#78350f;">━━━ 🚀 CBM-INT-S3 Sprint LIVE — 21/04/2026 (FINAL sprint) ━━━</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/133" target="_blank">#133</a></td>
+        <td>chore(sprint): CBM-INT-S3 kickoff — Plugin + 2 Packs · FINAL sprint (5 SP · 20 ngày sớm)</td>
+        <td><code>chore/cbm-int-s3-kickoff</code></td>
+        <td>PM · kickoff doc + board</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a></td>
+        <td>feat(plugin): CBM-INT-301 + 302 — plugin bundle + post-install hook (Day 1 · leverage S2)</td>
+        <td><code>feat/cbm-int-301-302-plugin-bundle-hook</code></td>
+        <td>TechLead · 9 files · zero new Python · Rule #S2-1 passed</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -1832,6 +1856,10 @@ a:hover { text-decoration: underline; }
     <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
       <div class="tl-date">21/04/2026 · 🚀 S3 KICKOFF</div>
       <div class="tl-content"><strong>🚀 CBM-INT-S3 KICKOFF — Plugin Marketplace + 2 Archetype Packs · Final sprint · 5 SP</strong>. Fast-track Tue 21/04 (20 ngày sớm schedule gốc Mon 11/05). CEO decision: skip Gate G3 ceremony formality, go S3 ngay. Sprint goal: Đóng gói CBM thành Claude Plugin 1-click install · AI Agent Knowledge Pack + SaaS Onboarding Pack (CEO D5 bilingual EN/VI) · Launch blog + demo video + HN/Reddit/Viblo/Zalo posts. Tasks CBM-INT-301→305. AC-S3-01→07 defined. Gate G4 mid · Gate G5 LAUNCH. <strong>Rule #S2-1 applied</strong> — feature PRs skip board.html progress, PM ships separate status sync (giảm recurring conflict pattern từ S2). <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">Kickoff brief ↗</a> · <a href="#cbm-int-s3">Task board ↓</a>. ⚠️ Pre-S3 blockers: AI-#1 PyPI OIDC · AI-#7 GitHub Settings (still open from S1).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">21/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-301 + 302 Day 1 MERGED — Plugin bundle + post-install hook (CTO leverage plan VALIDATED)</strong> — TechLead execute Day 1 trong <strong>~10 phút wall-clock</strong> (vs 40-min budget). <strong>Zero new Python</strong> — pure file assembly composing S1+S2 assets: 4 S1 files copied (SKILL.md + 3 slash commands · diff MATCHES zero drift) + 5 new files (manifest.json 31 dòng · README.md 139 dòng · mcp/config.json points to <code>cbm-mcp</code> entry · post-install.sh 44 dòng idempotent · pre-uninstall.sh 16 dòng). Hook dùng exact S2 verified command <code>pipx install 'codebase-map[mcp]>=2.4.0'</code>. <strong>Rule #S2-1 passed first test</strong> — PR không đụng board.html, PM ships separate status sync. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a> MERGED. <strong>Sprint progress 2/5 SP (40%).</strong></div>
     </div>
   </div>
 
@@ -2344,21 +2372,21 @@ a:hover { text-decoration: underline; }
       <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>Owner</th><th>DoD / Output</th><th>Status</th></tr>
     </thead>
     <tbody>
-      <tr>
+      <tr style="background:#d1fae5;">
         <td><code>CBM-INT-301</code></td>
         <td>Plugin manifest + bundle — <code>manifest.json</code> · <code>plugins/codebase-map/</code> dir structure · reuse S1 skill + commands + S2 MCP config</td>
-        <td>1</td><td>Day 1 (Tue 21/04)</td>
+        <td>1</td><td>Day 1 ✅ (Tue 21/04)</td>
         <td>TechLead</td>
-        <td><code>.plugin</code> bundle file · manifest valid per Cowork schema · skills + commands + mcp/config.json subfolders · README.md trong plugin</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <strong>Pure file assembly</strong> (CTO leverage plan validated) · manifest.json 31 dòng · README.md 139 dòng · mcp/config.json points to <code>cbm-mcp</code> entry · 4 S1 files copied (diff MATCHES zero drift) · ~10 min wall-clock · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
       </tr>
-      <tr>
+      <tr style="background:#d1fae5;">
         <td><code>CBM-INT-302</code></td>
         <td>Post-install hook — <code>hooks/post-install.sh</code> idempotent pipx install CBM+MCP · <code>pre-uninstall.sh</code> cleanup</td>
-        <td>1</td><td>Day 1 (Tue 21/04)</td>
+        <td>1</td><td>Day 1 ✅ (Tue 21/04)</td>
         <td>TechLead</td>
-        <td>Hook PASS trên macOS + Linux + WSL · ensures pipx · installs <code>codebase-map[mcp]</code> · idempotent (upgrade if already installed)</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <code>post-install.sh</code> 44 dòng · idempotent · uses exact S2 verified command <code>pipx install 'codebase-map[mcp]>=2.4.0'</code> · <code>pre-uninstall.sh</code> 16 dòng · both executable mode 100755 · <code>bash -n</code> syntax PASS · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
       </tr>
       <tr>
         <td><code>CBM-INT-303</code></td>
@@ -2650,7 +2678,7 @@ a:hover { text-decoration: underline; }
 <!-- Footer -->
 <div class="footer">
   <span>Codebase Map — Project Board · Hyper Commerce · CEO: Đoàn Đình Tỉnh</span>
-  <span>Updated: 21/04/2026 · <strong>🎉 S1+S2 SEALED · 🚀 S3 LIVE Day 1 — Plugin + 2 Packs (5 SP · FINAL sprint)</strong> · v2.4.0 LIVE · 5 MCP tools · 27 PRs merged · 158/158 tests · Launch target Sat 23/05 (likely earlier) · <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">S3 brief ↗</a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-Retrospective.md" target="_blank">S2 Retro ↗</a> · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
+  <span>Updated: 21/04/2026 · <strong>🎉 S1+S2 SEALED · 🚀 S3 Day 1 ✅ MERGED (2/5 SP 40%)</strong> · Plugin bundle + hook shipped trong ~10 phút (CTO leverage plan validated · zero new Python) · Rule #S2-1 passed first test · 29 PRs merged · 158/158 tests · <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">S3 brief ↗</a> · <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">KMP ↗</a></span>
 </div>
 
 <!-- ═══════════════════════════════════════

@@ -14,6 +14,11 @@ test-output/
 *.json
 !codebase-map.example.yaml
 !.claude/settings.json
+# Plugin bundle JSON files (manifest + MCP config) must be committed
+!plugins/**/*.json
+# MCP server integration docs
+!integrations/mcp/**/*.json
+!integrations/claude-code/**/*.json
 
 # IDE
 .vscode/
