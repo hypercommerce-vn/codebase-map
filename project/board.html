@@ -729,8 +729,8 @@ a:hover { text-decoration: underline; }
         <span class="badge active" style="background:#f59e0b;color:#fff;">🚀 KICKOFF Tue 21/04</span>
       </div>
       <p>Cowork plugin manifest + post-install hook (pipx install CBM+MCP) · <strong>AI Agent Knowledge Pack</strong> + <strong>SaaS Onboarding Pack</strong> (CEO D5 · bilingual EN/VI) · marketplace listing · launch blog + demo video + HN/Reddit/Viblo/Zalo posts. <strong>Final sprint of initiative.</strong> <a href="#cbm-int-s3"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">Kickoff brief →</a></p>
-      <div class="progress-bar"><div class="progress-fill" style="width:60%;background:#f59e0b"></div></div>
-      <div class="progress-label">3/5 SP · Day 1 ✅ bundle+hook (#134) · Day 2 ✅ marketplace staging (#136 · community schema) · Day 3-4 ⏳ · Rule #S2-1 validated 3 PRs · Final sprint</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:90%;background:#f59e0b"></div></div>
+      <div class="progress-label">4.5/5 SP · Day 1 ✅ · Day 2 ✅ · Day 3 ✅ 2 Archetype Packs bilingual (#138 · 38 files · leverage validated) · Day 4 ⏳ launch blog + video · Rule #S2-1 validated 5× PRs · zero conflicts</div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #8b5cf6;">
@@ -1606,6 +1606,20 @@ a:hover { text-decoration: underline; }
         <td>TechLead · 15 files · 975 insertions · community schema</td>
         <td><span class="badge merged">✅ Merged</span></td>
       </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/137" target="_blank">#137</a></td>
+        <td>chore(board): S3 Day 2 MERGED — status sync (3/5 SP 60%)</td>
+        <td><code>chore/cbm-int-s3-day2-status-sync</code></td>
+        <td>PM · board + BRIEF v5.3 · /review-gate 100%</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/138" target="_blank">#138</a></td>
+        <td>feat(packs): CBM-INT-304 — 2 Archetype Packs (AI Agent + SaaS bilingual) — Day 3</td>
+        <td><code>feat/cbm-int-304-cowork-2-packs</code></td>
+        <td>TechLead · 38 files · ~2,600 LoC · bilingual EN/VI</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -1878,6 +1892,10 @@ a:hover { text-decoration: underline; }
     <div class="tl-item">
       <div class="tl-date">21/04/2026</div>
       <div class="tl-content"><strong>✅ CBM-INT-303 Day 2 MERGED — Marketplace staging (no Anthropic registry found)</strong> — TechLead research: <strong>no official Anthropic/MCP plugin registry</strong> exists (21/04/2026) — <code>anthropic/claude-plugins</code>, <code>anthropic/mcp-servers</code> both 404. Community convention verified via 3 existing marketplaces (buildwithclaude, superpowers-marketplace, cc-marketplace): schema <code>.claude-plugin/marketplace.json</code> + <code>/plugin marketplace add</code> pattern. Decision: self-host at <code>hypercommerce-vn/claude-plugins</code>. Staged 15 files (975 insertions) trong <code>claude-plugins-repo/</code>: marketplace.json + README + CONTRIBUTING + LICENSE + <strong>PUBLISH_INSTRUCTIONS.md</strong> (CEO 4-step plan) + full plugin tree copy (no drift). <strong>Rule #S2-1 validated 3rd time</strong> (3 consecutive PRs clean-split — #134 #135 #136). PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/136" target="_blank">#136</a> MERGED. <strong>Sprint progress 3/5 SP (60%).</strong></div>
+    </div>
+    <div class="tl-item" style="background:#d1fae5; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
+      <div class="tl-date">21/04/2026 · 🎯 2 ARCHETYPE PACKS SHIPPED</div>
+      <div class="tl-content"><strong>✅ CBM-INT-304 Day 3 MERGED — AI Agent Knowledge Pack + SaaS Onboarding Pack (CEO D5 delivered · bilingual EN/VI)</strong>. TechLead delivered 38 files · ~2,600 LoC trong ~40 phút wall-clock (65% thời gian là bilingual content translation, khớp dự đoán retro S2). <strong>AI Agent Pack 615 LoC:</strong> SKILL.md 158 dòng bilingual · 3 commands (<code>/agent-overview</code> · <code>/agent-impact</code> · <code>/agent-refactor-plan</code>) wrapping cbm_search + cbm_impact + cbm_query. <strong>SaaS Pack 673 LoC:</strong> SKILL.md 165 dòng · 3 commands (<code>/saas-onboard</code> · <code>/saas-apis</code> · <code>/saas-tier-logic</code>) với 6-domain scan + tenant-isolation cross-check. <strong>Leverage architecture:</strong> cả 2 packs dùng <code>mcp/config.json</code> + <code>hooks/*.sh</code> IDENTICAL main plugin (diff MATCHES) — zero new backend. Marketplace.json v1.0.0 → v1.1.0 với 3 plugins. <strong>Rule #S2-1 validated 4th time</strong> (board.html untouched). PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/138" target="_blank">#138</a> MERGED. <strong>Sprint progress 4.5/5 SP (90%)</strong> — chỉ còn Day 4 launch prep + Day 5 LAUNCH.</div>
     </div>
   </div>
 
@@ -2414,13 +2432,13 @@ a:hover { text-decoration: underline; }
         <td>✅ <strong>Staged</strong> tại <code>claude-plugins-repo/</code> (CEO pushes new public repo per PUBLISH_INSTRUCTIONS.md) · Community schema <code>.claude-plugin/marketplace.json</code> (no official Anthropic registry 21/04) · Plugin tree copy no drift · 15 files 975 insertions · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/136" target="_blank">#136</a> MERGED</td>
         <td><span class="badge merged">✅ Merged</span></td>
       </tr>
-      <tr>
+      <tr style="background:#d1fae5;">
         <td><code>CBM-INT-304</code></td>
         <td>Cowork variant (2 Archetype Packs) — <strong>AI Agent Knowledge Pack</strong> (bilingual EN/VI · <code>/agent-overview</code> · <code>/agent-impact</code> · <code>/agent-refactor-plan</code>) + <strong>SaaS Onboarding Pack</strong> (<code>/saas-onboard</code> · <code>/saas-apis</code> · <code>/saas-tier-logic</code>)</td>
-        <td>1.5</td><td>Day 3 (Thu 23/04)</td>
+        <td>1.5</td><td>Day 3 ✅ (Tue 21/04)</td>
         <td>TechLead + AI pair</td>
-        <td>2 packs trong <code>plugins/codebase-map-cowork/</code> · skills bilingual · 6 slash commands · CEO content review sign-off</td>
-        <td><span class="badge">📋 Planned</span></td>
+        <td>✅ <strong>2 packs shipped · 38 files · ~2,600 LoC</strong> · AI Agent Pack 615 LoC · SaaS Pack 673 LoC · Bilingual EN/VI confirmed · 6 slash commands · <code>mcp/config.json</code> + <code>hooks/*.sh</code> IDENTICAL to main plugin (leverage · diff MATCHES) · marketplace.json v1.0.0 → v1.1.0 (3 plugins) · Zero new Python · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/138" target="_blank">#138</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
       </tr>
       <tr>
         <td><code>CBM-INT-305</code></td>
@@ -2696,7 +2714,7 @@ a:hover { text-decoration: underline; }
 <!-- Footer -->
 <div class="footer">
   <span>Codebase Map — Project Board · Hyper Commerce · CEO: Đoàn Đình Tỉnh</span>
-  <span>Updated: 21/04/2026 · <strong>🎉 S1+S2 SEALED · 🚀 S3 Day 1+2 ✅ MERGED (3/5 SP 60%)</strong> · Plugin bundle + marketplace staged · Community schema (no Anthropic registry) · CEO pushes via PUBLISH_INSTRUCTIONS · Rule #S2-1 validated 3× · 31 PRs merged · 158/158 tests · Day 3 starting — 2 Packs bilingual · <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">S3 brief ↗</a></span>
+  <span>Updated: 21/04/2026 · <strong>🎉 S1+S2 SEALED · 🚀 S3 Day 1+2+3 ✅ MERGED (4.5/5 SP 90%)</strong> · 3 plugins: codebase-map + AI Agent + SaaS (bilingual EN/VI) · Marketplace v1.1.0 · Rule #S2-1 validated 5× · zero S3 conflicts · 33 PRs merged tổng · 158/158 tests · Day 4 starting — launch blog + demo video · <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">S3 brief ↗</a></span>
 </div>
 
 <!-- ═══════════════════════════════════════

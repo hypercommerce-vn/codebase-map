@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 5.3 | Cập nhật: 21/04/2026 (🎉 S1+S2 SEALED · 🚀 S3 Day 1+2 MERGED · 3/5 SP (60%) · Rule #S2-1 validated 3× · Day 3 starting — 2 Packs)
+> Version: 5.4 | Cập nhật: 21/04/2026 (🎉 S1+S2 SEALED · 🚀 S3 Day 1+2+3 MERGED · 4.5/5 SP (90%) · 3 plugins shipped · Rule #S2-1 validated 5× · Day 4 launch prep)
 
 ---
 
@@ -186,23 +186,30 @@ codebase-map/
 
 ---
 
-## 🚀 SPRINT CBM-INT-S3 · 3/5 SP (60%) · Day 3 STARTING (FINAL sprint)
+## 🚀 SPRINT CBM-INT-S3 · 4.5/5 SP (90%) · Day 4 STARTING (FINAL sprint)
 
 **Sprint goal:** Đóng gói CBM thành Claude Plugin 1-click install (Cowork) · 2 Archetype Packs (AI Agent + SaaS per CEO D5) · Launch marketing. **Final sprint của Claude Integration initiative.**
 
-**CTO Leverage Plan:** VALIDATED ✅ — S3 = distribution wrapper over S2 runtime. Zero new Python expected through Day 4. Day 1-2 executed in minutes wall-clock.
+**CTO Leverage Plan:** VALIDATED ✅ — S3 = distribution wrapper over S2 runtime. Zero new Python Day 1-3. Remaining Day 4 = marketing content (blog + video), also no Python.
 
-**Rule #S2-1:** VALIDATED 3× consecutive (PRs #134 #135 #136 clean-split, no conflicts).
+**Rule #S2-1:** VALIDATED **5× consecutive** (PRs #134 #135 #136 #137 #138 clean-split, **ZERO** merge conflicts trong S3 vs S2's 3 conflicts).
+
+**3 plugins staged** (CEO publishes via `claude-plugins-repo/PUBLISH_INSTRUCTIONS.md`):
+- `codebase-map` main plugin (v2.5.0)
+- `codebase-map-ai-agent` AI Agent Knowledge Pack (v0.1.0 · bilingual EN/VI)
+- `codebase-map-saas` SaaS Onboarding Pack (v0.1.0 · bilingual EN/VI)
 
 **Timeline (fast-track, 20 ngày sớm original Mon 11/05):**
 - ✅ Day 1 Tue 21/04 — CBM-INT-301 + 302 plugin bundle + hook (2 SP) — PR #134 MERGED
 - ✅ Day 2 Tue 21/04 — CBM-INT-303 marketplace staging (1 SP) — PR #136 MERGED
-- 🔄 Day 3 STARTING — CBM-INT-304 Cowork variant 2 Archetype Packs bilingual (1.5 SP)
-- ⏳ Day 4 — CBM-INT-305 Launch blog + demo video (0.5 SP)
+- ✅ Day 3 Tue 21/04 — CBM-INT-304 Cowork variant 2 Archetype Packs bilingual (1.5 SP) — PR #138 MERGED
+- 🔄 Day 4 STARTING — CBM-INT-305 Launch blog 800 words + Loom demo video 2 min (0.5 SP · SPRINT CLOSURE)
 - ⏳ Day 5 — 🚀 LAUNCH HN/Reddit/Viblo/Zalo
-- 🎯 Gate G5 — Initiative complete
+- 🎯 Gate G5 — Initiative complete (S1 + S2 + S3)
 
 **Research from Day 2:** No official Anthropic plugin registry exists (21/04). Community convention self-hosted at `.claude-plugin/marketplace.json`. CEO pushes `hypercommerce-vn/claude-plugins` repo via `PUBLISH_INSTRUCTIONS.md` (4-step plan).
+
+**Known nit (Day 4 polish):** SaaS README EN section "Shopify" appears twice ~line 68. Bundle vào Day 4 launch blog PR.
 
 **Kickoff brief:** `docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md`
 
