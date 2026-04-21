@@ -1,0 +1,31 @@
+{
+  "name": "codebase-map-ai-agent",
+  "version": "0.1.0",
+  "display_name": "Codebase Map — AI Agent Knowledge Pack",
+  "description": "Archetype pack for devs building Claude agents, LangChain/AutoGen workflows, multi-agent orchestration. Bilingual EN/VI. Maps agent entry points, tool registry, orchestration layers. Wraps codebase-map MCP tools with agent-specific framing.",
+  "author": "Hyper Commerce",
+  "homepage": "https://github.com/hypercommerce-vn/codebase-map",
+  "license": "MIT",
+  "requires": {
+    "python": ">=3.10",
+    "claude_code": ">=1.0.0"
+  },
+  "dependencies": {
+    "pypi": ["codebase-map[mcp]>=2.4.0"]
+  },
+  "components": {
+    "skills": ["skills/codebase-map-ai-agent/SKILL.md"],
+    "commands": [
+      "commands/agent-overview.md",
+      "commands/agent-impact.md",
+      "commands/agent-refactor-plan.md"
+    ],
+    "mcp_servers": ["mcp/config.json"]
+  },
+  "hooks": {
+    "post_install": "hooks/post-install.sh",
+    "pre_uninstall": "hooks/pre-uninstall.sh"
+  },
+  "tags": ["ai-agent", "claude-agents", "langchain", "autogen", "multi-agent", "codebase", "mcp"],
+  "screenshots": []
+}
