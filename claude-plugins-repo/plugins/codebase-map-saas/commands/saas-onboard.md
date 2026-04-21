@@ -80,7 +80,7 @@ Output as clean Markdown. No JSON dumps.
 - **Data models:** top 5 model names with file paths.
 - **Entry points:** `main` / `create_app` / route registration site.
 - **Tier / subscription logic:** file(s) that house plan-gating. Flag if gating is scattered across 3+ files — that's a smell.
-- **Integrations:** list of external systems integrated (Stripe, Zalo, Shopify, Facebook, Shopify, etc.), or "none detected".
+- **Integrations:** list of external systems integrated (Stripe, Zalo, Shopify, Facebook, etc.), or "none detected".
 
 Close with one-line next step, e.g. "Use `/saas-apis` to see the full API surface, or `/saas-tier-logic` to audit the subscription gating."
 
