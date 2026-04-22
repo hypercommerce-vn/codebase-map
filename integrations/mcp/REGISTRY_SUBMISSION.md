@@ -1,15 +1,54 @@
 # MCP Registry Submission — Codebase Map
 
 **Status:** Ready to submit — CEO action post-launch.
-**Target registry:** https://github.com/modelcontextprotocol/servers
+**Target registry:** https://registry.modelcontextprotocol.io/ (preview)
 **Owner for submission:** Đoàn Đình Tỉnh (CEO, Hyper Commerce)
+**Last updated:** 22/04/2026 (PM re-researched registry landscape)
 
-## What the registry is
+---
 
-The official [`modelcontextprotocol/servers`](https://github.com/modelcontextprotocol/servers)
-repo on GitHub lists community-built MCP servers. Anthropic surfaces the
-list on modelcontextprotocol.io and in Claude Desktop's built-in server
-picker. Inclusion is via pull request — fork, add an entry, open the PR.
+## ⚠️ REGISTRY LANDSCAPE UPDATE (22/04/2026)
+
+Previous understanding (21/04): PR to `modelcontextprotocol/servers` repo.
+
+**Corrected (22/04):** Official registry is **[registry.modelcontextprotocol.io](https://registry.modelcontextprotocol.io/)** (preview).
+
+- `modelcontextprotocol/servers` repo → now just **reference implementations** maintained by MCP steering group (NOT community server listing anymore)
+- `modelcontextprotocol/registry` repo → **Go service** that runs the registry (submissions via API, not PR)
+- **Submission flow:** Use official `mcp-publisher` CLI tool (not PR · not manual JSON edit)
+- **Verification:** Registry verifies server metadata matches underlying npm/PyPI package
+- **Namespace:** GitHub auth → `io.github.{owner}/{name}` format
+- **Status:** Registry in preview — breaking changes or data resets may occur before GA
+
+## Primary: Submit via `mcp-publisher` CLI
+
+**Documented flow** (from [modelcontextprotocol/registry/docs/.../quickstart.mdx](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/quickstart.mdx)):
+
+1. Add `mcpName` metadata to package (npm + PyPI have different forms)
+2. Publish package to npm/PyPI (we already did — v2.4.0 on PyPI)
+3. Authenticate via GitHub (CEO's `hypercommercesystem` account)
+4. Run `mcp-publisher publish` against our package metadata
+
+**For our Python package:** TS tutorial uses `package.json.mcpName`. PyPI equivalent TBD — check [mcp-publisher docs for Python](https://github.com/modelcontextprotocol/registry/tree/main/docs) at submission time, or contact MCP community Discord.
+
+**Our metadata:** `io.github.hypercommerce-vn/codebase-map`
+
+## Secondary: Informational README entry (optional)
+
+If MCP steering group still accepts community server links in the reference `modelcontextprotocol/servers` README (check at submission time), PR this line:
+
+```markdown
+- **[codebase-map](https://github.com/hypercommerce-vn/codebase-map)**
+  — Function dependency graph for Python/TypeScript codebases. 5 tools:
+  `cbm_query`, `cbm_search`, `cbm_impact`, `cbm_snapshot_diff`,
+  `cbm_api_catalog`. Auto-invokes on refactor / PR-impact / onboarding
+  prompts. Install: `pipx install "codebase-map[mcp]"` then run `cbm-mcp`.
+  (Hyper Commerce, MIT)
+```
+
+---
+
+## Historical note (what we thought 21/04)
 
 ## Our server metadata
 

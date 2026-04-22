@@ -47,9 +47,11 @@ Wraps the CBM engine in a [Model Context Protocol](https://modelcontextprotocol.
 
 Underneath is a graph cache with mtime invalidation. Measured on CBM's own 201-node graph: **cold load 2.8ms, hot read 0.071ms — 40× speedup**. The target was <100ms; we crushed it.
 
-### 3. Claude Plugin — v2.5.0 (this sprint)
+### 3. Claude Plugin — v2.5.0 plugin bundle (this sprint · PyPI stays v2.4.0)
 
 One-click install via the Cowork marketplace. Plus two **archetype packs**, bilingual EN/VI: one for AI-agent repos, one for SaaS B2B codebases. Each pack adds 3 slash commands and domain-tuned skill triggers — no extra backend, just prompting the shared MCP tools with the right lens.
+
+> 🔍 **Note on versioning:** The plugin bundle is v2.5.0 (marketplace milestone). The underlying PyPI package stays at v2.4.0 — plugins are pure distribution packaging, no runtime changes. Your `pipx install 'codebase-map[mcp]'` still gets v2.4.0 with the 5 MCP tools.
 
 ```
 /plugin marketplace add hypercommerce-vn/claude-plugins
