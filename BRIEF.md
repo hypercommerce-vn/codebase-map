@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 5.4 | Cập nhật: 21/04/2026 (🎉 S1+S2 SEALED · 🚀 S3 Day 1+2+3 MERGED · 4.5/5 SP (90%) · 3 plugins shipped · Rule #S2-1 validated 5× · Day 4 launch prep)
+> Version: 6.0 | Cập nhật: 22/04/2026 (🎉 INITIATIVE SEALED · S1+S2+S3 all COMPLETE · 20 SP in ~3 days · 3 PyPI · 3 plugins LIVE · Next: CEO launch + CBM-LANG-P1)
 
 ---
 
@@ -186,26 +186,48 @@ codebase-map/
 
 ---
 
-## 🚀 SPRINT CBM-INT-S3 · 4.5/5 SP (90%) · Day 4 STARTING (FINAL sprint)
+## 🎉 SPRINT CBM-INT-S3 SEALED (22/04/2026) · **INITIATIVE COMPLETE**
 
-**Sprint goal:** Đóng gói CBM thành Claude Plugin 1-click install (Cowork) · 2 Archetype Packs (AI Agent + SaaS per CEO D5) · Launch marketing. **Final sprint của Claude Integration initiative.**
+- **5/5 SP** in ~1 calendar day (vs 14-day plan — **13 days early**)
+- **10 PRs merged** · **Rule #S2-1 validated 7× consecutive** (zero S3 conflicts vs S2's 3)
+- **0 P0/P1/P2 defects** · **158/158 tests** · **lint clean**
+- **3 plugins LIVE** tại [hypercommerce-vn/claude-plugins](https://github.com/hypercommerce-vn/claude-plugins):
+  - `codebase-map` (2.5.0)
+  - `codebase-map-ai-agent` (0.1.0 · bilingual EN/VI)
+  - `codebase-map-saas` (0.1.0 · bilingual EN/VI)
+- **E2E Verification: 22/25 PASS** (3 deferred to CEO launch-day hands-on)
+- **CTO leverage plan VALIDATED** — zero new Python trong S3 (pure distribution packaging over S2 runtime)
 
-**CTO Leverage Plan:** VALIDATED ✅ — S3 = distribution wrapper over S2 runtime. Zero new Python Day 1-3. Remaining Day 4 = marketing content (blog + video), also no Python.
+**S3 Retro:** `docs/active/cbm-claude-integration/CBM-INT-S3-Retrospective.md` (11 sections · 12 action items carried to CBM-LANG-P1)
+**S3 Verify:** `docs/active/cbm-claude-integration/CBM-INT-S3-Verification-Report.md` (L1 7/7 + L2A 3/3 + L2B 6/6 + L2C 6/6 + 3 deferred)
 
-**Rule #S2-1:** VALIDATED **5× consecutive** (PRs #134 #135 #136 #137 #138 clean-split, **ZERO** merge conflicts trong S3 vs S2's 3 conflicts).
+---
 
-**3 plugins staged** (CEO publishes via `claude-plugins-repo/PUBLISH_INSTRUCTIONS.md`):
-- `codebase-map` main plugin (v2.5.0)
-- `codebase-map-ai-agent` AI Agent Knowledge Pack (v0.1.0 · bilingual EN/VI)
-- `codebase-map-saas` SaaS Onboarding Pack (v0.1.0 · bilingual EN/VI)
+## 🎉🎉🎉 INITIATIVE CBM × Claude Integration OFFICIALLY COMPLETE (22/04/2026)
 
-**Timeline (fast-track, 20 ngày sớm original Mon 11/05):**
-- ✅ Day 1 Tue 21/04 — CBM-INT-301 + 302 plugin bundle + hook (2 SP) — PR #134 MERGED
-- ✅ Day 2 Tue 21/04 — CBM-INT-303 marketplace staging (1 SP) — PR #136 MERGED
-- ✅ Day 3 Tue 21/04 — CBM-INT-304 Cowork variant 2 Archetype Packs bilingual (1.5 SP) — PR #138 MERGED
-- 🔄 Day 4 STARTING — CBM-INT-305 Launch blog 800 words + Loom demo video 2 min (0.5 SP · SPRINT CLOSURE)
-- ⏳ Day 5 — 🚀 LAUNCH HN/Reddit/Viblo/Zalo
-- 🎯 Gate G5 — Initiative complete (S1 + S2 + S3)
+**Cross-sprint pattern (3 sprints · 20 SP · ~3 calendar days vs 6-week plan):**
+
+| Sprint | Version | SP | Actual | Plan | Days ahead |
+|:------:|:-------:|:--:|:------:|:----:|:---------:|
+| S1 | v2.3.0 | 5 | 1 day | 5 days | +4 |
+| S2 | v2.4.0 | 8 | 1.5 days | 10 days | +8.5 |
+| S3 | v2.5.0 plugin | 5 | 1 day | 14 days | +13 |
+| **Total** | — | **20** | **~3.5 days** | **29 days** | **+25.5 days** |
+
+**Shipped:**
+- 3 PyPI releases: v2.2.1, v2.3.0, v2.4.0 — all tag-triggered green CI
+- 3 plugins: `codebase-map` + `codebase-map-ai-agent` + `codebase-map-saas`
+- 5 MCP tools auto-invoke: `cbm_query` · `cbm_search` · `cbm_impact` · `cbm_snapshot_diff` · `cbm_api_catalog`
+- Graph cache 40× speedup (0.071ms hot vs 2.8ms cold)
+- Marketplace repo public: https://github.com/hypercommerce-vn/claude-plugins
+- Launch content ready: 824-word blog + 167-line demo video script
+- MCP registry submission prep (`mcp-publisher` CLI flow documented)
+
+**Cross-sprint quality:**
+- 0 P0/P1/P2 defects across 20 SP
+- 158/158 tests pass every PR
+- Lint 100% green
+- Rule #S2-1 final score: 7× consecutive clean-split (zero S3 conflicts)
 
 **Research from Day 2:** No official Anthropic plugin registry exists (21/04). Community convention self-hosted at `.claude-plugin/marketplace.json`. CEO pushes `hypercommerce-vn/claude-plugins` repo via `PUBLISH_INSTRUCTIONS.md` (4-step plan).
 
