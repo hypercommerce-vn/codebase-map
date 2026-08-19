@@ -40,6 +40,10 @@ class Config:
     # HC-AI | ticket: FDD-TOOL-CODEMAP
     # CM-S3-04: Business flows mapping {flow_name: [glob/regex patterns]}
     flows: dict[str, list[str]] = field(default_factory=dict)
+    # CM-S4-01: Domain overrides {domain_name: [fnmatch patterns on file path / node id]}.
+    # Lets a project define its own business domains instead of relying on the
+    # built-in path-segment list in the parsers. First match (insertion order) wins.
+    domains: dict[str, list[str]] = field(default_factory=dict)
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> Config:
@@ -83,6 +87,15 @@ class Config:
             elif isinstance(patterns, str):
                 flows[str(fname)] = [patterns]
 
+        # CM-S4-01: Parse domains section — same shape as flows
+        domains_raw = raw.get("domains", {}) or {}
+        domains: dict[str, list[str]] = {}
+        for dname, patterns in domains_raw.items():
+            if isinstance(patterns, list):
+                domains[str(dname)] = [str(p) for p in patterns]
+            elif isinstance(patterns, str):
+                domains[str(dname)] = [patterns]
+
         return cls(
             project=raw.get("project", "my-project"),
             sources=sources,
@@ -90,6 +103,7 @@ class Config:
             graph=graph,
             project_root=config_path.parent,
             flows=flows,
+            domains=domains,
         )
 
     @classmethod
