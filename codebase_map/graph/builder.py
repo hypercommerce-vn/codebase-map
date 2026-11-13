@@ -73,6 +73,8 @@ class GraphBuilder:
         # HC-AI | ticket: FDD-TOOL-CODEMAP
         # CM-S3-04: Apply YAML-defined business flow patterns
         self._apply_flow_patterns()
+        # CM-S4-01: Apply YAML-defined domain overrides (after flows, before save)
+        self._apply_domain_overrides()
 
         # Save updated cache
         if self.use_cache:
@@ -219,6 +221,27 @@ class GraphBuilder:
                         if flow_name not in existing:
                             node.metadata["flows"] = existing + [flow_name]
                         break
+
+    # CM-S4-01: Override node domains from config.domains patterns.
+    # Patterns are fnmatch globs tested against the node's file path (posix,
+    # relative to project root) and the node id. First matching domain in the
+    # config's insertion order wins; nodes with no match keep the parser's guess.
+    def _apply_domain_overrides(self) -> None:
+        if not self.config.domains:
+            return
+        import fnmatch
+
+        for node in self.graph.nodes.values():
+            path = (node.file_path or "").replace("\\", "/")
+            for domain, patterns in self.config.domains.items():
+                matched = False
+                for pat in patterns:
+                    if fnmatch.fnmatch(path, pat) or fnmatch.fnmatch(node.id, pat):
+                        node.module_domain = domain
+                        matched = True
+                        break
+                if matched:
+                    break
 
     def _deduplicate_edges(self) -> None:
         """Remove duplicate edges."""
