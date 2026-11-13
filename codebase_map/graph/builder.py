@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import logging
+import os
 import subprocess
 import time
 from datetime import datetime, timezone
@@ -135,7 +136,9 @@ class GraphBuilder:
             return
 
         extensions = parser.supported_extensions()
-        files = self._collect_files(source_path, extensions, source.exclude)
+        files = self._collect_files(
+            source_path, extensions, source.exclude, source.exclude_dirs
+        )
 
         for file_path in sorted(files):
             rel_path = str(file_path.relative_to(self.config.project_root))
@@ -176,22 +179,40 @@ class GraphBuilder:
 
             self._cache_stats.parsed_files += 1
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # VIBE-101: walk with directory pruning instead of rglob-then-filter, so a
+    # project with a large node_modules/ is not traversed file by file.
     def _collect_files(
-        self, root: Path, extensions: list[str], excludes: list[str]
+        self,
+        root: Path,
+        extensions: list[str],
+        excludes: list[str],
+        exclude_dirs: list[str] | None = None,
     ) -> list[Path]:
-        """Collect all files matching extensions, respecting excludes."""
+        """Collect all files matching extensions, respecting excludes.
+
+        ``excludes`` are substrings of the path relative to ``root``.
+        ``exclude_dirs`` are directory names matched as whole path segments.
+        """
+        suffixes = tuple(extensions)
+        skip_dirs = set(exclude_dirs or ())
         files: list[Path] = []
-        for ext in extensions:
-            for file_path in root.rglob(f"*{ext}"):
-                # Check excludes
+        for dirpath, dirnames, filenames in os.walk(root):
+            # A directory whose name contains an exclude substring can only
+            # hold excluded files, so skipping it does not change the result.
+            dirnames[:] = [
+                d
+                for d in dirnames
+                if d not in skip_dirs and not any(exc in d for exc in excludes)
+            ]
+            for filename in filenames:
+                if not filename.endswith(suffixes):
+                    continue
+                file_path = Path(dirpath) / filename
                 rel = str(file_path.relative_to(root))
-                skip = False
-                for exc in excludes:
-                    if exc in rel:
-                        skip = True
-                        break
-                if not skip:
-                    files.append(file_path)
+                if any(exc in rel for exc in excludes):
+                    continue
+                files.append(file_path)
         return files
 
     def _resolve_self_references(self) -> None:
