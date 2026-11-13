@@ -40,7 +40,8 @@ class Config:
     # HC-AI | ticket: FDD-TOOL-CODEMAP
     # CM-S3-04: Business flows mapping {flow_name: [glob/regex patterns]}
     flows: dict[str, list[str]] = field(default_factory=dict)
-    # CM-S4-01: Domain overrides {domain_name: [fnmatch patterns on file path / node id]}.
+    # CM-S4-01: Domain overrides {domain_name: [fnmatch patterns]}, matched on
+    # the node's file path or node id.
     # Lets a project define its own business domains instead of relying on the
     # built-in path-segment list in the parsers. First match (insertion order) wins.
     domains: dict[str, list[str]] = field(default_factory=dict)
