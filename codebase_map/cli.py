@@ -26,8 +26,12 @@ def main(argv: list[str] | None = None) -> int:
     gen.add_argument(
         "-c",
         "--config",
-        default="codebase-map.yaml",
-        help="Path to config file (default: codebase-map.yaml)",
+        default=None,
+        help=(
+            "Path to a YAML or JSON config file. Default: codebase-map.yaml, "
+            "then codebase-map.json; if neither exists the sources are "
+            "auto-detected."
+        ),
     )
     # HC-AI | ticket: FDD-TOOL-CODEMAP
     # CM-S2-02: Incremental cache flag
@@ -329,19 +333,48 @@ def main(argv: list[str] | None = None) -> int:
     return 0
 
 
-def _cmd_generate(args: argparse.Namespace) -> int:
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# VIBE-101: a config file is optional. An explicit -c path must exist; with no
+# flag the default file names are tried, then the sources are auto-detected.
+_DEFAULT_CONFIG_NAMES = ("codebase-map.yaml", "codebase-map.json")
+
+
+def _load_generate_config(config_arg: str | None):
+    """Return the Config for ``generate``, or None after printing an error."""
     from codebase_map.config import Config
+
+    candidates = [config_arg] if config_arg else list(_DEFAULT_CONFIG_NAMES)
+    for candidate in candidates:
+        if Path(candidate).exists():
+            try:
+                return Config.from_file(candidate)
+            except RuntimeError as exc:
+                print(f"[ERROR] {exc}")
+                return None
+
+    if config_arg:
+        print(f"[ERROR] Config not found: {config_arg}")
+        print("Create a codebase-map.yaml or use --config to specify path.")
+        return None
+
+    config = Config.auto_detect(Path("."))
+    if not config.sources:
+        print("[ERROR] No config file and no Python or TypeScript/JavaScript")
+        print(f"        source files found in {Path.cwd()}.")
+        return None
+    languages = ", ".join(source.language for source in config.sources)
+    print(f"[AUTO] No config file found. Auto-detected sources: {languages}.")
+    return config
+
+
+def _cmd_generate(args: argparse.Namespace) -> int:
     from codebase_map.exporters.html_exporter import export_html
     from codebase_map.exporters.json_exporter import export_json
     from codebase_map.graph.builder import GraphBuilder
 
-    config_path = Path(args.config)
-    if not config_path.exists():
-        print(f"[ERROR] Config not found: {config_path}")
-        print("Create a codebase-map.yaml or use --config to specify path.")
+    config = _load_generate_config(getattr(args, "config", None))
+    if config is None:
         return 1
-
-    config = Config.from_yaml(config_path)
     # HC-AI | ticket: FDD-TOOL-CODEMAP
     # CM-S2-02: Incremental cache support
     use_cache = not getattr(args, "no_cache", False)

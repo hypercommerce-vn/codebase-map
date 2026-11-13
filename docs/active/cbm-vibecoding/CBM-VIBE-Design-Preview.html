@@ -1,0 +1,587 @@
+<!-- HC-AI | ticket: FDD-TOOL-CODEMAP (CBM-VIBE concept — design preview v0.1, CEO duyệt 13/11/2026) -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBM-VIBE — Design preview v0.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Bộ màu và chữ kế thừa từ project/bang-dieu-hanh.html ("Hoang Dã Tinh Tế"):
+   Fraunces cho tiêu đề, Be Vietnam Pro cho chữ, JetBrains Mono cho mã.
+   Mọi màu đi qua token để giao diện tối tự đúng. */
+:root{
+  --bg:#F3F0E8; --surface:#FFFFFF; --surface2:#F8F6F0; --line:#E2DCCD;
+  --ink:#16261E; --ink2:#44544A; --muted:#76857B;
+  --lake:#1E4D3B; --on-lake:#F3F0E8; --moss:#3E7C5A; --sunrise:#D46A24; --gold:#B8862A;
+  --ok:#2F7A4F; --ok-bg:#E3F1E8; --warn:#B5651D; --warn-bg:#FBEBDA;
+  --bad:#B3261E; --bad-bg:#FBE4E1; --info:#3F6F8F; --info-bg:#E2EEF5;
+  --track:#E7E2D5; --focus:#D46A24; --shadow:rgba(22,38,30,.07);
+  --f-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --f-body:"Be Vietnam Pro",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#101814; --surface:#17211C; --surface2:#1C2822; --line:#2C3A33;
+  --ink:#E8EEE9; --ink2:#B8C5BD; --muted:#8A9A90;
+  --lake:#8CC7AA; --on-lake:#101814; --moss:#7FB894; --sunrise:#EE9452; --gold:#D9AE5C;
+  --ok:#7CC79A; --ok-bg:#1D3326; --warn:#E9A465; --warn-bg:#3A2A1A;
+  --bad:#F08A80; --bad-bg:#3D1F1C; --info:#8DBBD9; --info-bg:#1B2E3A;
+  --track:#26332D; --shadow:rgba(0,0,0,.35); color-scheme:dark;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  padding:24px max(16px,env(safe-area-inset-right,0px)) 72px max(16px,env(safe-area-inset-left,0px))}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:30px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.2;text-wrap:balance}
+h1{font-size:clamp(26px,3.6vw,38px);font-weight:700;color:var(--lake)}
+h2{font-size:23px;font-weight:600}
+h3{font-size:16.5px;font-weight:600}
+h4{margin:0;font-family:var(--f-body);font-size:13px;font-weight:600;color:var(--ink2)}
+p{margin:0}
+a{color:var(--lake);text-underline-offset:3px}
+button{font:inherit}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.eyebrow{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.small{font-size:13px}
+.muted{color:var(--muted)}
+code,.mono{font-family:var(--f-mono);font-size:12.5px}
+
+/* Đầu trang */
+.head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 28px;align-items:end;border-bottom:2px solid var(--lake);padding-bottom:16px}
+.head .lede{max-width:64ch;color:var(--ink2);margin-top:10px;font-size:16px}
+.head .meta{display:flex;flex-direction:column;gap:6px;align-items:flex-end;font-size:13px;color:var(--ink2)}
+.draft{display:inline-flex;align-items:center;background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok);border-radius:999px;padding:3px 12px;font-weight:600;font-size:12.5px}
+
+/* Thanh nhảy */
+.jump{display:flex;gap:6px;flex-wrap:wrap;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:5;border-bottom:1px solid var(--line)}
+.jump a{text-decoration:none;color:var(--ink2);font-size:14px;font-weight:500;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}
+.jump a:hover{border-color:var(--moss);color:var(--lake)}
+
+/* Ví dụ xuyên suốt */
+.scenario{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:14px 18px;display:grid;gap:6px}
+.scenario q{font-family:var(--f-display);font-size:18px;color:var(--lake);quotes:"“" "”"}
+
+/* Khối khoảnh khắc */
+.step{display:flex;flex-direction:column;gap:14px;scroll-margin-top:64px}
+.step > header{display:flex;flex-direction:column;gap:4px}
+.step > header p:not(.eyebrow){color:var(--ink2);max-width:72ch}
+.pair{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:18px;align-items:start}
+
+/* Khung "người dùng thấy" */
+.mock{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 1px 2px var(--shadow),0 10px 28px var(--shadow);overflow:hidden;min-width:0}
+.mock-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 12px;padding:9px 16px;background:var(--surface2);border-bottom:1px solid var(--line)}
+.mock-body{padding:18px;display:flex;flex-direction:column;gap:16px}
+
+/* Trò chuyện */
+.who{font-size:12px;color:var(--muted);margin-bottom:-10px}
+.who.right{text-align:right}
+.bubble{align-self:flex-end;max-width:88%;padding:10px 14px;border-radius:14px 14px 4px 14px;background:var(--lake);color:var(--on-lake)}
+.reply{border:1px solid var(--line);border-radius:14px 14px 14px 4px;padding:14px 16px;display:flex;flex-direction:column;gap:16px}
+.blk{display:flex;flex-direction:column;gap:8px}
+.blk-h{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;justify-content:space-between}
+.src{font-size:11px;font-weight:600;padding:1px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.src.code{color:var(--moss)}
+.src.ai{color:var(--gold)}
+
+/* Tiêu chí */
+.crit{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;counter-reset:c}
+.crit > li{counter-increment:c;display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;align-items:start;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface2)}
+.crit > li::before{content:counter(c);width:24px;height:24px;border-radius:50%;background:var(--lake);color:var(--on-lake);font-size:12.5px;font-weight:600;display:grid;place-items:center;margin-top:1px}
+.crit .line{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:start}
+.crit .how{font-size:13px;color:var(--ink2)}
+
+/* Nhãn trạng thái */
+.st{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 10px;border-radius:999px;white-space:nowrap;line-height:1.6}
+.st::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.st.ok{background:var(--ok-bg);color:var(--ok)}
+.st.stale{background:var(--warn-bg);color:var(--warn)}
+.st.none{background:var(--track);color:var(--ink2)}
+.st.bad{background:var(--bad-bg);color:var(--bad)}
+
+/* Phạm vi đụng tới */
+.scope{margin:0;display:grid;gap:8px}
+.scope > div{display:grid;grid-template-columns:170px minmax(0,1fr);gap:10px}
+.scope dt{font-size:13px;font-weight:600;color:var(--ink2)}
+.scope dd{margin:0}
+
+/* Nút */
+.btns{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
+.btn:hover{border-color:var(--moss)}
+.btn.primary{background:var(--lake);border-color:var(--lake);color:var(--on-lake)}
+.btn.sm{padding:5px 12px;font-size:13px}
+.btn.quiet{border-color:transparent;background:transparent;color:var(--lake);text-decoration:underline;text-underline-offset:3px;font-weight:500;padding-inline:4px}
+
+/* Kết luận */
+.verdict{border-radius:12px;padding:14px 16px;border:1px solid var(--warn);border-left-width:5px;background:var(--warn-bg);display:flex;flex-direction:column;gap:2px}
+.verdict strong{font-family:var(--f-display);font-size:20px;line-height:1.25;color:var(--warn)}
+.verdict.bad{border-color:var(--bad);background:var(--bad-bg)}
+.verdict.bad strong{color:var(--bad)}
+
+/* Danh sách thay đổi */
+.changes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.changes > li{padding:10px 12px;border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;gap:8px}
+.changes > li.off{border-color:var(--warn)}
+.flag{font-size:12.5px;font-weight:600;color:var(--warn)}
+.check{border:1px dashed var(--muted);border-radius:10px;padding:10px 12px;background:var(--surface);display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.check ol{margin:0;padding-left:20px;font-size:14px}
+.sub{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.sub li{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:8px;background:var(--surface2)}
+
+/* Bản đồ */
+.map-head{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;justify-content:space-between}
+.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px}
+.feat{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.feat h3{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 8px;align-items:baseline}
+.tag{font-family:var(--f-body);font-size:11px;font-weight:600;color:var(--sunrise);border:1px solid var(--sunrise);border-radius:999px;padding:0 8px;white-space:nowrap;line-height:1.7}
+.facts{font-size:13px;color:var(--ink2);display:grid;gap:2px}
+.seg{display:flex;height:8px;gap:2px}
+.seg i{display:block;height:100%;border-radius:3px}
+.seg .ok{background:var(--ok)}
+.seg .stale{background:var(--warn)}
+.seg .none{background:var(--track);box-shadow:inset 0 0 0 1px var(--muted)}
+.feat.orphan{border-style:dashed;background:var(--surface2)}
+
+/* Bậc thang */
+.ladder{display:flex;flex-direction:column;gap:8px}
+.rung{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.rung:nth-child(2){margin-left:16px}
+.rung:nth-child(3){margin-left:32px}
+.rung:nth-child(4){margin-left:48px}
+.rung > summary{list-style:none;cursor:pointer;padding:11px 14px;display:flex;align-items:center;gap:12px;font-weight:600}
+.rung > summary::-webkit-details-marker{display:none}
+.rung > summary .lvl{font-family:var(--f-mono);font-size:11.5px;font-weight:500;color:var(--on-lake);background:var(--lake);border-radius:6px;padding:2px 8px;white-space:nowrap}
+.rung > summary::after{content:"mở";margin-left:auto;font-size:12px;font-weight:500;color:var(--muted)}
+.rung[open] > summary::after{content:"đóng"}
+.rung .in{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{border:1px solid var(--line);background:var(--surface2);border-radius:8px;padding:3px 10px;font-size:13.5px}
+.chip.data{border-radius:999px;border-color:var(--info);color:var(--info);background:var(--info-bg)}
+.arrow{color:var(--muted)}
+.gloss{font-size:13px;color:var(--ink2);border-left:3px solid var(--gold);padding:2px 0 2px 10px}
+.gloss b{color:var(--ink)}
+.rung ol{margin:0;padding-left:20px;font-size:14.5px}
+.codelist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.codelist li{display:grid;gap:1px}
+.codelist code{color:var(--ink);overflow-wrap:anywhere}
+.codelist span{font-size:13px;color:var(--ink2)}
+
+/* Ghi chú thiết kế */
+.notes{border:1px dashed var(--muted);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.notes ol{margin:0;padding-left:20px;display:grid;gap:8px;font-size:14px;color:var(--ink2)}
+.notes code{background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:0 5px;color:var(--ink);white-space:nowrap}
+
+/* Phân vai */
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.role{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--moss);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.role.ai{border-top-color:var(--gold)}
+.role.user{border-top-color:var(--sunrise)}
+.role ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px;color:var(--ink2)}
+.foot{border-top:1px solid var(--line);padding-top:14px;font-size:13.5px;color:var(--ink2);display:grid;gap:6px}
+
+@media (max-width:900px){
+  .pair{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .head{grid-template-columns:1fr}
+  .head .meta{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 14px}
+  .jump{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .jump::-webkit-scrollbar{display:none}
+  .jump a{flex:none;white-space:nowrap}
+}
+@media (max-width:560px){
+  .scope > div{grid-template-columns:1fr;gap:2px}
+  .crit .line{grid-template-columns:1fr}
+  .crit .line .st{justify-self:start}
+  .rung:nth-child(n){margin-left:0}
+  .mock-body{padding:14px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div>
+      <p class="eyebrow">CBM-VIBE · Design preview v0.1</p>
+      <h1>Không đọc được code vẫn kiểm soát được phần mềm của mình</h1>
+      <p class="lede">Bản xem trước những gì một người không chuyên IT nhìn thấy khi nhờ AI làm phần mềm: trước khi AI làm, sau khi AI làm, và bất cứ lúc nào muốn hiểu app của mình.</p>
+    </div>
+    <div class="meta">
+      <span class="draft">CEO duyệt · 13/11/2026</span>
+      <span>Soạn 12/11/2026</span>
+      <a href="CBM-VIBE-Concept.md">Bản concept</a>
+    </div>
+  </header>
+
+  <nav class="jump" aria-label="Các phần của bản xem trước">
+    <a href="#chot">1 · Chốt yêu cầu</a>
+    <a href="#baocao">2 · Báo cáo thay đổi</a>
+    <a href="#bando">3 · Bản đồ ứng dụng</a>
+    <a href="#bacthang">4 · Bậc thang hiểu biết</a>
+    <a href="#phanvai">Ai làm phần nào</a>
+  </nav>
+
+  <section class="scenario" aria-label="Ví dụ dùng xuyên suốt">
+    <p class="eyebrow">Ví dụ dùng xuyên suốt</p>
+    <p>Chủ một tiệm tóc tự làm app <strong>Sổ đặt lịch</strong> bằng AI, chưa từng học lập trình. Hôm nay họ nhờ AI:</p>
+    <p><q>Cho khách tự huỷ lịch, nhưng phải trước giờ hẹn ít nhất 2 tiếng.</q></p>
+  </section>
+
+  <!-- ───────── 1. Chốt yêu cầu ───────── -->
+  <section class="step" id="chot">
+    <header>
+      <p class="eyebrow">Khoảnh khắc 1 · trước khi AI làm</p>
+      <h2>Chốt yêu cầu</h2>
+      <p>AI nhắc lại yêu cầu thành vài tiêu chí có thể kiểm được. CBM cho biết việc này đụng tới phần nào của app.</p>
+    </header>
+    <div class="pair">
+      <div class="mock">
+        <div class="mock-bar"><span class="eyebrow">Người dùng thấy</span><span class="small muted">Trong khung trò chuyện với AI</span></div>
+        <div class="mock-body">
+          <p class="who right">Bạn</p>
+          <p class="bubble">Cho khách tự huỷ lịch, nhưng phải trước giờ hẹn ít nhất 2 tiếng.</p>
+          <p class="who">AI của bạn</p>
+          <div class="reply">
+            <div class="blk">
+              <div class="blk-h"><h3>Mình hiểu yêu cầu của bạn như sau</h3><span class="src ai">AI viết lại · bạn chốt</span></div>
+              <p class="small muted">Làm xong thì phải đúng 3 điều này:</p>
+              <ol class="crit">
+                <li><div>Ở màn hình “Lịch của tôi”, mỗi lịch hẹn sắp tới có nút <strong>Huỷ lịch</strong>.</div></li>
+                <li><div>Còn hơn 2 tiếng trước giờ hẹn: bấm huỷ được, và khung giờ đó trống trở lại cho khách khác.</div></li>
+                <li><div>Còn dưới 2 tiếng: không huỷ được, và khách thấy lời giải thích.</div></li>
+              </ol>
+            </div>
+            <div class="blk">
+              <div class="blk-h"><h4>Việc này liên quan tới đâu trong app</h4><span class="src code">Tính từ code</span></div>
+              <dl class="scope">
+                <div><dt>Sẽ đụng tới</dt><dd><strong>Đặt lịch</strong>: màn hình “Lịch của tôi”, dữ liệu “Lịch hẹn”</dd></div>
+                <div><dt>Có thể bị ảnh hưởng theo</dt><dd><strong>Nhắc lịch</strong>, vì dùng chung dữ liệu “Lịch hẹn”. Sửa xong mình sẽ báo bạn kiểm lại.</dd></div>
+                <div><dt>Không đụng tới</dt><dd>Danh sách khách, Báo cáo doanh thu, Đăng nhập</dd></div>
+              </dl>
+            </div>
+            <div class="btns">
+              <button type="button" class="btn primary" title="Bản xem trước: nút minh hoạ">Đúng rồi, làm đi</button>
+              <button type="button" class="btn" title="Bản xem trước: nút minh hoạ">Sửa lại yêu cầu</button>
+            </div>
+            <p class="small muted">Mình đã lưu lại trạng thái app trước khi sửa, để so sánh sau.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" aria-label="Ghi chú thiết kế cho khoảnh khắc 1">
+        <p class="eyebrow">Ghi chú thiết kế</p>
+        <ol>
+          <li>Đây là phần việc của BA và design, gói trong một bước chừng 20 giây. Người dùng chỉ cần đọc kỹ ba tiêu chí.</li>
+          <li>Danh sách “sẽ đụng tới” và “có thể bị ảnh hưởng” do CBM tra từ graph bằng lệnh <code>impact</code>. AI không tự đoán.</li>
+          <li>“Lưu lại trạng thái” là snapshot trước khi sửa, để khoảnh khắc 2 so sánh được.</li>
+          <li>Tiêu chí được lưu cùng dự án. Lần sau AI và CBM đều đọc lại được.</li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ───────── 2. Báo cáo thay đổi ───────── -->
+  <section class="step" id="baocao">
+    <header>
+      <p class="eyebrow">Khoảnh khắc 2 · sau khi AI làm</p>
+      <h2>Báo cáo thay đổi</h2>
+      <p>Ba câu hỏi, luôn theo đúng thứ tự: AI đã làm gì, đúng yêu cầu chưa, có đụng gì ngoài yêu cầu không.</p>
+    </header>
+    <div class="pair">
+      <div class="mock">
+        <div class="mock-bar"><span class="eyebrow">Người dùng thấy</span><span class="small muted">Sau mỗi lần AI sửa xong</span></div>
+        <div class="mock-body">
+          <div class="verdict" id="verdict" role="status" aria-live="polite">
+            <strong id="v-title">Chưa nên đưa cho khách dùng</strong>
+            <span id="v-sub">Còn 3 việc cần kiểm. Làm xong cả 3 thì dùng tiếp được.</span>
+          </div>
+
+          <div class="blk">
+            <div class="blk-h"><h3>AI đã làm gì</h3><span class="src code">Tính từ code · AI diễn đạt</span></div>
+            <p class="small muted">Sửa 4 chỗ trong 2 tính năng.</p>
+            <ul class="changes">
+              <li><div><strong>Đặt lịch</strong>: thêm nút Huỷ lịch ở màn hình “Lịch của tôi”; thêm quy tắc 2 tiếng; trả khung giờ về trống khi huỷ.</div></li>
+              <li class="off"><div><strong>Nhắc lịch</strong>: sửa phần gửi tin nhắc. <span class="flag">Bạn không yêu cầu việc này.</span></div></li>
+            </ul>
+          </div>
+
+          <div class="blk">
+            <div class="blk-h"><h3>Đúng yêu cầu chưa</h3></div>
+            <ol class="crit">
+              <li><div><div class="line"><span>Có nút Huỷ lịch ở “Lịch của tôi”</span><span class="st ok">Có bằng chứng</span></div><p class="how">Kiểm thử tự động: đạt</p></div></li>
+              <li><div><div class="line"><span>Huỷ được khi còn hơn 2 tiếng, khung giờ trống trở lại</span><span class="st ok">Có bằng chứng</span></div><p class="how">Kiểm thử tự động: đạt</p></div></li>
+              <li><div>
+                <div class="line"><span>Dưới 2 tiếng thì không huỷ được, có lời giải thích</span><span class="st none" id="c3-pill">Chưa kiểm</span></div>
+                <p class="how" id="c3-how">Chưa có bằng chứng nào</p>
+                <div class="check">
+                  <h4>Tự kiểm trong 1 phút</h4>
+                  <ol>
+                    <li>Đặt thử một lịch bắt đầu sau 1 tiếng nữa.</li>
+                    <li>Mở “Lịch của tôi”, bấm Huỷ lịch.</li>
+                    <li>Phải thấy thông báo không huỷ được, kèm lý do.</li>
+                  </ol>
+                  <div class="btns">
+                    <button type="button" class="btn sm primary" id="c3-ok">Đạt</button>
+                    <button type="button" class="btn sm" id="c3-bad">Không đạt</button>
+                    <button type="button" class="btn sm quiet" id="c3-reset">Đặt lại</button>
+                    <button type="button" class="btn sm quiet" title="Bản xem trước: nút minh hoạ">Hoặc nhờ AI viết kiểm thử tự động</button>
+                  </div>
+                </div>
+              </div></li>
+            </ol>
+          </div>
+
+          <div class="blk">
+            <div class="blk-h"><h3>Có đụng gì ngoài yêu cầu không</h3><span class="src code">Tính từ code</span></div>
+            <ul class="changes">
+              <li class="off">
+                <div><strong>Nhắc lịch</strong>: AI đã sửa phần gửi tin nhắc. Hai điều từng được kiểm, nay cần kiểm lại vì code đã đổi:</div>
+                <ul class="sub">
+                  <li><span>Tin nhắc được gửi trước giờ hẹn 1 ngày</span><span class="st stale">Cần kiểm lại</span></li>
+                  <li><span>Không gửi tin nhắc cho lịch đã qua</span><span class="st stale">Cần kiểm lại</span></li>
+                </ul>
+                <p class="small muted">Kiểm lần cuối 03/11. Code liên quan đổi hôm nay.</p>
+                <div class="btns">
+                  <button type="button" class="btn sm" title="Bản xem trước: nút minh hoạ">Hỏi AI vì sao sửa chỗ này</button>
+                  <button type="button" class="btn sm" title="Bản xem trước: nút minh hoạ">Kiểm lại ngay</button>
+                </div>
+              </li>
+              <li><div>Danh sách khách, Báo cáo doanh thu, Đăng nhập: không bị đụng tới.</div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" aria-label="Ghi chú thiết kế cho khoảnh khắc 2">
+        <p class="eyebrow">Ghi chú thiết kế</p>
+        <ol>
+          <li>Dòng kết luận trên cùng chỉ có ba mức: dùng tiếp được, cần kiểm N việc, có thứ đang hỏng. Không có điểm số hay phần trăm.</li>
+          <li>Phần “đụng gì ngoài yêu cầu” do CBM tính: so sánh trạng thái trước và sau bằng <code>snapshot-diff</code>, rồi quy thay đổi về tính năng. AI không tự khai.</li>
+          <li>“Cần kiểm lại” xuất hiện vì code liên quan đã đổi sau lần kiểm cuối. Bằng chứng cũ tự hết hạn.</li>
+          <li>Người dùng tự bấm thử cũng là bằng chứng hợp lệ. Bấm “Đạt” hoặc “Không đạt” ở tiêu chí 3 để xem dòng kết luận thay đổi.</li>
+          <li>Tầng này không có tên hàm hay tên file.</li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ───────── 3. Bản đồ ứng dụng ───────── -->
+  <section class="step" id="bando">
+    <header>
+      <p class="eyebrow">Khoảnh khắc 3 · bất cứ lúc nào</p>
+      <h2>Bản đồ ứng dụng</h2>
+      <p>App gồm những tính năng nào, và mỗi tính năng đang ở tình trạng nào.</p>
+    </header>
+    <div class="pair">
+      <div class="mock">
+        <div class="mock-bar"><span class="eyebrow">Người dùng thấy</span><span class="small muted">Trang tổng quan của app</span></div>
+        <div class="mock-body">
+          <div class="map-head">
+            <h3>Sổ đặt lịch</h3>
+            <span class="small muted">5 tính năng · 9 màn hình · 5 loại dữ liệu</span>
+          </div>
+          <div class="btns" aria-label="Tình trạng 19 tiêu chí">
+            <span class="st ok">12 có bằng chứng</span>
+            <span class="st stale">2 cần kiểm lại</span>
+            <span class="st none">5 chưa kiểm</span>
+          </div>
+          <div class="features">
+            <article class="feat">
+              <h3>Đặt lịch <span class="tag">Sửa hôm nay</span></h3>
+              <p class="small">Khách chọn dịch vụ, chọn giờ và đặt chỗ.</p>
+              <div class="facts"><span>3 màn hình</span><span>Dữ liệu: Lịch hẹn, Khung giờ</span></div>
+              <div class="seg" aria-hidden="true"><i class="ok" style="flex:5"></i><i class="none" style="flex:1"></i></div>
+              <p class="small muted">5 có bằng chứng · 1 chưa kiểm</p>
+            </article>
+            <article class="feat">
+              <h3>Nhắc lịch <span class="tag">Sửa hôm nay</span></h3>
+              <p class="small">Gửi tin nhắc khách trước giờ hẹn.</p>
+              <div class="facts"><span>Chạy ngầm, không có màn hình</span><span>Dữ liệu: Lịch hẹn</span></div>
+              <div class="seg" aria-hidden="true"><i class="ok" style="flex:1"></i><i class="stale" style="flex:2"></i></div>
+              <p class="small muted">1 có bằng chứng · 2 cần kiểm lại</p>
+            </article>
+            <article class="feat">
+              <h3>Danh sách khách</h3>
+              <p class="small">Chủ tiệm xem và sửa thông tin khách.</p>
+              <div class="facts"><span>2 màn hình</span><span>Dữ liệu: Khách hàng</span></div>
+              <div class="seg" aria-hidden="true"><i class="ok" style="flex:4"></i></div>
+              <p class="small muted">4 có bằng chứng</p>
+            </article>
+            <article class="feat">
+              <h3>Báo cáo doanh thu</h3>
+              <p class="small">Tổng tiền theo ngày, tuần, tháng.</p>
+              <div class="facts"><span>2 màn hình</span><span>Dữ liệu: Lịch hẹn, Dịch vụ</span></div>
+              <div class="seg" aria-hidden="true"><i class="none" style="flex:3"></i></div>
+              <p class="small muted">3 chưa kiểm. AI đã làm, chưa ai kiểm.</p>
+            </article>
+            <article class="feat">
+              <h3>Đăng nhập</h3>
+              <p class="small">Chủ tiệm đăng nhập để quản lý.</p>
+              <div class="facts"><span>2 màn hình</span><span>Dữ liệu: Tài khoản</span></div>
+              <div class="seg" aria-hidden="true"><i class="ok" style="flex:2"></i><i class="none" style="flex:1"></i></div>
+              <p class="small muted">2 có bằng chứng · 1 chưa kiểm</p>
+            </article>
+            <article class="feat orphan">
+              <h3>Chưa thuộc tính năng nào</h3>
+              <p class="small">7 đoạn code không gắn với tính năng nào. Có thể là phần thừa AI để lại sau nhiều lần sửa.</p>
+              <div class="btns"><button type="button" class="btn sm" title="Bản xem trước: nút minh hoạ">Hỏi AI xem có xoá được không</button></div>
+            </article>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" aria-label="Ghi chú thiết kế cho khoảnh khắc 3">
+        <p class="eyebrow">Ghi chú thiết kế</p>
+        <ol>
+          <li>Thẻ tính năng thay cho thẻ “domain” của Executive view hiện tại: bỏ nodes, routes, cls, fn; thay bằng màn hình, dữ liệu và tiêu chí.</li>
+          <li>Tên và mô tả tính năng do AI đề xuất lần đầu, người dùng xác nhận. CBM lưu vào config <code>domains</code> (CM-S4-01). Người dùng không sửa file.</li>
+          <li>Số màn hình và loại dữ liệu đếm từ code. Việc này cần parser TS nhận diện màn hình và component thành khái niệm riêng.</li>
+          <li>Ô “chưa thuộc tính năng nào” là code mồ côi tính từ graph. Đây là dấu hiệu sớm của “càng sửa càng rối”.</li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ───────── 4. Bậc thang hiểu biết ───────── -->
+  <section class="step" id="bacthang">
+    <header>
+      <p class="eyebrow">Bấm vào một tính năng</p>
+      <h2>Bậc thang hiểu biết</h2>
+      <p>Cùng một tính năng, bốn tầng chi tiết. Người dùng tự chọn xuống sâu tới đâu.</p>
+    </header>
+    <div class="pair">
+      <div class="mock">
+        <div class="mock-bar"><span class="eyebrow">Người dùng thấy</span><span class="small muted">Tính năng Đặt lịch</span></div>
+        <div class="mock-body">
+          <div class="ladder">
+            <details class="rung" open>
+              <summary><span class="lvl">Tầng 1</span>Tính năng</summary>
+              <div class="in">
+                <p>Khách chọn dịch vụ, chọn giờ và đặt chỗ.</p>
+              </div>
+            </details>
+            <details class="rung" open>
+              <summary><span class="lvl">Tầng 2</span>Màn hình và dữ liệu</summary>
+              <div class="in">
+                <div class="flow"><span class="chip">Chọn dịch vụ</span><span class="arrow" aria-hidden="true">→</span><span class="chip">Chọn giờ</span><span class="arrow" aria-hidden="true">→</span><span class="chip">Lịch của tôi</span></div>
+                <div class="flow"><span class="small muted">Dùng dữ liệu:</span><span class="chip data">Lịch hẹn</span><span class="chip data">Khung giờ</span></div>
+                <p class="gloss"><b>Dữ liệu</b> là những gì app ghi nhớ lại, ví dụ danh sách lịch hẹn.</p>
+              </div>
+            </details>
+            <details class="rung">
+              <summary><span class="lvl">Tầng 3</span>Luồng xử lý</summary>
+              <div class="in">
+                <p>Khi khách bấm Đặt lịch:</p>
+                <ol>
+                  <li>Màn hình gửi yêu cầu lên máy chủ.</li>
+                  <li>Máy chủ kiểm tra khung giờ còn trống không.</li>
+                  <li>Nếu trống, ghi một lịch hẹn mới vào dữ liệu.</li>
+                  <li>Trả kết quả về để màn hình báo cho khách.</li>
+                </ol>
+                <p class="gloss"><b>Máy chủ</b> là nơi app xử lý và cất dữ liệu. Đường gửi yêu cầu từ màn hình lên máy chủ gọi là <b>API</b>.</p>
+              </div>
+            </details>
+            <details class="rung">
+              <summary><span class="lvl">Tầng 4</span>Code</summary>
+              <div class="in">
+                <ul class="codelist">
+                  <li><code>app/lich-cua-toi/page.tsx</code><span>Màn hình “Lịch của tôi”</span></li>
+                  <li><code>app/api/bookings/route.ts → POST</code><span>Nhận yêu cầu đặt lịch</span></li>
+                  <li><code>lib/slots.ts → isSlotFree()</code><span>Kiểm tra khung giờ</span></li>
+                  <li><code>lib/bookings.ts → createBooking()</code><span>Ghi lịch hẹn</span></li>
+                </ul>
+                <p class="gloss">Đây là tầng CBM đang hiển thị hôm nay. Người dùng chỉ tới đây khi tự bấm xuống.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" aria-label="Ghi chú thiết kế cho bậc thang">
+        <p class="eyebrow">Ghi chú thiết kế</p>
+        <ol>
+          <li>Mặc định mở tới tầng 2. Người dùng tự bấm xuống tầng 3 và 4 khi muốn hiểu thêm. Thử bấm để mở.</li>
+          <li>Thuật ngữ chỉ xuất hiện từ tầng 3. Mỗi từ kèm một dòng giải thích bằng ví dụ trong chính app của họ.</li>
+          <li>Tầng 4 là sơ đồ hàm của CBM hiện nay. Ba tầng trên là phần phải làm mới.</li>
+          <li>Đây là cách người dùng từng bước nắm bắt: học khi app của mình có chuyện, không qua giáo trình.</li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ───────── Phân vai ───────── -->
+  <section class="step" id="phanvai">
+    <header>
+      <h2>Ai làm phần nào</h2>
+      <p>Ba vai tách bạch, để người dùng biết nên tin dòng nào tới mức nào.</p>
+    </header>
+    <div class="roles">
+      <div class="role">
+        <h3>CBM tính từ code</h3>
+        <ul>
+          <li>Thay đổi nào đã xảy ra</li>
+          <li>Thay đổi thuộc tính năng nào</li>
+          <li>Bằng chứng nào đã hết hạn</li>
+          <li>Code nào không thuộc tính năng nào</li>
+        </ul>
+        <p class="small muted">Cùng một code thì luôn ra cùng một kết quả.</p>
+      </div>
+      <div class="role ai">
+        <h3>AI diễn đạt</h3>
+        <ul>
+          <li>Viết lại yêu cầu thành tiêu chí</li>
+          <li>Đề xuất tên và mô tả tính năng</li>
+          <li>Giải thích bằng lời thường</li>
+        </ul>
+        <p class="small muted">Luôn có nhãn, để người dùng biết đây là lời của AI.</p>
+      </div>
+      <div class="role user">
+        <h3>Người dùng quyết</h3>
+        <ul>
+          <li>Chốt tiêu chí</li>
+          <li>Tự bấm thử</li>
+          <li>Quyết định có đưa cho khách dùng không</li>
+        </ul>
+        <p class="small muted">CBM không nói “đúng”, chỉ nói “có bằng chứng”.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p><strong>Chưa có trong bản nháp này:</strong> kênh tiếp cận và cách cài đặt; trạng thái lỗi và trạng thái rỗng (app mới, chưa có tính năng nào); bản tiếng Anh.</p>
+    <p>Số liệu và tên file trong trang là ví dụ minh hoạ, không lấy từ một dự án thật.</p>
+  </footer>
+
+</div>
+
+<script>
+// Minh hoạ: người dùng tự kiểm tiêu chí 3 thì dòng kết luận đổi theo.
+(function () {
+  var verdict = document.getElementById('verdict');
+  var vTitle = document.getElementById('v-title');
+  var vSub = document.getElementById('v-sub');
+  var pill = document.getElementById('c3-pill');
+  var how = document.getElementById('c3-how');
+  var states = {
+    none: {pill: 'st none', label: 'Chưa kiểm', how: 'Chưa có bằng chứng nào', verdict: 'verdict',
+           title: 'Chưa nên đưa cho khách dùng', sub: 'Còn 3 việc cần kiểm. Làm xong cả 3 thì dùng tiếp được.'},
+    ok:   {pill: 'st ok', label: 'Có bằng chứng', how: 'Bạn tự kiểm hôm nay: đạt', verdict: 'verdict',
+           title: 'Chưa nên đưa cho khách dùng', sub: 'Còn 2 việc cần kiểm, đều ở tính năng Nhắc lịch.'},
+    bad:  {pill: 'st bad', label: 'Không đạt', how: 'Bạn tự kiểm hôm nay: không đạt', verdict: 'verdict bad',
+           title: 'Có thứ đang hỏng', sub: 'Tiêu chí 3 không đạt. Hãy báo AI sửa trước khi làm việc khác.'}
+  };
+  function show(key) {
+    var s = states[key];
+    pill.className = s.pill; pill.textContent = s.label;
+    how.textContent = s.how;
+    verdict.className = s.verdict;
+    vTitle.textContent = s.title; vSub.textContent = s.sub;
+  }
+  document.getElementById('c3-ok').addEventListener('click', function () { show('ok'); });
+  document.getElementById('c3-bad').addEventListener('click', function () { show('bad'); });
+  document.getElementById('c3-reset').addEventListener('click', function () { show('none'); });
+})();
+</script>
+</body>
+</html>

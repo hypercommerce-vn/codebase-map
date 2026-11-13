@@ -66,7 +66,9 @@ codebase-map --version
 
 ## Quick Start
 
-### 1. Create config at project root
+**No config file?** Run `codebase-map generate` in the project root. It finds the Python and TypeScript/JavaScript sources on its own and skips `node_modules`, build output and virtualenvs. Add a config when you want to choose the folders, name your own domains, or change the output location.
+
+### 1. Create config at project root (optional)
 
 ```yaml
 # codebase-map.yaml
@@ -91,6 +93,8 @@ codebase-map generate -c codebase-map.yaml
 ```
 
 Output: `docs/function-map/graph.json` + interactive `index.html`.
+
+The config can also be JSON (`codebase-map.json`, same keys), which needs no PyYAML.
 
 ### 3. Query the graph
 

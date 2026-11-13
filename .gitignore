@@ -21,6 +21,8 @@ test-output/
 !integrations/claude-code/**/*.json
 # Marketplace staging repo (CBM-INT-303): manifest + marketplace + MCP config
 !claude-plugins-repo/**/*.json
+# Sample apps used by tests keep their package.json / tsconfig.json
+!tests/fixtures/**/*.json
 
 # IDE
 .vscode/
