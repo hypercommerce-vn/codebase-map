@@ -253,7 +253,9 @@ p code, li code, td code, .note code {
   .copy-btn { min-height: 44px; }
   .lang-switch { display: inline-flex; align-items: center; min-height: 44px; }
 }
-.copy-btn[data-copied] { color: var(--code-str); border-color: currentColor; }
+.copy-btn[data-copied="done"] { color: var(--code-str); border-color: currentColor; }
+/* Copy failed, text selected instead: neutral, not the success green. */
+.copy-btn[data-copied="fail"] { color: var(--text); border-style: dashed; }
 
 /* Hero */
 .hero { padding: 56px 0 72px; overflow: hidden; }

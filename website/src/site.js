@@ -76,9 +76,9 @@
     window.setTimeout(function () { live.textContent = text; }, 50);
   };
 
-  var showState = function (btn, label) {
+  var showState = function (btn, label, state) {
     btn.textContent = label;
-    btn.setAttribute("data-copied", "");
+    btn.setAttribute("data-copied", state);
     window.clearTimeout(btn._resetTimer);
     btn._resetTimer = window.setTimeout(function () {
       btn.textContent = btn.getAttribute("data-label");
@@ -91,7 +91,7 @@
       var source = document.getElementById(btn.getAttribute("data-copy"));
       if (!source) return;
       copyText(source.textContent.replace(/\s+$/, "")).then(function () {
-        showState(btn, btn.getAttribute("data-done"));
+        showState(btn, btn.getAttribute("data-done"), "done");
         announce(btn.getAttribute("data-done"));
       }).catch(function () {
         // Clipboard blocked: select the text so Ctrl+C / Cmd+C copies it.
@@ -100,7 +100,7 @@
         var selection = window.getSelection();
         selection.removeAllRanges();
         selection.addRange(range);
-        showState(btn, btn.getAttribute("data-fail"));
+        showState(btn, btn.getAttribute("data-fail"), "fail");
         if (live) announce(live.getAttribute("data-fail"));
       });
     });

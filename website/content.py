@@ -41,7 +41,7 @@ VI = {
     "cta_install": "Hướng dẫn cài",
     "hero_fine": (
         "Cần Python 3.10 trở lên, không cần tài khoản. Nếu nối với Claude qua MCP, "
-        "chỉ kết quả bạn hỏi mới được đưa vào cuộc trò chuyện."
+        "chỉ kết quả Claude tra cứu mới được đưa vào cuộc trò chuyện."
     ),
     "term_caption": "Output thật: Codebase Map chạy trên chính mã nguồn của nó.",
     "use_title": "Khi nào dùng",
@@ -94,8 +94,8 @@ VI = {
     "feat_title": "Tính năng",
     "f1_t": "Bản đồ tương tác, chạy offline",
     "f1_d": (
-        "Đồ thị lực D3.js, cây thư mục, minimap, Executive view, PR Diff view và "
-        "API Catalog trong một file HTML."
+        "Đồ thị lực D3.js, thanh bên tìm node, minimap, Executive view, "
+        "PR Diff view và API Catalog trong một file HTML."
     ),
     "f2_t": "So sánh hai bản chụp",
     "f2_d": (
@@ -134,7 +134,7 @@ VI = {
     "demo_frame_title": "Bản đồ phụ thuộc của mã nguồn Codebase Map",
     "stat_nodes": "hàm, lớp và method",
     "stat_links": "cạnh giữa các node, vẽ trên bản đồ",
-    "stat_edges": "cạnh trong đồ thị, gồm cả lời gọi ra thư viện ngoài",
+    "stat_edges": "cạnh trong đồ thị, gồm cả import và lời gọi hàm có sẵn, thư viện",
     "install_title": "Cài đặt",
     "install_lede": "Chọn cách bạn sẽ dùng. Cả hai đều cài từ PyPI.",
     "tab_cli": "Dòng lệnh",
@@ -233,7 +233,7 @@ EN = {
     "cta_install": "Install",
     "hero_fine": (
         "Requires Python 3.10+, no account. Connected to Claude over MCP, only "
-        "the results you ask for go into the conversation."
+        "the results Claude looks up go into the conversation."
     ),
     "term_caption": "Real output: Codebase Map run on its own source code.",
     "use_title": "When to use",
@@ -288,7 +288,7 @@ EN = {
     "feat_title": "Features",
     "f1_t": "Interactive map, works offline",
     "f1_d": (
-        "D3.js force graph, file tree, minimap, Executive view, PR Diff view and "
+        "D3.js force graph, node sidebar, minimap, Executive view, PR Diff view and "
         "API Catalog in a single HTML file."
     ),
     "f2_t": "Dual-snapshot diff",
@@ -328,7 +328,9 @@ EN = {
     "demo_frame_title": "Dependency map of the Codebase Map source code",
     "stat_nodes": "functions, classes and methods",
     "stat_links": "edges between nodes, drawn on the map",
-    "stat_edges": "edges in the graph, including calls into other libraries",
+    "stat_edges": (
+        "edges in the graph, including imports and calls to built-ins and libraries"
+    ),
     "install_title": "Install",
     "install_lede": "Pick how you will use it. Both install from PyPI.",
     "tab_cli": "Command line",
