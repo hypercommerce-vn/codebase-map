@@ -48,8 +48,16 @@ DEPLOY_HOST=deploy@IP_VPS DOMAIN=ten-mien-cua-ban website/deploy/deploy.sh
 ```
 
 Biến tuỳ chọn: `WEBROOT` (mặc định `/var/www/codebase-map`), `PYTHON` (mặc định `python3`,
-ví dụ `PYTHON=.venv/bin/python`). Script dùng `rsync --delete`, nên file nào không còn trong
-`dist/` sẽ bị xoá khỏi web root.
+ví dụ `PYTHON=.venv/bin/python`).
+
+Các chốt an toàn của script:
+
+- `WEBROOT` phải là đúng một thư mục nằm ngay dưới `/var/www` hoặc `/srv`. Script dùng
+  `rsync --delete` (file nào không còn trong `dist/` sẽ bị xoá khỏi web root), nên nó chỉ đẩy
+  file vào thư mục do chính `--setup` tạo ra, có file đánh dấu `.codebase-map-webroot`.
+- `--setup` không ghi đè file site nginx đã có, vì certbot đã thêm khối HTTPS vào file đó.
+  Muốn thay thì chạy lại với `FORCE=1` rồi chạy certbot lần nữa.
+- Nếu `nginx -t` báo lỗi, script trả cấu hình về như cũ và không reload nginx.
 
 ## Deploy cách 2: Docker
 
