@@ -116,7 +116,7 @@ p code, li code, td code, .note code {
   z-index: 100;
   padding: 10px 14px;
   border-radius: 8px;
-  background: var(--brand-node);
+  background: #4f46e5;
   color: #fff;
 }
 .skip:focus { top: 12px; color: #fff; }
@@ -126,6 +126,7 @@ p code, li code, td code, .note code {
   position: sticky;
   top: 0;
   z-index: 50;
+  background: var(--bg);
   background: color-mix(in srgb, var(--bg) 86%, transparent);
   -webkit-backdrop-filter: saturate(160%) blur(12px);
   backdrop-filter: saturate(160%) blur(12px);
@@ -248,6 +249,10 @@ p code, li code, td code, .note code {
   cursor: pointer;
 }
 .copy-btn:hover { color: var(--text); }
+@media (pointer: coarse) {
+  .copy-btn { min-height: 44px; }
+  .lang-switch { display: inline-flex; align-items: center; min-height: 44px; }
+}
 .copy-btn[data-copied] { color: var(--code-str); border-color: currentColor; }
 
 /* Hero */
@@ -300,6 +305,8 @@ p code, li code, td code, .note code {
 .fine { margin-top: 12px; color: var(--muted); font-size: .88rem; }
 
 .hero-visual { position: relative; margin: 0; min-width: 0; }
+/* The SVG stops growing at 520px; keep the terminal's % margin tied to it. */
+@media (max-width: 959px) { .hero-visual { width: 100%; max-width: 520px; margin-inline: auto; } }
 .constellation { display: block; width: 100%; max-width: 520px; height: auto; margin-left: auto; }
 .constellation .edges line { stroke: var(--edge); stroke-width: 1.5; }
 .constellation .edges.impact line { stroke: var(--hl); stroke-width: 2.4; }
@@ -347,6 +354,7 @@ p code, li code, td code, .note code {
   line-height: 1.7;
   overflow-x: auto;
 }
+@media (max-width: 420px) { .terminal pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 11.5px; } }
 .terminal .t-prompt { color: var(--term-prompt); }
 .terminal .t-ok { color: var(--term-ok); }
 .terminal .t-head { color: var(--term-text); font-weight: 700; }
@@ -442,7 +450,7 @@ p code, li code, td code, .note code {
 .feature p { margin-top: 6px; color: var(--text-2); font-size: .95rem; }
 
 /* Demo */
-.stats { display: flex; flex-wrap: wrap; gap: 12px 40px; margin: 32px 0 0; }
+.stats { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 40px; margin: 32px 0 0; }
 .stats div { display: flex; flex-direction: column-reverse; max-width: 15em; }
 .stats dd { margin: 0; font-size: 2rem; font-weight: 750; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .stats dt { color: var(--muted); font-size: .88rem; }
@@ -565,7 +573,7 @@ p code, li code, td code, .note code {
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: var(--brand-node);
+  background: #4f46e5;
   color: #fff;
   font-size: .85rem;
   font-weight: 700;
@@ -583,3 +591,12 @@ p code, li code, td code, .note code {
 .not-found h1 { font-size: clamp(2rem, 4vw + 1rem, 3rem); }
 .not-found p { margin-top: 12px; color: var(--text-2); }
 .not-found .cta-row { justify-content: center; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

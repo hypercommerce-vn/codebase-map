@@ -85,15 +85,21 @@ def impact_sample(graph: Graph) -> str:
         env["PYTHONPATH"] = os.pathsep.join(
             p for p in (str(REPO), env.get("PYTHONPATH", "")) if p
         )
-        proc = subprocess.run(
-            [sys.executable, "-m", "codebase_map", "impact", IMPACT_EXAMPLE]
-            + ["-f", str(graph_file)],
-            cwd=REPO,
-            env=env,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
+        try:
+            proc = subprocess.run(
+                [sys.executable, "-m", "codebase_map", "impact", IMPACT_EXAMPLE]
+                + ["-f", str(graph_file)],
+                cwd=REPO,
+                env=env,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+        except subprocess.CalledProcessError as exc:
+            raise SystemExit(
+                f"`codebase-map impact {IMPACT_EXAMPLE}` failed "
+                f"(exit {exc.returncode}):\n{exc.stderr or exc.stdout}"
+            ) from exc
     return proc.stdout.rstrip()
 
 

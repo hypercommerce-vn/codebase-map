@@ -17,11 +17,22 @@
   if (menuBtn && nav) {
     var setMenu = function (open) {
       menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      menuBtn.setAttribute(
+        "aria-label",
+        menuBtn.getAttribute(open ? "data-label-close" : "data-label-open")
+      );
       if (open) nav.setAttribute("data-open", "");
       else nav.removeAttribute("data-open");
     };
     menuBtn.addEventListener("click", function () {
-      setMenu(menuBtn.getAttribute("aria-expanded") !== "true");
+      var open = menuBtn.getAttribute("aria-expanded") !== "true";
+      setMenu(open);
+      // The nav comes before the button in the page, so move focus into it;
+      // otherwise Tab would skip past the links that just appeared.
+      if (open) {
+        var first = nav.querySelector("a");
+        if (first) first.focus();
+      }
     });
     nav.addEventListener("click", function (e) {
       if (e.target.closest("a")) setMenu(false);
@@ -57,24 +68,40 @@
     return legacyCopy(text);
   }
 
+  // Screen readers hear the result of a copy through this status line.
+  var live = document.querySelector("[data-live]");
+  var announce = function (text) {
+    if (!live) return;
+    live.textContent = "";
+    window.setTimeout(function () { live.textContent = text; }, 50);
+  };
+
+  var showState = function (btn, label) {
+    btn.textContent = label;
+    btn.setAttribute("data-copied", "");
+    window.clearTimeout(btn._resetTimer);
+    btn._resetTimer = window.setTimeout(function () {
+      btn.textContent = btn.getAttribute("data-label");
+      btn.removeAttribute("data-copied");
+    }, 2400);
+  };
+
   document.querySelectorAll("[data-copy]").forEach(function (btn) {
     btn.addEventListener("click", function () {
       var source = document.getElementById(btn.getAttribute("data-copy"));
       if (!source) return;
       copyText(source.textContent.replace(/\s+$/, "")).then(function () {
-        btn.textContent = btn.getAttribute("data-done");
-        btn.setAttribute("data-copied", "");
-        window.clearTimeout(btn._resetTimer);
-        btn._resetTimer = window.setTimeout(function () {
-          btn.textContent = btn.getAttribute("data-label");
-          btn.removeAttribute("data-copied");
-        }, 1800);
+        showState(btn, btn.getAttribute("data-done"));
+        announce(btn.getAttribute("data-done"));
       }).catch(function () {
+        // Clipboard blocked: select the text so Ctrl+C / Cmd+C copies it.
         var range = document.createRange();
         range.selectNodeContents(source);
         var selection = window.getSelection();
         selection.removeAllRanges();
         selection.addRange(range);
+        showState(btn, btn.getAttribute("data-fail"));
+        if (live) announce(live.getAttribute("data-fail"));
       });
     });
   });

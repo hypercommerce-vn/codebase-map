@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="Codebase Map">
 <meta property="og:title" content="{{meta_title}}">
 <meta property="og:description" content="{{meta_description}}">
-<link rel="icon" href="{{base}}favicon.svg" type="image/svg+xml">
+<link rel="icon" href="{{base}}favicon.svg?v={{asset_hash}}" type="image/svg+xml">
 <link rel="stylesheet" href="{{base}}styles.css?v={{asset_hash}}">
 <script src="{{base}}site.js?v={{asset_hash}}" defer></script>
 </head>
@@ -42,11 +42,12 @@
       </a>
     </nav>
     <a class="lang-switch" href="{{alt_href}}" hreflang="{{alt_lang}}" lang="{{alt_lang}}">{{alt_label}}</a>
-    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="{{menu_label}}" data-menu>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="{{menu_label}}" data-label-open="{{menu_label}}" data-label-close="{{menu_close}}" data-menu>
       <span></span><span></span><span></span>
     </button>
   </div>
 </header>
+<p class="sr-only" role="status" aria-live="polite" data-live data-fail="{{copy_fail_note}}"></p>
 
 <main id="main">
   <section class="hero">
@@ -61,7 +62,7 @@
         </div>
         <div class="install-line">
           <code id="hero-install">pipx install codebase-map</code>
-          <button class="copy-btn" type="button" data-copy="hero-install" data-label="{{copy}}" data-done="{{copied}}">{{copy}}</button>
+          <button class="copy-btn" type="button" data-copy="hero-install" data-label="{{copy}}" data-done="{{copied}}" data-fail="{{copy_fail}}">{{copy}}</button>
         </div>
         <p class="fine">{{hero_fine}}</p>
       </div>
@@ -202,7 +203,7 @@
           <ol class="install-steps">
             <li>
               <p>{{cli_step1}}</p>
-              <div class="code"><pre id="code-cli-1"><span class="cmd">pipx install codebase-map</span></pre><button class="copy-btn" type="button" data-copy="code-cli-1" data-label="{{copy}}" data-done="{{copied}}">{{copy}}</button></div>
+              <div class="code"><pre id="code-cli-1"><span class="cmd">pipx install codebase-map</span></pre><button class="copy-btn" type="button" data-copy="code-cli-1" data-label="{{copy}}" data-done="{{copied}}" data-fail="{{copy_fail}}">{{copy}}</button></div>
             </li>
             <li>
               <p>{{cli_step2}}</p>
@@ -214,12 +215,12 @@
     <span class="k">exclude</span>: [<span class="s">"__pycache__"</span>, <span class="s">"migrations"</span>]
 <span class="k">output</span>:
   <span class="k">dir</span>: <span class="s">"docs/function-map"</span>
-  <span class="k">formats</span>: [json, html]</pre><button class="copy-btn" type="button" data-copy="code-cli-2" data-label="{{copy}}" data-done="{{copied}}">{{copy}}</button></div>
+  <span class="k">formats</span>: [json, html]</pre><button class="copy-btn" type="button" data-copy="code-cli-2" data-label="{{copy}}" data-done="{{copied}}" data-fail="{{copy_fail}}">{{copy}}</button></div>
             </li>
             <li>
               <p>{{cli_step3}}</p>
               <div class="code"><pre id="code-cli-3"><span class="cmd">codebase-map generate -c codebase-map.yaml</span>
-<span class="cmd">codebase-map impact "CustomerService" -f docs/function-map/graph.json</span></pre><button class="copy-btn" type="button" data-copy="code-cli-3" data-label="{{copy}}" data-done="{{copied}}">{{copy}}</button></div>
+<span class="cmd">codebase-map impact "CustomerService" -f docs/function-map/graph.json</span></pre><button class="copy-btn" type="button" data-copy="code-cli-3" data-label="{{copy}}" data-done="{{copied}}" data-fail="{{copy_fail}}">{{copy}}</button></div>
             </li>
           </ol>
         </div>
@@ -228,7 +229,7 @@
           <ol class="install-steps">
             <li>
               <p>{{mcp_step1}}</p>
-              <div class="code"><pre id="code-mcp-1"><span class="cmd">pipx install "codebase-map[mcp]"</span></pre><button class="copy-btn" type="button" data-copy="code-mcp-1" data-label="{{copy}}" data-done="{{copied}}">{{copy}}</button></div>
+              <div class="code"><pre id="code-mcp-1"><span class="cmd">pipx install "codebase-map[mcp]"</span></pre><button class="copy-btn" type="button" data-copy="code-mcp-1" data-label="{{copy}}" data-done="{{copied}}" data-fail="{{copy_fail}}">{{copy}}</button></div>
             </li>
             <li>
               <p>{{mcp_step2}}</p>
@@ -238,7 +239,7 @@
       <span class="k">"command"</span>: <span class="s">"cbm-mcp"</span>
     }
   }
-}</pre><button class="copy-btn" type="button" data-copy="code-mcp-2" data-label="{{copy}}" data-done="{{copied}}">{{copy}}</button></div>
+}</pre><button class="copy-btn" type="button" data-copy="code-mcp-2" data-label="{{copy}}" data-done="{{copied}}" data-fail="{{copy_fail}}">{{copy}}</button></div>
             </li>
           </ol>
           <p class="note">{{mcp_note}}</p>

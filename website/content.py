@@ -19,8 +19,14 @@ VI = {
     "nav_demo": "Demo",
     "nav_install": "Cài đặt",
     "menu_label": "Mở menu",
+    "menu_close": "Đóng menu",
     "copy": "Sao chép",
     "copied": "Đã chép",
+    "copy_fail": "Đã chọn",
+    "copy_fail_note": (
+        "Không chép tự động được. Đoạn lệnh đã được chọn, bấm Ctrl+C "
+        "(⌘C trên Mac) để chép."
+    ),
     "hero_eyebrow": "Mã nguồn mở · MIT · v{{version}}",
     "hero_title": (
         "Biết sửa một hàm sẽ ảnh hưởng tới đâu, "
@@ -29,15 +35,16 @@ VI = {
     "hero_lede": (
         "Codebase Map đọc code Python và TypeScript, dựng bản đồ hàm nào gọi "
         "hàm nào, rồi trả lời câu hỏi: đổi chỗ này thì những chỗ nào chịu ảnh "
-        "hưởng. Mọi thứ chạy trên máy bạn, code không rời khỏi máy."
+        "hưởng. Việc phân tích chạy hoàn toàn trên máy bạn."
     ),
     "cta_demo": "Xem bản đồ mẫu",
     "cta_install": "Hướng dẫn cài",
     "hero_fine": (
-        "Cần Python 3.10 trở lên. Không cần tài khoản, không gửi dữ liệu đi đâu."
+        "Cần Python 3.10 trở lên, không cần tài khoản. Nếu nối với Claude qua MCP, "
+        "chỉ kết quả bạn hỏi mới được đưa vào cuộc trò chuyện."
     ),
     "term_caption": "Output thật: Codebase Map chạy trên chính mã nguồn của nó.",
-    "use_title": "Dùng khi nào",
+    "use_title": "Khi nào dùng",
     "use_lede": "Bốn lúc bạn cần biết code đang nối với nhau ra sao.",
     "use1_t": "Trước khi refactor",
     "use1_d": (
@@ -71,8 +78,8 @@ VI = {
     ),
     "how2_t": "Dựng đồ thị",
     "how2_d": (
-        "Mỗi hàm là một node, mỗi lời gọi là một cạnh. Tự xếp vào tầng route, "
-        "service, model, util, schema, test và nhóm theo module."
+        "Mỗi hàm là một node, mỗi lời gọi là một cạnh. Node được xếp vào các "
+        "tầng như router, service, repository, model và test."
     ),
     "how3_t": "Xuất kết quả",
     "how3_d": (
@@ -126,8 +133,8 @@ VI = {
     "demo_open": "Mở toàn màn hình",
     "demo_frame_title": "Bản đồ phụ thuộc của mã nguồn Codebase Map",
     "stat_nodes": "hàm, lớp và method",
-    "stat_links": "liên kết giữa chúng, vẽ trên bản đồ",
-    "stat_edges": "lời gọi và import tìm thấy, gồm cả cái trỏ ra ngoài bản đồ",
+    "stat_links": "cạnh giữa các node, vẽ trên bản đồ",
+    "stat_edges": "cạnh trong đồ thị, gồm cả lời gọi ra thư viện ngoài",
     "install_title": "Cài đặt",
     "install_lede": "Chọn cách bạn sẽ dùng. Cả hai đều cài từ PyPI.",
     "tab_cli": "Dòng lệnh",
@@ -205,8 +212,14 @@ EN = {
     "nav_demo": "Demo",
     "nav_install": "Install",
     "menu_label": "Open menu",
+    "menu_close": "Close menu",
     "copy": "Copy",
     "copied": "Copied",
+    "copy_fail": "Selected",
+    "copy_fail_note": (
+        "Couldn't copy automatically. The command is selected; press Ctrl+C "
+        "(⌘C on Mac) to copy it."
+    ),
     "hero_eyebrow": "Open source · MIT · v{{version}}",
     "hero_title": (
         'Know what a change will touch, <span class="hl">before you merge</span>.'
@@ -214,14 +227,16 @@ EN = {
     "hero_lede": (
         "Codebase Map parses Python and TypeScript into a graph of which "
         "function calls which, then answers the question: if I change this, "
-        "what else is affected? It all runs on your machine. Your code never "
-        "leaves it."
+        "what else is affected? The analysis runs entirely on your machine."
     ),
     "cta_demo": "Explore the live map",
     "cta_install": "Install",
-    "hero_fine": "Requires Python 3.10+. No account, no data sent anywhere.",
+    "hero_fine": (
+        "Requires Python 3.10+, no account. Connected to Claude over MCP, only "
+        "the results you ask for go into the conversation."
+    ),
     "term_caption": "Real output: Codebase Map run on its own source code.",
-    "use_title": "When to reach for it",
+    "use_title": "When to use",
     "use_lede": "Four moments when you need to know how the code fits together.",
     "use1_t": "Before a refactor",
     "use1_d": (
@@ -257,8 +272,7 @@ EN = {
     "how2_t": "Build the graph",
     "how2_d": (
         "Each function is a node, each call an edge. Nodes are sorted into "
-        "route, service, model, util, schema and test layers and grouped by "
-        "module."
+        "layers such as router, service, repository, model and test."
     ),
     "how3_t": "Export",
     "how3_d": (
@@ -309,12 +323,12 @@ EN = {
         "rebuilt every time the site is built. Drag to pan, scroll to zoom, "
         "click a node to see what it calls and what calls it."
     ),
-    "demo_activate": "Click to interact with the map",
+    "demo_activate": "Click or tap to interact with the map",
     "demo_open": "Open full screen",
     "demo_frame_title": "Dependency map of the Codebase Map source code",
     "stat_nodes": "functions, classes and methods",
-    "stat_links": "links between them, drawn on the map",
-    "stat_edges": "calls and imports found, including ones that point off the map",
+    "stat_links": "edges between nodes, drawn on the map",
+    "stat_edges": "edges in the graph, including calls into other libraries",
     "install_title": "Install",
     "install_lede": "Pick how you will use it. Both install from PyPI.",
     "tab_cli": "Command line",
