@@ -11,6 +11,7 @@ import subprocess
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 from codebase_map import __version__
 from codebase_map.config import Config, SourceConfig
@@ -51,7 +52,9 @@ class GraphBuilder:
         self._cache_stats = CacheStats()
         self._all_files: set[str] = set()
         # VIBE-102: {posix path: {"hash": ..., "module_hash": ...}} per source file
-        self._files: dict[str, dict[str, str]] = {}
+        self._files: dict[str, dict[str, Any]] = {}
+        # VIBE-103: {module id: posix path} of the Python files, to resolve imports
+        self._python_modules: dict[str, str] = {}
 
     @property
     def cache_stats(self) -> CacheStats:
@@ -76,6 +79,7 @@ class GraphBuilder:
 
         self._resolve_self_references()
         self._resolve_typescript_calls()
+        self._resolve_file_imports()
         self._deduplicate_edges()
         # HC-AI | ticket: FDD-TOOL-CODEMAP
         # CM-S3-04: Apply YAML-defined business flow patterns
@@ -153,6 +157,9 @@ class GraphBuilder:
             rel_path = str(rel)
             self._all_files.add(rel_path)
             self._cache_stats.total_files += 1
+            if rel.suffix == ".py":
+                module = parser.module_id(rel, source.base_module)
+                self._python_modules.setdefault(module, rel.as_posix())
 
             # HC-AI | ticket: FDD-TOOL-CODEMAP
             # VIBE-102: read each file once. The hash drives the cache and is
@@ -169,7 +176,7 @@ class GraphBuilder:
                     for edge in cached_edges:
                         self.graph.add_edge(edge)
                     self._cache_stats.cached_files += 1
-                    self._record_file(rel, file_hash, lines, cached_nodes)
+                    self._record_file(rel, file_hash, lines, cached_nodes, parser)
                     continue
 
             # Cache miss or no cache — parse file. The project-relative path is
@@ -190,13 +197,25 @@ class GraphBuilder:
                 self._cache.update(rel_path, file_hash, nodes, edges)
 
             self._cache_stats.parsed_files += 1
-            self._record_file(rel, file_hash, lines, nodes)
+            self._record_file(rel, file_hash, lines, nodes, parser)
 
     def _record_file(
-        self, rel: Path, file_hash: str, lines: list[str], nodes: list[Node]
+        self,
+        rel: Path,
+        file_hash: str,
+        lines: list[str],
+        nodes: list[Node],
+        parser: BaseParser,
     ) -> None:
-        """Remember the file's fingerprints for the snapshot metadata."""
+        """Remember the file's fingerprints for the snapshot metadata.
+
+        ``module_hash`` covers the code outside functions that runs: constants
+        and top-level statements. Imports and type declarations are left out
+        (VIBE-103) — an import is recorded as a dependency instead, and a type
+        cannot change behaviour.
+        """
         covered = [(n.line_start, n.line_end or n.line_start) for n in nodes]
+        covered.extend(parser.non_runtime_ranges(lines))
         self._files[rel.as_posix()] = {
             "hash": file_hash[:HASH_LENGTH],
             "module_hash": module_level_hash(lines, covered),
@@ -256,33 +275,59 @@ class GraphBuilder:
     # imports, or a function of the same file — so impact analysis works for
     # these languages. Calls to built-ins and packages keep their bare name.
     def _resolve_typescript_calls(self) -> None:
-        ts_nodes = [
-            n
-            for n in self.graph.nodes.values()
-            if n.metadata.get("language") == "typescript" and n.metadata.get("module")
-        ]
-        if not ts_nodes:
+        stems = self._typescript_stems()
+        if not stems:
             return
 
-        functions: dict[tuple[str, str], str] = {}  # (module, name) -> node id
-        default_export: dict[str, str] = {}  # module -> node id
-        module_by_path: dict[str, str] = {}  # "lib/slots" -> module id
-        for node in ts_nodes:
-            module = node.metadata["module"]
-            module_by_path[_strip_extension(_posix(node.file_path))] = module
-            if node.parent_class:
+        functions: dict[tuple[str, str], str] = {}  # (file, name) -> node id
+        default_export: dict[str, str] = {}  # file -> node id
+        for node in self.graph.nodes.values():
+            if node.metadata.get("language") != "typescript" or node.parent_class:
                 continue
-            functions.setdefault((module, node.name), node.id)
+            path = _posix(node.file_path)
+            functions.setdefault((path, node.name), node.id)
             if node.metadata.get("export_default"):
-                default_export[module] = node.id
+                default_export[path] = node.id
 
+        # What each file imports by name, and what it passes on (re-exports)
         imports: dict[str, dict[str, tuple[str, str]]] = {}
+        reexports: dict[str, list[tuple[str, dict[str, str] | None]]] = {}
         for edge in self.graph.edges:
+            importer = edge.metadata.get("file")
+            if edge.edge_type is not EdgeType.IMPORTS or not importer:
+                continue
             names = edge.metadata.get("names")
-            if edge.edge_type is EdgeType.IMPORTS and isinstance(names, dict):
-                table = imports.setdefault(edge.source, {})
+            if edge.metadata.get("reexport"):
+                if edge.metadata.get("star"):
+                    reexports.setdefault(importer, []).append((edge.target, None))
+                elif isinstance(names, dict):
+                    reexports.setdefault(importer, []).append((edge.target, names))
+            elif isinstance(names, dict):
+                table = imports.setdefault(importer, {})
                 for local, exported in names.items():
                     table[local] = (edge.target, exported)
+
+        def find_export(path: str, name: str, depth: int = 0) -> str | None:
+            """The function a file exports as ``name``, followed through re-exports."""
+            if name == "default":
+                found = default_export.get(path)
+            else:
+                found = functions.get((path, name))
+            if found or depth >= _MAX_REEXPORT_DEPTH:
+                return found
+            for source, names in reexports.get(path, []):
+                if names is None:
+                    original = name
+                elif name in names:
+                    original = names[name]
+                else:
+                    continue
+                for stem in _import_candidates(source, path):
+                    target = stems.get(stem)
+                    found = find_export(target, original, depth + 1) if target else None
+                    if found:
+                        return found
+            return None
 
         for edge in self.graph.edges:
             if edge.edge_type is not EdgeType.CALLS or edge.target in self.graph.nodes:
@@ -290,28 +335,87 @@ class GraphBuilder:
             caller = self.graph.nodes.get(edge.source)
             if caller is None or caller.metadata.get("language") != "typescript":
                 continue
-            module = caller.metadata.get("module", "")
+            path = _posix(caller.file_path)
             name = edge.target
             resolved: str | None = None
-            imported = imports.get(module, {}).get(name)
+            imported = imports.get(path, {}).get(name)
             if imported:
                 source, exported = imported
-                for stem in _import_candidates(source, _posix(caller.file_path)):
-                    target_module = module_by_path.get(stem)
-                    if target_module is None:
+                for stem in _import_candidates(source, path):
+                    target = stems.get(stem)
+                    if target is None:
                         continue
-                    if exported == "default":
-                        resolved = default_export.get(target_module) or functions.get(
-                            (target_module, name)
-                        )
-                    else:
-                        resolved = functions.get((target_module, exported))
+                    resolved = find_export(target, exported)
+                    if not resolved and exported == "default":
+                        resolved = find_export(target, name)
                     if resolved:
                         break
             else:
-                resolved = functions.get((module, name))
+                resolved = functions.get((path, name))
             if resolved:
                 edge.target = resolved
+
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # VIBE-103: which project files each file imports at runtime. Stored per
+    # file as ``imports`` in the snapshot metadata, so a change to a constant
+    # in one file can be traced to the code that uses it. Type-only imports
+    # are left out; packages and built-ins match no project file.
+    def _resolve_file_imports(self) -> None:
+        stems = self._typescript_stems()
+        imported: dict[str, set[str]] = {}
+        for edge in self.graph.edges:
+            importer = edge.metadata.get("file")
+            if edge.edge_type is not EdgeType.IMPORTS or not importer:
+                continue
+            if importer not in self._files or edge.metadata.get("type_only"):
+                continue
+            target: str | None = None
+            if importer.endswith(".py"):
+                target = self._python_import_file(edge.target, importer)
+            else:
+                for stem in _import_candidates(edge.target, importer):
+                    target = stems.get(stem)
+                    if target:
+                        break
+            if target and target != importer:
+                imported.setdefault(importer, set()).add(target)
+        for path, targets in imported.items():
+            self._files[path]["imports"] = sorted(targets)
+
+    def _typescript_stems(self) -> dict[str, str]:
+        """{path without extension: path} for the TypeScript/JavaScript files."""
+        return {
+            _strip_extension(path): path
+            for path in self._files
+            if path.endswith(_TS_EXTENSIONS)
+        }
+
+    def _python_import_file(self, target: str, importer: str) -> str | None:
+        """The project file a dotted import target lives in, if any.
+
+        Tries the target and its parents as module ids, then the same below
+        the importing file's packages (relative imports, ``src`` layouts).
+        """
+        parts = target.split(".")
+        importer_parts = _strip_extension(importer).split("/")[:-1]
+        for cut in range(len(importer_parts), -1, -1):
+            prefix = importer_parts[:cut]
+            for end in range(len(parts), 0, -1):
+                module = ".".join(prefix + parts[:end])
+                for candidate in (module, f"{module}.__init__"):
+                    path = self._python_modules.get(candidate)
+                    if path:
+                        return path
+            if cut == 0:
+                break
+        # the same search with the absolute form last, for ids trimmed by base_module
+        for end in range(len(parts), 0, -1):
+            module = ".".join(parts[:end])
+            for candidate in (module, f"{module}.__init__"):
+                path = self._python_modules.get(candidate)
+                if path:
+                    return path
+        return None
 
     # HC-AI | ticket: FDD-TOOL-CODEMAP
     # CM-S3-04: Match nodes against config.flows patterns (fnmatch on node id)
@@ -365,6 +469,9 @@ class GraphBuilder:
 # HC-AI | ticket: FDD-TOOL-CODEMAP
 # VIBE-102: helpers for content fingerprints and TypeScript import resolution
 _TS_EXTENSIONS = (".tsx", ".ts", ".jsx", ".js", ".mjs", ".cjs")
+_PY_EXTENSION = ".py"
+# `export * from` chains longer than this are not followed
+_MAX_REEXPORT_DEPTH = 5
 
 
 def _read_source(file_path: Path) -> tuple[str, list[str]]:
@@ -382,7 +489,7 @@ def _posix(path: str) -> str:
 
 
 def _strip_extension(path: str) -> str:
-    for extension in _TS_EXTENSIONS:
+    for extension in _TS_EXTENSIONS + (_PY_EXTENSION,):
         if path.endswith(extension):
             return path[: -len(extension)]
     return path

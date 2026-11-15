@@ -29,3 +29,14 @@ class BaseParser(ABC):
     def supported_extensions(self) -> list[str]:
         """Return list of file extensions this parser handles."""
         ...
+
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # VIBE-103: optional hooks, used to tell which file depends on which and
+    # which top-level lines cannot change how the program behaves.
+    def module_id(self, rel_path: Path, base_module: str = "") -> str:
+        """Module id of a project file, as used in node ids and import targets."""
+        return ""
+
+    def non_runtime_ranges(self, lines: list[str]) -> list[tuple[int, int]]:
+        """1-based line ranges outside functions that do not run: imports, types."""
+        return []

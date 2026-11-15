@@ -79,6 +79,19 @@ _IMPORT_STMT = re.compile(
     re.MULTILINE,
 )
 _IMPORT_LINE = re.compile(r"^\s*import\b")
+# VIBE-103: `export { a, b as c } from "./x"` and `export * from "./x"`
+_REEXPORT_STMT = re.compile(
+    r"^[ \t]*export\s+(?P<type>type\s+)?"
+    r"(?P<clause>\*(?:\s+as\s+[A-Za-z_$][\w$]*)?|\{[^}]*\})\s*from\s*"
+    r"['\"](?P<src>[^'\"]+)['\"]",
+    re.MULTILINE,
+)
+# VIBE-103: a top-level declaration that exists only for the type checker
+_TYPE_DECL = re.compile(
+    r"^(?:export\s+)?(?:declare\s+\S|type\s+[A-Za-z_$]|interface\s+[A-Za-z_$])"
+)
+_TYPE_CONTINUES_AFTER = ("=", "|", "&", ",", "<", "?", ":", "extends")
+_TYPE_CONTINUES_BEFORE = ("|", "&", "?", ":", "extends")
 _IDENTIFIER = re.compile(r"[A-Za-z_$][\w$]*")
 _EXPORT_DEFAULT_NAME = re.compile(
     r"^\s*export\s+default\s+(?P<name>[A-Za-z_$][\w$]*)\s*;?\s*$"
@@ -171,6 +184,51 @@ class TypeScriptParser(BaseParser):
     def supported_extensions(self) -> list[str]:
         return [".ts", ".tsx", ".js", ".jsx"]
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # VIBE-103: hooks for file-level dependencies and the runtime module hash
+    def module_id(self, rel_path: Path, base_module: str = "") -> str:
+        return self._module_id(rel_path, base_module)
+
+    def non_runtime_ranges(self, lines: list[str]) -> list[tuple[int, int]]:
+        """Imports, re-exports and type-only declarations at the top level."""
+        source = "\n".join(lines)
+        ranges: list[tuple[int, int]] = []
+        for pattern in (_IMPORT_STMT, _REEXPORT_STMT):
+            for match in pattern.finditer(source):
+                first = source.count("\n", 0, match.start()) + 1
+                last = source.count("\n", 0, match.end()) + 1
+                ranges.append((first, last))
+        index = 0
+        while index < len(lines):
+            if _TYPE_DECL.match(lines[index]):
+                end = self._type_declaration_end(lines, index)
+                ranges.append((index + 1, end + 1))
+                index = end + 1
+            else:
+                index += 1
+        return ranges
+
+    def _type_declaration_end(self, lines: list[str], start: int) -> int:
+        """Index of the last line of the type declaration starting at ``start``."""
+        balance = 0
+        for index in range(start, len(lines)):
+            text = self._strip_comment(lines[index]).strip()
+            balance += sum(text.count(char) for char in "{([")
+            balance -= sum(text.count(char) for char in "})]")
+            if balance > 0:
+                continue
+            if text.endswith(";"):
+                return index
+            following = ""
+            if index + 1 < len(lines):
+                following = self._strip_comment(lines[index + 1]).strip()
+            if text.endswith(_TYPE_CONTINUES_AFTER):
+                continue
+            if following.startswith(_TYPE_CONTINUES_BEFORE):
+                continue
+            return index
+        return len(lines) - 1
+
     # ─────────────────────────────────────────────────────────────────
     # Public API
     # ─────────────────────────────────────────────────────────────────
@@ -208,7 +266,7 @@ class TypeScriptParser(BaseParser):
 
         lines = source.splitlines()
         fdd_by_line = self._extract_fdd(lines)
-        edges: list[Edge] = self._import_edges(source, rel_module)
+        edges: list[Edge] = self._import_edges(source, rel_module, file_path)
 
         # State
         class_stack: list[tuple[Node, int]] = []  # [(class node, brace depth before)]
@@ -623,21 +681,52 @@ class TypeScriptParser(BaseParser):
     # ─────────────────────────────────────────────────────────────────
     # Imports (VIBE-102)
     # ─────────────────────────────────────────────────────────────────
-    def _import_edges(self, source: str, rel_module: str) -> list[Edge]:
-        """One IMPORTS edge per import statement.
+    def _import_edges(
+        self, source: str, rel_module: str, file_path: Path
+    ) -> list[Edge]:
+        """One IMPORTS edge per import or re-export statement.
 
         ``metadata["names"]`` maps each local name to the name it has in the
-        imported module ("default" for a default import), which lets the
-        builder resolve calls to the function they refer to.
+        imported module ("default" for a default import, "*" for a namespace),
+        which lets the builder resolve calls to the function they refer to.
+        ``metadata["file"]`` is the importing file. A statement that brings in
+        types only is marked ``type_only``; a re-export is marked ``reexport``
+        (and ``star`` for ``export * from``).
         """
+        importer = file_path.as_posix()
         edges: list[Edge] = []
         for match in _IMPORT_STMT.finditer(source):
             src = match.group("src") or match.group("bare")
             edge = Edge(source=rel_module, target=src, edge_type=EdgeType.IMPORTS)
-            if match.group("src") and not match.group("type"):
-                names = self._import_names(match.group("clause") or "")
+            edge.metadata["file"] = importer
+            if match.group("src"):
+                names: dict[str, str] = {}
+                if not match.group("type"):
+                    names = self._import_names(match.group("clause") or "")
                 if names:
                     edge.metadata["names"] = names
+                else:
+                    edge.metadata["type_only"] = True
+            edges.append(edge)
+        for match in _REEXPORT_STMT.finditer(source):
+            edge = Edge(
+                source=rel_module,
+                target=match.group("src"),
+                edge_type=EdgeType.IMPORTS,
+                metadata={"file": importer, "reexport": True},
+            )
+            clause = match.group("clause")
+            if match.group("type"):
+                edge.metadata["type_only"] = True
+            elif clause.startswith("*"):
+                if " as " not in clause:
+                    edge.metadata["star"] = True
+            else:
+                names = self._import_names(clause)
+                if names:
+                    edge.metadata["names"] = names
+                else:
+                    edge.metadata["type_only"] = True
             edges.append(edge)
         return edges
 
@@ -657,7 +746,11 @@ class TypeScriptParser(BaseParser):
                 names[(local or exported).strip()] = exported.strip()
         for part in outside.split(","):
             part = part.strip()
-            if part and _IDENTIFIER.fullmatch(part):
+            if part.startswith("*"):
+                alias = part.partition(" as ")[2].strip()
+                if alias:
+                    names[alias] = "*"
+            elif part and _IDENTIFIER.fullmatch(part):
                 names[part] = "default"
         return names
 

@@ -322,6 +322,23 @@ class PythonParser(BaseParser):
     def supported_extensions(self) -> list[str]:
         return [".py"]
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # VIBE-103: hooks for file-level dependencies and the runtime module hash
+    def module_id(self, rel_path: Path, base_module: str = "") -> str:
+        return _file_to_module_id(str(rel_path), base_module)
+
+    def non_runtime_ranges(self, lines: list[str]) -> list[tuple[int, int]]:
+        """Top-level import statements."""
+        try:
+            tree = ast.parse("\n".join(lines))
+        except (SyntaxError, ValueError):
+            return []
+        return [
+            (item.lineno, item.end_lineno or item.lineno)
+            for item in tree.body
+            if isinstance(item, (ast.Import, ast.ImportFrom))
+        ]
+
     def parse_file(
         self, file_path: Path, base_module: str = "", rel_path: Path | None = None
     ) -> tuple[list[Node], list[Edge]]:
@@ -361,6 +378,13 @@ class PythonParser(BaseParser):
                     import_map[name] = alias.name
             elif isinstance(node, ast.ImportFrom):
                 mod = node.module or ""
+                # HC-AI | ticket: FDD-TOOL-CODEMAP
+                # VIBE-103: `from .pricing import price` — resolve a relative
+                # import against this module's package, so calls made through
+                # it point at the real function.
+                if node.level:
+                    package = module_id.split(".")[: -node.level]
+                    mod = ".".join(package + ([mod] if mod else []))
                 for alias in node.names:
                     name = alias.asname or alias.name
                     import_map[name] = f"{mod}.{alias.name}" if mod else alias.name
@@ -431,13 +455,16 @@ class PythonParser(BaseParser):
                     existing = node_obj.metadata.get("flows", [])
                     node_obj.metadata["flows"] = sorted(set(existing) | set(flows))
 
-        # Import edges (module-level)
+        # Import edges (module-level). VIBE-103: each one names the importing
+        # file, so the builder can work out which file depends on which.
+        import_file = id_path.as_posix()
         for alias_name, full_path in import_map.items():
             edges.append(
                 Edge(
                     source=module_id,
                     target=full_path,
                     edge_type=EdgeType.IMPORTS,
+                    metadata={"file": import_file},
                 )
             )
 

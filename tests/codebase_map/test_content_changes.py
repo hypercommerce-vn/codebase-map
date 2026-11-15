@@ -131,7 +131,7 @@ class TestSampleAppGraph:
         files = _build(app).metadata["files"]
         assert "lib/reminders.ts" in files
         assert "app/api/bookings/route.ts" in files
-        assert set(files["lib/reminders.ts"]) == {"hash", "module_hash"}
+        assert {"hash", "module_hash"} <= set(files["lib/reminders.ts"])
         assert list(files) == sorted(files)
 
     def test_same_content_gives_the_same_fingerprints_anywhere(
