@@ -38,6 +38,14 @@ die() {
 [[ "$WEBROOT" =~ ^/(var/www|srv)/[A-Za-z0-9_-][A-Za-z0-9._-]*$ ]] ||
   die "WEBROOT must be one folder directly under /var/www or /srv: $WEBROOT"
 
+# The demo map shows the branch and commit it was built from.
+repo="$(dirname "$WEBSITE")"
+branch="$(git -C "$repo" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "?")"
+if [[ "$branch" != main ]] || [[ -n "$(git -C "$repo" status --porcelain 2>/dev/null)" ]]; then
+  echo "Warning: this is not a clean checkout of main (branch '$branch')." \
+    "The public demo will show this branch and commit." >&2
+fi
+
 "$PYTHON" "$WEBSITE/build.py" --site-url "https://$DOMAIN"
 
 if [[ "${1:-}" == "--setup" ]]; then
@@ -49,24 +57,25 @@ if [[ "${1:-}" == "--setup" ]]; then
   scp "$conf" "$DEPLOY_HOST:codebase-map.nginx"
   ssh -t "$DEPLOY_HOST" "set -eu
     upload=\"\$HOME/codebase-map.nginx\"
+    trap 'rm -f \"\$upload\"' EXIT
     if [ -e '$SITE_CONF' ] && [ $force != 1 ]; then
-      rm -f \"\$upload\"
       echo '$SITE_CONF already exists (certbot may have added HTTPS to it).' >&2
       echo 'Nothing changed. Run with FORCE=1 to replace it, then run certbot again.' >&2
       exit 1
     fi
-    if [ -d '$WEBROOT' ] && [ ! -e '$WEBROOT/$MARKER' ] && [ -n \"\$(ls -A '$WEBROOT')\" ]; then
-      rm -f \"\$upload\"
-      echo '$WEBROOT is not empty and was not created by this script. Pick another WEBROOT.' >&2
+    # sudo, so a folder the SSH user cannot read is never mistaken for empty.
+    if sudo test -e '$WEBROOT' && ! sudo test -e '$WEBROOT/$MARKER' &&
+      [ -n \"\$(sudo find '$WEBROOT' -mindepth 1 -print -quit)\" ]; then
+      echo '$WEBROOT already has files and was not created by this script. Pick another WEBROOT.' >&2
       exit 1
     fi
-    sudo rm -f '$SITE_CONF.bak'
-    if [ -e '$SITE_CONF' ]; then sudo cp '$SITE_CONF' '$SITE_CONF.bak'; fi
-    sudo install -m 644 \"\$upload\" '$SITE_CONF'
-    rm -f \"\$upload\"
+    # Web root first: if it cannot be created, nginx is not touched at all.
     sudo mkdir -p '$WEBROOT'
     sudo chown \"\$(id -un)\" '$WEBROOT'
     touch '$WEBROOT/$MARKER'
+    sudo rm -f '$SITE_CONF.bak'
+    if [ -e '$SITE_CONF' ]; then sudo cp '$SITE_CONF' '$SITE_CONF.bak'; fi
+    sudo install -m 644 \"\$upload\" '$SITE_CONF'
     sudo ln -sf '$SITE_CONF' '$SITE_LINK'
     if ! sudo nginx -t; then
       if [ -e '$SITE_CONF.bak' ]; then
