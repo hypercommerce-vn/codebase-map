@@ -63,6 +63,11 @@ if [[ "${1:-}" == "--setup" ]]; then
       echo 'Nothing changed. Run with FORCE=1 to replace it, then run certbot again.' >&2
       exit 1
     fi
+    # A symlink would hand chown and rsync --delete a folder this check never saw.
+    if sudo test -L '$WEBROOT'; then
+      echo '$WEBROOT is a symlink. Set WEBROOT to a real folder.' >&2
+      exit 1
+    fi
     # sudo, so a folder the SSH user cannot read is never mistaken for empty.
     if sudo test -e '$WEBROOT' && ! sudo test -e '$WEBROOT/$MARKER' &&
       [ -n \"\$(sudo find '$WEBROOT' -mindepth 1 -print -quit)\" ]; then

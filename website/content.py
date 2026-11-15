@@ -328,9 +328,7 @@ EN = {
     "demo_frame_title": "Dependency map of the Codebase Map source code",
     "stat_nodes": "functions, classes and methods",
     "stat_links": "edges between nodes, drawn on the map",
-    "stat_edges": (
-        "edges in the graph, including imports and calls to built-ins and libraries"
-    ),
+    "stat_edges": "edges in the graph, including imports and library calls",
     "install_title": "Install",
     "install_lede": "Pick how you will use it. Both install from PyPI.",
     "tab_cli": "Command line",
