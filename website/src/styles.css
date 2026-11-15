@@ -453,6 +453,8 @@ p code, li code, td code, .note code {
 
 /* Demo */
 .stats { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 40px; margin: 32px 0 0; }
+/* Three columns that shrink with the container, so a long label never pushes one stat onto its own row. */
+@media (min-width: 640px) { .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 15em)); } }
 .stats div { display: flex; flex-direction: column-reverse; max-width: 15em; }
 .stats dd { margin: 0; font-size: 2rem; font-weight: 750; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .stats dt { color: var(--muted); font-size: .88rem; }
