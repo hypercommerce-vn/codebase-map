@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 6.1 | Cập nhật: 15/11/2026 (CBM-WEB website v0.1 chờ CEO duyệt · trước đó 22/04: INITIATIVE SEALED · S1+S2+S3 COMPLETE · 3 PyPI · 3 plugins)
+> Version: 6.1 | Cập nhật: 15/11/2026 (CBM-WEB website v0.1 CEO duyệt 15/11 · trước đó 22/04: INITIATIVE SEALED · S1+S2+S3 COMPLETE · 3 PyPI · 3 plugins)
 
 ---
 
@@ -23,13 +23,14 @@ Tất cả sprints COMPLETE (85 SP, 582 tests):
 
 ---
 
-## 🌐 CBM-WEB — Website dự án v0.1 (15/11/2026 · chờ CEO duyệt)
+## 🌐 CBM-WEB — Website dự án v0.1 (✅ CEO duyệt 15/11/2026)
 
 - Thư mục `website/`, nhánh `feat/cbm-website`. Landing tĩnh song ngữ (`/` VI, `/en/` EN) + demo thật `/demo/`.
 - `python website/build.py` dựng đồ thị từ `codebase_map/` của repo → demo, số liệu (200 node · 165 liên kết trên bản đồ · 992 lời gọi/import) và output terminal đều là kết quả thật.
 - Deploy: `website/deploy/deploy.sh` (nginx + certbot trên VPS) hoặc `website/docker-compose.yml`. Hướng dẫn: `website/README.md`.
 - Đã verify: desktop/mobile, sáng/tối, link 200, Docker nginx (CSP, gzip, 404, redirect). **Chưa deploy lên VPS thật.**
-- CEO cần quyết: duyệt v0.1 làm design · có công khai khối "Sắp tới" (hướng CBM-VIBE) không · tên miền + VPS.
+- ✅ CEO duyệt v0.1 làm design (15/11/2026), giữ khối "Sắp tới" (hướng CBM-VIBE) như trong bản đã duyệt.
+- Còn chờ: tên miền + VPS (IP, user SSH) để chạy `deploy.sh --setup`; PR nhánh `feat/cbm-website` → review gate 3 tầng.
 - Phát hiện: `_FLOW_PATTERN` trong `python_parser.py` khớp mọi comment có chữ `flow:` → demo hiện flow giả "name1, name2". ✅ Đã sửa ở PR #148 (merge 15/11); nhánh website đã merge main, demo hết flow giả.
 
 ---
