@@ -30,7 +30,7 @@ Tất cả sprints COMPLETE (85 SP, 582 tests):
 - Deploy: `website/deploy/deploy.sh` (nginx + certbot trên VPS) hoặc `website/docker-compose.yml`. Hướng dẫn: `website/README.md`.
 - Đã verify: desktop/mobile, sáng/tối, link 200, Docker nginx (CSP, gzip, 404, redirect). **Chưa deploy lên VPS thật.**
 - CEO cần quyết: duyệt v0.1 làm design · có công khai khối "Sắp tới" (hướng CBM-VIBE) không · tên miền + VPS.
-- Phát hiện: `_FLOW_PATTERN` trong `python_parser.py` khớp mọi comment có chữ `flow:` → demo hiện flow giả "name1, name2". Sửa ở PR riêng.
+- Phát hiện: `_FLOW_PATTERN` trong `python_parser.py` khớp mọi comment có chữ `flow:` → demo hiện flow giả "name1, name2". ✅ Đã sửa ở PR #148 (merge 15/11); nhánh website đã merge main, demo hết flow giả.
 
 ---
 
