@@ -3,8 +3,10 @@
 
 from __future__ import annotations
 
+import hashlib
 import logging
 import os
+import posixpath
 import subprocess
 import time
 from datetime import datetime, timezone
@@ -12,8 +14,9 @@ from pathlib import Path
 
 from codebase_map import __version__
 from codebase_map.config import Config, SourceConfig
+from codebase_map.fingerprint import HASH_LENGTH, module_level_hash
 from codebase_map.graph.cache import BuildCache, CacheStats
-from codebase_map.graph.models import Edge, Graph
+from codebase_map.graph.models import Edge, EdgeType, Graph, Node
 from codebase_map.parsers.base import BaseParser
 from codebase_map.parsers.python_parser import PythonParser
 from codebase_map.parsers.typescript_parser import TypeScriptParser
@@ -47,6 +50,8 @@ class GraphBuilder:
         self._cache = BuildCache(cache_dir=config.project_root if use_cache else None)
         self._cache_stats = CacheStats()
         self._all_files: set[str] = set()
+        # VIBE-102: {posix path: {"hash": ..., "module_hash": ...}} per source file
+        self._files: dict[str, dict[str, str]] = {}
 
     @property
     def cache_stats(self) -> CacheStats:
@@ -70,6 +75,7 @@ class GraphBuilder:
             self._cache_stats.removed_files = removed
 
         self._resolve_self_references()
+        self._resolve_typescript_calls()
         self._deduplicate_edges()
         # HC-AI | ticket: FDD-TOOL-CODEMAP
         # CM-S3-04: Apply YAML-defined business flow patterns
@@ -117,6 +123,8 @@ class GraphBuilder:
                 "removed": self._cache_stats.removed_files,
                 "hit_rate": round(self._cache_stats.cache_hit_rate, 1),
             },
+            # VIBE-102: content fingerprints, compared by `snapshot-diff`
+            "files": dict(sorted(self._files.items())),
         }
 
         return self.graph
@@ -141,28 +149,32 @@ class GraphBuilder:
         )
 
         for file_path in sorted(files):
-            rel_path = str(file_path.relative_to(self.config.project_root))
+            rel = file_path.relative_to(self.config.project_root)
+            rel_path = str(rel)
             self._all_files.add(rel_path)
             self._cache_stats.total_files += 1
 
             # HC-AI | ticket: FDD-TOOL-CODEMAP
-            # CM-S2-02: Check cache before parsing
-            if self.use_cache:
-                file_hash = BuildCache.hash_file(file_path)
-                if not self._cache.is_changed(rel_path, file_hash):
-                    # Cache hit — load from cache
-                    cached = self._cache.get_cached(rel_path)
-                    if cached is not None:
-                        cached_nodes, cached_edges = cached
-                        for node in cached_nodes:
-                            self.graph.add_node(node)
-                        for edge in cached_edges:
-                            self.graph.add_edge(edge)
-                        self._cache_stats.cached_files += 1
-                        continue
+            # VIBE-102: read each file once. The hash drives the cache and is
+            # stored in the snapshot so two snapshots can be compared by content.
+            file_hash, lines = _read_source(file_path)
 
-            # Cache miss or no cache — parse file
-            nodes, edges = parser.parse_file(file_path, source.base_module)
+            # CM-S2-02: Check cache before parsing
+            if self.use_cache and not self._cache.is_changed(rel_path, file_hash):
+                cached = self._cache.get_cached(rel_path)
+                if cached is not None:
+                    cached_nodes, cached_edges = cached
+                    for node in cached_nodes:
+                        self.graph.add_node(node)
+                    for edge in cached_edges:
+                        self.graph.add_edge(edge)
+                    self._cache_stats.cached_files += 1
+                    self._record_file(rel, file_hash, lines, cached_nodes)
+                    continue
+
+            # Cache miss or no cache — parse file. The project-relative path is
+            # passed so node ids do not depend on where the project sits on disk.
+            nodes, edges = parser.parse_file(file_path, source.base_module, rel)
 
             for node in nodes:
                 # Override file_path to be relative
@@ -178,6 +190,17 @@ class GraphBuilder:
                 self._cache.update(rel_path, file_hash, nodes, edges)
 
             self._cache_stats.parsed_files += 1
+            self._record_file(rel, file_hash, lines, nodes)
+
+    def _record_file(
+        self, rel: Path, file_hash: str, lines: list[str], nodes: list[Node]
+    ) -> None:
+        """Remember the file's fingerprints for the snapshot metadata."""
+        covered = [(n.line_start, n.line_end or n.line_start) for n in nodes]
+        self._files[rel.as_posix()] = {
+            "hash": file_hash[:HASH_LENGTH],
+            "module_hash": module_level_hash(lines, covered),
+        }
 
     # HC-AI | ticket: FDD-TOOL-CODEMAP
     # VIBE-101: walk with directory pruning instead of rglob-then-filter, so a
@@ -228,6 +251,69 @@ class GraphBuilder:
                         edge.target = resolved
 
     # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # VIBE-102: the TypeScript/JavaScript parser records calls as bare names.
+    # Point each one at the function it refers to — through the caller's
+    # imports, or a function of the same file — so impact analysis works for
+    # these languages. Calls to built-ins and packages keep their bare name.
+    def _resolve_typescript_calls(self) -> None:
+        ts_nodes = [
+            n
+            for n in self.graph.nodes.values()
+            if n.metadata.get("language") == "typescript" and n.metadata.get("module")
+        ]
+        if not ts_nodes:
+            return
+
+        functions: dict[tuple[str, str], str] = {}  # (module, name) -> node id
+        default_export: dict[str, str] = {}  # module -> node id
+        module_by_path: dict[str, str] = {}  # "lib/slots" -> module id
+        for node in ts_nodes:
+            module = node.metadata["module"]
+            module_by_path[_strip_extension(_posix(node.file_path))] = module
+            if node.parent_class:
+                continue
+            functions.setdefault((module, node.name), node.id)
+            if node.metadata.get("export_default"):
+                default_export[module] = node.id
+
+        imports: dict[str, dict[str, tuple[str, str]]] = {}
+        for edge in self.graph.edges:
+            names = edge.metadata.get("names")
+            if edge.edge_type is EdgeType.IMPORTS and isinstance(names, dict):
+                table = imports.setdefault(edge.source, {})
+                for local, exported in names.items():
+                    table[local] = (edge.target, exported)
+
+        for edge in self.graph.edges:
+            if edge.edge_type is not EdgeType.CALLS or edge.target in self.graph.nodes:
+                continue
+            caller = self.graph.nodes.get(edge.source)
+            if caller is None or caller.metadata.get("language") != "typescript":
+                continue
+            module = caller.metadata.get("module", "")
+            name = edge.target
+            resolved: str | None = None
+            imported = imports.get(module, {}).get(name)
+            if imported:
+                source, exported = imported
+                for stem in _import_candidates(source, _posix(caller.file_path)):
+                    target_module = module_by_path.get(stem)
+                    if target_module is None:
+                        continue
+                    if exported == "default":
+                        resolved = default_export.get(target_module) or functions.get(
+                            (target_module, name)
+                        )
+                    else:
+                        resolved = functions.get((target_module, exported))
+                    if resolved:
+                        break
+            else:
+                resolved = functions.get((module, name))
+            if resolved:
+                edge.target = resolved
+
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
     # CM-S3-04: Match nodes against config.flows patterns (fnmatch on node id)
     def _apply_flow_patterns(self) -> None:
         if not self.config.flows:
@@ -274,6 +360,52 @@ class GraphBuilder:
                 seen.add(key)
                 unique.append(edge)
         self.graph.edges = unique
+
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# VIBE-102: helpers for content fingerprints and TypeScript import resolution
+_TS_EXTENSIONS = (".tsx", ".ts", ".jsx", ".js", ".mjs", ".cjs")
+
+
+def _read_source(file_path: Path) -> tuple[str, list[str]]:
+    """Return (sha256 of the bytes, text lines); empty values if unreadable."""
+    try:
+        raw = file_path.read_bytes()
+    except OSError:
+        return "", []
+    text = raw.decode("utf-8", errors="replace")
+    return hashlib.sha256(raw).hexdigest(), text.splitlines()
+
+
+def _posix(path: str) -> str:
+    return path.replace("\\", "/")
+
+
+def _strip_extension(path: str) -> str:
+    for extension in _TS_EXTENSIONS:
+        if path.endswith(extension):
+            return path[: -len(extension)]
+    return path
+
+
+def _import_candidates(source: str, importer_file: str) -> list[str]:
+    """Project-relative file stems an import specifier may refer to.
+
+    Handles relative paths, the common ``@/`` and ``~/`` root aliases, and
+    bare root-relative paths. Package imports simply match nothing.
+    """
+    if source.startswith("."):
+        base = posixpath.dirname(importer_file)
+        roots = [posixpath.normpath(posixpath.join(base, source))]
+    elif source.startswith(("@/", "~/")):
+        roots = [source[2:], f"src/{source[2:]}"]
+    else:
+        roots = [source, f"src/{source}"]
+    candidates: list[str] = []
+    for root in roots:
+        stem = _strip_extension(root)
+        candidates.extend([stem, f"{stem}/index"])
+    return candidates
 
 
 # HC-AI | ticket: FDD-TOOL-CODEMAP

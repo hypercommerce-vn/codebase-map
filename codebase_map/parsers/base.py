@@ -14,9 +14,15 @@ class BaseParser(ABC):
 
     @abstractmethod
     def parse_file(
-        self, file_path: Path, base_module: str = ""
+        self, file_path: Path, base_module: str = "", rel_path: Path | None = None
     ) -> tuple[list[Node], list[Edge]]:
-        """Parse a single file and return nodes + edges."""
+        """Parse a single file and return nodes + edges.
+
+        ``file_path`` is where the file is read from. ``rel_path`` is the same
+        file relative to the project root; when given, node ids, layer and
+        domain are derived from it so they do not depend on where the project
+        sits on disk.
+        """
         ...
 
     @abstractmethod
