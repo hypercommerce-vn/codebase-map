@@ -604,6 +604,11 @@ a:hover { text-decoration: underline; }
         <td><code>codebase_map/</code></td>
         <td><span class="badge merged">PR #82 ✅</span></td>
       </tr>
+      <tr>
+        <td>Website dự án v0.1 (landing song ngữ + demo + deploy VPS) — trang build ra chính là bản design</td>
+        <td><code>website/</code> · <code>website/README.md</code></td>
+        <td><span class="badge active">⏳ Chờ CEO duyệt</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -741,6 +746,25 @@ a:hover { text-decoration: underline; }
       <p>Coverage 38% → 75% theo ngôn ngữ (64% → 90%+ theo archetype). JS parser extend TS (3 SP, AI pair) + Java parser javalang+Spring (8 SP, TechLead) + QA integration (2 SP). <strong>D3 + D4 decision.</strong></p>
       <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#8b5cf6"></div></div>
       <div class="progress-label">0/13 SP · Target: 20/04 → 23/05/2026 (5 tuần song song) · Gate G4: Java + JS parse HC-sample PASS</div>
+    </div>
+
+    <div class="sprint-card" style="border-left: 3px solid #6366f1;">
+      <div class="sprint-card-header">
+        <h3>CBM-WEB · Website dự án v0.1</h3>
+        <span class="badge active">⏳ Chờ CEO duyệt</span>
+      </div>
+      <p>Landing tĩnh song ngữ (<code>/</code> tiếng Việt · <code>/en/</code> tiếng Anh) · demo thật ở <code>/demo/</code> (CBM vẽ chính mã nguồn của nó, dựng lại mỗi lần build) · số liệu + output terminal lấy từ code thật · không backend, không cookie, không CDN · deploy VPS bằng nginx + certbot (<code>deploy.sh</code>) hoặc Docker. <a href="../website/README.md" target="_blank"><strong>Hướng dẫn →</strong></a></p>
+      <div class="progress-bar"><div class="progress-fill" style="width:80%;background:#6366f1"></div></div>
+      <div class="progress-label">Nhánh <code>feat/cbm-website</code> · verify: desktop/mobile, sáng/tối, link nội bộ + ngoài 200, Docker nginx (CSP, gzip, 404) · lint + 158 tests PASS · <strong>chưa deploy lên VPS thật</strong> · 15/11/2026</div>
+      <div style="margin-top:10px; padding:8px 10px; background:var(--bg-muted); border-radius:6px; font-size:11px; color:var(--text-muted);">
+        <strong style="color:var(--text);">CEO cần quyết:</strong>
+        <ul style="margin:4px 0 0 16px; padding:0;">
+          <li>Duyệt v0.1 làm design (rule No Design = No Implementation)</li>
+          <li>Có công khai khối "Sắp tới: cho người làm app bằng AI" (lộ hướng CBM-VIBE) hay gỡ ra</li>
+          <li>Tên miền + VPS (IP, user SSH) để chạy <code>deploy.sh --setup</code></li>
+        </ul>
+        <strong style="color:var(--text);">Phát hiện khi làm:</strong> parser Python đọc nhầm comment tài liệu có chữ <code>flow:</code> thành chú thích flow → demo hiện chip "name1, name2" (<code>python_parser.py</code> <code>_FLOW_PATTERN</code>), cần sửa riêng.
+      </div>
     </div>
   </div>
 

@@ -1,0 +1,302 @@
+<!doctype html>
+<!-- HC-AI | ticket: FDD-TOOL-CODEMAP -->
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>{{meta_title}}</title>
+<meta name="description" content="{{meta_description}}">
+{{seo_links}}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Codebase Map">
+<meta property="og:title" content="{{meta_title}}">
+<meta property="og:description" content="{{meta_description}}">
+<link rel="icon" href="{{base}}favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="{{base}}styles.css?v={{asset_hash}}">
+<script src="{{base}}site.js?v={{asset_hash}}" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">{{skip}}</a>
+
+<header class="site-header" data-header>
+  <div class="wrap header-inner">
+    <a class="brand" href="{{home}}">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M9 22 16 9l7 13" />
+        <path d="M9 22h14" />
+        <circle cx="16" cy="9" r="4" />
+        <circle cx="9" cy="22" r="4" />
+        <circle cx="23" cy="22" r="4" />
+      </svg>
+      <span>Codebase Map</span>
+    </a>
+    <nav class="nav" id="site-nav" aria-label="{{nav_label}}" data-nav>
+      <a href="#use-cases">{{nav_use}}</a>
+      <a href="#how">{{nav_how}}</a>
+      <a href="#demo">{{nav_demo}}</a>
+      <a href="#install">{{nav_install}}</a>
+      <a href="{{repo}}" class="nav-gh">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/></svg>
+        GitHub
+      </a>
+    </nav>
+    <a class="lang-switch" href="{{alt_href}}" hreflang="{{alt_lang}}" lang="{{alt_lang}}">{{alt_label}}</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="{{menu_label}}" data-menu>
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">{{hero_eyebrow}}</p>
+        <h1>{{hero_title}}</h1>
+        <p class="lede">{{hero_lede}}</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#demo">{{cta_demo}}</a>
+          <a class="btn btn-ghost" href="#install">{{cta_install}}</a>
+        </div>
+        <div class="install-line">
+          <code id="hero-install">pipx install codebase-map</code>
+          <button class="copy-btn" type="button" data-copy="hero-install" data-label="{{copy}}" data-done="{{copied}}">{{copy}}</button>
+        </div>
+        <p class="fine">{{hero_fine}}</p>
+      </div>
+
+      <figure class="hero-visual">
+        <svg class="constellation" viewBox="0 0 480 420" aria-hidden="true">
+          <g class="edges">
+            <line x1="60" y1="70" x2="170" y2="40"/>
+            <line x1="170" y1="40" x2="290" y2="80"/>
+            <line x1="290" y1="80" x2="420" y2="50"/>
+            <line x1="60" y1="70" x2="110" y2="170"/>
+            <line x1="230" y1="180" x2="360" y2="170"/>
+            <line x1="360" y1="170" x2="450" y2="150"/>
+            <line x1="290" y1="80" x2="360" y2="170"/>
+            <line x1="110" y1="170" x2="60" y2="280"/>
+            <line x1="60" y1="280" x2="180" y2="300"/>
+            <line x1="180" y1="300" x2="300" y2="280"/>
+            <line x1="300" y1="280" x2="420" y2="300"/>
+            <line x1="360" y1="170" x2="420" y2="300"/>
+            <line x1="420" y1="50" x2="450" y2="150"/>
+            <line x1="180" y1="300" x2="250" y2="380"/>
+            <line x1="420" y1="300" x2="370" y2="385"/>
+          </g>
+          <g class="edges impact">
+            <line x1="230" y1="180" x2="170" y2="40"/>
+            <line x1="230" y1="180" x2="290" y2="80"/>
+            <line x1="230" y1="180" x2="110" y2="170"/>
+            <line x1="230" y1="180" x2="300" y2="280"/>
+          </g>
+          <g class="nodes">
+            <circle class="n-route" cx="60" cy="70" r="7"/>
+            <circle class="n-service ring" cx="170" cy="40" r="7"/>
+            <circle class="n-service ring" cx="290" cy="80" r="7"/>
+            <circle class="n-model" cx="420" cy="50" r="6"/>
+            <circle class="n-util ring" cx="110" cy="170" r="6"/>
+            <circle class="n-model" cx="360" cy="170" r="7"/>
+            <circle class="n-util" cx="450" cy="150" r="5"/>
+            <circle class="n-util" cx="60" cy="280" r="6"/>
+            <circle class="n-route" cx="180" cy="300" r="7"/>
+            <circle class="n-service ring" cx="300" cy="280" r="7"/>
+            <circle class="n-core" cx="420" cy="300" r="6"/>
+            <circle class="n-util" cx="250" cy="380" r="5"/>
+            <circle class="n-model" cx="370" cy="385" r="5"/>
+            <circle class="n-focus-halo" cx="230" cy="180" r="22"/>
+            <circle class="n-focus" cx="230" cy="180" r="11"/>
+          </g>
+        </svg>
+        <div class="terminal">
+          <div class="terminal-bar"><i></i><i></i><i></i><span>~/codebase-map</span></div>
+          <pre>{{terminal}}</pre>
+        </div>
+        <figcaption>{{term_caption}}</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="use-cases">
+    <div class="wrap">
+      <h2>{{use_title}}</h2>
+      <p class="section-lede">{{use_lede}}</p>
+      <div class="cards cards-4">
+        <article class="card">
+          <h3>{{use1_t}}</h3>
+          <p>{{use1_d}}</p>
+          <code class="card-cmd">codebase-map impact "AuthService"</code>
+        </article>
+        <article class="card">
+          <h3>{{use2_t}}</h3>
+          <p>{{use2_d}}</p>
+          <code class="card-cmd">codebase-map snapshot-diff --baseline before --current after --format markdown</code>
+        </article>
+        <article class="card">
+          <h3>{{use3_t}}</h3>
+          <p>{{use3_d}}</p>
+          <code class="card-cmd">codebase-map summary · api-catalog</code>
+        </article>
+        <article class="card">
+          <h3>{{use4_t}}</h3>
+          <p>{{use4_d}}</p>
+          <code class="card-cmd">cbm-mcp</code>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="how">
+    <div class="wrap">
+      <h2>{{how_title}}</h2>
+      <p class="section-lede">{{how_lede}}</p>
+      <ol class="steps">
+        <li class="step"><span class="step-num">1</span><h3>{{how1_t}}</h3><p>{{how1_d}}</p></li>
+        <li class="step"><span class="step-num">2</span><h3>{{how2_t}}</h3><p>{{how2_d}}</p></li>
+        <li class="step"><span class="step-num">3</span><h3>{{how3_t}}</h3><p>{{how3_d}}</p></li>
+        <li class="step"><span class="step-num">4</span><h3>{{how4_t}}</h3><p>{{how4_d}}</p></li>
+      </ol>
+
+      <h2 class="subhead">{{feat_title}}</h2>
+      <div class="features">
+        <div class="feature"><h3>{{f1_t}}</h3><p>{{f1_d}}</p></div>
+        <div class="feature"><h3>{{f2_t}}</h3><p>{{f2_d}}</p></div>
+        <div class="feature"><h3>{{f3_t}}</h3><p>{{f3_d}}</p></div>
+        <div class="feature"><h3>{{f4_t}}</h3><p>{{f4_d}}</p></div>
+        <div class="feature"><h3>{{f5_t}}</h3><p>{{f5_d}}</p></div>
+        <div class="feature"><h3>{{f6_t}}</h3><p>{{f6_d}}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="demo">
+    <div class="wrap">
+      <h2>{{demo_title}}</h2>
+      <p class="section-lede">{{demo_lede}}</p>
+      <dl class="stats">
+        <div><dt>{{stat_nodes}}</dt><dd>{{n_nodes}}</dd></div>
+        <div><dt>{{stat_links}}</dt><dd>{{n_links}}</dd></div>
+        <div><dt>{{stat_edges}}</dt><dd>{{n_edges}}</dd></div>
+      </dl>
+      <div class="demo-frame" data-demo>
+        <iframe src="{{base}}demo/" title="{{demo_frame_title}}" loading="lazy" tabindex="-1"></iframe>
+        <button class="demo-activate" type="button" data-demo-activate><span>{{demo_activate}}</span></button>
+      </div>
+      <p class="demo-actions"><a class="btn btn-ghost" href="{{base}}demo/" target="_blank" rel="noopener">{{demo_open}} ↗</a></p>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="install">
+    <div class="wrap">
+      <h2>{{install_title}}</h2>
+      <p class="section-lede">{{install_lede}}</p>
+
+      <div class="tabs" data-tabs>
+        <div class="tab-list" role="tablist">
+          <button class="tab" type="button" role="tab" id="tab-cli" aria-controls="panel-cli" aria-selected="true">{{tab_cli}}</button>
+          <button class="tab" type="button" role="tab" id="tab-mcp" aria-controls="panel-mcp" aria-selected="false" tabindex="-1">{{tab_mcp}}</button>
+        </div>
+
+        <div class="tab-panel" role="tabpanel" id="panel-cli" aria-labelledby="tab-cli">
+          <ol class="install-steps">
+            <li>
+              <p>{{cli_step1}}</p>
+              <div class="code"><pre id="code-cli-1"><span class="cmd">pipx install codebase-map</span></pre><button class="copy-btn" type="button" data-copy="code-cli-1" data-label="{{copy}}" data-done="{{copied}}">{{copy}}</button></div>
+            </li>
+            <li>
+              <p>{{cli_step2}}</p>
+              <div class="code"><pre id="code-cli-2"><span class="k">project</span>: <span class="s">"my-app"</span>
+<span class="k">sources</span>:
+  - <span class="k">path</span>: <span class="s">"app"</span>
+    <span class="k">language</span>: python
+    <span class="k">base_module</span>: <span class="s">"app"</span>
+    <span class="k">exclude</span>: [<span class="s">"__pycache__"</span>, <span class="s">"migrations"</span>]
+<span class="k">output</span>:
+  <span class="k">dir</span>: <span class="s">"docs/function-map"</span>
+  <span class="k">formats</span>: [json, html]</pre><button class="copy-btn" type="button" data-copy="code-cli-2" data-label="{{copy}}" data-done="{{copied}}">{{copy}}</button></div>
+            </li>
+            <li>
+              <p>{{cli_step3}}</p>
+              <div class="code"><pre id="code-cli-3"><span class="cmd">codebase-map generate -c codebase-map.yaml</span>
+<span class="cmd">codebase-map impact "CustomerService" -f docs/function-map/graph.json</span></pre><button class="copy-btn" type="button" data-copy="code-cli-3" data-label="{{copy}}" data-done="{{copied}}">{{copy}}</button></div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="tab-panel" role="tabpanel" id="panel-mcp" aria-labelledby="tab-mcp" hidden>
+          <ol class="install-steps">
+            <li>
+              <p>{{mcp_step1}}</p>
+              <div class="code"><pre id="code-mcp-1"><span class="cmd">pipx install "codebase-map[mcp]"</span></pre><button class="copy-btn" type="button" data-copy="code-mcp-1" data-label="{{copy}}" data-done="{{copied}}">{{copy}}</button></div>
+            </li>
+            <li>
+              <p>{{mcp_step2}}</p>
+              <div class="code"><pre id="code-mcp-2">{
+  <span class="k">"mcpServers"</span>: {
+    <span class="k">"codebase-map"</span>: {
+      <span class="k">"command"</span>: <span class="s">"cbm-mcp"</span>
+    }
+  }
+}</pre><button class="copy-btn" type="button" data-copy="code-mcp-2" data-label="{{copy}}" data-done="{{copied}}">{{copy}}</button></div>
+            </li>
+          </ol>
+          <p class="note">{{mcp_note}}</p>
+        </div>
+      </div>
+
+      <h3 class="table-title">{{cmd_title}}</h3>
+      <div class="table-wrap">
+        <table class="cmd-table">
+          <tbody>
+            <tr><td><code>generate</code></td><td>{{cmd_generate}}</td></tr>
+            <tr><td><code>query</code></td><td>{{cmd_query}}</td></tr>
+            <tr><td><code>impact</code></td><td>{{cmd_impact}}</td></tr>
+            <tr><td><code>search</code></td><td>{{cmd_search}}</td></tr>
+            <tr><td><code>summary</code></td><td>{{cmd_summary}}</td></tr>
+            <tr><td><code>diff</code></td><td>{{cmd_diff}}</td></tr>
+            <tr><td><code>snapshot-diff</code></td><td>{{cmd_snapshot_diff}}</td></tr>
+            <tr><td><code>snapshots</code></td><td>{{cmd_snapshots}}</td></tr>
+            <tr><td><code>api-catalog</code></td><td>{{cmd_api_catalog}}</td></tr>
+            <tr><td><code>coverage</code></td><td>{{cmd_coverage}}</td></tr>
+            <tr><td><code>check-staleness</code></td><td>{{cmd_check_staleness}}</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">{{cmd_help}}</p>
+    </div>
+  </section>
+
+  <section class="section" id="next">
+    <div class="wrap">
+      <div class="next">
+        <p class="eyebrow">{{next_eyebrow}}</p>
+        <h2>{{next_title}}</h2>
+        <p class="section-lede">{{next_lede}}</p>
+        <ol class="moments">
+          <li><span class="moment-num">1</span><h3>{{m1_t}}</h3><p>{{m1_d}}</p></li>
+          <li><span class="moment-num">2</span><h3>{{m2_t}}</h3><p>{{m2_d}}</p></li>
+          <li><span class="moment-num">3</span><h3>{{m3_t}}</h3><p>{{m3_d}}</p></li>
+        </ol>
+        <a class="btn btn-primary" href="{{repo}}/discussions">{{next_cta}}</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div>
+      <p>{{foot_tagline}}</p>
+      <p class="fine">{{foot_privacy}}</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="{{repo}}">{{foot_source}}</a></li>
+      <li><a href="https://pypi.org/project/codebase-map/">PyPI</a></li>
+      <li><a href="{{repo}}/issues">{{foot_issues}}</a></li>
+      <li><a href="{{repo}}/blob/main/SECURITY.md">{{foot_security}}</a></li>
+    </ul>
+  </div>
+</footer>
+</body>
+</html>
