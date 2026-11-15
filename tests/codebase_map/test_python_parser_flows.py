@@ -112,6 +112,22 @@ class TestSelfScan:
         fake = {nid: f for nid, f in tagged.items() if {"name1", "name2"} & set(f)}
         assert fake == {}
 
+    def test_self_source_has_no_annotation_lines(self) -> None:
+        """CBM's own source has no real `# flow:` annotations, so no line may match.
+
+        Independent of line positions: the node-level checks above can pass
+        by accident if a comment drifts out of the 5-line lookup window. The
+        old unanchored regex matched 4 prose/CSS lines here. If a real
+        annotation is ever added to codebase_map/, allow-list it below.
+        """
+        allowed: dict[str, dict[int, list[str]]] = {}
+        found: dict[str, dict[int, list[str]]] = {}
+        for py in sorted((REPO_ROOT / "codebase_map").rglob("*.py")):
+            hits = _extract_flow_annotations(py.read_text(encoding="utf-8"))
+            if hits:
+                found[str(py.relative_to(REPO_ROOT))] = hits
+        assert found == allowed
+
     def test_extract_flow_annotations_node_untagged(self) -> None:
         src = REPO_ROOT / "codebase_map" / "parsers" / "python_parser.py"
         nodes, _ = PythonParser().parse_file(src, "codebase_map")
