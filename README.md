@@ -173,6 +173,13 @@ Limits: a dependency that exists only at run time is not seen — a screen
 calling an endpoint through `fetch("/api/…")`, or two features sharing a
 database table. List the endpoint's file under the feature that uses it.
 
+**For people who do not read code.** The `cbm-vibe` plugin in
+[`plugins/cbm-vibe/`](plugins/cbm-vibe/README.md) puts these commands behind a
+Claude skill (in Vietnamese): Claude agrees the acceptance criteria before it
+edits, and reports afterwards what it did, which criteria have evidence, and
+what it touched outside the request. It carries its own copy of this package
+and needs only Python 3.9+; build it with `python3 scripts/build_cbm_vibe.py`.
+
 ---
 
 ## Commands

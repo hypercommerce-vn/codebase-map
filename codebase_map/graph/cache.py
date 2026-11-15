@@ -99,7 +99,7 @@ class BuildCache:
             return False
 
         try:
-            with open(cache_path) as f:
+            with open(cache_path, encoding="utf-8") as f:
                 data = json.load(f)
 
             # Validate cache version and project
@@ -146,7 +146,7 @@ class BuildCache:
 
         try:
             cache_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(cache_path, "w") as f:
+            with open(cache_path, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=None, separators=(",", ":"))
             return True
         except OSError as e:

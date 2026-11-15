@@ -10,7 +10,8 @@ from pathlib import Path
 from codebase_map import __version__
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The command-line parser, separate from running a command."""
     parser = argparse.ArgumentParser(
         prog="codebase-map",
         description="Function dependency graph generator for any codebase.",
@@ -304,8 +305,13 @@ def main(argv: list[str] | None = None) -> int:
         default="codebase-map.yaml",
         help="Config file (for snapshot dir detection)",
     )
+    return parser
 
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
+    _use_utf8_output()
 
     if not args.command:
         parser.print_help()
@@ -337,6 +343,21 @@ def main(argv: list[str] | None = None) -> int:
         return _cmd_features(args)
 
     return 0
+
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# VIBE-104: output is UTF-8 whatever the platform default is. On Windows a
+# redirected stdout uses a legacy code page, and printing a Vietnamese feature
+# name to it raises UnicodeEncodeError.
+def _use_utf8_output() -> None:
+    for stream in (sys.stdout, sys.stderr):
+        encoding = (getattr(stream, "encoding", "") or "").lower().replace("-", "")
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None and encoding != "utf8":
+            try:
+                reconfigure(encoding="utf-8", errors="replace")
+            except (OSError, ValueError):
+                pass
 
 
 # HC-AI | ticket: FDD-TOOL-CODEMAP
@@ -945,14 +966,19 @@ def _add_features_parser(sub) -> None:
 
     add_p = command("add", "Add a feature, or update an existing one")
     add_p.add_argument("--id", required=True, dest="feature_id", help="e.g. booking")
-    add_p.add_argument("--name", required=True, help="Name shown to the owner")
+    add_p.add_argument("--name", default=None, help="Name shown to the owner")
     add_p.add_argument(
         "--files",
-        required=True,
+        default=None,
         nargs="+",
         help="Files, folders or globs (* and ?) that implement the feature",
     )
-    add_p.add_argument("--summary", default="", help="One sentence about it")
+    add_p.add_argument(
+        "--append",
+        action="store_true",
+        help="Add --files to the feature's existing ones instead of replacing them",
+    )
+    add_p.add_argument("--summary", default=None, help="One sentence about it")
 
     crit_p = command("criterion", "Add an acceptance criterion to a feature")
     crit_p.add_argument("--feature", required=True, help="Feature id")
@@ -1037,9 +1063,18 @@ def _run_features(args: argparse.Namespace):
         return None
 
     if command == "add":
-        feature = store.upsert_feature(
-            args.feature_id, args.name, args.files, args.summary
-        )
+        # An existing feature keeps whatever the command does not give
+        known = next((f for f in store.features if f.id == args.feature_id), None)
+        name = args.name or (known.name if known else None)
+        files = args.files or (list(known.files) if known else None)
+        if name is None or files is None:
+            raise FeatureStoreError("A new feature needs --name and --files.")
+        if args.append and known and args.files:
+            files = known.files + [p for p in args.files if p not in known.files]
+        summary = args.summary
+        if summary is None:
+            summary = known.summary if known else ""
+        feature = store.upsert_feature(args.feature_id, name, files, summary)
         store.save(store_path)
         scope = FeatureMap(store, graph).scope(feature.id)
         files = graph.metadata["files"]
