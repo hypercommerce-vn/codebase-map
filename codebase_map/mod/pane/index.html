@@ -1,0 +1,93 @@
+<!-- HC-AI | ticket: VIBE-105 -->
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBM Mod Pane</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="status-line" id="status-line">
+  <div class="slot" data-slot="sprint">
+    <span class="icon">🚀</span><span class="val" data-field="sprint">…</span>
+  </div>
+  <span class="sep">│</span>
+  <div class="slot" data-slot="branch">
+    <span class="icon">🌿</span><span class="val" data-field="branch">…</span>
+  </div>
+  <span class="sep">│</span>
+  <div class="slot" data-slot="pr">
+    <span class="icon">🔀</span>
+    <span class="val"><a id="pr-link" href="#" target="_blank" rel="noopener">—</a></span>
+  </div>
+  <span class="sep">│</span>
+  <div class="slot" data-slot="ci">
+    <span class="dot" id="ci-dot"></span><span class="val" data-field="ci_state">…</span>
+  </div>
+  <span class="sep">│</span>
+  <div class="slot" data-slot="snapshot">
+    <span class="icon">📊</span><span class="val" data-field="snapshot_state">…</span>
+  </div>
+  <div class="slot slot-right" data-slot="risk">
+    <span class="dot" id="risk-dot"></span><span class="val" data-field="risk_level">…</span>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-tab="graph">📊 Graph</button>
+  <button class="tab" data-tab="timeline">🕐 Timeline</button>
+  <button class="tab" data-tab="replay">🎬 Replay</button>
+</nav>
+
+<main class="panes">
+
+  <section class="pane active" id="pane-graph">
+    <div class="pane-header">
+      <h2>Codebase graph</h2>
+      <div class="pane-meta" id="graph-meta">loading…</div>
+    </div>
+    <div class="pane-body" id="graph-body">
+      <div class="placeholder" id="graph-placeholder">
+        <div class="spinner"></div>
+        <p>Đang tải graph…</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pane" id="pane-timeline">
+    <div class="pane-header">
+      <h2>Snapshot timeline</h2>
+      <div class="pane-meta">D3 — coming Day 3</div>
+    </div>
+    <div class="pane-body">
+      <div class="placeholder">
+        <div class="placeholder-icon">🕐</div>
+        <h3>Timeline sắp có</h3>
+        <p>Danh sách snapshot + slider tua graph qua các phiên bản.</p>
+        <p class="muted">Dự kiến: Day 3 VIBE-105</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pane" id="pane-replay">
+    <div class="pane-header">
+      <h2>Claude Replay</h2>
+      <div class="pane-meta">D5 — coming Day 5</div>
+    </div>
+    <div class="pane-body">
+      <div class="placeholder">
+        <div class="placeholder-icon">🎬</div>
+        <h3>Replay sắp có</h3>
+        <p>Tua lại từng step Claude đã làm, đồng bộ highlight trên tab Graph.</p>
+        <p class="muted">Dự kiến: Day 4 parser · Day 5 player UI</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

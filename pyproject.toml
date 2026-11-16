@@ -53,7 +53,13 @@ cbm-mcp = "mcp_server.server:main"
 include = ["codebase_map*", "mcp_server*"]
 
 [tool.setuptools.package-data]
-codebase_map = ["exporters/d3.v7.min.js"]
+codebase_map = [
+    "exporters/d3.v7.min.js",
+    # VIBE-105: ship the pane shell with the wheel so `cbm mod serve` works
+    "mod/pane/*.html",
+    "mod/pane/*.css",
+    "mod/pane/*.js",
+]
 
 [tool.black]
 target-version = ["py310"]
