@@ -41,8 +41,10 @@ def _find_fdd_for_node(fdd_by_line: dict[int, str], line_start: int) -> str:
 
 
 # HC-AI | ticket: FDD-TOOL-CODEMAP
-# CM-S3-04: Business flow tagging — parse `# flow: name1, name2` comments
-_FLOW_PATTERN = re.compile(r"#[^\n]*?flow\s*:\s*([A-Za-z0-9_,\-\s]+)", re.IGNORECASE)
+# CM-S3-04: Business flow tagging — parse `# flow: name1, name2` comments.
+# Anchored: the whole line must be the comment and the comment must start with
+# `flow:`, so prose that merely mentions `flow:` (or `workflow:`) is ignored.
+_FLOW_PATTERN = re.compile(r"^\s*#\s*flow\s*:\s*([A-Za-z0-9_,\-\s]+)", re.IGNORECASE)
 
 
 def _extract_flow_annotations(source: str) -> dict[int, list[str]]:

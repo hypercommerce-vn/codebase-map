@@ -604,6 +604,11 @@ a:hover { text-decoration: underline; }
         <td><code>codebase_map/</code></td>
         <td><span class="badge merged">PR #82 ✅</span></td>
       </tr>
+      <tr>
+        <td>Website dự án v0.1 (landing song ngữ + demo + deploy VPS) — trang build ra chính là bản design</td>
+        <td><code>website/</code> · <code>website/README.md</code></td>
+        <td><span class="badge ceo">✅ CEO duyệt 15/11/2026</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -741,6 +746,34 @@ a:hover { text-decoration: underline; }
       <p>Coverage 38% → 75% theo ngôn ngữ (64% → 90%+ theo archetype). JS parser extend TS (3 SP, AI pair) + Java parser javalang+Spring (8 SP, TechLead) + QA integration (2 SP). <strong>D3 + D4 decision.</strong></p>
       <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#8b5cf6"></div></div>
       <div class="progress-label">0/13 SP · Target: 20/04 → 23/05/2026 (5 tuần song song) · Gate G4: Java + JS parse HC-sample PASS</div>
+    </div>
+
+    <div class="sprint-card" style="border-left: 3px solid #6366f1;">
+      <div class="sprint-card-header">
+        <h3>CBM-WEB · Website dự án v0.1</h3>
+        <span class="badge done">✅ PR #152 merged 16/11 · chờ deploy</span>
+      </div>
+      <p>Landing tĩnh song ngữ (<code>/</code> tiếng Việt · <code>/en/</code> tiếng Anh) · demo thật ở <code>/demo/</code> (CBM vẽ chính mã nguồn của nó, dựng lại mỗi lần build) · số liệu + output terminal lấy từ code thật · không backend, không cookie, không CDN · deploy VPS bằng nginx + certbot (<code>deploy.sh</code>) hoặc Docker. <a href="../website/README.md" target="_blank"><strong>Hướng dẫn →</strong></a></p>
+      <div class="progress-bar"><div class="progress-fill" style="width:95%;background:#6366f1"></div></div>
+      <div class="progress-label"><a href="https://github.com/hypercommerce-vn/codebase-map/pull/152" target="_blank">PR #152</a> merged 16/11 (<code>e7a9b91</code>) · review gate 3 vòng: 85.2% → 93.0% → <strong>94.4% SHIPIT+NOTE</strong> (CTO 96.7% · Designer 91) · lint + 174 tests + CI (thêm job <code>website</code>) PASS · <strong>chưa deploy lên VPS thật</strong> · 16/11/2026</div>
+      <div style="margin-top:10px; padding:8px 10px; background:var(--bg-muted); border-radius:6px; font-size:11px; color:var(--text-muted);">
+        <strong style="color:var(--text);">Quyết định CEO:</strong>
+        <ul style="margin:4px 0 0 16px; padding:0;">
+          <li>✅ 15/11/2026: duyệt v0.1 làm design (rule No Design = No Implementation)</li>
+          <li>✅ Khối "Sắp tới: cho người làm app bằng AI" (hướng CBM-VIBE): giữ, vì nằm trong bản v0.1 đã duyệt</li>
+          <li>✅ 16/11/2026: duyệt merge PR #152 (merge commit <code>e7a9b91</code>)</li>
+          <li>⏳ Còn chờ: tên miền + VPS (IP, user SSH) để chạy <code>deploy.sh --setup</code></li>
+        </ul>
+        <strong style="color:var(--text);">Review gate:</strong> <a href="../docs/reference/reviews/ReviewGate_Local_feat-cbm-website_2026-11-15.md" target="_blank">Local pre-flight</a> · <a href="../docs/reference/reviews/ReviewGate_PR152_Round1_2026-11-15.md" target="_blank">Vòng 1</a> · <a href="../docs/reference/reviews/ReviewGate_PR152_Round2_2026-11-15.md" target="_blank">Vòng 2</a> · <a href="../docs/reference/reviews/ReviewGate_PR152_Round3_2026-11-15.md" target="_blank">Vòng 3</a>. Review chặn được các lỗi: <code>deploy.sh</code> có thể xoá file ngoài web root (thư mục lạ, symlink, đường dẫn <code>//</code>); chạy lại <code>--setup</code> thì mất HTTPS của certbot; câu "code không rời khỏi máy" nói quá; terminal che node ở 700–959 px; tương phản dưới chuẩn AA.<br>
+        <strong style="color:var(--text);">Tách ra làm ticket riêng (exporter/parser, đang xử lý ở phiên riêng từ 16/11):</strong>
+        <ul style="margin:4px 0 0 16px; padding:0;">
+          <li>Demo: toolbar/minimap che legend và panel node (layout exporter, cả bản <code>/demo/</code> 1440 px)</li>
+          <li>Badge "v2.0" viết cứng ở <code>html_exporter.py:552</code> (bản thật 2.4.0); "1 domains" sai số nhiều; dòng Flows trống</li>
+          <li><code>_detect_domain</code> trong <code>python_parser.py</code> chỉ nhận tên domain của Hyper Commerce → repo khác chỉ có 1 nhóm "other"</li>
+          <li>Màu xanh lá mang hai nghĩa: service ở hình hero, method ở demo</li>
+        </ul>
+        <strong style="color:var(--text);">Phát hiện khi làm:</strong> parser Python đọc nhầm comment tài liệu có chữ <code>flow:</code> thành chú thích flow → demo hiện chip "name1, name2" (<code>python_parser.py</code> <code>_FLOW_PATTERN</code>). ✅ Đã sửa ở PR #148 (merge 15/11), nhánh website đã merge main và build lại: demo hết chip giả.
+      </div>
     </div>
   </div>
 
@@ -928,6 +961,24 @@ a:hover { text-decoration: underline; }
       <tr>
         <td><a href="../docs/active/cbm-claude-integration/Phase2_MCP_Explainer.md" target="_blank">MCP_Explainer</a></td>
         <td>Slash Command vs MCP auto-invoke (retention 15% → 50%)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- HC-AI | ticket: FDD-TOOL-CODEMAP — CBM-VIBE docs (15/11/2026) -->
+  <h3 style="margin-top:28px; font-size:15px;">🧭 Tài liệu CBM-VIBE — <code>docs/active/cbm-vibecoding/</code></h3>
+  <table style="margin-top:10px;">
+    <thead>
+      <tr><th>Tài liệu</th><th>Mục đích</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="../docs/active/cbm-vibecoding/CBM-VIBE-Chan-Dung-Khach-Hang.md" target="_blank">Chan_Dung_Khach_Hang</a></td>
+        <td>Chân dung 2 tập khách hàng (chủ kinh doanh tự xây công cụ · người mới học để làm nghề), hệ quả cho sản phẩm, câu hỏi cần kiểm chứng — nháp v0.1 15/11/2026, chờ CEO duyệt</td>
+      </tr>
+      <tr>
+        <td><a href="../design-preview/active/CBM-MOD-VIBE-106-design.html" target="_blank">CBM-MOD-VIBE-106 Design</a></td>
+        <td>🆕 <strong>VIBE-106 CBM Mod + Claude Replay</strong> (renamed từ VIBE-105 theo CEO decision 16/11/2026 — mã VIBE-105 để dành cho ticket "cài plugin Chat/Cowork/Code" PR #153) — biến CBM thành mod gắn Claude: status line always-on · pane 3-tab (Graph/Timeline/Replay) · toast · hooks. Tính năng chính: <em>Claude Replay</em> tua lại từng step Claude đã làm sync với graph. 21 SP tổng, 7 days. <strong>Tiến độ:</strong> ✅ D1 server + status API (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/159" target="_blank">PR #159</a>, 3 SP) · ✅ D2 pane shell + Graph tab (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/160" target="_blank">PR #160</a>, 3 SP) · ✅ D3 Timeline tab + snapshot diff (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/161" target="_blank">PR #161</a>, 3 SP) · ✅ D4 Claude Replay parser (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/162" target="_blank">PR #162</a>, 4 SP) · ✅ D5 Replay player UI + Graph sync + redaction (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/163" target="_blank">PR #163</a>, 4 SP) · ✅ D6 Hooks + Toast (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/164" target="_blank">PR #164</a>, 3 SP) · ✅ D7 polish + README + design v1.0 (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/165" target="_blank">PR #165</a>, 1 SP) → <strong>21/21 SP sprint complete</strong> · 🎯 <strong>Review Gate Round 1 = 90.4% SHIPIT+NOTE</strong> (<a href="../docs/reference/reviews/ReviewGate_VIBE-106_Round1_20261116.md" target="_blank">report</a>) · chờ CEO duyệt merge. <br><em>Note: PR cũ #156/#157/#158 bị GitHub close tự động khi branch rename; nội dung và history giữ nguyên ở PR mới.</em></td>
       </tr>
     </tbody>
   </table>
@@ -1655,6 +1706,20 @@ a:hover { text-decoration: underline; }
       <tr style="background:#fef3c7;">
         <td colspan="5" style="text-align:center; font-weight:700; color:#78350f; font-size:13px;">🎉🎉🎉 INITIATIVE CBM × Claude Integration OFFICIALLY SEALED (22/04/2026) — S1 + S2 + S3 all COMPLETE · 20 SP in ~3 days · 3 PyPI + 3 plugins LIVE</td>
       </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/148" target="_blank">#148</a></td>
+        <td>fix(parser): only match full-line <code># flow:</code> annotation comments (bug phát hiện khi làm website demo)</td>
+        <td><code>claude/sleepy-kare-6ceeae</code></td>
+        <td><a href="../docs/reference/reviews/ReviewGate_PR148_Round1_2026-11-15.md" target="_blank">SHIPIT 98.3%</a></td>
+        <td><span class="badge merged">✅ Merged 15/11</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/152" target="_blank">#152</a></td>
+        <td>feat(website): bilingual project website with live demo and VPS deploy (CBM-WEB v0.1)</td>
+        <td><code>feat/cbm-website</code></td>
+        <td><a href="../docs/reference/reviews/ReviewGate_PR152_Round3_2026-11-15.md" target="_blank">3 vòng · 94.4% SHIPIT+NOTE</a></td>
+        <td><span class="badge merged">✅ Merged 16/11</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -1939,6 +2004,10 @@ a:hover { text-decoration: underline; }
     <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
       <div class="tl-date">22/04/2026 · 🎉 S3 SEALED + INITIATIVE COMPLETE</div>
       <div class="tl-content"><strong>🎉 SPRINT CBM-INT-S3 SEALED — 5/5 SP (100%) in ~1 calendar day · 13 days ahead of schedule</strong>. 10 PRs merged · <strong>Rule #S2-1 validated 7× consecutive</strong> (ZERO S3 conflicts vs S2's 3) · 0 P0/P1/P2 defects · 158/158 tests · 3 plugins LIVE · marketplace public · launch content ready. <strong>E2E Verification 22/25 PASS</strong> (3 deferred to CEO launch-day hands-on: Loom record, blog publish, HN/Reddit posts). <strong>🎉🎉🎉 INITIATIVE CBM × Claude Integration OFFICIALLY COMPLETE</strong> — S1 v2.3.0 + S2 v2.4.0 + S3 v2.5.0 plugin all SEALED. <strong>20 SP shipped in ~3 calendar days (vs original 6-week plan · 25.5 days saved)</strong>. 3 PyPI releases · 3 plugins · 5 MCP tools · 40× cache speedup · ~36 PRs merged. <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-Retrospective.md" target="_blank">S3 Retro ↗</a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-Verification-Report.md" target="_blank">S3 Verify Report ↗</a>. Next: CEO Day 5 launch-day actions → CBM-LANG-P1 (JS + Java, 13 SP, metrics gate).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">15/11/2026 · CBM-WEB</div>
+      <div class="tl-content"><strong>CEO duyệt website dự án v0.1 làm design</strong> (landing song ngữ + demo <code>/demo/</code> + deploy VPS), giữ khối "Sắp tới" hướng CBM-VIBE. PR #152 qua review gate 3 vòng (85.2% → 93.0% → 94.4% SHIPIT+NOTE), CEO duyệt merge 16/11/2026 (<code>e7a9b91</code>). Bug parser <code># flow:</code> phát hiện khi làm demo đã sửa và merge ở PR #148. Còn chờ: tên miền + VPS để deploy.</div>
     </div>
   </div>
 
