@@ -199,6 +199,7 @@ Cập nhật `BRIEF.md` + Board HTML (SSOT):
 | **v2.0.1** | Hotfix | Classifier fix, coverage hook, generate --diff | 3 | ✅ Done (08/04/2026) |
 | **v2.1** | CBM-P1 | Graph metadata + snapshot versioning | 7 | ✅ Done (12/04/2026) |
 | **v2.2** | CBM-P2 | Dual-snapshot diff engine | 12 | ✅ Done (12/04/2026) |
+| **v2.5** | VIBE-106 | CBM Mod: status line + pane 3-tab (Graph/Timeline/Replay) + Claude Replay + hooks + toasts | 21 | ✅ Done (16/11/2026) |
 
 ---
 
