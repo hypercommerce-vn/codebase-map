@@ -690,9 +690,13 @@ const edges = DATA.edges.filter(e =>
 ).map(e => ({{ source: e.source, target: e.target, type: e.type }}));
 
 // CM-S1-10: Top bar stats
-// HC-AI | ticket: FDD-TOOL-CODEMAP — singular label when the count is 1
+// HC-AI | ticket: FDD-TOOL-CODEMAP — singular noun when the count is 1
+// ("1 domain", "2 domains"); pass `many` for irregular plurals.
+function plural(count, noun, many) {{
+  return count === 1 ? noun : (many || noun + 's');
+}}
 function statLabel(count, noun) {{
-  return `<strong>${{count.toLocaleString()}}</strong> ${{noun}}${{count === 1 ? '' : 's'}}`;
+  return `<strong>${{count.toLocaleString()}}</strong> ${{plural(count, noun)}}`;
 }}
 const domainCount = DATA.stats.by_domain ? Object.keys(DATA.stats.by_domain).length : 0;
 document.getElementById('stat-nodes').innerHTML = statLabel(nodes.length, 'node');
@@ -754,7 +758,7 @@ function renderApiCatalog() {{
   const parts = [];
   for (const d of Object.keys(byDomain).sort()) {{
     const list = byDomain[d];
-    parts.push(`<div class="api-domain"><div class="hdr"><span>${{htmlEscape(d)}}</span><span>${{list.length}} routes</span></div>` +
+    parts.push(`<div class="api-domain"><div class="hdr"><span>${{htmlEscape(d)}}</span><span>${{list.length}} ${{plural(list.length, 'route')}}</span></div>` +
       list.map(r => `<div class="route">${{htmlEscape(r.name || r.id || '')}}</div>`).join('') +
       `</div>`);
   }}
@@ -912,7 +916,7 @@ function renderExecutiveView() {{
     if (hasCoverage && d.covCount > 0) {{
       healthPct = Math.round(d.covSum / d.covCount);
       healthLabel = 'Test coverage';
-      healthTitle = `Real coverage from pytest-cov: ${{d.covCount}}/${{d.nodes}} nodes covered`;
+      healthTitle = `Real coverage from pytest-cov: ${{d.covCount}}/${{d.nodes}} ${{plural(d.nodes, 'node')}} covered`;
     }} else {{
       // Fallback: layer-diversity proxy (v2.0 behaviour)
       healthPct = Math.min(100, layerCount * 14);
@@ -924,13 +928,13 @@ function renderExecutiveView() {{
     else if (healthPct < 70) healthColor = '#d29922';
     const rightLabel = (hasCoverage && d.covCount > 0)
       ? `${{healthPct}}%`
-      : `${{layerCount}} layers`;
+      : `${{layerCount}} ${{plural(layerCount, 'layer')}}`;
     return `
       <div class="exec-card" style="border-color:${{color}}" data-domain="${{htmlEscape(d.name)}}" title="${{htmlEscape(healthTitle)}}">
         <h3><span class="dot" style="background:${{color}}"></span>${{htmlEscape(d.name)}}</h3>
         <div class="stats">
-          <span>&#x1f4cd; ${{d.nodes}} nodes</span>
-          <span>&#x1f50c; ${{d.routes}} routes</span>
+          <span>&#x1f4cd; ${{d.nodes}} ${{plural(d.nodes, 'node')}}</span>
+          <span>&#x1f50c; ${{d.routes}} ${{plural(d.routes, 'route')}}</span>
           <span>&#x1f9e9; ${{d.classes}} cls</span>
           <span>&#x192; ${{d.methods}} fn</span>
         </div>
@@ -1250,7 +1254,7 @@ function renderDomainTree(filter = '') {{
     </div>`;
     searchCountEl.style.display = 'none';
   }} else if (lowerFilter !== '') {{
-    searchCountEl.textContent = `${{totalVisible}} results`;
+    searchCountEl.textContent = `${{totalVisible}} ${{plural(totalVisible, 'result')}}`;
     searchCountEl.style.display = 'block';
   }} else {{
     searchCountEl.style.display = 'none';
@@ -1536,9 +1540,9 @@ function selectNode(d) {{
     <div class="dp-block">
       <div class="dp-block-title">&#x2462; Relationships</div>
       <div class="dp-kv">
-        <span class="k">Calls</span><span class="v">${{deps.length}} dependencies</span>
-        <span class="k">Called by</span><span class="v">${{dependents.length}} dependents</span>
-        <span class="k">Impact</span><span class="v">${{impactCount}} edges</span>
+        <span class="k">Calls</span><span class="v">${{deps.length}} ${{plural(deps.length, 'dependency', 'dependencies')}}</span>
+        <span class="k">Called by</span><span class="v">${{dependents.length}} ${{plural(dependents.length, 'dependent')}}</span>
+        <span class="k">Impact</span><span class="v">${{impactCount}} ${{plural(impactCount, 'edge')}}</span>
       </div>
       ${{deps.length ? `<div style="margin-top:8px; font-size:11px; color:var(--text-muted);">&#x2192; ${{deps.slice(0,5).map(e => {{ const tid = typeof e.target === 'object' ? e.target.id : e.target; const tname = tid.split('.').pop(); return `<span class="dep-item" style="display:inline-block; padding:1px 6px;" onclick="selectNodeById('${{tid}}')">${{tname}}</span>`; }}).join(' ')}}</div>` : ''}}
       ${{dependents.length ? `<div style="margin-top:4px; font-size:11px; color:var(--text-muted);">&#x2190; ${{dependents.slice(0,5).map(e => {{ const sid = typeof e.source === 'object' ? e.source.id : e.source; const sname = sid.split('.').pop(); return `<span class="dep-item" style="display:inline-block; padding:1px 6px;" onclick="selectNodeById('${{sid}}')">${{sname}}</span>`; }}).join(' ')}}</div>` : ''}}

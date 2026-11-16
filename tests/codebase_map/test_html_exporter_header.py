@@ -49,6 +49,23 @@ class TestVersionBadge:
         assert f'<span class="logo-ver">v{__version__}</span>' in html
 
 
+def _js_function(html: str, name: str) -> str:
+    match = re.search(rf"function {name}\([^)]*\) \{{.*?\n\}}", html, re.S)
+    assert match, f"{name}() not found in exported HTML"
+    return match.group(0)
+
+
+def _run_node(script: str) -> object:
+    result = subprocess.run(
+        ["node", "-e", script],
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    )
+    return json.loads(result.stdout)
+
+
 class TestStatLabels:
     def test_badges_use_singular_aware_helper(self, html: str) -> None:
         assert "statLabel(nodes.length, 'node')" in html
@@ -56,29 +73,48 @@ class TestStatLabels:
         assert "statLabel(domainCount, 'domain')" in html
         assert "</strong> domains`" not in html
 
+    @pytest.mark.parametrize(
+        "hardcoded",
+        [
+            "} routes</span>",
+            "} nodes covered",
+            "} layers`",
+            "} nodes</span>",
+            "} results`",
+            "} dependencies</span>",
+            "} dependents</span>",
+            "} edges</span>",
+        ],
+    )
+    def test_no_hardcoded_plural_after_a_count(self, html: str, hardcoded: str) -> None:
+        """Every other "<count> <noun>" label on the page goes through plural()."""
+        assert hardcoded not in html
+
     @pytest.mark.skipif(shutil.which("node") is None, reason="node not installed")
-    def test_helper_pluralizes(self, html: str) -> None:
-        match = re.search(r"function statLabel\(count, noun\) \{.*?\n\}", html, re.S)
-        assert match, "statLabel helper not found in exported HTML"
-        script = match.group(0) + (
-            "\nconsole.log(JSON.stringify("
-            "[0, 1, 2].map(n => statLabel(n, 'domain'))));"
+    def test_helpers_pluralize(self, html: str) -> None:
+        script = (
+            _js_function(html, "plural")
+            + "\n"
+            + _js_function(html, "statLabel")
+            + "\nconsole.log(JSON.stringify(["
+            "[0, 1, 2].map(n => statLabel(n, 'domain')),"
+            "[0, 1, 2].map(n => plural(n, 'dependency', 'dependencies')),"
+            "]));"
         )
-        result = subprocess.run(
-            ["node", "-e", script],
-            capture_output=True,
-            text=True,
-            check=True,
-            timeout=30,
-        )
-        assert json.loads(result.stdout) == [
-            "<strong>0</strong> domains",
-            "<strong>1</strong> domain",
-            "<strong>2</strong> domains",
+        assert _run_node(script) == [
+            [
+                "<strong>0</strong> domains",
+                "<strong>1</strong> domain",
+                "<strong>2</strong> domains",
+            ],
+            ["dependencies", "dependency", "dependencies"],
         ]
 
 
 class TestFlowBar:
+    """The first and last tests are guards (they also pass on the old code);
+    `test_hidden_attribute_wins_over_flex` is the regression test."""
+
     def test_flow_bar_starts_hidden(self, html: str) -> None:
         assert '<div id="flow-bar" class="flow-bar" hidden>' in html
 
