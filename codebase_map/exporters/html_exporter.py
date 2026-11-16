@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from codebase_map import __version__
 from codebase_map.graph.models import Graph
 
 # HC-AI | ticket: FDD-TOOL-CODEMAP
@@ -492,6 +493,9 @@ body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
   background: var(--bg-elevated); border-bottom: 1px solid var(--border);
   font-size: 11px; flex-wrap: wrap;
 }}
+/* HC-AI | ticket: FDD-TOOL-CODEMAP — `display: flex` above would otherwise
+   override the `hidden` attribute and leave an empty "Flows:" row. */
+.flow-bar[hidden] {{ display: none; }}
 .flow-bar .lbl {{ color: var(--text-muted); }}
 .flow-chip {{
   display: inline-flex; align-items: center; gap: 4px;
@@ -549,7 +553,7 @@ svg {{ width: 100%; height: 100%; }}
   <div id="topbar">
     <div class="logo-icon">CM</div>
     <span class="logo-text">Codebase Map</span>
-    <span class="logo-ver">v2.0</span>
+    <span class="logo-ver">v{__version__}</span>
     <span class="stat-badge" id="stat-nodes"></span>
     <span class="stat-badge" id="stat-edges"></span>
     <span class="stat-badge" id="stat-domains"></span>
@@ -686,10 +690,21 @@ const edges = DATA.edges.filter(e =>
 ).map(e => ({{ source: e.source, target: e.target, type: e.type }}));
 
 // CM-S1-10: Top bar stats
+// HC-AI | ticket: FDD-TOOL-CODEMAP — singular noun when the count is 1
+// ("1 domain", "2 domains"); pass `many` for irregular plurals.
+function plural(count, noun, many) {{
+  return count === 1 ? noun : (many || noun + 's');
+}}
+function statLabel(count, noun) {{
+  return `<strong>${{count.toLocaleString()}}</strong> ${{plural(count, noun)}}`;
+}}
+function countLabel(count, noun, many) {{
+  return `${{count.toLocaleString()}} ${{plural(count, noun, many)}}`;
+}}
 const domainCount = DATA.stats.by_domain ? Object.keys(DATA.stats.by_domain).length : 0;
-document.getElementById('stat-nodes').innerHTML = `<strong>${{nodes.length.toLocaleString()}}</strong> nodes`;
-document.getElementById('stat-edges').innerHTML = `<strong>${{edges.length.toLocaleString()}}</strong> edges`;
-document.getElementById('stat-domains').innerHTML = `<strong>${{domainCount}}</strong> domains`;
+document.getElementById('stat-nodes').innerHTML = statLabel(nodes.length, 'node');
+document.getElementById('stat-edges').innerHTML = statLabel(edges.length, 'edge');
+document.getElementById('stat-domains').innerHTML = statLabel(domainCount, 'domain');
 document.getElementById('timestamp').textContent = `Generated: ${{DATA.generated_at || new Date().toLocaleString()}}`;
 
 // HC-AI | ticket: FDD-TOOL-CODEMAP
@@ -728,7 +743,7 @@ function renderApiCatalog() {{
         <div class="es-icon" aria-hidden="true">&#x1f50c;</div>
         <div class="es-title">No HTTP routes detected in this project</div>
         <div class="es-hint">
-          Codebase Map found <strong>${{nodes.length.toLocaleString()}}</strong> nodes but none are tagged as routes.
+          Codebase Map found <strong>${{nodes.length.toLocaleString()}}</strong> ${{plural(nodes.length, 'node')}} but none are tagged as routes.
           This is expected for Python library / CLI / worker repos, or if route decorators live outside the scanned paths.<br><br>
           Tips: make sure your <code>codebase-map.yaml</code> <code>include</code> list covers your router/controller directories,
           and that your framework's route decorators (FastAPI <code>@router.get</code>, NestJS <code>@Controller</code>, Express <code>app.get</code>) match the parser.<br><br>
@@ -746,7 +761,7 @@ function renderApiCatalog() {{
   const parts = [];
   for (const d of Object.keys(byDomain).sort()) {{
     const list = byDomain[d];
-    parts.push(`<div class="api-domain"><div class="hdr"><span>${{htmlEscape(d)}}</span><span>${{list.length}} routes</span></div>` +
+    parts.push(`<div class="api-domain"><div class="hdr"><span>${{htmlEscape(d)}}</span><span>${{list.length}} ${{plural(list.length, 'route')}}</span></div>` +
       list.map(r => `<div class="route">${{htmlEscape(r.name || r.id || '')}}</div>`).join('') +
       `</div>`);
   }}
@@ -904,7 +919,7 @@ function renderExecutiveView() {{
     if (hasCoverage && d.covCount > 0) {{
       healthPct = Math.round(d.covSum / d.covCount);
       healthLabel = 'Test coverage';
-      healthTitle = `Real coverage from pytest-cov: ${{d.covCount}}/${{d.nodes}} nodes covered`;
+      healthTitle = `Real coverage from pytest-cov: ${{d.covCount}}/${{d.nodes}} ${{plural(d.nodes, 'node')}} covered`;
     }} else {{
       // Fallback: layer-diversity proxy (v2.0 behaviour)
       healthPct = Math.min(100, layerCount * 14);
@@ -916,13 +931,13 @@ function renderExecutiveView() {{
     else if (healthPct < 70) healthColor = '#d29922';
     const rightLabel = (hasCoverage && d.covCount > 0)
       ? `${{healthPct}}%`
-      : `${{layerCount}} layers`;
+      : `${{layerCount}} ${{plural(layerCount, 'layer')}}`;
     return `
       <div class="exec-card" style="border-color:${{color}}" data-domain="${{htmlEscape(d.name)}}" title="${{htmlEscape(healthTitle)}}">
         <h3><span class="dot" style="background:${{color}}"></span>${{htmlEscape(d.name)}}</h3>
         <div class="stats">
-          <span>&#x1f4cd; ${{d.nodes}} nodes</span>
-          <span>&#x1f50c; ${{d.routes}} routes</span>
+          <span>&#x1f4cd; ${{d.nodes}} ${{plural(d.nodes, 'node')}}</span>
+          <span>&#x1f50c; ${{d.routes}} ${{plural(d.routes, 'route')}}</span>
           <span>&#x1f9e9; ${{d.classes}} cls</span>
           <span>&#x192; ${{d.methods}} fn</span>
         </div>
@@ -1242,7 +1257,7 @@ function renderDomainTree(filter = '') {{
     </div>`;
     searchCountEl.style.display = 'none';
   }} else if (lowerFilter !== '') {{
-    searchCountEl.textContent = `${{totalVisible}} results`;
+    searchCountEl.textContent = `${{totalVisible}} ${{plural(totalVisible, 'result')}}`;
     searchCountEl.style.display = 'block';
   }} else {{
     searchCountEl.style.display = 'none';
@@ -1528,9 +1543,9 @@ function selectNode(d) {{
     <div class="dp-block">
       <div class="dp-block-title">&#x2462; Relationships</div>
       <div class="dp-kv">
-        <span class="k">Calls</span><span class="v">${{deps.length}} dependencies</span>
-        <span class="k">Called by</span><span class="v">${{dependents.length}} dependents</span>
-        <span class="k">Impact</span><span class="v">${{impactCount}} edges</span>
+        <span class="k">Calls</span><span class="v">${{deps.length}} ${{plural(deps.length, 'dependency', 'dependencies')}}</span>
+        <span class="k">Called by</span><span class="v">${{dependents.length}} ${{plural(dependents.length, 'dependent')}}</span>
+        <span class="k">Impact</span><span class="v">${{impactCount}} ${{plural(impactCount, 'edge')}}</span>
       </div>
       ${{deps.length ? `<div style="margin-top:8px; font-size:11px; color:var(--text-muted);">&#x2192; ${{deps.slice(0,5).map(e => {{ const tid = typeof e.target === 'object' ? e.target.id : e.target; const tname = tid.split('.').pop(); return `<span class="dep-item" style="display:inline-block; padding:1px 6px;" onclick="selectNodeById('${{tid}}')">${{tname}}</span>`; }}).join(' ')}}</div>` : ''}}
       ${{dependents.length ? `<div style="margin-top:4px; font-size:11px; color:var(--text-muted);">&#x2190; ${{dependents.slice(0,5).map(e => {{ const sid = typeof e.source === 'object' ? e.source.id : e.source; const sname = sid.split('.').pop(); return `<span class="dep-item" style="display:inline-block; padding:1px 6px;" onclick="selectNodeById('${{sid}}')">${{sname}}</span>`; }}).join(' ')}}</div>` : ''}}
@@ -1540,7 +1555,7 @@ function selectNode(d) {{
       <div class="dp-block-title">&#x2463; Quality</div>
       <div class="dp-kv">
         <span class="k">Coverage</span><span class="v">${{covPill || '<em style="color:var(--text-muted)">N/A</em>'}}</span>
-        <span class="k">LOC</span><span class="v">${{d.line_end && d.line_start ? (d.line_end - d.line_start + 1) + ' lines' : '—'}}</span>
+        <span class="k">LOC</span><span class="v">${{d.line_end && d.line_start ? countLabel(d.line_end - d.line_start + 1, 'line') : '—'}}</span>
         <span class="k">Docstring</span><span class="v">${{d.docstring ? 'yes' : '<em style="color:var(--text-muted)">none</em>'}}</span>
       </div>
       ${{d.docstring ? `<div style="margin-top:8px; font-size:11px; color:var(--text-secondary); font-style:italic;">${{d.docstring.substring(0, 180)}}${{d.docstring.length > 180 ? '…' : ''}}</div>` : ''}}

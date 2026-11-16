@@ -34,7 +34,10 @@ Tất cả sprints COMPLETE (85 SP, 582 tests):
 - Review chặn được: `deploy.sh` có thể xoá file ngoài web root (thư mục lạ, symlink, `//`), chạy lại `--setup` mất HTTPS certbot, câu quảng cáo về quyền riêng tư nói quá, terminal che hình ở tablet, tương phản dưới chuẩn AA. `--setup` đã test 9 kịch bản trong container.
 - ✅ 16/11/2026: CEO duyệt, PR #152 merged vào `main` (merge commit `e7a9b91`).
 - Còn chờ: tên miền + VPS (IP, user SSH) để chạy `deploy.sh --setup` rồi certbot.
-- Ticket riêng (exporter/parser): demo bị toolbar/minimap che legend; badge "v2.0" viết cứng ở `html_exporter.py:552`; "1 domains", dòng Flows trống; `_detect_domain` chỉ biết domain của HC; màu xanh lá mang hai nghĩa.
+- Ticket riêng (exporter/parser) → **PR #155** (16/11/2026):
+  - ✅ Đã sửa: badge "v2.0" viết cứng (nay lấy `codebase_map.__version__`); "1 domains" → "1 domain", và mọi nhãn đếm khác trên trang (kết quả tìm kiếm, panel node, Executive, API Catalog) dùng chung helper `plural()`; dòng Flows trống (CSS `display:flex` đè thuộc tính `hidden`). Graph không đổi.
+  - ⏳ Chờ CEO, chưa code: toolbar/minimap che legend và panel node (toolbar che legend là lỗ hổng của design v2; minimap che panel là do exporter lệch design; cần duyệt design trước), và `_detect_domain` chỉ biết domain HC (đề xuất lấy package cấp 1 làm domain). Đề xuất: `docs/active/map-demo-fixes/Proposal_Map_Layout_and_Package_Domains.md`.
+  - Chưa xử lý: màu xanh lá mang hai nghĩa (service ở hero, method ở demo).
 - Phát hiện: `_FLOW_PATTERN` trong `python_parser.py` khớp mọi comment có chữ `flow:` → demo hiện flow giả "name1, name2". ✅ Đã sửa ở PR #148 (merge 15/11); nhánh website đã merge main, demo hết flow giả.
 
 ---
