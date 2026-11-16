@@ -11,6 +11,7 @@ docs/
 ├── README.md                      ← File này
 ├── active/                        ← Đang dev / cần cho phát triển hiện tại
 │   ├── ONBOARDING.md              ← Hướng dẫn người mới vào dự án
+│   ├── map-demo-fixes/            ← Đề xuất bố cục canvas + domain theo package (PR #155, chờ CEO)
 │   └── cbm-claude-integration/    ← Initiative 2026-04-16 (7 docs, pending CEO D1-D7)
 │       ├── Strategy_Memo_CBM_Claude_Integration.md
 │       ├── Technical_Plan_CBM_Claude_Integration.md
