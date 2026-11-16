@@ -9,6 +9,8 @@ Routes:
     GET /api/snapshots                    list of stored snapshots
     GET /api/snapshots/<id>               one snapshot (full graph JSON)
     GET /api/snapshots/<id>/diff?base=<y> diff this snapshot vs base (JSON)
+    GET /api/replay/sessions              list Claude Code sessions for this repo
+    GET /api/replay/sessions/<id>         ordered replay steps for one session
     GET /                                 the pane shell (index.html)
     GET /<asset>                          pane assets — same dir only
 
@@ -164,6 +166,14 @@ class _Handler(BaseHTTPRequestHandler):
             self._snapshot_route(path)
             return
 
+        if path == "/api/replay/sessions":
+            self._json(200, self._list_replay_sessions())
+            return
+
+        if path.startswith("/api/replay/sessions/"):
+            self._replay_route(path)
+            return
+
         if path == "/" or path == "/index.html":
             if self._serve_pane_file("index.html"):
                 return
@@ -270,6 +280,72 @@ class _Handler(BaseHTTPRequestHandler):
             current = Graph.from_dict(json.load(f))
         result = SnapshotDiff(base, current).compute()
         return _result_to_dict(result)
+
+    # ------ replay routes (VIBE-106 Day 4) ------
+
+    def _list_replay_sessions(self) -> dict:
+        from codebase_map.mod.replay import (
+            DEFAULT_PROJECTS_DIR,
+            list_sessions,
+            project_sessions_dir,
+        )
+
+        sessions = list_sessions(self.repo_root)
+        return {
+            "sessions": [s.to_dict() for s in sessions],
+            "count": len(sessions),
+            "projects_dir": str(project_sessions_dir(self.repo_root)),
+            "default_root": str(DEFAULT_PROJECTS_DIR),
+        }
+
+    def _replay_route(self, path: str) -> None:
+        from codebase_map.mod.replay import (
+            parse_session,
+            project_sessions_dir,
+        )
+
+        tail = path[len("/api/replay/sessions/") :]
+        if not tail:
+            self._json(404, {"error": "missing session id"})
+            return
+        parts = tail.split("/", 1)
+        session_id = unquote(parts[0])
+        action = parts[1] if len(parts) > 1 else ""
+
+        # Only filename-safe ids are valid session uuids.
+        if (
+            "/" in session_id
+            or "\\" in session_id
+            or ".." in session_id
+            or session_id.startswith(".")
+        ):
+            self._json(404, {"error": "invalid session id"})
+            return
+
+        sdir = project_sessions_dir(self.repo_root)
+        jsonl = sdir / f"{session_id}.jsonl"
+        try:
+            jsonl_resolved = jsonl.resolve()
+            jsonl_resolved.relative_to(sdir.resolve())
+        except (OSError, ValueError):
+            self._json(404, {"error": "session not found", "id": session_id})
+            return
+        if not jsonl_resolved.is_file():
+            self._json(404, {"error": "session not found", "id": session_id})
+            return
+
+        if action == "":
+            steps = parse_session(jsonl_resolved)
+            self._json(
+                200,
+                {
+                    "id": session_id,
+                    "step_count": len(steps),
+                    "steps": [s.to_dict() for s in steps],
+                },
+            )
+            return
+        self._json(404, {"error": "unknown replay action", "action": action})
 
     def log_message(self, fmt: str, *args) -> None:  # noqa: A003
         log.info("%s - %s", self.address_string(), fmt % args)

@@ -129,6 +129,150 @@ class TestPaneAssetsOnDisk:
         assert (PANE_DIR / name).is_file(), f"missing pane asset: {name}"
 
 
+class TestReplayEndpoint:
+    def _start(self, repo: Path, projects_root: Path):
+        """Start a server that resolves sessions under ``projects_root``."""
+        from codebase_map.mod import replay as replay_mod
+
+        port = _free_port()
+        # Monkey-patch the default projects dir so test repos resolve to tmp.
+        orig = replay_mod.DEFAULT_PROJECTS_DIR
+        replay_mod.DEFAULT_PROJECTS_DIR = projects_root
+        httpd = make_server(repo, host="127.0.0.1", port=port)
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        return httpd, thread, f"http://127.0.0.1:{port}", orig
+
+    def _stop(self, httpd, thread, orig):
+        from codebase_map.mod import replay as replay_mod
+
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join(timeout=2)
+        replay_mod.DEFAULT_PROJECTS_DIR = orig
+
+    def test_empty_sessions_when_no_project_dir(self, tmp_path: Path):
+        repo = tmp_path / "project"
+        repo.mkdir()
+        projects_root = tmp_path / "projects"
+        projects_root.mkdir()
+        httpd, thread, base, orig = self._start(repo, projects_root)
+        try:
+            with urlopen(f"{base}/api/replay/sessions", timeout=3) as r:
+                data = json.loads(r.read().decode())
+                assert data["count"] == 0
+                assert data["sessions"] == []
+        finally:
+            self._stop(httpd, thread, orig)
+
+    def test_lists_sessions(self, tmp_path: Path):
+        from codebase_map.mod.replay import encode_project_dir
+
+        repo = tmp_path / "project"
+        repo.mkdir()
+        projects_root = tmp_path / "projects"
+        sdir = projects_root / encode_project_dir(repo)
+        sdir.mkdir(parents=True)
+        _write_min_session(sdir / "aaaa.jsonl", "aaaa")
+
+        httpd, thread, base, orig = self._start(repo, projects_root)
+        try:
+            with urlopen(f"{base}/api/replay/sessions", timeout=3) as r:
+                data = json.loads(r.read().decode())
+                assert data["count"] == 1
+                assert data["sessions"][0]["id"] == "aaaa"
+                assert data["sessions"][0]["step_count"] == 3  # user+claude+tool
+        finally:
+            self._stop(httpd, thread, orig)
+
+    def test_session_steps(self, tmp_path: Path):
+        from codebase_map.mod.replay import encode_project_dir
+
+        repo = tmp_path / "project"
+        repo.mkdir()
+        projects_root = tmp_path / "projects"
+        sdir = projects_root / encode_project_dir(repo)
+        sdir.mkdir(parents=True)
+        _write_min_session(sdir / "abcd.jsonl", "abcd")
+
+        httpd, thread, base, orig = self._start(repo, projects_root)
+        try:
+            with urlopen(f"{base}/api/replay/sessions/abcd", timeout=3) as r:
+                data = json.loads(r.read().decode())
+                assert data["id"] == "abcd"
+                kinds = [s["kind"] for s in data["steps"]]
+                assert kinds == ["user", "claude", "tool"]
+                # The file-history-delta should attach to the Claude step.
+                claude_step = next(s for s in data["steps"] if s["kind"] == "claude")
+                assert claude_step["files_touched"] == ["a.py"]
+        finally:
+            self._stop(httpd, thread, orig)
+
+    def test_unknown_session_404(self, tmp_path: Path):
+        from codebase_map.mod.replay import encode_project_dir
+
+        repo = tmp_path / "project"
+        repo.mkdir()
+        projects_root = tmp_path / "projects"
+        (projects_root / encode_project_dir(repo)).mkdir(parents=True)
+        httpd, thread, base, orig = self._start(repo, projects_root)
+        try:
+            with pytest.raises(HTTPError) as exc:
+                urlopen(f"{base}/api/replay/sessions/does-not-exist", timeout=3)
+            assert exc.value.code == 404
+        finally:
+            self._stop(httpd, thread, orig)
+
+    def test_session_id_traversal_blocked(self, tmp_path: Path):
+        from codebase_map.mod.replay import encode_project_dir
+
+        repo = tmp_path / "project"
+        repo.mkdir()
+        projects_root = tmp_path / "projects"
+        (projects_root / encode_project_dir(repo)).mkdir(parents=True)
+        httpd, thread, base, orig = self._start(repo, projects_root)
+        try:
+            with pytest.raises(HTTPError) as exc:
+                urlopen(f"{base}/api/replay/sessions/..%2fsecret", timeout=3)
+            assert exc.value.code == 404
+        finally:
+            self._stop(httpd, thread, orig)
+
+
+def _write_min_session(path: Path, uid: str) -> None:
+    """Write a 3-event Claude Code session JSONL file."""
+    events = [
+        {
+            "type": "user",
+            "timestamp": "2026-11-15T10:00:00Z",
+            "message": {"role": "user", "content": "do thing"},
+        },
+        {
+            "type": "assistant",
+            "timestamp": "2026-11-15T10:00:05Z",
+            "message": {
+                "role": "assistant",
+                "id": "m1",
+                "content": [
+                    {"type": "text", "text": "ok"},
+                    {
+                        "type": "tool_use",
+                        "name": "Bash",
+                        "input": {"command": "ls"},
+                    },
+                ],
+            },
+        },
+        {
+            "type": "file-history-delta",
+            "timestamp": "2026-11-15T10:00:07Z",
+            "messageId": "m1",
+            "trackingPath": "a.py",
+        },
+    ]
+    path.write_text("\n".join(json.dumps(e) for e in events))
+
+
 def _write_min_snapshot(path: Path, nodes: int, label: str = "test") -> None:
     """Write a small graph snapshot with N nodes under path."""
     data = {
