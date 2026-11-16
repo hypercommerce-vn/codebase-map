@@ -297,6 +297,18 @@ def main(argv: list[str] | None = None) -> int:
         help="Config file (for snapshot dir detection)",
     )
 
+    # HC-AI | ticket: VIBE-105
+    # CBM Mod — status line / pane / Claude Replay backend
+    mod_p = sub.add_parser("mod", help="CBM Mod server for Claude Code pane")
+    mod_sub = mod_p.add_subparsers(dest="mod_cmd", help="Mod subcommand")
+    mod_serve = mod_sub.add_parser("serve", help="Run the local Mod server")
+    mod_serve.add_argument("--host", default="127.0.0.1", help="Bind host")
+    mod_serve.add_argument("--port", type=int, default=7430, help="Bind port")
+    mod_serve.add_argument("--repo", default=".", help="Repository root")
+    mod_serve.add_argument("-v", "--verbose", action="store_true", help="Log requests")
+    mod_status = mod_sub.add_parser("status", help="Print status JSON once and exit")
+    mod_status.add_argument("--repo", default=".", help="Repository root")
+
     args = parser.parse_args(argv)
 
     if not args.command:
@@ -325,8 +337,33 @@ def main(argv: list[str] | None = None) -> int:
         return _cmd_snapshots(args)
     elif args.command == "snapshot-diff":
         return _cmd_snapshot_diff(args)
+    elif args.command == "mod":
+        return _cmd_mod(args)
 
     return 0
+
+
+def _cmd_mod(args: argparse.Namespace) -> int:
+    # HC-AI | ticket: VIBE-105
+    import json as _json
+    import logging as _logging
+
+    from codebase_map.mod import collect_status
+    from codebase_map.mod.server import serve
+
+    if args.mod_cmd == "serve":
+        _logging.basicConfig(
+            level=_logging.INFO if args.verbose else _logging.WARNING,
+            format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        )
+        serve(args.repo, args.host, args.port)
+        return 0
+    if args.mod_cmd == "status":
+        data = collect_status(args.repo)
+        print(_json.dumps(data.to_dict(), ensure_ascii=False, indent=2))
+        return 0
+    print("[ERROR] Unknown mod subcommand. Try 'mod serve' or 'mod status'.")
+    return 1
 
 
 def _cmd_generate(args: argparse.Namespace) -> int:
