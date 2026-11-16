@@ -3,11 +3,14 @@
 
 Routes:
 
-    GET /api/health         {"ok": true}
-    GET /api/status         status aggregator JSON
-    GET /api/graph          graph.json (404 if not generated yet)
-    GET /                   the pane shell (index.html)
-    GET /<asset>            pane assets (app.js, styles.css) — same dir only
+    GET /api/health                       {"ok": true}
+    GET /api/status                       status aggregator JSON
+    GET /api/graph                        graph.json (404 if not generated yet)
+    GET /api/snapshots                    list of stored snapshots
+    GET /api/snapshots/<id>               one snapshot (full graph JSON)
+    GET /api/snapshots/<id>/diff?base=<y> diff this snapshot vs base (JSON)
+    GET /                                 the pane shell (index.html)
+    GET /<asset>                          pane assets — same dir only
 
 Binds to 127.0.0.1 so nothing on the network can reach it, and sends
 permissive CORS headers so the Claude Code pane (rendered from another
@@ -25,6 +28,7 @@ import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Optional
+from urllib.parse import parse_qs, unquote
 
 from codebase_map.mod.status import collect_status
 
@@ -40,6 +44,12 @@ GRAPH_CANDIDATES = [
     ".codebase-map/graph.json",
 ]
 
+# Candidate locations for snapshot cache dir, searched in order.
+SNAPSHOT_CANDIDATES = [
+    ".codebase-map-cache/snapshots",
+    ".codebase-map/snapshots",
+]
+
 log = logging.getLogger("codebase_map.mod.server")
 
 
@@ -49,6 +59,31 @@ def _resolve_graph(repo: Path) -> Optional[Path]:
         if p.is_file():
             return p
     return None
+
+
+def _resolve_snapshot_dir(repo: Path) -> Optional[Path]:
+    for rel in SNAPSHOT_CANDIDATES:
+        p = repo / rel
+        if p.is_dir():
+            return p
+    return None
+
+
+def _snapshot_by_id(snap_dir: Path, snap_id: str) -> Optional[Path]:
+    """Resolve a snapshot id (filename stem) to a file path.
+
+    Rejects traversal and only accepts a bare `.json` under ``snap_dir``.
+    """
+    if "/" in snap_id or "\\" in snap_id or ".." in snap_id:
+        return None
+    p = (snap_dir / f"{snap_id}.json").resolve()
+    try:
+        p.relative_to(snap_dir.resolve())
+    except ValueError:
+        return None
+    if not p.is_file():
+        return None
+    return p
 
 
 class _Handler(BaseHTTPRequestHandler):
@@ -121,6 +156,14 @@ class _Handler(BaseHTTPRequestHandler):
             self._send(200, gpath.read_bytes(), "application/json; charset=utf-8")
             return
 
+        if path == "/api/snapshots":
+            self._json(200, self._list_snapshots())
+            return
+
+        if path.startswith("/api/snapshots/"):
+            self._snapshot_route(path)
+            return
+
         if path == "/" or path == "/index.html":
             if self._serve_pane_file("index.html"):
                 return
@@ -133,6 +176,100 @@ class _Handler(BaseHTTPRequestHandler):
                 return
 
         self._json(404, {"error": "not found", "path": path})
+
+    # ------ snapshot routes ------
+
+    def _list_snapshots(self) -> dict:
+        snap_dir = _resolve_snapshot_dir(self.repo_root)
+        if snap_dir is None:
+            return {
+                "snapshots": [],
+                "hint": (
+                    "run `codebase-map generate` to create snapshots "
+                    "(stored in .codebase-map-cache/snapshots/)"
+                ),
+                "searched": SNAPSHOT_CANDIDATES,
+            }
+        items = []
+        for fp in sorted(snap_dir.glob("*.json")):
+            try:
+                with fp.open("r", encoding="utf-8") as f:
+                    data = json.load(f)
+            except (OSError, json.JSONDecodeError):
+                continue
+            meta = data.get("metadata", {}) or {}
+            stats = data.get("stats", {}) or {}
+            items.append(
+                {
+                    "id": fp.stem,
+                    "label": meta.get("label") or "unknown",
+                    "generated_at": data.get("generated_at")
+                    or meta.get("generated_at")
+                    or "",
+                    "branch": meta.get("branch", "unknown"),
+                    "commit_sha": (meta.get("commit_sha") or "")[:7],
+                    "nodes": stats.get("total_functions")
+                    or stats.get("nodes")
+                    or len(data.get("nodes", [])),
+                    "edges": stats.get("total_edges")
+                    or stats.get("edges")
+                    or len(data.get("edges", [])),
+                    "size_bytes": fp.stat().st_size,
+                }
+            )
+        # Newest first — sort by generated_at descending.
+        items.sort(key=lambda s: s["generated_at"], reverse=True)
+        return {"snapshots": items, "count": len(items)}
+
+    def _snapshot_route(self, path: str) -> None:
+        # Shape: /api/snapshots/<id>[/diff]
+        tail = path[len("/api/snapshots/") :]
+        if not tail:
+            self._json(404, {"error": "missing snapshot id"})
+            return
+        parts = tail.split("/", 1)
+        snap_id = unquote(parts[0])
+        action = parts[1] if len(parts) > 1 else ""
+
+        snap_dir = _resolve_snapshot_dir(self.repo_root)
+        if snap_dir is None:
+            self._json(404, {"error": "no snapshot cache dir"})
+            return
+        snap_file = _snapshot_by_id(snap_dir, snap_id)
+        if snap_file is None:
+            self._json(404, {"error": "snapshot not found", "id": snap_id})
+            return
+
+        if action == "":
+            self._send(200, snap_file.read_bytes(), "application/json; charset=utf-8")
+            return
+        if action == "diff":
+            query = parse_qs(self.path.split("?", 1)[1] if "?" in self.path else "")
+            base_id = (query.get("base") or [""])[0]
+            if not base_id:
+                self._json(400, {"error": "missing ?base=<id> query"})
+                return
+            base_file = _snapshot_by_id(snap_dir, base_id)
+            if base_file is None:
+                self._json(404, {"error": "base snapshot not found", "id": base_id})
+                return
+            self._json(200, self._compute_diff(base_file, snap_file))
+            return
+        self._json(404, {"error": "unknown snapshot action", "action": action})
+
+    @staticmethod
+    def _compute_diff(base_file: Path, current_file: Path) -> dict:
+        # Imported lazily so the server module stays cheap to import.
+        from codebase_map.graph.diff_formatter import _result_to_dict
+        from codebase_map.graph.models import Graph
+        from codebase_map.graph.snapshot_diff import SnapshotDiff
+
+        with base_file.open("r", encoding="utf-8") as f:
+            base = Graph.from_dict(json.load(f))
+        with current_file.open("r", encoding="utf-8") as f:
+            current = Graph.from_dict(json.load(f))
+        result = SnapshotDiff(base, current).compute()
+        return _result_to_dict(result)
 
     def log_message(self, fmt: str, *args) -> None:  # noqa: A003
         log.info("%s - %s", self.address_string(), fmt % args)
