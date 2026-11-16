@@ -1,0 +1,950 @@
+<!-- HC-AI | ticket: CBM-MOD-VIBE-105 -->
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBM Mod + Claude Replay — Design Preview VIBE-105</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — CBM Mod VIBE-105
+   Based on: Codebase Map Project Board design system
+   Designer: Claude (Opus 4.7) | Reviewer: CEO Hyper Commerce
+   Date: 2026-11-16 | Ticket: VIBE-105
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --brand: #6366f1;
+  --brand-dark: #4f46e5;
+  --brand-light: #e0e7ff;
+  --bg: #ffffff;
+  --bg-subtle: #f8fafc;
+  --bg-muted: #f1f5f9;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --border-muted: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* Claude Replay specific */
+  --replay-bg: #0d1117;
+  --replay-surface: #161b22;
+  --replay-border: #30363d;
+  --replay-text: #e6edf3;
+  --replay-text-muted: #8b949e;
+  --replay-accent: #58a6ff;
+  --replay-user: #3fb950;
+  --replay-claude: #a371f7;
+  --replay-tool: #f0883e;
+
+  /* Status Line */
+  --status-bg: #1e1e2e;
+  --status-text: #cdd6f4;
+  --status-ok: #a6e3a1;
+  --status-warn: #f9e2af;
+  --status-err: #f38ba8;
+
+  /* Colors */
+  --c-blue: #1d4ed8; --c-blue-bg: #eff6ff;
+  --c-green: #15803d; --c-green-bg: #f0fdf4;
+  --c-amber: #b45309; --c-amber-bg: #fffbeb;
+  --c-red: #b91c1c; --c-red-bg: #fef2f2;
+  --c-purple: #7c3aed; --c-purple-bg: #faf5ff;
+
+  --r-sm: 4px; --r-md: 8px; --r-lg: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,.15);
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Fira Code', 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* ═══ HEADER ═══ */
+.hero {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+  color: #fff;
+  padding: 48px 32px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(255,255,255,.08) 0%, transparent 60%);
+  border-radius: 50%;
+}
+.hero-inner { max-width: 1200px; margin: 0 auto; position: relative; }
+.hero .ticket {
+  display: inline-block;
+  background: rgba(255,255,255,.15);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  margin-bottom: 12px;
+}
+.hero h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+.hero p { font-size: 16px; opacity: .9; max-width: 720px; }
+.hero-meta { display: flex; gap: 24px; margin-top: 24px; flex-wrap: wrap; }
+.hero-meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; opacity: .85; }
+.hero-meta-item strong { font-weight: 600; opacity: 1; }
+
+/* ═══ LAYOUT ═══ */
+.container { max-width: 1200px; margin: 0 auto; padding: 32px; }
+.section { background: var(--surface); border-radius: var(--r-lg); padding: 28px; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
+.section-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+.section-title .num {
+  width: 28px; height: 28px;
+  background: var(--brand-light);
+  color: var(--brand-dark);
+  border-radius: var(--r-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+.section-desc { color: var(--text-secondary); margin-bottom: 20px; font-size: 14px; }
+
+/* ═══ TABLES ═══ */
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th { background: var(--bg-muted); padding: 10px 12px; text-align: left; font-weight: 600; color: var(--text-primary); border-bottom: 1px solid var(--border); }
+.tbl td { padding: 10px 12px; border-bottom: 1px solid var(--border-muted); vertical-align: top; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl .code { font-family: var(--font-mono); font-size: 12px; background: var(--bg-muted); padding: 2px 6px; border-radius: var(--r-sm); }
+
+/* ═══ BADGES ═══ */
+.badge { display: inline-block; padding: 2px 10px; font-size: 11px; font-weight: 600; border-radius: 12px; letter-spacing: .3px; }
+.badge.ok { background: var(--c-green-bg); color: var(--c-green); }
+.badge.warn { background: var(--c-amber-bg); color: var(--c-amber); }
+.badge.err { background: var(--c-red-bg); color: var(--c-red); }
+.badge.info { background: var(--c-blue-bg); color: var(--c-blue); }
+.badge.purple { background: var(--c-purple-bg); color: var(--c-purple); }
+
+/* ═══ KEY MOCKUP: FULL WINDOW ═══ */
+.window-mock {
+  background: var(--replay-bg);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  margin: 20px 0;
+  border: 1px solid var(--replay-border);
+}
+
+/* Status Line */
+.status-line {
+  background: var(--status-bg);
+  color: var(--status-text);
+  padding: 6px 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--replay-border);
+}
+.status-item { display: flex; align-items: center; gap: 6px; }
+.status-sep { opacity: .3; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.status-dot.ok { background: var(--status-ok); box-shadow: 0 0 6px var(--status-ok); }
+.status-dot.warn { background: var(--status-warn); }
+.status-dot.err { background: var(--status-err); }
+
+/* Window body: Chat + Pane */
+.window-body { display: grid; grid-template-columns: 1fr 460px; min-height: 520px; }
+
+/* Chat area */
+.chat-area {
+  background: var(--bg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-right: 1px solid var(--border);
+}
+.chat-msg { padding: 12px 14px; border-radius: var(--r-md); font-size: 13px; max-width: 85%; }
+.chat-msg.user { background: var(--brand-light); align-self: flex-end; color: var(--text-primary); }
+.chat-msg.claude { background: var(--bg-muted); align-self: flex-start; color: var(--text-primary); }
+.chat-msg .label { font-size: 11px; font-weight: 600; opacity: .7; margin-bottom: 4px; }
+
+/* Pane */
+.pane {
+  background: var(--replay-bg);
+  color: var(--replay-text);
+  display: flex;
+  flex-direction: column;
+}
+.pane-tabs { display: flex; background: var(--replay-surface); border-bottom: 1px solid var(--replay-border); }
+.pane-tab {
+  flex: 1;
+  padding: 10px 12px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--replay-text-muted);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  border-bottom: 2px solid transparent;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.pane-tab.active { color: var(--replay-accent); border-bottom-color: var(--replay-accent); background: var(--replay-bg); }
+.pane-body { padding: 16px; flex: 1; overflow: auto; }
+
+/* Annotation callouts */
+.callouts { position: relative; }
+.callout {
+  display: flex;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #fef3c7;
+  border-left: 3px solid #f59e0b;
+  border-radius: var(--r-sm);
+  margin: 8px 0;
+  font-size: 13px;
+}
+.callout-num {
+  min-width: 22px; height: 22px;
+  background: #f59e0b;
+  color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ═══ CLAUDE REPLAY MOCKUP ═══ */
+.replay-sessions { margin-bottom: 16px; }
+.replay-session {
+  padding: 8px 10px;
+  background: var(--replay-surface);
+  border: 1px solid var(--replay-border);
+  border-radius: var(--r-sm);
+  margin-bottom: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.replay-session.active { border-color: var(--replay-accent); background: #0d2847; }
+.replay-session .title { color: var(--replay-text); font-weight: 500; }
+.replay-session .meta { color: var(--replay-text-muted); font-size: 11px; }
+.replay-player {
+  background: var(--replay-surface);
+  border: 1px solid var(--replay-border);
+  border-radius: var(--r-md);
+  padding: 12px;
+  margin-top: 12px;
+}
+.replay-controls { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.replay-btn {
+  background: var(--replay-border);
+  border: none;
+  color: var(--replay-text);
+  width: 32px; height: 32px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.replay-btn.play { background: var(--replay-accent); color: #fff; }
+.replay-progress {
+  flex: 1;
+  height: 4px;
+  background: var(--replay-border);
+  border-radius: 2px;
+  position: relative;
+}
+.replay-progress-fill {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  width: 35%;
+  background: var(--replay-accent);
+  border-radius: 2px;
+}
+.replay-time { font-family: var(--font-mono); font-size: 11px; color: var(--replay-text-muted); }
+.replay-step {
+  background: var(--replay-bg);
+  border-left: 2px solid var(--replay-claude);
+  padding: 8px 10px;
+  font-size: 12px;
+  margin-top: 8px;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+}
+.replay-step .step-label { font-size: 10px; color: var(--replay-claude); font-weight: 600; margin-bottom: 2px; text-transform: uppercase; letter-spacing: .5px; }
+.replay-step .step-text { color: var(--replay-text); }
+.replay-step.tool { border-left-color: var(--replay-tool); }
+.replay-step.tool .step-label { color: var(--replay-tool); }
+.replay-step.user { border-left-color: var(--replay-user); }
+.replay-step.user .step-label { color: var(--replay-user); }
+.replay-files {
+  background: var(--replay-bg);
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  margin-top: 8px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--replay-text-muted);
+}
+.replay-files .f-mod { color: var(--status-warn); }
+.replay-files .f-add { color: var(--status-ok); }
+.replay-files .f-del { color: var(--status-err); }
+
+/* Graph tab mockup */
+.graph-mock {
+  background: var(--replay-bg);
+  border-radius: var(--r-md);
+  padding: 16px;
+  position: relative;
+  min-height: 300px;
+}
+.graph-node {
+  position: absolute;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+  font-family: var(--font-mono);
+  border: 1px solid transparent;
+}
+.graph-node.highlight {
+  border-color: var(--status-warn);
+  box-shadow: 0 0 12px rgba(249,226,175,.4);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(249,226,175,.4); }
+  50% { box-shadow: 0 0 20px rgba(249,226,175,.8); }
+}
+
+/* Timeline tab */
+.timeline-list { }
+.timeline-item {
+  display: flex;
+  gap: 10px;
+  padding: 8px;
+  background: var(--replay-surface);
+  border-radius: var(--r-sm);
+  margin-bottom: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.timeline-item:hover { border-color: var(--replay-border); }
+.timeline-item .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; background: var(--replay-accent); }
+.timeline-item .body { flex: 1; }
+.timeline-item .label-row { display: flex; justify-content: space-between; color: var(--replay-text); font-weight: 500; }
+.timeline-item .meta { color: var(--replay-text-muted); font-size: 11px; margin-top: 2px; }
+
+/* Toast mockup */
+.toast-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+.toast {
+  background: var(--replay-surface);
+  color: var(--replay-text);
+  border-radius: var(--r-md);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 280px;
+  border-left: 3px solid var(--replay-accent);
+}
+.toast.success { border-left-color: var(--status-ok); }
+.toast.warn { border-left-color: var(--status-warn); }
+.toast.err { border-left-color: var(--status-err); }
+.toast .icon { font-size: 20px; }
+.toast .title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.toast .desc { font-size: 12px; color: var(--replay-text-muted); }
+
+/* ═══ ARCHITECTURE DIAGRAM ═══ */
+.arch {
+  background: var(--bg-muted);
+  padding: 20px;
+  border-radius: var(--r-md);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  overflow-x: auto;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* ═══ Acceptance criteria ═══ */
+.ac-list { list-style: none; }
+.ac-list li {
+  padding: 10px 12px;
+  background: var(--bg-muted);
+  border-left: 3px solid var(--brand);
+  margin-bottom: 8px;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  font-size: 13px;
+}
+.ac-list li strong { color: var(--brand-dark); }
+
+/* ═══ Decision box ═══ */
+.decisions {
+  background: var(--c-amber-bg);
+  border: 1px solid var(--c-amber);
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+  margin-top: 16px;
+}
+.decisions h4 { color: var(--c-amber); margin-bottom: 10px; font-size: 15px; }
+.decisions ol { padding-left: 20px; }
+.decisions li { margin-bottom: 8px; font-size: 13px; color: var(--text-primary); }
+
+/* ═══ Grid ═══ */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-inner">
+    <span class="ticket">VIBE-105 · DESIGN PREVIEW · v0.1</span>
+    <h1>CBM Mod + Claude Replay</h1>
+    <p>Biến Codebase Map thành mod gắn liền với Claude: thanh trạng thái always-on, pane 3-tab cạnh chat, và tính năng Claude Replay để tua lại từng bước Claude đã làm trên dự án — đồng bộ với graph codebase.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><span>🎯</span> <strong>Owner:</strong> CEO (Đoàn Đình Tỉnh)</div>
+      <div class="hero-meta-item"><span>👤</span> <strong>Target:</strong> Vibecoder tay mơ · Dev review · CEO onboarding</div>
+      <div class="hero-meta-item"><span>📅</span> <strong>Draft:</strong> 16/11/2026</div>
+      <div class="hero-meta-item"><span>⚡</span> <strong>Status:</strong> Chờ CEO duyệt design</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══ 1. OVERVIEW ═══ -->
+<div class="section">
+  <h2 class="section-title"><span class="num">1</span>Tổng quan &amp; Mục tiêu</h2>
+  <p class="section-desc">Mod là lớp vỏ gắn CBM vào ngay giao diện Claude: anh không cần mở browser rời để xem board/graph, cũng không cần ngồi đọc lại transcript để biết Claude đã làm gì trên dự án — tất cả ở trong cùng 1 cửa sổ.</p>
+
+  <table class="tbl">
+    <tr><th>Thành phần</th><th>Mô tả ngắn</th><th>Vị trí</th><th>Luôn hiện?</th></tr>
+    <tr><td><strong>Status Line</strong></td><td>Sprint · Branch · PR · CI · Snapshot</td><td>Thanh trên cùng/dưới cùng</td><td><span class="badge ok">Yes</span></td></tr>
+    <tr><td><strong>CBM Pane</strong></td><td>3 tabs: Graph · Timeline · Replay</td><td>Cạnh phải chat</td><td>Mặc định mở, có thể ẩn</td></tr>
+    <tr><td><strong>Toast</strong></td><td>Cảnh báo sau commit/PR/CI</td><td>Góc dưới phải</td><td>Hiện theo event</td></tr>
+    <tr><td><strong>Hooks</strong></td><td>Pre-commit snapshot · Post-edit regen</td><td>Chạy ngầm</td><td>Không có UI</td></tr>
+  </table>
+
+  <h3 style="margin-top:20px;margin-bottom:8px;font-size:15px;">User Story</h3>
+  <p style="color:var(--text-secondary);font-size:13px;">
+    <em>"Là CEO không rành code, tôi muốn vừa chat với Claude vừa thấy luôn Claude đang sửa phần nào của dự án (trên graph), và sau đó tua lại từng bước nó đã làm — để tôi hiểu (hoặc cho dev khác xem) mà không phải đọc code."</em>
+  </p>
+</div>
+
+<!-- ═══ 2. FULL WINDOW MOCKUP ═══ -->
+<div class="section">
+  <h2 class="section-title"><span class="num">2</span>Toàn cảnh cửa sổ</h2>
+  <p class="section-desc">Dưới đây là bố cục đầy đủ khi mod chạy. Các chú thích (①②③④⑤) đánh dấu từng thành phần.</p>
+
+  <div class="window-mock">
+    <!-- Status Line -->
+    <div class="status-line">
+      <div class="status-item"><span style="opacity:.6">①</span></div>
+      <div class="status-item"><span>🚀</span> <span>Sprint <strong>CBM-VIBE</strong></span></div>
+      <span class="status-sep">│</span>
+      <div class="status-item"><span>🌿</span> <span>feat/vibe-105-cbm-mod</span></div>
+      <span class="status-sep">│</span>
+      <div class="status-item"><span>🔀</span> <span>PR <a style="color:var(--replay-accent)">#152</a></span></div>
+      <span class="status-sep">│</span>
+      <div class="status-item"><span class="status-dot ok"></span> <span>CI <strong>pass</strong></span></div>
+      <span class="status-sep">│</span>
+      <div class="status-item"><span>📊</span> <span>Snapshot <strong>dirty</strong> (+12 nodes)</span></div>
+      <span class="status-sep">│</span>
+      <div class="status-item" style="margin-left:auto;"><span>🟢</span> <span>Risk Low</span></div>
+    </div>
+
+    <!-- Window body -->
+    <div class="window-body">
+      <!-- Chat area -->
+      <div class="chat-area">
+        <div class="chat-msg user">
+          <div class="label">Anh (CEO)</div>
+          Cho tôi xem phần nào của dự án vừa bị thay đổi
+        </div>
+        <div class="chat-msg claude">
+          <div class="label">Claude</div>
+          Em vừa mở tab <strong>Claude Replay</strong> bên phải — anh thấy session <em>"VIBE-104 plugin"</em> đã sửa 6 file, trong đó có 2 file ở lõi parser. Em đang highlight trên graph. <span style="opacity:.6">② ③</span>
+        </div>
+        <div class="chat-msg claude">
+          <div class="label">Claude</div>
+          Nhấn ▶ ở player để xem Claude đã làm gì ở step 7/23 — sửa hàm <code style="font-family:var(--font-mono);background:var(--bg-muted);padding:2px 5px;border-radius:3px;">PythonParser.parse()</code>. <span style="opacity:.6">④</span>
+        </div>
+        <!-- Toast -->
+        <div style="margin-top:auto;">
+          <div class="toast success">
+            <span class="icon">✅</span>
+            <div><div class="title">Graph updated <span style="opacity:.6">⑤</span></div><div class="desc">+12 nodes · Risk 🟢 Low · Impact zone 0</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pane -->
+      <div class="pane">
+        <div class="pane-tabs">
+          <button class="pane-tab">📊 Graph</button>
+          <button class="pane-tab">🕐 Timeline</button>
+          <button class="pane-tab active">🎬 Replay</button>
+        </div>
+        <div class="pane-body">
+          <div style="font-size:11px;color:var(--replay-text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Recent sessions</div>
+          <div class="replay-sessions">
+            <div class="replay-session active">
+              <div><div class="title">VIBE-104 plugin</div><div class="meta">16/11 · 23 steps · 6 files</div></div>
+              <span class="badge purple">active</span>
+            </div>
+            <div class="replay-session">
+              <div><div class="title">Billing fix</div><div class="meta">15/11 · 45 steps · 2 files</div></div>
+            </div>
+            <div class="replay-session">
+              <div><div class="title">CBM-P2 dual-snapshot</div><div class="meta">12/11 · 87 steps · 14 files</div></div>
+            </div>
+          </div>
+
+          <div class="replay-player">
+            <div class="replay-controls">
+              <button class="replay-btn">⏮</button>
+              <button class="replay-btn play">▶</button>
+              <button class="replay-btn">⏭</button>
+              <div class="replay-progress"><div class="replay-progress-fill"></div></div>
+              <span class="replay-time">7/23</span>
+            </div>
+            <div class="replay-step user">
+              <div class="step-label">👤 User · 14:32:08</div>
+              <div class="step-text">Thêm Vietnamese skill cho plugin</div>
+            </div>
+            <div class="replay-step">
+              <div class="step-label">🤖 Claude · 14:32:15</div>
+              <div class="step-text">Em tạo skills/cbm-vibe/SKILL.md với tiếng Việt...</div>
+            </div>
+            <div class="replay-step tool">
+              <div class="step-label">🔧 Tool · Write</div>
+              <div class="step-text">plugins/cbm-vibe/skills/cbm-vibe/SKILL.md</div>
+            </div>
+            <div class="replay-files">
+              <div class="f-mod">M plugins/cbm-vibe/.claude-plugin/plugin.json</div>
+              <div class="f-add">+ plugins/cbm-vibe/skills/cbm-vibe/SKILL.md</div>
+              <div class="f-add">+ plugins/cbm-vibe/skills/cbm-vibe/references/lenh.md</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callouts">
+    <div class="callout"><span class="callout-num">1</span><div><strong>Status Line</strong> — luôn hiện. Click vào từng phần mở popup chi tiết (PR → mở PR, Snapshot → mở tab Graph).</div></div>
+    <div class="callout"><span class="callout-num">2</span><div><strong>CBM Pane</strong> — cạnh chat, 3 tabs. Chat và pane giao tiếp 2 chiều qua <code>sendPrompt()</code> và <code>postMessage</code>.</div></div>
+    <div class="callout"><span class="callout-num">3</span><div><strong>Session list</strong> — pull từ <code>~/.claude/projects/-Users-pro-Projects-codebase-map/*.jsonl</code>, mỗi file = 1 session.</div></div>
+    <div class="callout"><span class="callout-num">4</span><div><strong>Replay player</strong> — scrub timeline từng step. Mỗi step nối với <code>file-history-delta</code> để biết file nào bị động + highlight trên graph (tab Graph).</div></div>
+    <div class="callout"><span class="callout-num">5</span><div><strong>Toast</strong> — hiện khi: commit mới · PR update · CI change · snapshot regenerated. Tự ẩn sau 5s, click → mở tab tương ứng.</div></div>
+  </div>
+</div>
+
+<!-- ═══ 3. STATUS LINE ═══ -->
+<div class="section">
+  <h2 class="section-title"><span class="num">3</span>Status Line — chi tiết</h2>
+  <p class="section-desc">Dòng trạng thái lấy data từ 4 nguồn, cập nhật mỗi 5 giây (hoặc theo event).</p>
+
+  <div class="window-mock" style="margin-top:0;">
+    <div class="status-line">
+      <div class="status-item"><span>🚀</span> <span>Sprint <strong>CBM-VIBE</strong></span></div>
+      <span class="status-sep">│</span>
+      <div class="status-item"><span>🌿</span> <span>feat/vibe-105-cbm-mod</span></div>
+      <span class="status-sep">│</span>
+      <div class="status-item"><span>🔀</span> <span>PR <a style="color:var(--replay-accent)">#152</a></span></div>
+      <span class="status-sep">│</span>
+      <div class="status-item"><span class="status-dot ok"></span> <span>CI <strong>pass</strong></span></div>
+      <span class="status-sep">│</span>
+      <div class="status-item"><span>📊</span> <span>Snapshot <strong>dirty</strong></span></div>
+      <span class="status-sep">│</span>
+      <div class="status-item" style="margin-left:auto;"><span>🟢</span> <span>Risk Low</span></div>
+    </div>
+  </div>
+
+  <table class="tbl" style="margin-top:16px;">
+    <tr><th>Slot</th><th>Nguồn data</th><th>Cập nhật khi</th></tr>
+    <tr><td>Sprint</td><td><code class="code">BRIEF.md</code> · section ROADMAP</td><td>File đổi</td></tr>
+    <tr><td>Branch</td><td><code class="code">git rev-parse --abbrev-ref HEAD</code></td><td>Branch switch</td></tr>
+    <tr><td>PR</td><td><code class="code">gh pr view --json number,url</code></td><td>Push/PR event</td></tr>
+    <tr><td>CI</td><td><code class="code">gh run list --limit 1</code></td><td>Mỗi 30s khi có PR</td></tr>
+    <tr><td>Snapshot</td><td><code class="code">codebase-map snapshot status</code></td><td>File watch <code>codebase_map/</code></td></tr>
+    <tr><td>Risk</td><td><code class="code">codebase-map diff --quick</code></td><td>Khi snapshot đổi</td></tr>
+  </table>
+
+  <div style="margin-top:16px;">
+    <h4 style="font-size:14px;margin-bottom:8px;">Trạng thái Status Line theo tình huống</h4>
+    <div class="window-mock" style="margin:8px 0;">
+      <div class="status-line">
+        <div class="status-item"><span>🚀</span> Sprint <strong>CBM-VIBE</strong></div>
+        <span class="status-sep">│</span>
+        <div class="status-item"><span class="status-dot err"></span> CI <strong style="color:var(--status-err);">fail</strong></div>
+        <span class="status-sep">│</span>
+        <div class="status-item"><span>📊</span> Snapshot <strong>dirty</strong></div>
+        <span class="status-sep">│</span>
+        <div class="status-item" style="margin-left:auto;"><span>🔴</span> Risk <strong style="color:var(--status-err);">High (+3 impacted zones)</strong></div>
+      </div>
+    </div>
+    <div class="window-mock" style="margin:8px 0;">
+      <div class="status-line">
+        <div class="status-item"><span>🚀</span> Sprint <strong>CBM-VIBE</strong></div>
+        <span class="status-sep">│</span>
+        <div class="status-item"><span class="status-dot warn"></span> CI <strong style="color:var(--status-warn);">running (3:24)</strong></div>
+        <span class="status-sep">│</span>
+        <div class="status-item"><span>📊</span> Snapshot <strong>clean</strong></div>
+        <span class="status-sep">│</span>
+        <div class="status-item" style="margin-left:auto;"><span>⏳</span> Verifying...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 4. CBM PANE — 3 TABS ═══ -->
+<div class="section">
+  <h2 class="section-title"><span class="num">4</span>CBM Pane — 3 tabs</h2>
+
+  <div class="grid-3">
+    <!-- Tab 1: Graph -->
+    <div>
+      <h4 style="font-size:14px;margin-bottom:8px;">📊 Graph (live)</h4>
+      <div class="pane" style="height:300px;border-radius:var(--r-md);border:1px solid var(--replay-border);">
+        <div class="pane-body" style="padding:12px;">
+          <div class="graph-mock" style="min-height:260px;">
+            <div class="graph-node highlight" style="top:20px;left:20px;background:#79c0ff;">python_parser.py</div>
+            <div class="graph-node" style="top:70px;left:80px;background:#a371f7;">PythonParser</div>
+            <div class="graph-node highlight" style="top:130px;left:20px;background:#3fb950;">parse()</div>
+            <div class="graph-node" style="top:70px;left:200px;background:#3fb950;">visit_FunctionDef()</div>
+            <div class="graph-node" style="top:180px;left:150px;background:#f0883e;">graph/builder.py</div>
+            <div class="graph-node" style="top:220px;left:80px;background:#79c0ff;">cli.py</div>
+            <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;" viewBox="0 0 400 260">
+              <line x1="80" y1="40" x2="110" y2="80" stroke="#30363d" stroke-width="1"/>
+              <line x1="140" y1="90" x2="60" y2="140" stroke="#f9e2af" stroke-width="2" stroke-dasharray="3 3"/>
+              <line x1="180" y1="150" x2="180" y2="190" stroke="#30363d" stroke-width="1"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text-secondary);margin-top:6px;">Live render từ <code class="code">graph.json</code>. Highlight (vàng) đồng bộ với step replay hiện tại.</p>
+    </div>
+
+    <!-- Tab 2: Timeline -->
+    <div>
+      <h4 style="font-size:14px;margin-bottom:8px;">🕐 Timeline (snapshots)</h4>
+      <div class="pane" style="height:300px;border-radius:var(--r-md);border:1px solid var(--replay-border);">
+        <div class="pane-body" style="padding:12px;">
+          <div class="timeline-list">
+            <div class="timeline-item">
+              <div class="dot" style="background:var(--replay-tool);"></div>
+              <div class="body">
+                <div class="label-row"><span>v2.2.0 — Dual-snapshot</span><span class="meta">12/11</span></div>
+                <div class="meta">+49 nodes · 7 files mới</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="dot"></div>
+              <div class="body">
+                <div class="label-row"><span>v2.1.0 — Fingerprint</span><span class="meta">12/11</span></div>
+                <div class="meta">+12 nodes · fingerprint field</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="dot" style="background:var(--replay-user);"></div>
+              <div class="body">
+                <div class="label-row"><span>v2.0.1 — Hotfix classifier</span><span class="meta">08/11</span></div>
+                <div class="meta">-3 nodes · 1 fix</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="dot"></div>
+              <div class="body">
+                <div class="label-row"><span>v2.0 — Multi-view</span><span class="meta">07/11</span></div>
+                <div class="meta">+87 nodes · 14 files mới</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text-secondary);margin-top:6px;">Scrub để xem graph quay ngược/tiến. Click snapshot → diff với current.</p>
+    </div>
+
+    <!-- Tab 3: Claude Replay -->
+    <div>
+      <h4 style="font-size:14px;margin-bottom:8px;">🎬 Claude Replay (🆕)</h4>
+      <div class="pane" style="height:300px;border-radius:var(--r-md);border:1px solid var(--replay-border);">
+        <div class="pane-body" style="padding:12px;">
+          <div class="replay-session active" style="margin-bottom:8px;">
+            <div><div class="title">VIBE-104 plugin</div><div class="meta">16/11 · 23 steps</div></div>
+          </div>
+          <div class="replay-player" style="padding:10px;">
+            <div class="replay-controls" style="margin-bottom:8px;">
+              <button class="replay-btn" style="width:24px;height:24px;font-size:11px;">⏮</button>
+              <button class="replay-btn play" style="width:24px;height:24px;font-size:11px;">▶</button>
+              <button class="replay-btn" style="width:24px;height:24px;font-size:11px;">⏭</button>
+              <div class="replay-progress"><div class="replay-progress-fill"></div></div>
+            </div>
+            <div class="replay-step tool" style="padding:6px 8px;font-size:11px;">
+              <div class="step-label">🔧 Write · 14:32:15</div>
+              <div class="step-text">SKILL.md created</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text-secondary);margin-top:6px;">Tua từng step Claude đã làm. Auto-highlight file đang touch trên tab Graph.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 5. CLAUDE REPLAY — DEEP DIVE ═══ -->
+<div class="section">
+  <h2 class="section-title"><span class="num">5</span>Claude Replay — trọng tâm</h2>
+  <p class="section-desc">Tính năng mới. Tua lại từng bước Claude đã làm trên dự án — như Google Doc version history, nhưng thấy luôn <strong>context chat</strong>, <strong>tool call</strong>, và <strong>file nào bị động trên graph codebase</strong>.</p>
+
+  <h3 style="margin-bottom:8px;font-size:15px;">5.1 — Cấu trúc 1 step</h3>
+  <div class="grid-2">
+    <div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">Mỗi step trong replay gộp 3 loại event từ JSONL:</p>
+      <ul style="font-size:13px;padding-left:20px;line-height:1.8;">
+        <li><strong style="color:var(--replay-user);">user</strong> — prompt từ anh</li>
+        <li><strong style="color:var(--replay-claude);">assistant</strong> — câu trả lời của Claude</li>
+        <li><strong style="color:var(--replay-tool);">tools-used</strong> — mỗi tool call (Write, Edit, Bash...)</li>
+        <li><strong>file-history-delta</strong> — file nào thay đổi ở step này (data chính sync graph)</li>
+      </ul>
+    </div>
+    <div>
+      <div class="arch" style="font-size:11px;">
+<span style="color:var(--replay-text-muted);"># 1 event trong JSONL</span>
+{
+  <span style="color:var(--replay-accent);">"type"</span>: "file-history-delta",
+  <span style="color:var(--replay-accent);">"trackingPath"</span>: "codebase_map/parsers/python_parser.py",
+  <span style="color:var(--replay-accent);">"backup"</span>: {
+    <span style="color:var(--replay-accent);">"version"</span>: 3,
+    <span style="color:var(--replay-accent);">"backupTime"</span>: "2026-11-16T14:32:15Z"
+  },
+  <span style="color:var(--replay-accent);">"messageId"</span>: "a4b2a247..."
+}
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:20px;margin-bottom:8px;font-size:15px;">5.2 — Replay player đầy đủ</h3>
+  <div class="window-mock" style="margin-top:0;">
+    <div class="pane" style="padding:16px;">
+      <div class="pane-body" style="padding:0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div>
+            <div style="font-size:14px;font-weight:600;">Session: VIBE-104 plugin</div>
+            <div style="font-size:11px;color:var(--replay-text-muted);">16/11/2026 · 14:28 → 16:45 · 23 steps · 6 files · 1 commit · PR #151</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="replay-btn" style="width:auto;padding:0 10px;font-size:11px;">1×</button>
+            <button class="replay-btn" style="width:auto;padding:0 10px;font-size:11px;">🔗 Share</button>
+          </div>
+        </div>
+
+        <div class="replay-player">
+          <div class="replay-controls">
+            <button class="replay-btn">⏮</button>
+            <button class="replay-btn">⏪</button>
+            <button class="replay-btn play">▶</button>
+            <button class="replay-btn">⏩</button>
+            <button class="replay-btn">⏭</button>
+            <div class="replay-progress"><div class="replay-progress-fill"></div></div>
+            <span class="replay-time">07/23 · 14:32:15</span>
+          </div>
+
+          <div class="replay-step user">
+            <div class="step-label">👤 User · 14:32:08</div>
+            <div class="step-text">Thêm Vietnamese skill cho plugin, follow design preview v0.1</div>
+          </div>
+          <div class="replay-step">
+            <div class="step-label">🤖 Claude · 14:32:12</div>
+            <div class="step-text">Em đọc design trước khi viết skill. Em sẽ tạo SKILL.md với tiếng Việt thường, mẫu báo cáo, và danh sách lệnh.</div>
+          </div>
+          <div class="replay-step tool">
+            <div class="step-label">🔧 Read · 14:32:13</div>
+            <div class="step-text">design-preview/active/CBM-VIBE-design.html</div>
+          </div>
+          <div class="replay-step tool">
+            <div class="step-label">🔧 Write · 14:32:15 ← HIỆN TẠI</div>
+            <div class="step-text">plugins/cbm-vibe/skills/cbm-vibe/SKILL.md (+142 lines)</div>
+          </div>
+          <div class="replay-files">
+            <div style="color:var(--replay-text-muted);margin-bottom:4px;">Files touched trong step này:</div>
+            <div class="f-add">+ plugins/cbm-vibe/skills/cbm-vibe/SKILL.md</div>
+          </div>
+          <div style="margin-top:10px;padding:8px;background:var(--replay-bg);border-radius:var(--r-sm);border:1px dashed var(--replay-border);font-size:11px;color:var(--replay-text-muted);">
+            💡 <strong>Sync:</strong> Tab <em>Graph</em> đang highlight node <code style="color:var(--replay-text);">SKILL.md</code>. Bấm <strong>⏭</strong> để qua step 8 (Bash test run).
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:20px;margin-bottom:8px;font-size:15px;">5.3 — Ba chế độ replay</h3>
+  <table class="tbl">
+    <tr><th>Chế độ</th><th>Mô tả</th><th>Khi dùng</th></tr>
+    <tr><td><strong>⏯ Step-by-step</strong></td><td>Bấm ⏭ qua từng tool call, xem chat + files thay đổi</td><td>Review chi tiết · Dev onboarding</td></tr>
+    <tr><td><strong>▶ Auto-play</strong></td><td>Tự động chạy 1 step/2s (hoặc 1×/2×/5×)</td><td>Watch Claude làm từ đầu</td></tr>
+    <tr><td><strong>🎯 Jump-to-file</strong></td><td>Click 1 file trên graph → nhảy tới step đầu tiên touch file đó</td><td>"File này ai sửa?" "Khi nào?"</td></tr>
+  </table>
+
+  <h3 style="margin-top:20px;margin-bottom:8px;font-size:15px;">5.4 — Phân biệt với git log</h3>
+  <div class="grid-2">
+    <div style="padding:14px;background:var(--bg-muted);border-radius:var(--r-md);">
+      <strong style="color:var(--text-secondary);">Git log cho thấy:</strong>
+      <ul style="font-size:13px;margin-top:6px;padding-left:20px;line-height:1.7;">
+        <li>Commit hash + diff</li>
+        <li>Message (thường ngắn)</li>
+        <li>File thay đổi (list)</li>
+      </ul>
+    </div>
+    <div style="padding:14px;background:var(--brand-light);border-radius:var(--r-md);">
+      <strong style="color:var(--brand-dark);">Claude Replay cho thêm:</strong>
+      <ul style="font-size:13px;margin-top:6px;padding-left:20px;line-height:1.7;">
+        <li><strong>Context chat</strong>: tại sao Claude làm vậy</li>
+        <li><strong>Từng tool call riêng</strong> (git chỉ thấy commit kết)</li>
+        <li><strong>Timing</strong>: Claude mất bao lâu, có bị user interrupt không</li>
+        <li><strong>Sync graph</strong>: file bị động = node highlight</li>
+        <li><strong>Resume context</strong>: click "Continue here" mở session tiếp</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 6. ARCHITECTURE ═══ -->
+<div class="section">
+  <h2 class="section-title"><span class="num">6</span>Kiến trúc kỹ thuật</h2>
+
+  <div class="arch">
+┌────────────────────────── Claude Code / Claude Desktop ──────────────────────────┐
+│                                                                                    │
+│   ┌─────────────────────┐    ┌────────────────────────────────────┐              │
+│   │  STATUS LINE        │    │  CBM PANE (iframe hoặc web view)   │              │
+│   │  (plugin hook)      │    │  ┌──────────────────────────────┐  │              │
+│   │                     │    │  │  Graph · Timeline · Replay   │  │              │
+│   └──────────┬──────────┘    │  └──────────────────────────────┘  │              │
+│              │               │              │                      │              │
+│              │               │              │ sendPrompt()         │              │
+│              │               │              ▼                      │              │
+│              │               │     ┌──────────────┐                │              │
+│              │               │     │    CHAT      │                │              │
+│              │               │     └──────────────┘                │              │
+│              │               └──────────┬─────────────────────────┘              │
+│              │                          │                                          │
+└──────────────┼──────────────────────────┼──────────────────────────────────────────┘
+               │                          │
+               ▼                          ▼
+      ┌────────────────┐         ┌───────────────────────────┐
+      │ Status data    │         │ CBM Mod backend (Python)  │
+      │ aggregator     │         │ ────────────────────────  │
+      │ - git state    │         │ /api/graph       (JSON)   │
+      │ - gh pr/run    │         │ /api/sessions    (list)   │
+      │ - cbm diff     │         │ /api/replay/:id  (events) │
+      └────────┬───────┘         │ /api/snapshot    (list)   │
+               │                 └──────┬────────────────────┘
+               └─────────────────────┐  │
+                                     ▼  ▼
+                           ┌──────────────────────┐
+                           │  Data sources        │
+                           │  ─ graph.json        │
+                           │  ─ snapshots/*.json  │
+                           │  ─ ~/.claude/.../    │
+                           │     projects/*.jsonl │
+                           │  ─ git / gh cli      │
+                           └──────────────────────┘
+  </div>
+
+  <h3 style="margin-top:20px;margin-bottom:8px;font-size:15px;">Module tổ chức trong repo</h3>
+  <table class="tbl">
+    <tr><th>Path</th><th>Vai trò</th></tr>
+    <tr><td><code class="code">plugins/cbm-vibe/.claude-plugin/plugin.json</code></td><td>Khai báo mod (status line, hooks, pane)</td></tr>
+    <tr><td><code class="code">plugins/cbm-vibe/mod/status-line.js</code></td><td>Script render status line (đọc Python backend)</td></tr>
+    <tr><td><code class="code">plugins/cbm-vibe/mod/pane/index.html</code></td><td>HTML pane 3-tab (reuse graph.html)</td></tr>
+    <tr><td><code class="code">plugins/cbm-vibe/mod/pane/replay.js</code></td><td>Logic parse JSONL + player (JS)</td></tr>
+    <tr><td><code class="code">plugins/cbm-vibe/hooks/pre-commit.sh</code></td><td>Auto <code>snapshot create</code> trước commit</td></tr>
+    <tr><td><code class="code">codebase_map/mod/server.py</code></td><td>FastAPI local server cho pane API</td></tr>
+    <tr><td><code class="code">codebase_map/mod/replay.py</code></td><td>Parser JSONL → step model</td></tr>
+  </table>
+</div>
+
+<!-- ═══ 7. ACCEPTANCE CRITERIA ═══ -->
+<div class="section">
+  <h2 class="section-title"><span class="num">7</span>Acceptance Criteria</h2>
+  <ul class="ac-list">
+    <li><strong>AC-1</strong> — Status line hiện trong Claude Code với 6 slot: Sprint · Branch · PR · CI · Snapshot · Risk. Mỗi slot refresh đúng nguồn (bảng mục 3).</li>
+    <li><strong>AC-2</strong> — Mở pane cạnh chat qua lệnh <code class="code">/cbm-mod open</code>. Pane có 3 tabs hoạt động (Graph · Timeline · Replay).</li>
+    <li><strong>AC-3</strong> — Tab <strong>Graph</strong> render được graph.json của repo hiện tại, zoom/pan OK. Click node → sendPrompt về chat ("/cbm-impact &lt;node&gt;").</li>
+    <li><strong>AC-4</strong> — Tab <strong>Timeline</strong> list snapshots từ <code class="code">codebase_map snapshot list</code>. Click snapshot → diff với current.</li>
+    <li><strong>AC-5</strong> — Tab <strong>Claude Replay</strong> list sessions từ <code class="code">~/.claude/projects/&lt;encoded-path&gt;/*.jsonl</code>. Chọn session → player hiện step-by-step.</li>
+    <li><strong>AC-6</strong> — Replay player có nút ⏮ ⏪ ▶ ⏩ ⏭ và scrubber. Hiện đúng user/claude/tool/file-delta.</li>
+    <li><strong>AC-7</strong> — Replay sync Graph tab: step hiện tại touch file X → node X highlight vàng.</li>
+    <li><strong>AC-8</strong> — Hook <code class="code">pre-commit</code> tự động chạy <code class="code">codebase-map snapshot create --label pre-commit-$SHA</code>.</li>
+    <li><strong>AC-9</strong> — Toast hiện khi: commit mới (✅) · CI fail (❌) · snapshot regenerated (📊). Click → mở tab tương ứng.</li>
+    <li><strong>AC-10</strong> — Pane load &lt; 1s trên repo CBM (173 tests, 60+ files). Replay 1 session 100 step &lt; 2s.</li>
+    <li><strong>AC-11</strong> — Mod không collect data ra ngoài máy. Status line không gọi mạng ngoài <code class="code">gh cli</code> (đã auth local).</li>
+    <li><strong>AC-12</strong> — Cài đặt qua <code class="code">pipx install codebase-map</code> + 1 lệnh <code class="code">cbm-mod install</code> (symlink vào <code class="code">~/.claude/plugins/</code>).</li>
+  </ul>
+</div>
+
+<!-- ═══ 8. ROLLOUT ═══ -->
+<div class="section">
+  <h2 class="section-title"><span class="num">8</span>Rollout &amp; Sprint plan</h2>
+  <table class="tbl">
+    <tr><th>Day</th><th>Task</th><th>Deliverable</th><th>SP</th></tr>
+    <tr><td>D1</td><td>Backend server + status API</td><td><code class="code">codebase_map/mod/server.py</code> + status line rendering</td><td>3</td></tr>
+    <tr><td>D2</td><td>Pane shell 3 tabs + Graph reuse</td><td>Pane HTML + Graph tab load graph.json</td><td>3</td></tr>
+    <tr><td>D3</td><td>Timeline tab (snapshot list + diff)</td><td>Timeline hoạt động</td><td>3</td></tr>
+    <tr><td>D4</td><td>Claude Replay parser (JSONL → steps)</td><td><code class="code">codebase_map/mod/replay.py</code> + unit test</td><td>4</td></tr>
+    <tr><td>D5</td><td>Replay player UI + sync Graph</td><td>Replay tab + highlight</td><td>4</td></tr>
+    <tr><td>D6</td><td>Hooks + Toast + Polish</td><td>Pre-commit · Toast · Cài đặt</td><td>3</td></tr>
+    <tr><td>D7</td><td>Review gate (Tester → CTO → Designer)</td><td>3 approvals</td><td>1</td></tr>
+    <tr><td colspan="3" style="text-align:right;"><strong>Tổng</strong></td><td><strong>21 SP</strong></td></tr>
+  </table>
+</div>
+
+<!-- ═══ 9. DECISIONS NEEDED ═══ -->
+<div class="section">
+  <h2 class="section-title"><span class="num">9</span>Quyết định cần CEO duyệt</h2>
+  <div class="decisions">
+    <h4>⚠️ 5 câu hỏi cần anh chốt trước khi em bắt tay implement</h4>
+    <ol>
+      <li><strong>Pane form factor:</strong> HTML iframe trong Claude Desktop pane · <em>hoặc</em> · artifact.claude.ai (link share cho dev khác) · <em>hoặc</em> · cả 2?</li>
+      <li><strong>Claude Replay privacy:</strong> JSONL chứa content chat (có thể là nhạy cảm). Replay có nên <em>redact</em> credentials/path/email? · Có cần option <em>"pin session as private"</em>?</li>
+      <li><strong>Sync direction Graph ↔ Replay:</strong> Chỉ Replay highlight Graph (1 chiều) · <em>hoặc</em> · click Graph node cũng jump replay tới file đó (2 chiều)?</li>
+      <li><strong>Session scope:</strong> Replay chỉ sessions của CBM project (hiện tại 5 sessions, 11,395 lines) · <em>hoặc</em> · mở rộng cả sessions khác trên máy (KMP, HC)?</li>
+      <li><strong>Hook pre-commit:</strong> Bật mặc định khi cài mod · <em>hoặc</em> · opt-in (anh phải gõ <code class="code">cbm-mod enable-hooks</code>)?</li>
+    </ol>
+    <p style="margin-top:12px;font-size:13px;color:var(--text-secondary);">👉 Em recommend: 1 iframe · 2 redact mặc định + option pin · 3 2 chiều · 4 chỉ CBM (mở rộng sau) · 5 opt-in (an toàn).</p>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:12px;">
+  Design preview v0.1 · Draft 16/11/2026 · Ticket VIBE-105 · Rule #5 "No Design = No Implementation"
+</div>
+
+</div>
+
+</body>
+</html>
