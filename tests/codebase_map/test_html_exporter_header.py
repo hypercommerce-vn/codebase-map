@@ -84,6 +84,8 @@ class TestStatLabels:
             "} dependencies</span>",
             "} dependents</span>",
             "} edges</span>",
+            "</strong> nodes but none",
+            "' lines'",
         ],
     )
     def test_no_hardcoded_plural_after_a_count(self, html: str, hardcoded: str) -> None:
@@ -96,9 +98,12 @@ class TestStatLabels:
             _js_function(html, "plural")
             + "\n"
             + _js_function(html, "statLabel")
+            + "\n"
+            + _js_function(html, "countLabel")
             + "\nconsole.log(JSON.stringify(["
             "[0, 1, 2].map(n => statLabel(n, 'domain')),"
             "[0, 1, 2].map(n => plural(n, 'dependency', 'dependencies')),"
+            "[1, 2].map(n => countLabel(n, 'line')),"
             "]));"
         )
         assert _run_node(script) == [
@@ -108,6 +113,7 @@ class TestStatLabels:
                 "<strong>2</strong> domains",
             ],
             ["dependencies", "dependency", "dependencies"],
+            ["1 line", "2 lines"],
         ]
 
 

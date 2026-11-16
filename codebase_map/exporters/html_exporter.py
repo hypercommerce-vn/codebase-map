@@ -698,6 +698,9 @@ function plural(count, noun, many) {{
 function statLabel(count, noun) {{
   return `<strong>${{count.toLocaleString()}}</strong> ${{plural(count, noun)}}`;
 }}
+function countLabel(count, noun, many) {{
+  return `${{count.toLocaleString()}} ${{plural(count, noun, many)}}`;
+}}
 const domainCount = DATA.stats.by_domain ? Object.keys(DATA.stats.by_domain).length : 0;
 document.getElementById('stat-nodes').innerHTML = statLabel(nodes.length, 'node');
 document.getElementById('stat-edges').innerHTML = statLabel(edges.length, 'edge');
@@ -740,7 +743,7 @@ function renderApiCatalog() {{
         <div class="es-icon" aria-hidden="true">&#x1f50c;</div>
         <div class="es-title">No HTTP routes detected in this project</div>
         <div class="es-hint">
-          Codebase Map found <strong>${{nodes.length.toLocaleString()}}</strong> nodes but none are tagged as routes.
+          Codebase Map found <strong>${{nodes.length.toLocaleString()}}</strong> ${{plural(nodes.length, 'node')}} but none are tagged as routes.
           This is expected for Python library / CLI / worker repos, or if route decorators live outside the scanned paths.<br><br>
           Tips: make sure your <code>codebase-map.yaml</code> <code>include</code> list covers your router/controller directories,
           and that your framework's route decorators (FastAPI <code>@router.get</code>, NestJS <code>@Controller</code>, Express <code>app.get</code>) match the parser.<br><br>
@@ -1552,7 +1555,7 @@ function selectNode(d) {{
       <div class="dp-block-title">&#x2463; Quality</div>
       <div class="dp-kv">
         <span class="k">Coverage</span><span class="v">${{covPill || '<em style="color:var(--text-muted)">N/A</em>'}}</span>
-        <span class="k">LOC</span><span class="v">${{d.line_end && d.line_start ? (d.line_end - d.line_start + 1) + ' lines' : '—'}}</span>
+        <span class="k">LOC</span><span class="v">${{d.line_end && d.line_start ? countLabel(d.line_end - d.line_start + 1, 'line') : '—'}}</span>
         <span class="k">Docstring</span><span class="v">${{d.docstring ? 'yes' : '<em style="color:var(--text-muted)">none</em>'}}</span>
       </div>
       ${{d.docstring ? `<div style="margin-top:8px; font-size:11px; color:var(--text-secondary); font-style:italic;">${{d.docstring.substring(0, 180)}}${{d.docstring.length > 180 ? '…' : ''}}</div>` : ''}}
