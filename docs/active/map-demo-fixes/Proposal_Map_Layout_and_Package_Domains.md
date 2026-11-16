@@ -28,7 +28,7 @@ Số đo: lần đầu đo trên bản `main` trước PR #155 (hàng Flows còn
 
 | Viewport | Canvas | Toolbar ↔ Legend | Minimap ↔ Legend | Minimap ↔ Detail panel |
 |----------|--------|------------------|------------------|------------------------|
-| 1440 × 900 | 1100 px | chồng **99 px**, che chữ "TYPE" | không chồng | che **0–96 px** đáy panel tùy node (bản `main` trước PR #155: tới ~124 px) |
+| 1440 × 900 | 1100 px | chồng **99 px**, che chữ "TYPE" | không chồng | che **0–~102 px** đáy panel tùy node (bản `main` trước PR #155: tới ~124 px) |
 | 1094 × 800 | 754 px | chồng **~272–280 px** | chồng **~110–118 px**, che nhóm "EDGE" | che **~116–136 px** đáy panel |
 | 820 × 800 | 540 px | chồng | chồng | che **105–131 px** đáy panel; thêm: **toolbar chồng minimap 6 px** (ở 769 px là ~57 px) |
 

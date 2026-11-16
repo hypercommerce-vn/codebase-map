@@ -773,7 +773,7 @@ a:hover { text-decoration: underline; }
         <strong style="color:var(--text);">Tách ra làm ticket riêng (exporter/parser):</strong> → <a href="https://github.com/hypercommerce-vn/codebase-map/pull/155" target="_blank">PR #155</a> (16/11/2026) · <a href="../docs/active/map-demo-fixes/Proposal_Map_Layout_and_Package_Domains.md" target="_blank">đề xuất §4 + §5</a>
         <ul style="margin:4px 0 0 16px; padding:0;">
           <li>⏳ Demo: toolbar/minimap che legend và panel node (layout exporter, cả bản <code>/demo/</code> 1440 px) → toolbar che legend là lỗ hổng của design v2 (3 khối chung 1 hàng đáy); minimap che panel là do exporter lệch design (design để panel z 20 nằm trên minimap). <strong>Chờ CEO chọn phương án</strong> (khuyến nghị A: legend lên trên toolbar ở góc trái, panel node dừng trên minimap, chỉ sửa CSS, 1 SP), sau đó cập nhật design rồi mới code</li>
-          <li>✅ Badge "v2.0" viết cứng ở <code>html_exporter.py:552</code> (bản thật 2.4.0); "1 domains" sai số nhiều; dòng Flows trống → <strong>đã sửa ở PR #155</strong>: badge lấy version của package; "1 domain / 1 node / 1 edge" và mọi nhãn đếm khác (tìm kiếm, panel node, Executive, API Catalog) dùng chung helper <code>plural()</code>; ẩn dòng Flows khi không node nào có flow. Graph không đổi (self-scan 200 node / 992 cạnh, HC 1624 / 9989)</li>
+          <li>✅ Badge "v2.0" viết cứng ở <code>html_exporter.py:552</code> (bản thật 2.4.0); "1 domains" sai số nhiều; dòng Flows trống → <strong>đã sửa ở PR #155</strong>: badge lấy version của package; "1 domain / 1 node / 1 edge" và mọi nhãn đếm khác (tìm kiếm, panel node, Executive, API Catalog) dùng chung helper <code>plural()</code>; ẩn dòng Flows khi không node nào có flow. Graph không đổi: cùng mã nguồn thì code cũ và mới cho kết quả giống hệt (self-scan 200 node / 992 cạnh, HC 1624 / 9989); self-scan nhánh này 993 cạnh vì dòng import <code>__version__</code> mới cũng được quét</li>
           <li>⏳ <code>_detect_domain</code> trong <code>python_parser.py</code> chỉ nhận tên domain của Hyper Commerce → repo khác chỉ có 1 nhóm "other" → <strong>chờ CEO</strong> (Q5a–c): khi không khớp tên HC thì lấy package cấp 1 làm domain (self-scan CBM: 1 → 4 domain). Không xung đột PR #145; nên làm sau khi #145 và nhóm VIBE merge</li>
           <li>Màu xanh lá mang hai nghĩa: service ở hình hero, method ở demo (chưa xử lý, ngoài phạm vi PR #155)</li>
         </ul>
@@ -1711,7 +1711,7 @@ a:hover { text-decoration: underline; }
         <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/155" target="_blank">#155</a></td>
         <td>fix(exporter): show real version, singular stat labels, hide empty Flows row (+ đề xuất bố cục canvas &amp; domain theo package, chưa code)</td>
         <td><code>claude/epic-yonath-a6064b</code></td>
-        <td><a href="../docs/reference/reviews/ReviewGate_PR155_Round1_2026-11-16.md" target="_blank">Vòng 1</a> 96.0 · <a href="../docs/reference/reviews/ReviewGate_PR155_Round2_2026-11-16.md" target="_blank">Vòng 2</a> 96.0 (Designer 100, CTO chờ CI)</td>
+        <td><a href="../docs/reference/reviews/ReviewGate_PR155_Round1_2026-11-16.md" target="_blank">Vòng 1</a> 96.0 · <a href="../docs/reference/reviews/ReviewGate_PR155_Round2_2026-11-16.md" target="_blank">Vòng 2</a> 96.0 · <a href="../docs/reference/reviews/ReviewGate_PR155_Round3_2026-11-16.md" target="_blank">Vòng 3</a> <strong>100 SHIPIT</strong> · CI 9/9</td>
         <td><span class="badge open">🔍 Chờ CEO</span></td>
       </tr>
     </tbody>
