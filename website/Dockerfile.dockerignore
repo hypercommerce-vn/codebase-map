@@ -1,0 +1,5 @@
+*
+!codebase_map
+!website
+website/dist
+**/__pycache__

@@ -1,0 +1,14 @@
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# docker compose -f website/docker-compose.yml up -d --build
+# Listens on 127.0.0.1:8080 only; put the VPS's HTTPS reverse proxy in front.
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: website/Dockerfile
+      args:
+        SITE_URL: ${SITE_URL:-}
+    image: codebase-map-website
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8080}:80"

@@ -124,6 +124,7 @@ codebase-map/
 | Slash commands | **`.claude/commands/`** |
 | Docs index + cấu trúc | **`docs/README.md`** |
 | Onboarding | **`docs/active/ONBOARDING.md`** |
+| Website dự án (build + deploy VPS) | **`website/README.md`** |
 | CBM Claude Integration initiative | **`docs/active/cbm-claude-integration/`** (7 docs) |
 | CBM Dual-Snapshot proposal | **`docs/reference/cbm-dual-snapshot/Proposal_Dual_Snapshot_CBM.md`** |
 | CBM CTO review | **`docs/reference/cbm-dual-snapshot/CTO_Review_Dual_Snapshot.md`** |
