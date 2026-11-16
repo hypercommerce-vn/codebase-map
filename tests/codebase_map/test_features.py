@@ -376,6 +376,20 @@ class TestApplicationMap:
         assert booking["functions"]["owned"] > 0
         assert "lib/db.ts" in booking["files"]["shared"]
 
+    def test_features_that_depend_on_a_feature(
+        self, app: Path, store: FeatureStore
+    ) -> None:
+        """What to warn about before editing a feature, straight from the graph."""
+        feature_map = FeatureMap(store, _build(app))
+        # Reminders read the upcoming bookings and look up the customer
+        assert feature_map.affected_by("dat-lich") == ["nhac-lich"]
+        assert feature_map.affected_by("khach-hang") == ["nhac-lich"]
+        # nothing else runs the reminder, report or login code
+        assert feature_map.affected_by("nhac-lich") == []
+        assert feature_map.affected_by("dang-nhap") == ["khach-hang", "bao-cao"]
+        data = feature_map.to_dict()
+        assert data["features"][0]["affects"] == ["nhac-lich"]
+
     def test_counts(self, app: Path, store: FeatureStore) -> None:
         graph = _build(app)
         store.record_evidence(

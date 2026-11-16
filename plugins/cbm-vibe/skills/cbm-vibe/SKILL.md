@@ -20,8 +20,8 @@ Bạn làm việc theo ba khoảnh khắc:
 
 | Khoảnh khắc | Khi nào | Bạn làm gì |
 |---|---|---|
-| 1. Chốt yêu cầu | Trước khi sửa code | Nhắc lại yêu cầu thành 2–4 tiêu chí nghiệm thu, chờ người dùng chốt |
-| 2. Báo cáo thay đổi | Ngay sau khi sửa xong | Nói đã làm gì, tiêu chí nào có bằng chứng, đụng gì ngoài yêu cầu |
+| 1. Chốt yêu cầu | Trước khi sửa code | Nhắc lại yêu cầu thành 2–4 tiêu chí nghiệm thu, nói việc này liên quan tới đâu, chờ người dùng chốt |
+| 2. Báo cáo thay đổi | Ngay sau khi sửa xong | Trả lời ba câu, luôn đúng thứ tự: AI đã làm gì, đúng yêu cầu chưa, có đụng gì ngoài yêu cầu không |
 | 3. Bản đồ ứng dụng | Khi người dùng hỏi | Kể ứng dụng có những tính năng nào, tình trạng từng cái |
 
 ## Năm nguyên tắc
@@ -91,7 +91,9 @@ vào cùng tính năng với màn hình gọi nó**. File dùng chung (kết n�
 khai báo kiểu, khung trang) không cần gán. `id` chỉ gồm chữ thường không
 dấu, số và gạch nối.
 
-**Bước 2. Viết tiêu chí nghiệm thu.** 2 đến 4 câu, mỗi câu:
+**Bước 2. Viết tiêu chí nghiệm thu.** Mở bằng "Em hiểu yêu cầu của anh như
+sau. Làm xong thì phải đúng N điều này:" (xưng hô theo người dùng), rồi 2
+đến 4 câu, mỗi câu:
 
 - nói bằng lời của người dùng, không thuật ngữ;
 - kiểm được bằng cách tự bấm thử trên ứng dụng;
@@ -100,11 +102,19 @@ dấu, số và gạch nối.
 Luôn có ít nhất một câu về tình huống **không được phép** (ví dụ "Còn dưới 2
 tiếng thì không huỷ được, và có thông báo vì sao").
 
-**Bước 3. Nói trước phần sẽ bị đụng.** Một hai câu: yêu cầu này cần sửa
-những tính năng nào, màn hình nào sẽ thay đổi. Lấy từ kết quả bước 1. Một yêu
-cầu có thể cần sửa vài tính năng (huỷ lịch đụng cả "Lịch của tôi" lẫn "Đặt
-lịch"); kể hết ra ở đây. Những tính năng bạn kể ở bước này và người dùng đồng
-ý chính là **phạm vi của yêu cầu**. Ghi nhớ danh sách này cho khoảnh khắc 2.
+**Bước 3. Nói việc này liên quan tới đâu trong ứng dụng.** Đúng ba dòng, lấy
+từ kết quả bước 1, không tự đoán:
+
+- **Sẽ đụng tới:** những tính năng bạn cần sửa để làm yêu cầu này, kèm màn
+  hình sẽ thay đổi. Một yêu cầu có thể cần sửa vài tính năng (huỷ lịch đụng
+  cả "Lịch của tôi" lẫn "Đặt lịch"); kể hết ra.
+- **Có thể bị ảnh hưởng theo:** các tính năng nằm trong trường `affects` của
+  những tính năng ở dòng trên. Chúng không bị sửa nhưng chạy chung code. Nói
+  thêm: sửa xong bạn sẽ báo người dùng kiểm lại.
+- **Không đụng tới:** các tính năng còn lại.
+
+Những tính năng ở dòng "Sẽ đụng tới" mà người dùng đồng ý chính là **phạm vi
+của yêu cầu**. Ghi nhớ danh sách này cho khoảnh khắc 2.
 
 **Bước 4. Hỏi chốt và chờ.** Kết thúc bằng câu hỏi rõ ràng, ví dụ "Anh chốt
 ba tiêu chí này chứ, hay cần sửa câu nào?". Nếu có công cụ hỏi lựa chọn bằng
@@ -125,7 +135,8 @@ dụ `dat-lich-4`). Dùng `id` của tiêu chí đầu tiên vừa tạo làm đ
 một tính năng hoàn toàn mới, dùng `features add` tạo nó trước với những file
 bạn dự định tạo.
 
-Chỉ sau bước 5 mới bắt đầu sửa code.
+Báo người dùng một câu: bạn đã lưu lại trạng thái ứng dụng trước khi sửa, để
+so sánh sau. Chỉ sau bước 5 mới bắt đầu sửa code.
 
 ## Khoảnh khắc 2 — Báo cáo thay đổi
 
@@ -162,19 +173,37 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/cbm.py" features evidence --criterion dat-l
 Bằng chứng gắn với code tại thời điểm ghi. Khi code liên quan đổi, công cụ
 tự chuyển tiêu chí sang "cần kiểm lại".
 
-**Bước 4. Viết báo cáo** theo đúng bốn phần dưới đây. Mẫu câu và một ví dụ
-đầy đủ: [references/mau-bao-cao.md](references/mau-bao-cao.md).
+**Bước 4. Viết báo cáo.** Một dòng kết luận, rồi ba câu hỏi luôn theo đúng
+thứ tự này. Mẫu câu và một ví dụ đầy đủ:
+[references/mau-bao-cao.md](references/mau-bao-cao.md).
 
-1. **Đã làm** — 2–3 câu lời thường về điều đã thay đổi trên ứng dụng.
-2. **Tiêu chí đã chốt** — mỗi tiêu chí một dòng, mở đầu bằng trạng thái:
-   **Có bằng chứng**, **Cần kiểm lại** hoặc **Chưa kiểm**; kèm cách tự thử
-   nếu chưa có bằng chứng.
-3. **Ngoài yêu cầu** — đọc `features` trong kết quả `impact`. Trước hết
-   **bỏ ra mọi tính năng thuộc phạm vi của yêu cầu** (đã chốt ở khoảnh khắc
-   1, bước 3): sửa chúng là việc được nhờ, không báo ở đây và không hỏi
-   "giữ hay hoàn lại". Với các tính năng còn lại, mỗi tính năng đúng một dòng:
+**Dòng kết luận** đứng trên cùng và chỉ có ba mức, không điểm số, không phần
+trăm:
+
+- "Dùng tiếp được." — mọi tiêu chí vừa chốt đều có bằng chứng, không tiêu chí
+  nào ở nơi khác phải kiểm lại.
+- "Còn N việc cần kiểm. Làm xong thì dùng tiếp được." — N là số tiêu chí vừa
+  chốt chưa có bằng chứng, cộng số tiêu chí ở tính năng khác vừa chuyển sang
+  cần kiểm lại.
+- "Có thứ đang hỏng: …" — một bài kiểm thử không đạt, hoặc người dùng báo đã
+  thử và thấy sai.
+
+1. **AI đã làm gì** — một câu đếm ("Sửa 4 chỗ trong 2 tính năng"), rồi mỗi
+   tính năng bị sửa một dòng lời thường. Với tính năng nằm ngoài phạm vi của
+   yêu cầu, thêm câu "Anh/chị không yêu cầu việc này."
+2. **Đúng yêu cầu chưa** — mỗi tiêu chí vừa chốt một dòng, kèm trạng thái
+   **Có bằng chứng**, **Cần kiểm lại** hoặc **Chưa kiểm**, và nguồn bằng
+   chứng ("Kiểm thử tự động: đạt", "Anh tự thử ngày 15/11", "Chưa có bằng
+   chứng nào"). Sau đó, mục con **Tự kiểm trong 1 phút**: với mỗi tiêu chí
+   chưa có bằng chứng, 2–3 bước bấm thử đánh số và điều phải thấy; mời người
+   dùng trả lời "đạt" hoặc "không đạt", hoặc để bạn viết kiểm thử tự động.
+3. **Có đụng gì ngoài yêu cầu không** — đọc `features` trong kết quả
+   `impact`. Trước hết **bỏ ra mọi tính năng thuộc phạm vi của yêu cầu** (đã
+   chốt ở khoảnh khắc 1, bước 3): sửa chúng là việc được nhờ, không hỏi "giữ
+   hay hoàn lại". Với các tính năng còn lại, mỗi tính năng đúng một dòng:
    - `touched` là `direct`: bạn đã sửa cả phần đó dù không được yêu cầu. Nói
-     thẳng đã sửa gì, và hỏi người dùng muốn giữ hay hoàn lại.
+     thẳng đã sửa gì, liệt kê các tiêu chí của nó vừa chuyển sang cần kiểm
+     lại, và hỏi người dùng muốn giữ hay hoàn lại.
    - `touched` là `indirect`: bạn không sửa phần đó, nhưng nó dùng chung một
      đoạn code vừa đổi. Nếu nó có tiêu chí mang `status_after` là
      `needs_recheck` thì liệt kê các tiêu chí ấy; nếu không có thì chỉ nói
@@ -185,10 +214,10 @@ tự chuyển tiêu chí sang "cần kiểm lại".
    - Mỗi mục trong `unowned_changes` (phần dùng chung, chưa thuộc tính năng
      nào): một câu nói đã đổi gì và những tính năng nào đang dùng nó.
    - Không có gì ngoài phạm vi bị đụng: viết "Không đụng tới phần nào khác."
-4. **Việc của anh/chị** — một câu: cần tự thử những điểm nào rồi báo lại.
 
-Cuối báo cáo ghi một dòng: phần "Tiêu chí" và "Ngoài yêu cầu" do công cụ đối
-chiếu code trước và sau; phần "Đã làm" là bạn tóm tắt.
+Cuối báo cáo ghi một dòng: phần "Đúng yêu cầu chưa" và "Có đụng gì ngoài yêu
+cầu không" do công cụ đối chiếu code trước và sau; phần "AI đã làm gì" là bạn
+tóm tắt.
 
 **Bước 5. Khi người dùng báo đã thử.** Ghi bằng chứng `manual` cho đúng các
 tiêu chí họ nói đã thử, rồi xác nhận lại một câu. Nếu họ muốn hoàn lại phần

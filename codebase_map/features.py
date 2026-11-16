@@ -458,6 +458,25 @@ class FeatureMap:
             if path in files
         ]
 
+    def affected_by(self, feature_id: str) -> list[str]:
+        """Ids of the other features that depend on this feature's code.
+
+        These are the features to warn about before this one is edited: they
+        own nothing that changes, but they run code that will.
+        """
+        scope = self.scope(feature_id)
+        owned_nodes = set(scope.owned_nodes)
+        owned_files = set(scope.owned_files)
+        affected = []
+        for other_id, other in self.scopes.items():
+            if other_id == feature_id:
+                continue
+            if owned_nodes & set(other.reached_nodes) or (
+                owned_files & self._scope_files[other_id]
+            ):
+                affected.append(other_id)
+        return affected
+
     @property
     def unowned_files(self) -> list[str]:
         return sorted(path for path in self._files if not self.owners_of_file(path))
@@ -503,6 +522,8 @@ class FeatureMap:
                         "owned": len(scope.owned_nodes),
                         "reached": len(scope.reached_nodes),
                     },
+                    # other features that depend on this one's code
+                    "affects": self.affected_by(feature.id),
                     "criteria": criteria,
                     "counts": counts,
                 }
