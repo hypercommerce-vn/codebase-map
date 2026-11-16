@@ -1,4 +1,4 @@
-# HC-AI | ticket: VIBE-105
+# HC-AI | ticket: VIBE-106
 """Tests for codebase_map.mod.status — status aggregator."""
 
 from __future__ import annotations
@@ -35,7 +35,7 @@ class TestBranchParse:
     @pytest.mark.parametrize(
         "branch,expected",
         [
-            ("feat/vibe-105-cbm-mod", "VIBE-105"),
+            ("feat/vibe-106-cbm-mod", "VIBE-106"),
             ("fix/cm-s2-01-cache", "CM-S2-01"),  # multi-component ticket id
             ("hotfix/kmp-42", "KMP-42"),
             ("docs/cbm-999-readme", "CBM-999"),
@@ -88,14 +88,14 @@ class TestGetSprint:
     def test_prefers_branch_over_claude(self, tmp_path: Path):
         _git_init(tmp_path)
         subprocess.run(
-            ["git", "checkout", "-q", "-b", "feat/vibe-105-xyz"],
+            ["git", "checkout", "-q", "-b", "feat/vibe-106-xyz"],
             cwd=tmp_path,
             check=True,
         )
         (tmp_path / "CLAUDE.md").write_text(
             "| **v1.0** | OTHER-1 | Flow | 1 | In progress |\n"
         )
-        assert get_sprint(tmp_path) == "VIBE-105"
+        assert get_sprint(tmp_path) == "VIBE-106"
 
     def test_falls_back_to_claude_md(self, tmp_path: Path):
         _git_init(tmp_path)  # branch = main, not a ticket slug

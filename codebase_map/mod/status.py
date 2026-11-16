@@ -1,4 +1,4 @@
-# HC-AI | ticket: VIBE-105
+# HC-AI | ticket: VIBE-106
 """Status line data aggregator.
 
 Collects six slots the CBM Mod status line shows:
