@@ -1,6 +1,6 @@
 # CBM-VIBE — Concept v0.1
 
-> **Trạng thái:** CEO duyệt nội dung ngày 13/11/2026 · "CBM-VIBE" là tên tạm
+> **Trạng thái:** CEO duyệt nội dung ngày 13/11/2026 · "CBM-VIBE" là tên tạm · tầng 1 đã xong code ngày 16/11/2026, xem mục "Kết quả tầng 1"
 > **Design preview:** [CBM-VIBE-Design-Preview.html](CBM-VIBE-Design-Preview.html) · **Khảo sát khách:** [CBM-VIBE-Khao-Sat-Khach.md](CBM-VIBE-Khao-Sat-Khach.md)
 
 ## Người dùng
@@ -100,7 +100,7 @@ Ba khoảnh khắc ứng với điểm mở rộng nào:
 
 ### Phạm vi tầng 1 (CEO duyệt 13/11/2026)
 
-Ước lượng 8 SP (VIBE-102 được thêm sau phép thử ngày 13/11). Mỗi việc một PR từ nhánh riêng, qua review gate. Chưa nằm trong tầng 1: nối màn hình với component (JSX) và component với API (`fetch`).
+Ước lượng 8 SP (VIBE-102 được thêm sau phép thử ngày 13/11). Mỗi việc một PR từ nhánh riêng, qua review gate. Chưa nằm trong tầng 1: nối component với API (`fetch`). (Việc nối màn hình với component qua JSX ban đầu để ngoài tầng 1, sau đó đã làm trong VIBE-102.)
 
 | Mã | Việc | Xong khi | SP |
 |---|---|---|---|
@@ -165,7 +165,7 @@ App mẫu: `tests/fixtures/so-dat-lich/` (Next.js, 26 file TS/TSX, 5 tính năng
 **CBM (đã chạy thật):**
 
 - Dựng đồ thị trong 16 ms: 44 hàm, gán đúng vào 5 tính năng qua `domains`.
-- Thấy được phụ thuộc giữa tính năng: Nhắc lịch gọi sang Đặt lịch và Danh sách khách.
+- Thấy được phụ thuộc giữa tính năng ở mức file: file của Nhắc lịch import từ file của Đặt lịch và Danh sách khách. Ở mức lời gọi hàm thì **chưa**: parser TS khi đó không nối lời gọi về hàm đích, nên lệnh `impact` trả về rỗng cho dự án TS. (Bản đầu của tài liệu này viết "Nhắc lịch gọi sang…", nói quá so với điều đo được; đã sửa ngày 16/11.)
 - Không thấy hai hàm truy cập dữ liệu vì chúng dùng generic (`readAll<K>`, `insertRow<K>`), nên không biết tính năng nào dùng dữ liệu nào.
 - Không nối màn hình với component (JSX) và component với API (`fetch`), nên màn hình, component và phần xử lý là ba cụm rời.
 - `snapshot-diff` báo 7 hàm thêm, 0 hàm sửa. Nó bỏ sót toàn bộ thay đổi ở Nhắc lịch, vì chỉ coi hàm là bị sửa khi đổi tham số, kiểu trả về, decorator hoặc lớp cha. Parser TS cũng không ghi dòng kết thúc của hàm.
@@ -181,6 +181,23 @@ App mẫu: `tests/fixtures/so-dat-lich/` (Next.js, 26 file TS/TSX, 5 tính năng
 **Kết luận:** với bộ máy hiện tại, CBM sẽ nói "AI chỉ đụng Đặt lịch", tức báo an toàn sai. Phải thêm phát hiện thay đổi theo nội dung trước khi làm bất cứ báo cáo nào cho người dùng; việc này là VIBE-102 trong bảng việc tầng 1.
 
 Để chạy Understand Anything, đã tạo cục bộ một bản git độc lập của app mẫu (một commit gốc, bộ thay đổi ở dạng chưa commit); bản này không nằm trong repo.
+
+## Kết quả tầng 1 (16/11/2026)
+
+Chạy lại đúng phép thử ở mục trên, sau VIBE-101 đến VIBE-104:
+
+| Điều đo ngày 13/11 | Sau tầng 1 |
+|---|---|
+| 44 hàm; thiếu hai hàm truy cập dữ liệu vì chúng dùng generic | 46 hàm; có `readAll` và `insertRow` |
+| Không lời gọi nào được nối về hàm đích; `impact` rỗng | 45 trên 140 lời gọi trỏ tới hàm trong dự án (phần còn lại là hàm có sẵn và thư viện); `impact` của `isSlotFree` ra đúng hàm đặt lịch và API đặt lịch |
+| Màn hình và component là hai cụm rời | Đã nối qua JSX: trang → component → hàm xử lý khai báo trong component |
+| `snapshot-diff` báo 7 hàm thêm, 0 hàm sửa; bỏ sót Nhắc lịch | Báo thêm 2 hàm đổi nội dung và 6 file đổi; `lib/reminders.ts` được nêu là có phần ngoài hàm bị đổi |
+| Chưa có khái niệm tính năng, tiêu chí, bằng chứng | `features impact` báo Đặt lịch và Nhắc lịch bị sửa trực tiếp, ba tính năng còn lại không bị đụng, 5 tiêu chí chuyển sang "cần kiểm lại" |
+| Phải `pipx install` và viết file cấu hình | Chạy bằng Python 3.9 có sẵn của macOS, không cài gì, không cần file cấu hình |
+
+Vẫn chưa nối được: màn hình gọi API qua `fetch("/api/...")`, và hai tính năng dùng chung một bảng dữ liệu. Trước mắt, file của API phải được ghi vào cùng tính năng với màn hình gọi nó.
+
+Điều chưa có số liệu: Claude có tự bật skill từ lời người dùng không, và người không đọc được code có hiểu báo cáo không. Cái đầu chờ cài thử ([CBM-VIBE-Cai-Thu.md](CBM-VIBE-Cai-Thu.md)); cái sau chờ 5 buổi thử nêu ở mục dưới.
 
 ## Giả định rủi ro nhất và cách thử rẻ nhất
 

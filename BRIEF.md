@@ -6,6 +6,37 @@
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
+### 🧭 Đang làm — CBM-VIBE Tầng 1 (cập nhật 16/11/2026)
+
+Hướng mới CEO chốt 12–13/11/2026: CBM chuyên cho vibecoding, giúp người không rành kỹ thuật kiểm soát ứng dụng do AI viết. Concept: `docs/active/cbm-vibecoding/CBM-VIBE-Concept.md` · Board: `project/board.html#cbm-vibe-t1`.
+
+| Việc | PR | Trạng thái 16/11 |
+|---|---|---|
+| CM-S4-01 domain theo config | #145 | Chờ CEO duyệt · CI xanh |
+| Concept + design preview v0.1 + khảo sát | #146 | CEO duyệt nội dung 13/11 · chờ merge |
+| VIBE-101 chạy không cần cài, không cần config | #147 | Chờ CEO duyệt · CI xanh |
+| VIBE-102 phát hiện sửa nội dung hàm và file | #149 | Chờ CEO duyệt · CI xanh |
+| VIBE-103 kho tính năng, tiêu chí, bằng chứng | #150 | Chờ CEO duyệt · CI xanh |
+| VIBE-104 plugin `cbm-vibe` + skill tiếng Việt | #151 (chứa cả chuỗi #145–#150) | Chờ CEO duyệt · CI xanh |
+| VIBE-105 cài thử ở Chat, Cowork, tab Code | #153 (hướng dẫn) | **Chờ CEO bấm thử và điền bảng** |
+
+Merge theo thứ tự #145 → #146 → #147 → #149 → #150 → #151 → #153, hoặc chỉ #151 rồi #153.
+
+**Chờ CEO:** duyệt chuỗi PR · bấm thử plugin theo `docs/active/cbm-vibecoding/CBM-VIBE-Cai-Thu.md` · gửi khảo sát 3 câu và chọn 5 người thử báo cáo mẫu · quyết định có đưa 3 file training lên repo công khai không.
+
+**Rà soát độc lập (16/11):** một agent không tham gia viết code tái hiện 10 trường hợp báo an toàn sai; đã sửa cả 10 trong PR #151, mỗi cái có test (420 test). Báo cáo: `docs/reference/reviews/ReviewGate_CBM-VIBE-Tier1_Round1_20261116.md`.
+
+**Chưa làm được:** chạy plugin trong Claude thật (phiên `claude` dòng lệnh trên máy hết hạn đăng nhập; mới thử bằng agent phụ đóng vai Claude).
+
+**Lệnh mới:** `codebase-map generate` chạy không cần file cấu hình · `codebase-map features {status,impact,add,criterion,evidence}` · `python3 scripts/build_cbm_vibe.py` dựng plugin vào `dist/`.
+
+**Trùng với nhánh mod (PR #156, #157, phiên khác làm):** cả hai cùng sửa `codebase_map/cli.py` và board, và cùng dùng mã VIBE-105 cho hai việc khác nhau. Chuỗi merge sau phải rebase; mã việc chờ CEO chọn.
+
+**Lưu ý cho phiên sau:** ngày 15–16/11 có nhiều phiên Claude cùng làm trong thư mục này. Trước khi đổi nhánh hay commit, xem `git status` có thay đổi của phiên khác không; việc mới nên làm trong worktree riêng.
+
+**Đính chính:** dòng "3 plugins LIVE" ở dưới đúng về việc đã đăng, nhưng ba plugin đó chưa theo định dạng chuẩn của Claude (xem Concept, mục "Đóng gói trên Claude").
+
+
 **Codebase Map v2.2 — Production ready — Public OSS**
 
 Tất cả sprints COMPLETE (85 SP, 582 tests):
