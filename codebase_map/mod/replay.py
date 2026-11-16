@@ -180,7 +180,7 @@ def parse_session(jsonl_path: Path) -> list[Step]:
                     index=index,
                     timestamp=ts,
                     kind="user",
-                    text=_shorten(text, 2000),
+                    text=redact(_shorten(text, 2000)),
                 )
             )
             index += 1
@@ -195,7 +195,7 @@ def parse_session(jsonl_path: Path) -> list[Step]:
                         index=index,
                         timestamp=ts,
                         kind="claude",
-                        text=_shorten(text, 2000),
+                        text=redact(_shorten(text, 2000)),
                         message_id=msg_id,
                     )
                 )
@@ -212,8 +212,10 @@ def parse_session(jsonl_path: Path) -> list[Step]:
                         kind="tool",
                         text="",
                         tool_name=b.get("name"),
-                        tool_input_summary=_summarise_tool_input(
-                            b.get("name") or "", b.get("input") or {}
+                        tool_input_summary=redact(
+                            _summarise_tool_input(
+                                b.get("name") or "", b.get("input") or {}
+                            )
                         ),
                         message_id=msg_id,
                     )
@@ -328,6 +330,54 @@ def _shorten(text: Optional[str], limit: int = 120) -> str:
     if len(text) <= limit:
         return text
     return text[: limit - 1].rstrip() + "…"
+
+
+# ─── Redaction (CEO decision #2: redact-default) ──────────────────────────
+# Day 5 adds coarse pattern redaction so credentials and personal data in
+# session text never render in the pane. Precision over recall: a false
+# negative is a leak, a false positive just replaces a long token with [token].
+
+_EMAIL_RE = re.compile(r"\b[\w._%+-]+@[\w.-]+\.[A-Za-z]{2,}\b")
+# GitHub tokens, Anthropic keys, AWS access keys, 32+ hex, long base64url.
+_TOKEN_RE = re.compile(
+    r"(?:"
+    r"gh[pousr]_[A-Za-z0-9]{36,}"
+    r"|sk-ant-[A-Za-z0-9_-]{20,}"
+    r"|sk-[A-Za-z0-9]{20,}"
+    r"|AKIA[0-9A-Z]{16}"
+    r"|[A-Fa-f0-9]{40,}"
+    r"|[A-Za-z0-9_-]{48,}"
+    r")"
+)
+# Authorization / Bearer / api-key headers. Allow 1-2 value tokens so
+# "Authorization: Bearer <token>" collapses in a single match instead of
+# leaving the token exposed after the header.
+_BEARER_RE = re.compile(
+    r"(?i)(authorization|bearer|api[-_]?key|secret|token|password)"
+    r"[\s:=\"']+(?:\S+\s+)?\S{6,}"
+)
+# Common credit-card shapes (Visa/MC/Amex/Disc): 13-16 digits, optionally spaced.
+_CARD_RE = re.compile(r"\b(?:\d[ -]*?){13,16}\b")
+
+
+def redact(text: Optional[str]) -> str:
+    """Replace credentials, emails, long tokens and card-like numbers.
+
+    Not a comprehensive DLP — just enough that casual pane viewers (CEO
+    glance, screen share, screenshot) do not see common secret shapes.
+    """
+    if not text:
+        return ""
+    t = _EMAIL_RE.sub("[email]", text)
+    t = _TOKEN_RE.sub("[token]", t)
+    t = _BEARER_RE.sub(lambda m: f"{m.group(1)} [redacted]", t)
+
+    def _card_sub(m: re.Match) -> str:
+        digits = re.sub(r"[ -]", "", m.group(0))
+        return "[card]" if 13 <= len(digits) <= 16 else m.group(0)
+
+    t = _CARD_RE.sub(_card_sub, t)
+    return t
 
 
 # ─── CLI helper (used by the mod subcommand for debugging) ────────────────

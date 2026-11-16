@@ -10,6 +10,8 @@ const API = {
   snapshot: (id) => `/api/snapshots/${encodeURIComponent(id)}`,
   diff: (id, base) =>
     `/api/snapshots/${encodeURIComponent(id)}/diff?base=${encodeURIComponent(base)}`,
+  replaySessions: '/api/replay/sessions',
+  replaySession: (id) => `/api/replay/sessions/${encodeURIComponent(id)}`,
 };
 
 const POLL_MS = 5000;
@@ -88,6 +90,7 @@ function activateTab(name) {
   $$('.pane').forEach((p) => p.classList.toggle('active', p.id === 'pane-' + name));
   if (name === 'graph') loadGraph();
   if (name === 'timeline') loadTimeline();
+  if (name === 'replay') loadReplay();
 }
 
 function wireTabs() {
@@ -406,6 +409,253 @@ function renderDiff(box, result) {
     </div>
     ${changesHtml}
   `;
+}
+
+// ═══ REPLAY TAB (VIBE-106 Day 5) ═══
+
+let replayLoaded = false;
+const replayState = {
+  sessions: [],
+  sessionId: null,
+  steps: [],
+  index: 0,
+  playing: false,
+  speed: 1,
+  timerId: null,
+  highlightedFiles: new Set(),
+};
+
+async function loadReplay() {
+  if (replayLoaded) return;
+  const body = $('#replay-body');
+  const meta = $('#replay-meta');
+  try {
+    const r = await fetch(API.replaySessions, { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    const sessions = data.sessions || [];
+    if (sessions.length === 0) {
+      renderReplayEmpty(body, meta, data.projects_dir);
+      return;
+    }
+    replayState.sessions = sessions;
+    renderReplayShell(body, meta);
+    replayLoaded = true;
+  } catch (e) {
+    body.innerHTML = `<div class="error-box"><strong>Không tải được sessions.</strong><code>${String(e)}</code></div>`;
+    meta.textContent = 'lỗi tải';
+  }
+}
+
+function renderReplayEmpty(body, meta, dir) {
+  meta.textContent = '0 sessions';
+  body.innerHTML = `
+    <div class="placeholder">
+      <div class="placeholder-icon">🎬</div>
+      <h3>Chưa có session Claude Code nào</h3>
+      <p>Mở dự án này trong Claude Code rồi chat một lượt — session sẽ được ghi và hiện ở đây.</p>
+      <p class="muted">Tìm ở: <code>${escapeHtml(dir || '~/.claude/projects/')}</code></p>
+    </div>
+  `;
+  replayLoaded = false;
+}
+
+function renderReplayShell(body, meta) {
+  const { sessions } = replayState;
+  meta.textContent = `${sessions.length} sessions`;
+  const sessionRows = sessions
+    .map(
+      (s) => `
+    <div class="replay-session" data-id="${s.id}">
+      <div class="rs-body">
+        <div class="rs-title">${escapeHtml(s.title || s.id)}</div>
+        <div class="rs-meta">
+          ${fmtDate(s.started_at)} · ${s.step_count} steps · ${s.file_count} files
+        </div>
+      </div>
+    </div>`
+    )
+    .join('');
+
+  body.innerHTML = `
+    <div class="replay-layout">
+      <aside class="replay-sidebar">
+        <div class="section-label">Recent sessions</div>
+        ${sessionRows}
+      </aside>
+      <div class="replay-main" id="replay-main">
+        <div class="placeholder">
+          <p class="muted">Chọn 1 session bên trái để tua.</p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  body.querySelectorAll('.replay-session').forEach((row) => {
+    row.addEventListener('click', () => selectSession(row.dataset.id));
+  });
+}
+
+async function selectSession(id) {
+  if (replayState.sessionId === id) return;
+  stopPlay();
+  replayState.sessionId = id;
+  $$('.replay-session').forEach((r) => r.classList.toggle('active', r.dataset.id === id));
+  const main = $('#replay-main');
+  main.innerHTML = '<div class="placeholder"><div class="spinner"></div><p>Đang tải steps…</p></div>';
+  try {
+    const r = await fetch(API.replaySession(id), { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    replayState.steps = data.steps || [];
+    replayState.index = 0;
+    renderReplayPlayer();
+  } catch (e) {
+    main.innerHTML = `<div class="error-box"><strong>Không tải được session.</strong><code>${String(e)}</code></div>`;
+  }
+}
+
+function renderReplayPlayer() {
+  const { steps, index, speed } = replayState;
+  const main = $('#replay-main');
+  if (steps.length === 0) {
+    main.innerHTML = '<div class="placeholder"><p>Session không có step nào.</p></div>';
+    return;
+  }
+  const step = steps[index] || steps[0];
+  const pct = steps.length <= 1 ? 100 : (index / (steps.length - 1)) * 100;
+
+  main.innerHTML = `
+    <div class="player-controls">
+      <button class="player-btn" data-act="first" title="Đầu">⏮</button>
+      <button class="player-btn" data-act="prev" title="Lùi">⏪</button>
+      <button class="player-btn primary" data-act="play" title="Chạy/Dừng">${replayState.playing ? '⏸' : '▶'}</button>
+      <button class="player-btn" data-act="next" title="Tới">⏩</button>
+      <button class="player-btn" data-act="last" title="Cuối">⏭</button>
+      <div class="player-scrubber">
+        <div class="player-progress" style="width:${pct}%"></div>
+        <input type="range" min="0" max="${steps.length - 1}" value="${index}" id="player-range" class="player-range" />
+      </div>
+      <span class="player-time">${index + 1}/${steps.length}</span>
+      <select class="player-speed" id="player-speed">
+        ${[1, 2, 5].map((v) => `<option value="${v}" ${v === speed ? 'selected' : ''}>${v}×</option>`).join('')}
+      </select>
+    </div>
+    <div class="player-step" id="player-step">
+      ${renderStep(step)}
+    </div>
+  `;
+
+  main.querySelectorAll('.player-btn').forEach((b) =>
+    b.addEventListener('click', () => handlePlayerAction(b.dataset.act))
+  );
+  $('#player-range').addEventListener('input', (e) => {
+    const n = parseInt(e.target.value, 10);
+    stopPlay();
+    setStep(n);
+  });
+  $('#player-speed').addEventListener('change', (e) => {
+    replayState.speed = parseInt(e.target.value, 10) || 1;
+    if (replayState.playing) {
+      stopPlay();
+      startPlay();
+    }
+  });
+  syncGraphHighlight();
+}
+
+function renderStep(step) {
+  if (!step) return '';
+  const kindLabel = {
+    user: '👤 Anh (User)',
+    claude: '🤖 Claude',
+    tool: '🔧 Tool',
+  }[step.kind] || step.kind;
+
+  const kindClass = step.kind;
+  const files = (step.files_touched || [])
+    .map((f) => `<li>${escapeHtml(f)}</li>`)
+    .join('');
+  const filesBlock = files
+    ? `<div class="step-files"><div class="step-label">Files touched</div><ul>${files}</ul></div>`
+    : '';
+  const body = step.kind === 'tool'
+    ? `<div class="step-text"><code>${escapeHtml(step.tool_name || '?')}</code> ${escapeHtml(step.tool_input_summary || '')}</div>`
+    : `<div class="step-text">${escapeHtml(step.text || '')}</div>`;
+
+  return `
+    <div class="step-card ${kindClass}">
+      <div class="step-head">
+        <span class="step-kind">${kindLabel}</span>
+        <span class="step-ts">${fmtDate(step.timestamp)}</span>
+      </div>
+      ${body}
+      ${filesBlock}
+    </div>
+  `;
+}
+
+function handlePlayerAction(act) {
+  const n = replayState.steps.length;
+  if (!n) return;
+  if (act === 'first') { stopPlay(); setStep(0); }
+  else if (act === 'last') { stopPlay(); setStep(n - 1); }
+  else if (act === 'prev') { stopPlay(); setStep(Math.max(0, replayState.index - 1)); }
+  else if (act === 'next') { stopPlay(); setStep(Math.min(n - 1, replayState.index + 1)); }
+  else if (act === 'play') { replayState.playing ? stopPlay() : startPlay(); }
+}
+
+function setStep(n) {
+  replayState.index = n;
+  renderReplayPlayer();
+}
+
+function startPlay() {
+  if (replayState.playing) return;
+  replayState.playing = true;
+  const tick = () => {
+    const next = replayState.index + 1;
+    if (next >= replayState.steps.length) {
+      stopPlay();
+      renderReplayPlayer();
+      return;
+    }
+    replayState.index = next;
+    renderReplayPlayer();
+    replayState.timerId = setTimeout(tick, Math.round(2000 / replayState.speed));
+  };
+  renderReplayPlayer();
+  replayState.timerId = setTimeout(tick, Math.round(2000 / replayState.speed));
+}
+
+function stopPlay() {
+  if (replayState.timerId) clearTimeout(replayState.timerId);
+  replayState.timerId = null;
+  replayState.playing = false;
+}
+
+// ═══ GRAPH ↔ REPLAY SYNC (CEO decision #3: 2-way) ═══
+
+function syncGraphHighlight() {
+  // Highlight files touched by the current step on the Graph tab's node list.
+  const step = replayState.steps[replayState.index];
+  const files = new Set((step && step.files_touched) || []);
+  replayState.highlightedFiles = files;
+  // Clear previous highlights.
+  document.querySelectorAll('#pane-graph .node-row').forEach((row) => {
+    row.classList.remove('replay-highlight');
+  });
+  if (files.size === 0) return;
+  document.querySelectorAll('#pane-graph .node-row').forEach((row) => {
+    // Match by file suffix (graph nodes carry ":line_start" after the path).
+    const fileText = row.querySelector('.node-file')?.textContent || '';
+    for (const f of files) {
+      if (fileText.startsWith(f + ':') || fileText === f) {
+        row.classList.add('replay-highlight');
+        break;
+      }
+    }
+  });
 }
 
 // ═══ BOOT ═══

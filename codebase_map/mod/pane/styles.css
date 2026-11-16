@@ -316,6 +316,243 @@ body {
   :root:not([data-theme="light"]) .diff-badge.renamed { background: #312e81; color: #c7d2fe; }
 }
 
+/* ═══ REPLAY TAB (VIBE-106 Day 5) ═══ */
+.replay-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 12px;
+  height: 100%;
+  min-height: 0;
+}
+.replay-sidebar {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md, 8px);
+  padding: 8px;
+  overflow-y: auto;
+  max-height: calc(100vh - 220px);
+}
+.section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--text-muted);
+  padding: 6px 8px;
+  font-weight: 600;
+}
+.replay-session {
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+  transition: background 0.15s;
+}
+.replay-session:hover { background: var(--bg-muted); border-color: var(--border); }
+.replay-session.active { background: var(--brand-light); border-color: var(--brand); }
+.rs-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rs-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-top: 2px;
+}
+
+.replay-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--bg-muted);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+.player-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.player-btn:hover { border-color: var(--brand); color: var(--brand); }
+.player-btn.primary {
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand-dark);
+  width: 40px;
+  height: 36px;
+  font-size: 16px;
+}
+.player-btn.primary:hover { background: var(--brand-dark); color: #fff; }
+.player-scrubber {
+  flex: 1;
+  position: relative;
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+.player-progress {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  height: 4px;
+  background: var(--brand);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.player-range {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border);
+  height: 4px;
+  border-radius: 2px;
+  outline: none;
+  margin: 0;
+}
+.player-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--brand);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.player-range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--brand);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.player-time {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  min-width: 48px;
+  text-align: right;
+}
+.player-speed {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.player-step {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.step-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+.step-card.user { border-left-color: var(--status-ok); }
+.step-card.claude { border-left-color: #a371f7; }
+.step-card.tool { border-left-color: var(--node-router, #f0883e); }
+.step-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.step-kind {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--text-secondary);
+}
+.step-ts {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+.step-text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.step-text code {
+  font-family: var(--font-mono);
+  background: var(--bg-muted);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-right: 4px;
+}
+.step-files {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+.step-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.step-files ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.step-files li {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding: 2px 0;
+}
+
+/* Graph node highlight when touched by current replay step */
+.node-row.replay-highlight {
+  background: #fef3c7;
+  border-left-width: 4px !important;
+  box-shadow: 0 0 0 1px #f59e0b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .node-row.replay-highlight {
+    background: #3b2a0a;
+    box-shadow: 0 0 0 1px #d97706;
+  }
+}
+
 /* ═══ ERROR STATE ═══ */
 .error-box {
   padding: 14px 16px;

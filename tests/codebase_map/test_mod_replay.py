@@ -16,6 +16,7 @@ from codebase_map.mod.replay import (
     list_sessions,
     parse_session,
     project_sessions_dir,
+    redact,
     summarise_session,
 )
 
@@ -324,3 +325,71 @@ class TestStep:
         assert d["tool_name"] == "Bash"
         assert d["files_touched"] == ["a.py"]
         assert "text" not in d  # empty string dropped
+
+
+# ─── redact (Day 5 CEO decision #2) ────────────────────────────────────
+
+
+class TestRedact:
+    def test_empty(self):
+        assert redact("") == ""
+        assert redact(None) == ""
+
+    def test_email(self):
+        assert redact("contact alice@example.com for help") == (
+            "contact [email] for help"
+        )
+
+    def test_github_token(self):
+        assert (
+            redact("export GH=ghp_1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+            == "export GH=[token]"
+        )
+
+    def test_anthropic_key(self):
+        out = redact("key=sk-ant-api03-abcDEF1234567890xyzABC-_-_-")
+        assert "[token]" in out
+        assert "sk-ant" not in out
+
+    def test_aws_access_key(self):
+        assert "[token]" in redact("AKIAIOSFODNN7EXAMPLE and more")
+
+    def test_long_hex(self):
+        # 40-char hex looks like a secret token / git sha
+        assert "[token]" in redact("sha=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+    def test_bearer_header(self):
+        out = redact("Authorization: Bearer mysecrettoken123")
+        assert "Authorization [redacted]" in out
+        assert "mysecrettoken" not in out
+
+    def test_card_number(self):
+        assert redact("Visa 4111 1111 1111 1111 declined") == ("Visa [card] declined")
+
+    def test_passes_through_non_secret(self):
+        assert redact("Hello world, no secrets here") == "Hello world, no secrets here"
+
+    def test_parse_session_applies_redaction(self, tmp_path: Path):
+        """End-to-end: redaction runs on text that survives into Steps."""
+        p = tmp_path / "s.jsonl"
+        _write_session(
+            p,
+            [
+                _user(
+                    "Here is my key sk-ant-api03-DEADBEEF1234567890abcdef-_-_",
+                    "2026-11-15T10:00:00Z",
+                ),
+                _assistant(
+                    "Reply to bob@example.com now.",
+                    "2026-11-15T10:00:05Z",
+                    "m1",
+                ),
+            ],
+        )
+        steps = parse_session(p)
+        user_text = next(s.text for s in steps if s.kind == "user")
+        claude_text = next(s.text for s in steps if s.kind == "claude")
+        assert "sk-ant" not in user_text
+        assert "[token]" in user_text
+        assert "bob@example.com" not in claude_text
+        assert "[email]" in claude_text
