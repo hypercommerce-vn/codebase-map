@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 6.0 | Cập nhật: 22/04/2026 (🎉 INITIATIVE SEALED · S1+S2+S3 all COMPLETE · 20 SP in ~3 days · 3 PyPI · 3 plugins LIVE · Next: CEO launch + CBM-LANG-P1)
+> Version: 6.1 | Cập nhật: 15/11/2026 (CBM-WEB website v0.1 CEO duyệt 15/11 · trước đó 22/04: INITIATIVE SEALED · S1+S2+S3 COMPLETE · 3 PyPI · 3 plugins)
 
 ---
 
@@ -20,6 +20,21 @@ Tất cả sprints COMPLETE (85 SP, 582 tests):
 **Repo split 16/04/2026:** KMP (Knowledge AI Platform) tách sang repo riêng (private):
 - KMP repo: https://github.com/hypercommerce-vn/knowledge-AI-platform
 - CBM repo (this): standalone public OSS — free unlimited CI on GitHub Actions
+
+---
+
+## 🌐 CBM-WEB — Website dự án v0.1 (✅ CEO duyệt design 15/11/2026 · PR #152 chờ merge)
+
+- Thư mục `website/`, nhánh `feat/cbm-website`. Landing tĩnh song ngữ (`/` VI, `/en/` EN) + demo thật `/demo/`.
+- `python website/build.py` dựng đồ thị từ `codebase_map/` của repo → demo, số liệu (200 node · 165 liên kết trên bản đồ · 992 lời gọi/import) và output terminal đều là kết quả thật.
+- Deploy: `website/deploy/deploy.sh` (nginx + certbot trên VPS) hoặc `website/docker-compose.yml`. Hướng dẫn: `website/README.md`.
+- Đã verify: desktop/mobile, sáng/tối, link 200, Docker nginx (CSP, gzip, 404, redirect). **Chưa deploy lên VPS thật.**
+- ✅ CEO duyệt v0.1 làm design (15/11/2026), giữ khối "Sắp tới" (hướng CBM-VIBE) như trong bản đã duyệt.
+- **PR #152** (`feat/cbm-website`): review gate 3 vòng 85.2% → 93.0% → **94.4% SHIPIT+NOTE** (CTO 96.7% · Designer 91), CI 9/9 PASS (thêm job `website`: lint + build + kiểm placeholder + `bash -n deploy.sh`). Báo cáo: `docs/reference/reviews/ReviewGate_PR152_Round{1,2,3}_2026-11-15.md`.
+- Review chặn được: `deploy.sh` có thể xoá file ngoài web root (thư mục lạ, symlink, `//`), chạy lại `--setup` mất HTTPS certbot, câu quảng cáo về quyền riêng tư nói quá, terminal che hình ở tablet, tương phản dưới chuẩn AA. `--setup` đã test 9 kịch bản trong container.
+- Còn chờ: CEO duyệt merge PR #152; tên miền + VPS (IP, user SSH) để chạy `deploy.sh --setup`.
+- Ticket riêng (exporter/parser): demo bị toolbar/minimap che legend; badge "v2.0" viết cứng ở `html_exporter.py:552`; "1 domains", dòng Flows trống; `_detect_domain` chỉ biết domain của HC; màu xanh lá mang hai nghĩa.
+- Phát hiện: `_FLOW_PATTERN` trong `python_parser.py` khớp mọi comment có chữ `flow:` → demo hiện flow giả "name1, name2". ✅ Đã sửa ở PR #148 (merge 15/11); nhánh website đã merge main, demo hết flow giả.
 
 ---
 
