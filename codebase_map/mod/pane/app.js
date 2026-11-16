@@ -81,6 +81,76 @@ function renderStatus(data) {
 async function pollStatus() {
   const data = await fetchStatus();
   renderStatus(data);
+  detectAndToast(data);
+}
+
+// ═══ TOAST (VIBE-106 Day 6) ═══
+
+let prevStatus = null;
+
+function toast({ kind = 'info', title, desc = '', target = null, ttl = 5000 }) {
+  const root = document.getElementById('toast-root');
+  if (!root) return;
+  const el = document.createElement('div');
+  el.className = `toast toast-${kind}`;
+  el.innerHTML = `
+    <div class="toast-body">
+      <div class="toast-title">${escapeHtml(title)}</div>
+      ${desc ? `<div class="toast-desc">${escapeHtml(desc)}</div>` : ''}
+    </div>
+    <button class="toast-close" aria-label="Dismiss">✕</button>
+  `;
+  root.appendChild(el);
+  // Fire the enter animation on next frame.
+  requestAnimationFrame(() => el.classList.add('toast-in'));
+
+  const dismiss = () => {
+    el.classList.remove('toast-in');
+    el.addEventListener('transitionend', () => el.remove(), { once: true });
+    // Fallback in case transitionend never fires.
+    setTimeout(() => el.remove(), 400);
+  };
+  el.querySelector('.toast-close').addEventListener('click', dismiss);
+  if (target) {
+    el.classList.add('toast-clickable');
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('.toast-close')) return;
+      activateTab(target);
+      dismiss();
+    });
+  }
+  setTimeout(dismiss, ttl);
+}
+
+function detectAndToast(data) {
+  if (!data) return;
+  if (prevStatus === null) {
+    prevStatus = data;
+    return;
+  }
+  // CI state transitions — only notify on meaningful changes.
+  if (data.ci_state !== prevStatus.ci_state) {
+    if (data.ci_state === 'pass') {
+      toast({ kind: 'success', title: '✅ CI pass', desc: `PR #${data.pr_number || '—'}` });
+    } else if (data.ci_state === 'fail') {
+      toast({ kind: 'error', title: '❌ CI fail', desc: `PR #${data.pr_number || '—'} — click để mở`, target: 'graph' });
+    } else if (data.ci_state === 'running') {
+      toast({ kind: 'info', title: '🔄 CI đang chạy', desc: `PR #${data.pr_number || '—'}` });
+    }
+  }
+  // Snapshot state transitions
+  if (data.snapshot_state !== prevStatus.snapshot_state) {
+    if (data.snapshot_state === 'dirty') {
+      toast({ kind: 'warn', title: '📊 Graph outdated', desc: data.snapshot_delta || 'Có file mới', target: 'timeline' });
+    } else if (data.snapshot_state === 'clean' && prevStatus.snapshot_state === 'dirty') {
+      toast({ kind: 'success', title: '📊 Graph refreshed', desc: 'Snapshot clean' });
+    }
+  }
+  // New PR opened
+  if (data.pr_number && data.pr_number !== prevStatus.pr_number) {
+    toast({ kind: 'info', title: `🔀 PR #${data.pr_number} opened`, desc: 'Click để mở trong browser' });
+  }
+  prevStatus = data;
 }
 
 // ═══ TABS ═══

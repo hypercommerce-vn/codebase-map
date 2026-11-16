@@ -308,6 +308,19 @@ def main(argv: list[str] | None = None) -> int:
     mod_serve.add_argument("-v", "--verbose", action="store_true", help="Log requests")
     mod_status = mod_sub.add_parser("status", help="Print status JSON once and exit")
     mod_status.add_argument("--repo", default=".", help="Repository root")
+    # Hook management (opt-in per CEO decision #5).
+    mod_enable = mod_sub.add_parser(
+        "enable-hooks", help="Install the post-commit snapshot hook"
+    )
+    mod_enable.add_argument("--repo", default=".", help="Repository root")
+    mod_disable = mod_sub.add_parser(
+        "disable-hooks", help="Uninstall the post-commit snapshot hook"
+    )
+    mod_disable.add_argument("--repo", default=".", help="Repository root")
+    mod_hooks_status = mod_sub.add_parser(
+        "hooks-status", help="Print hook install state as JSON"
+    )
+    mod_hooks_status.add_argument("--repo", default=".", help="Repository root")
 
     args = parser.parse_args(argv)
 
@@ -349,6 +362,7 @@ def _cmd_mod(args: argparse.Namespace) -> int:
     import logging as _logging
 
     from codebase_map.mod import collect_status
+    from codebase_map.mod import hooks as _hooks
     from codebase_map.mod.server import serve
 
     if args.mod_cmd == "serve":
@@ -362,7 +376,23 @@ def _cmd_mod(args: argparse.Namespace) -> int:
         data = collect_status(args.repo)
         print(_json.dumps(data.to_dict(), ensure_ascii=False, indent=2))
         return 0
-    print("[ERROR] Unknown mod subcommand. Try 'mod serve' or 'mod status'.")
+    if args.mod_cmd == "enable-hooks":
+        st = _hooks.enable(Path(args.repo))
+        print(_json.dumps(st.to_dict(), indent=2))
+        return 0
+    if args.mod_cmd == "disable-hooks":
+        st = _hooks.disable(Path(args.repo))
+        print(_json.dumps(st.to_dict(), indent=2))
+        return 0
+    if args.mod_cmd == "hooks-status":
+        st = _hooks.status(Path(args.repo))
+        print(_json.dumps(st.to_dict(), indent=2))
+        return 0
+    print(
+        "[ERROR] Unknown mod subcommand. "
+        "Try 'mod serve', 'mod status', 'mod enable-hooks', "
+        "'mod disable-hooks', or 'mod hooks-status'."
+    )
     return 1
 
 
