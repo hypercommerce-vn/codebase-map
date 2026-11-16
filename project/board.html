@@ -756,24 +756,24 @@ a:hover { text-decoration: underline; }
     <div class="sprint-card" style="border-left: 3px solid #6366f1;">
       <div class="sprint-card-header">
         <h3>CBM-WEB · Website dự án v0.1</h3>
-        <span class="badge active">🔍 PR #152 · Review 94.4% SHIPIT+NOTE · chờ CEO</span>
+        <span class="badge done">✅ PR #152 merged 16/11 · chờ deploy</span>
       </div>
       <p>Landing tĩnh song ngữ (<code>/</code> tiếng Việt · <code>/en/</code> tiếng Anh) · demo thật ở <code>/demo/</code> (CBM vẽ chính mã nguồn của nó, dựng lại mỗi lần build) · số liệu + output terminal lấy từ code thật · không backend, không cookie, không CDN · deploy VPS bằng nginx + certbot (<code>deploy.sh</code>) hoặc Docker. <a href="../website/README.md" target="_blank"><strong>Hướng dẫn →</strong></a></p>
       <div class="progress-bar"><div class="progress-fill" style="width:95%;background:#6366f1"></div></div>
-      <div class="progress-label"><a href="https://github.com/hypercommerce-vn/codebase-map/pull/152" target="_blank">PR #152</a> · nhánh <code>feat/cbm-website</code> · review gate 3 vòng: 85.2% → 93.0% → <strong>94.4% SHIPIT+NOTE</strong> (CTO 96.7% · Designer 91) · lint + 174 tests + CI (thêm job <code>website</code>) PASS · <strong>chưa deploy lên VPS thật</strong> · 15/11/2026</div>
+      <div class="progress-label"><a href="https://github.com/hypercommerce-vn/codebase-map/pull/152" target="_blank">PR #152</a> merged 16/11 (<code>e7a9b91</code>) · review gate 3 vòng: 85.2% → 93.0% → <strong>94.4% SHIPIT+NOTE</strong> (CTO 96.7% · Designer 91) · lint + 174 tests + CI (thêm job <code>website</code>) PASS · <strong>chưa deploy lên VPS thật</strong> · 16/11/2026</div>
       <div style="margin-top:10px; padding:8px 10px; background:var(--bg-muted); border-radius:6px; font-size:11px; color:var(--text-muted);">
         <strong style="color:var(--text);">Quyết định CEO:</strong>
         <ul style="margin:4px 0 0 16px; padding:0;">
           <li>✅ 15/11/2026: duyệt v0.1 làm design (rule No Design = No Implementation)</li>
           <li>✅ Khối "Sắp tới: cho người làm app bằng AI" (hướng CBM-VIBE): giữ, vì nằm trong bản v0.1 đã duyệt</li>
-          <li>⏳ Còn chờ: duyệt merge PR #152</li>
+          <li>✅ 16/11/2026: duyệt merge PR #152 (merge commit <code>e7a9b91</code>)</li>
           <li>⏳ Còn chờ: tên miền + VPS (IP, user SSH) để chạy <code>deploy.sh --setup</code></li>
         </ul>
         <strong style="color:var(--text);">Review gate:</strong> <a href="../docs/reference/reviews/ReviewGate_Local_feat-cbm-website_2026-11-15.md" target="_blank">Local pre-flight</a> · <a href="../docs/reference/reviews/ReviewGate_PR152_Round1_2026-11-15.md" target="_blank">Vòng 1</a> · <a href="../docs/reference/reviews/ReviewGate_PR152_Round2_2026-11-15.md" target="_blank">Vòng 2</a> · <a href="../docs/reference/reviews/ReviewGate_PR152_Round3_2026-11-15.md" target="_blank">Vòng 3</a>. Review chặn được các lỗi: <code>deploy.sh</code> có thể xoá file ngoài web root (thư mục lạ, symlink, đường dẫn <code>//</code>); chạy lại <code>--setup</code> thì mất HTTPS của certbot; câu "code không rời khỏi máy" nói quá; terminal che node ở 700–959 px; tương phản dưới chuẩn AA.<br>
         <strong style="color:var(--text);">Tách ra làm ticket riêng (exporter/parser):</strong> → <a href="https://github.com/hypercommerce-vn/codebase-map/pull/155" target="_blank">PR #155</a> (16/11/2026) · <a href="../docs/active/map-demo-fixes/Proposal_Map_Layout_and_Package_Domains.md" target="_blank">đề xuất §4 + §5</a>
         <ul style="margin:4px 0 0 16px; padding:0;">
-          <li>⏳ Demo: toolbar/minimap che legend và panel node (layout exporter, cả bản <code>/demo/</code> 1440 px) → lỗi nằm ở chính design v2 (3 khối chung 1 hàng đáy). <strong>Chờ CEO chọn phương án</strong> (khuyến nghị A: legend lên trên toolbar ở góc trái, panel node dừng trên minimap, chỉ sửa CSS, 1 SP), sau đó cập nhật design rồi mới code</li>
-          <li>✅ Badge "v2.0" viết cứng ở <code>html_exporter.py:552</code> (bản thật 2.4.0); "1 domains" sai số nhiều; dòng Flows trống → <strong>đã sửa ở PR #155</strong>: badge lấy version của package, "1 domain / 1 node / 1 edge", ẩn dòng Flows khi không node nào có flow. Graph không đổi (self-scan 200 node / 992 cạnh, HC 1624 / 9989)</li>
+          <li>⏳ Demo: toolbar/minimap che legend và panel node (layout exporter, cả bản <code>/demo/</code> 1440 px) → toolbar che legend là lỗ hổng của design v2 (3 khối chung 1 hàng đáy); minimap che panel là do exporter lệch design (design để panel z 20 nằm trên minimap). <strong>Chờ CEO chọn phương án</strong> (khuyến nghị A: legend lên trên toolbar ở góc trái, panel node dừng trên minimap, chỉ sửa CSS, 1 SP), sau đó cập nhật design rồi mới code</li>
+          <li>✅ Badge "v2.0" viết cứng ở <code>html_exporter.py:552</code> (bản thật 2.4.0); "1 domains" sai số nhiều; dòng Flows trống → <strong>đã sửa ở PR #155</strong>: badge lấy version của package; "1 domain / 1 node / 1 edge" và mọi nhãn đếm khác (tìm kiếm, panel node, Executive, API Catalog) dùng chung helper <code>plural()</code>; ẩn dòng Flows khi không node nào có flow. Graph không đổi (self-scan 200 node / 992 cạnh, HC 1624 / 9989)</li>
           <li>⏳ <code>_detect_domain</code> trong <code>python_parser.py</code> chỉ nhận tên domain của Hyper Commerce → repo khác chỉ có 1 nhóm "other" → <strong>chờ CEO</strong> (Q5a–c): khi không khớp tên HC thì lấy package cấp 1 làm domain (self-scan CBM: 1 → 4 domain). Không xung đột PR #145; nên làm sau khi #145 và nhóm VIBE merge</li>
           <li>Màu xanh lá mang hai nghĩa: service ở hình hero, method ở demo (chưa xử lý, ngoài phạm vi PR #155)</li>
         </ul>
@@ -1705,13 +1705,13 @@ a:hover { text-decoration: underline; }
         <td>feat(website): bilingual project website with live demo and VPS deploy (CBM-WEB v0.1)</td>
         <td><code>feat/cbm-website</code></td>
         <td><a href="../docs/reference/reviews/ReviewGate_PR152_Round3_2026-11-15.md" target="_blank">3 vòng · 94.4% SHIPIT+NOTE</a></td>
-        <td><span class="badge open">🔍 Chờ CEO</span></td>
+        <td><span class="badge merged">✅ Merged 16/11</span></td>
       </tr>
       <tr>
         <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/155" target="_blank">#155</a></td>
         <td>fix(exporter): show real version, singular stat labels, hide empty Flows row (+ đề xuất bố cục canvas &amp; domain theo package, chưa code)</td>
         <td><code>claude/epic-yonath-a6064b</code></td>
-        <td>Review gate đang chạy</td>
+        <td><a href="../docs/reference/reviews/ReviewGate_PR155_Round1_2026-11-16.md" target="_blank">Vòng 1</a> 96.0 · <a href="../docs/reference/reviews/ReviewGate_PR155_Round2_2026-11-16.md" target="_blank">Vòng 2</a> 96.0 (Designer 100, CTO chờ CI)</td>
         <td><span class="badge open">🔍 Chờ CEO</span></td>
       </tr>
     </tbody>
@@ -2001,7 +2001,7 @@ a:hover { text-decoration: underline; }
     </div>
     <div class="tl-item">
       <div class="tl-date">15/11/2026 · CBM-WEB</div>
-      <div class="tl-content"><strong>CEO duyệt website dự án v0.1 làm design</strong> (landing song ngữ + demo <code>/demo/</code> + deploy VPS), giữ khối "Sắp tới" hướng CBM-VIBE. PR #152 qua review gate 3 vòng (85.2% → 93.0% → 94.4% SHIPIT+NOTE), chờ CEO merge. Bug parser <code># flow:</code> phát hiện khi làm demo đã sửa và merge ở PR #148. Còn chờ: tên miền + VPS để deploy.</div>
+      <div class="tl-content"><strong>CEO duyệt website dự án v0.1 làm design</strong> (landing song ngữ + demo <code>/demo/</code> + deploy VPS), giữ khối "Sắp tới" hướng CBM-VIBE. PR #152 qua review gate 3 vòng (85.2% → 93.0% → 94.4% SHIPIT+NOTE), CEO duyệt merge 16/11/2026 (<code>e7a9b91</code>). Bug parser <code># flow:</code> phát hiện khi làm demo đã sửa và merge ở PR #148. Còn chờ: tên miền + VPS để deploy.</div>
     </div>
   </div>
 

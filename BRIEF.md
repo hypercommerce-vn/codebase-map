@@ -1,6 +1,6 @@
 # BRIEF.md — Codebase Map Session Brief
 > **Đọc file này ĐẦU TIÊN mỗi session. Cập nhật cuối mỗi session.**
-> Version: 6.1 | Cập nhật: 15/11/2026 (CBM-WEB website v0.1 CEO duyệt 15/11 · trước đó 22/04: INITIATIVE SEALED · S1+S2+S3 COMPLETE · 3 PyPI · 3 plugins)
+> Version: 6.2 | Cập nhật: 16/11/2026 (CBM-WEB website v0.1 merged PR #152 · chờ deploy · trước đó 22/04: INITIATIVE SEALED · S1+S2+S3 COMPLETE · 3 PyPI · 3 plugins)
 
 ---
 
@@ -23,7 +23,7 @@ Tất cả sprints COMPLETE (85 SP, 582 tests):
 
 ---
 
-## 🌐 CBM-WEB — Website dự án v0.1 (✅ CEO duyệt design 15/11/2026 · PR #152 chờ merge)
+## 🌐 CBM-WEB — Website dự án v0.1 (✅ design 15/11 · PR #152 merged 16/11/2026 · chờ deploy)
 
 - Thư mục `website/`, nhánh `feat/cbm-website`. Landing tĩnh song ngữ (`/` VI, `/en/` EN) + demo thật `/demo/`.
 - `python website/build.py` dựng đồ thị từ `codebase_map/` của repo → demo, số liệu (200 node · 165 liên kết trên bản đồ · 992 lời gọi/import) và output terminal đều là kết quả thật.
@@ -32,10 +32,11 @@ Tất cả sprints COMPLETE (85 SP, 582 tests):
 - ✅ CEO duyệt v0.1 làm design (15/11/2026), giữ khối "Sắp tới" (hướng CBM-VIBE) như trong bản đã duyệt.
 - **PR #152** (`feat/cbm-website`): review gate 3 vòng 85.2% → 93.0% → **94.4% SHIPIT+NOTE** (CTO 96.7% · Designer 91), CI 9/9 PASS (thêm job `website`: lint + build + kiểm placeholder + `bash -n deploy.sh`). Báo cáo: `docs/reference/reviews/ReviewGate_PR152_Round{1,2,3}_2026-11-15.md`.
 - Review chặn được: `deploy.sh` có thể xoá file ngoài web root (thư mục lạ, symlink, `//`), chạy lại `--setup` mất HTTPS certbot, câu quảng cáo về quyền riêng tư nói quá, terminal che hình ở tablet, tương phản dưới chuẩn AA. `--setup` đã test 9 kịch bản trong container.
-- Còn chờ: CEO duyệt merge PR #152; tên miền + VPS (IP, user SSH) để chạy `deploy.sh --setup`.
+- ✅ 16/11/2026: CEO duyệt, PR #152 merged vào `main` (merge commit `e7a9b91`).
+- Còn chờ: tên miền + VPS (IP, user SSH) để chạy `deploy.sh --setup` rồi certbot.
 - Ticket riêng (exporter/parser) → **PR #155** (16/11/2026):
-  - ✅ Đã sửa: badge "v2.0" viết cứng (nay lấy `codebase_map.__version__`), "1 domains" → "1 domain", dòng Flows trống (CSS `display:flex` đè thuộc tính `hidden`). Graph không đổi.
-  - ⏳ Chờ CEO, chưa code: toolbar/minimap che legend và panel node (lỗi ở chính design v2, cần duyệt design trước) và `_detect_domain` chỉ biết domain HC (đề xuất lấy package cấp 1 làm domain). Đề xuất: `docs/active/map-demo-fixes/Proposal_Map_Layout_and_Package_Domains.md`.
+  - ✅ Đã sửa: badge "v2.0" viết cứng (nay lấy `codebase_map.__version__`); "1 domains" → "1 domain", và mọi nhãn đếm khác trên trang (kết quả tìm kiếm, panel node, Executive, API Catalog) dùng chung helper `plural()`; dòng Flows trống (CSS `display:flex` đè thuộc tính `hidden`). Graph không đổi.
+  - ⏳ Chờ CEO, chưa code: toolbar/minimap che legend và panel node (toolbar che legend là lỗ hổng của design v2; minimap che panel là do exporter lệch design; cần duyệt design trước), và `_detect_domain` chỉ biết domain HC (đề xuất lấy package cấp 1 làm domain). Đề xuất: `docs/active/map-demo-fixes/Proposal_Map_Layout_and_Package_Domains.md`.
   - Chưa xử lý: màu xanh lá mang hai nghĩa (service ở hero, method ở demo).
 - Phát hiện: `_FLOW_PATTERN` trong `python_parser.py` khớp mọi comment có chữ `flow:` → demo hiện flow giả "name1, name2". ✅ Đã sửa ở PR #148 (merge 15/11); nhánh website đã merge main, demo hết flow giả.
 
