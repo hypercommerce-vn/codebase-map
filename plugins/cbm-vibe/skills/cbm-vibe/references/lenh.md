@@ -97,7 +97,7 @@ CBM features impact --baseline truoc-dat-lich-4 --current sau-dat-lich-4 --json
 | Trường | Ý nghĩa |
 |---|---|
 | `features[].touched` | `direct`: file của tính năng bị sửa. `indirect`: code mà nó phụ thuộc bị sửa. `none`: không bị đụng |
-| `features[].behaviour_changed` | `false`: có sửa nhưng cách chạy không đổi (chỉ đổi trình bày, dòng import, khai báo kiểu) |
+| `features[].behaviour_changed` | `false`: có sửa nhưng cách chạy không đổi (chỉ đổi thụt lề, dòng import, khai báo kiểu) |
 | `features[].direct.files[]` | File của tính năng bị thêm, sửa, xoá (`change`: `added`, `modified`, `removed`) |
 | `features[].direct.functions[]` | Đoạn xử lý bị thêm, xoá hoặc sửa (`change`: `added`, `removed`, `body`, `signature`) |
 | `features[].indirect.files[]` | File dùng chung có phần ngoài các đoạn xử lý bị đổi (ví dụ một hằng số); `owners` là tính năng sở hữu file |
@@ -117,8 +117,9 @@ Một tính năng **sở hữu** những file khớp mẫu của nó, và **ph�
 mọi đoạn xử lý mà code của nó gọi tới (kể cả gọi qua nhiều tầng), cùng các
 hằng số và lệnh nằm ngoài đoạn xử lý trong những file liên quan. Bằng chứng
 của một tiêu chí hết hạn khi bất kỳ phần nào trong số đó thay đổi theo cách
-có thể làm đổi cách chạy. Đổi cách trình bày code, dòng import hay khai báo
-kiểu thì không làm hết hạn.
+có thể làm đổi cách chạy. Đổi thụt lề, dòng import hay khai báo kiểu thì
+không làm hết hạn. Mọi thay đổi khác đều làm hết hạn, kể cả việc một công cụ
+định dạng tự ngắt lại dòng: khi không chắc, công cụ chọn yêu cầu kiểm lại.
 
 ## Những điều công cụ không thấy
 
@@ -128,6 +129,9 @@ Nói rõ với người dùng khi những điểm này có thể ảnh hưởng 
   file của điểm nhận dữ liệu phải được ghi vào cùng tính năng với màn hình.
 - Hai tính năng cùng đọc, ghi một bảng dữ liệu. Sửa cách một bên ghi có thể
   ảnh hưởng bên kia mà công cụ không báo.
+- Lời gọi qua một đối tượng (`repo.save()`), và một đoạn xử lý được truyền
+  đi bằng tên mà không gọi. Công cụ vẫn theo dõi file được import, nên thay
+  đổi ở phần ngoài các đoạn xử lý của file đó vẫn được tính.
 - File không phải mã nguồn: kiểu dáng (CSS), dữ liệu JSON, hình ảnh.
 - Hành vi lúc chạy thật: công cụ đọc code, không chạy ứng dụng. "Có bằng
   chứng" nghĩa là đã có người hoặc bài kiểm thử xác nhận, không phải công cụ

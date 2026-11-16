@@ -284,6 +284,40 @@ class TestBodyChangeRules:
             ("shop.py", True)
         ]
 
+    def test_python_statement_moved_out_of_a_block_is_a_change(
+        self, tmp_path: Path
+    ) -> None:
+        """Only whitespace differs, and the discount is now logged for everyone."""
+        source = (
+            "def checkout(user):\n"
+            "    if user.is_vip:\n"
+            "        apply_discount(user)\n"
+            "        log_discount(user)\n"
+            "    return total(user)\n"
+        )
+        _write(tmp_path, "billing.py", source)
+        before = GraphBuilder(_python_project(tmp_path), use_cache=False).build()
+        _write(
+            tmp_path,
+            "billing.py",
+            source.replace("        log_discount", "    log_discount"),
+        )
+        after = GraphBuilder(_python_project(tmp_path), use_cache=False).build()
+        result = SnapshotDiff(before, after).compute()
+        assert [c.node.name for c in result.nodes_body_changed] == ["checkout"]
+
+    def test_line_break_that_changes_meaning_is_a_change(self, app: Path) -> None:
+        """`return` followed by a newline returns nothing in JavaScript."""
+        before = _build(app)
+        path = app / "lib" / "slots.ts"
+        text = path.read_text(encoding="utf-8")
+        assert "  return slots;" in text
+        path.write_text(
+            text.replace("  return slots;", "  return\n    slots;"), "utf-8"
+        )
+        result = SnapshotDiff(before, _build(app)).compute()
+        assert [c.node.id for c in result.nodes_body_changed] == ["lib.slots.listSlots"]
+
     def test_removed_file_is_reported(self, app: Path) -> None:
         before = _build(app)
         (app / "lib" / "reports.ts").unlink()

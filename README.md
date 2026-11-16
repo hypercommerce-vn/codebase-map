@@ -161,17 +161,28 @@ Every criterion is in one of three states:
 
 A feature **owns** what its patterns match and **depends on** what that code
 calls, plus the constants and other top-level code of the files involved.
-Evidence stores a fingerprint of all of it; reformatting, imports and type
-declarations do not change the fingerprint, any edit that can change
-behaviour does. `features impact` reports a feature as touched `direct`ly
-(its own files were edited) or `indirect`ly (code it depends on was).
+Evidence stores a fingerprint of all of it. Re-indenting, import lines and
+type declarations do not change the fingerprint; anything else does,
+including a line break (it can end a statement) and the text inside a
+string. `features impact` reports a feature as touched `direct`ly (its own
+files were edited) or `indirect`ly (code it depends on was).
 
 The tool never says a criterion is met. It says whether evidence exists and
 whether the code has changed since. All `features` commands take `--json`.
 
-Limits: a dependency that exists only at run time is not seen — a screen
-calling an endpoint through `fetch("/api/…")`, or two features sharing a
-database table. List the endpoint's file under the feature that uses it.
+Limits. The parsers read source text; they do not run it or type-check it:
+
+- A dependency that exists only at run time is not seen: a screen calling an
+  endpoint through `fetch("/api/…")`, or two features sharing a database
+  table. List the endpoint's file under the feature that uses it.
+- A call through an object (`repo.save()`, `this.http.get()`) is not resolved
+  to a function, and a function passed by name without being called is not an
+  edge unless it is declared inside the function that passes it. The file
+  that is imported is still tracked, so a change to its top-level code counts.
+- Files that are not source code (styles, JSON data, images) are not tracked.
+- When in doubt the tool asks for a recheck: a change to the top-level code
+  of a file touches every feature that depends on any part of that file, and
+  a tool that re-wraps lines expires the evidence of what it re-wrapped.
 
 **For people who do not read code.** The `cbm-vibe` plugin in
 [`plugins/cbm-vibe/`](plugins/cbm-vibe/README.md) puts these commands behind a

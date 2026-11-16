@@ -403,10 +403,20 @@ def _detect_modifications(old: Node, new: Node) -> list[str]:
 
 
 def _signature_match(a: Node, b: Node) -> bool:
-    """Match two nodes by signature: same name+params+return_type, different file."""
-    return (
-        a.name == b.name
-        and a.params == b.params
-        and a.return_type == b.return_type
-        and a.file_path != b.file_path
-    )
+    """Match two nodes by signature: same name+params+return_type, different file.
+
+    VIBE-102: a node with no recorded signature at all (the TypeScript parser
+    records none) would match any other node of the same name, and two
+    unrelated `GET` handlers would be reported as one that moved. Such nodes
+    are a rename only when their bodies are identical.
+    """
+    if a.name != b.name or a.file_path == b.file_path:
+        return False
+    if a.params != b.params or a.return_type != b.return_type:
+        return False
+    if a.params or a.return_type:
+        return True
+    body_a, body_b = a.metadata.get("body_hash"), b.metadata.get("body_hash")
+    if body_a is None or body_b is None:
+        return True  # snapshots without fingerprints: keep the old behaviour
+    return body_a == body_b

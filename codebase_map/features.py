@@ -21,7 +21,6 @@ whether the code has changed since.
 
 from __future__ import annotations
 
-import fnmatch
 import json
 import os
 import re
@@ -53,7 +52,7 @@ _FINGERPRINT_SCHEME = "feature-v1"
 
 # Next.js conventions, used to tell screens and API endpoints from other files
 _APP_ROUTER = re.compile(
-    r"^(?:src/)?app/(?:(?P<dir>.*)/)?(?P<file>page|route)\.(?:tsx|jsx|ts|js)$"
+    r"^(?:.*?/)?(?:src/)?app/(?:(?P<dir>.*)/)?(?P<file>page|route)\.(?:tsx|jsx|ts|js)$"
 )
 _PAGES_ROUTER = re.compile(r"^(?:src/)?pages/(?P<rest>.+)\.(?:tsx|jsx|ts|js)$")
 _HTTP_METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS")
@@ -122,7 +121,8 @@ class Feature:
     def owns_node(self, node: Node) -> bool:
         path = _posix(node.file_path)
         return any(
-            pattern_matches(pattern, path) or pattern_matches(pattern, node.id)
+            pattern_matches(pattern, path)
+            or (_is_id_pattern(pattern) and pattern_matches(pattern, node.id))
             for pattern in self.files
         )
 
@@ -153,8 +153,8 @@ class FeatureStore:
         if not path.exists():
             return cls()
         try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as exc:
+            data = json.loads(path.read_text(encoding="utf-8-sig"))
+        except (OSError, ValueError) as exc:
             raise FeatureStoreError(f"Cannot read {path}: {exc}") from exc
         return cls.from_dict(data)
 
@@ -295,16 +295,60 @@ def pattern_matches(pattern: str, text: str) -> bool:
     """True when ``text`` (a file path or a node id) falls under ``pattern``.
 
     A pattern is an exact value, a folder (matches everything below it), or a
-    glob where ``*`` and ``?`` are wildcards and ``*`` also crosses ``/``.
-    Square brackets are literal, because Next.js puts them in folder names.
+    glob: ``*`` and ``?`` are wildcards and ``*`` also crosses ``/``; ``**/``
+    also matches no folder at all; ``{a,b}`` is either. Square brackets are
+    literal, because Next.js puts them in folder names. A leading ``./`` is
+    ignored.
     """
     pattern = pattern.rstrip("/")
+    if pattern.startswith("./"):
+        pattern = pattern[2:]
     if text == pattern or text.startswith(pattern + "/"):
         return True
-    if "*" not in pattern and "?" not in pattern:
+    if not any(char in pattern for char in "*?{"):
         return False
-    escaped = "".join(f"[{char}]" if char in "[]" else char for char in pattern)
-    return fnmatch.fnmatchcase(text, escaped)
+    return any(_glob_matches(option, text) for option in _expand_braces(pattern))
+
+
+def _expand_braces(pattern: str) -> list[str]:
+    """``a.{ts,tsx}`` → ``["a.ts", "a.tsx"]`` (one level, repeated)."""
+    match = re.search(r"\{([^{}]*)\}", pattern)
+    if not match:
+        return [pattern]
+    options: list[str] = []
+    for choice in match.group(1).split(","):
+        expanded = pattern[: match.start()] + choice + pattern[match.end() :]
+        options.extend(_expand_braces(expanded))
+    return options
+
+
+def _glob_matches(pattern: str, text: str) -> bool:
+    regex = ""
+    index = 0
+    while index < len(pattern):
+        if pattern.startswith("**/", index):
+            regex += "(?:.*/)?"
+            index += 3
+        elif pattern[index] == "*":
+            regex += ".*"
+            index += 1
+        elif pattern[index] == "?":
+            regex += "."
+            index += 1
+        else:
+            regex += re.escape(pattern[index])
+            index += 1
+    return re.fullmatch(regex, text) is not None
+
+
+def _is_id_pattern(pattern: str) -> bool:
+    """A pattern meant for node ids: dotted, with no path separator.
+
+    ``lib.reports.*`` is one. ``*Booking*`` is not: without a dot it reads as
+    a file name, and matching it against ids would pull in functions that
+    merely contain the word.
+    """
+    return "/" not in pattern and "." in pattern.strip("*?")
 
 
 def web_route(path: str) -> Optional[tuple[str, str]]:
@@ -394,34 +438,44 @@ class FeatureMap:
             node.id for node in self.graph.nodes.values() if feature.owns_node(node)
         )
 
-        reached: set[str] = set()
-        frontier = list(owned_nodes)
-        seen = set(owned_nodes)
-        while frontier:
-            for target in self._uses.get(frontier.pop(), ()):
-                if target not in seen:
-                    seen.add(target)
-                    reached.add(target)
-                    frontier.append(target)
-
-        # Files whose top-level code runs with the feature: those holding its
-        # functions, and whatever those files import, transitively.
-        files = set(owned_files)
-        files.update(self._node_file[node_id] for node_id in seen)
-        pending = list(files)
-        while pending:
-            for imported in self._files.get(pending.pop(), {}).get("imports", ()):
-                if imported not in files:
-                    files.add(imported)
-                    pending.append(imported)
+        # Grow two sets together until neither changes:
+        #   nodes — the feature's functions and everything they call;
+        #   files — the files whose top-level code runs with the feature:
+        #           its own, those holding its functions, and what they import.
+        # A file's top-level code makes calls too (an inline route handler,
+        # an initialiser); those functions are reached as well.
+        nodes: set[str] = set()
+        files: set[str] = set()
+        pending_nodes = list(owned_nodes)
+        pending_files = list(owned_files)
+        while pending_nodes or pending_files:
+            while pending_nodes:
+                node_id = pending_nodes.pop()
+                if node_id in nodes:
+                    continue
+                nodes.add(node_id)
+                pending_nodes.extend(self._uses.get(node_id, ()))
+                pending_files.append(self._node_file[node_id])
+            while pending_files:
+                path = pending_files.pop()
+                if path in files:
+                    continue
+                files.add(path)
+                info = self._files.get(path, {})
+                pending_files.extend(info.get("imports", ()))
+                pending_nodes.extend(
+                    target
+                    for target in info.get("calls", ())
+                    if target in self.graph.nodes
+                )
 
         return FeatureScope(
             feature=feature,
             owned_files=owned_files,
             owned_nodes=owned_nodes,
-            reached_nodes=sorted(reached),
+            reached_nodes=sorted(nodes - set(owned_nodes)),
             context_files=sorted(files - set(owned_files)),
-            fingerprint=self._fingerprint(seen, files),
+            fingerprint=self._fingerprint(nodes, files),
         )
 
     def _fingerprint(self, node_ids: set[str], files: set[str]) -> str:
