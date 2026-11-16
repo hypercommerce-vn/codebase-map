@@ -1,4 +1,4 @@
-# HC-AI | ticket: VIBE-105
+# HC-AI | ticket: VIBE-106
 """Tests for codebase_map.mod.server — HTTP endpoints."""
 
 from __future__ import annotations

@@ -297,7 +297,7 @@ def main(argv: list[str] | None = None) -> int:
         help="Config file (for snapshot dir detection)",
     )
 
-    # HC-AI | ticket: VIBE-105
+    # HC-AI | ticket: VIBE-106
     # CBM Mod — status line / pane / Claude Replay backend
     mod_p = sub.add_parser("mod", help="CBM Mod server for Claude Code pane")
     mod_sub = mod_p.add_subparsers(dest="mod_cmd", help="Mod subcommand")
@@ -344,7 +344,7 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _cmd_mod(args: argparse.Namespace) -> int:
-    # HC-AI | ticket: VIBE-105
+    # HC-AI | ticket: VIBE-106
     import json as _json
     import logging as _logging
 

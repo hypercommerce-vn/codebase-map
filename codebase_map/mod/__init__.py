@@ -1,4 +1,4 @@
-# HC-AI | ticket: VIBE-105
+# HC-AI | ticket: VIBE-106
 """CBM Mod — status line, pane, and Claude Replay for Claude Code.
 
 Day 1 deliverable: backend server + status API.

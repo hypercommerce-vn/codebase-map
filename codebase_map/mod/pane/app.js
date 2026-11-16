@@ -1,4 +1,4 @@
-// HC-AI | ticket: VIBE-105
+// HC-AI | ticket: VIBE-106
 // Pane controller: status line polling, tab switching, Graph tab.
 // Day 2 scope — status line + Graph summary rendering from /api/graph.
 // Full D3 interactive view lands with Timeline integration on Day 3+.
