@@ -15,7 +15,7 @@ Hai việc dưới đây **chưa được code**. Việc 4 đổi bố cục HTM
 Cả 3 khối cùng nằm ở đáy canvas: toolbar bên trái, legend ở giữa, minimap bên phải. Lỗi đến từ hai nguồn:
 
 - **Toolbar che legend là lỗ hổng của design.** Design `design-preview/active/codebase-map-v2-design.html` cũng xếp 3 khối chung một hàng đáy.
-- **Minimap che panel node là code làm lệch design.** Trong design, detail panel có z-index 20 (nằm trên minimap z 15), top/right 12 px, bo góc 12. Exporter lại dùng z 10, 16 px, bo góc 8. Legend trong design là z 15, bottom 12; exporter dùng z 5, bottom 16.
+- **Minimap che panel node là code làm lệch design.** Trong design, detail panel có z-index 20 (nằm trên minimap z 15), top/right 12 px, bo góc 12. Exporter lại dùng z 10, 16 px, bo góc 8. Legend trong design là z 15, bottom 12; exporter dùng z 5, bottom 16. Ở ≤ 1024 px, design thu panel còn rộng 320 px; exporter giữ 380 px (= 70% canvas ở 820 px).
 
 | Khối | Kích thước | Vị trí trong exporter |
 |------|-----------|--------|
@@ -28,12 +28,12 @@ Số đo: lần đầu đo trên bản `main` trước PR #155 (hàng Flows còn
 
 | Viewport | Canvas | Toolbar ↔ Legend | Minimap ↔ Legend | Minimap ↔ Detail panel |
 |----------|--------|------------------|------------------|------------------------|
-| 1440 × 900 | 1100 px | chồng **99 px**, che chữ "TYPE" | không chồng | che **36 px** đáy panel (tới ~102–124 px khi panel cao tối đa) |
+| 1440 × 900 | 1100 px | chồng **99 px**, che chữ "TYPE" | không chồng | che **0–96 px** đáy panel tùy node (bản `main` trước PR #155: tới ~124 px) |
 | 1094 × 800 | 754 px | chồng **~272–280 px** | chồng **~110–118 px**, che nhóm "EDGE" | che **~116–136 px** đáy panel |
-| 820 × 800 | 540 px | chồng | chồng | — ; thêm: **toolbar chồng minimap 6 px** (ở 769 px là ~57 px) |
+| 820 × 800 | 540 px | chồng | chồng | che **105–131 px** đáy panel; thêm: **toolbar chồng minimap 6 px** (ở 769 px là ~57 px) |
 
 Muốn cả 3 khối nằm vừa một hàng mà legend vẫn căn giữa thì canvas phải rộng ≥ 1323 px, tức viewport ≥ ~1663 px (sidebar 340 px). Màn laptop phổ biến (1280–1536) đều dính lỗi.
-Ngoài ra `80vh` không trừ phần header. Header cao ~127–131 px (topbar 48 + tab 43 + breadcrumb 36), hoặc ~155 px khi hàng Flows hiện. Vì vậy panel tràn khỏi màn hình khi màn thấp hơn ~715–735 px, hoặc ~885 px khi có hàng Flows. Bản `main` trước PR #155 luôn hiện hàng Flows (lỗi 3), nên ở 1094 × 800 panel tràn ra ngoài; sau PR #155 thì không tràn ở kích thước này nữa.
+Ngoài ra `80vh` không trừ phần header. Header cao ~127–131 px (topbar 48 + tab 43 + breadcrumb 36). Khi hàng Flows hiện, header cao ~155 px (hàng trống 28 px trên `main`) hoặc ~161 px (hàng có chip 34 px). Mép trên panel nằm thấp hơn header ~16–21 px. Vì vậy panel tràn khỏi màn hình khi màn thấp hơn khoảng **715–760 px**, hoặc khoảng **855–915 px** khi hàng Flows hiện. Bản `main` trước PR #155 luôn hiện hàng Flows (lỗi 3), nên panel tràn ra ngoài ở 1094 × 800, và tràn 1 px ngay cả ở 1440 × 900. Sau PR #155 thì hai kích thước này hết tràn, trừ khi project có flow.
 Ở ≤ 768 px, design ẩn các badge thống kê trên topbar (`.topbar-stats{display:none}`), nhưng exporter không ẩn. Kết quả: ở 375 px topbar rộng 579 px và trang bị cuộn ngang.
 
 ### Phương án
@@ -63,7 +63,7 @@ Designer (review PR #155) đồng ý hướng A và yêu cầu bổ sung khi v�
 1. Từng nhóm legend cũng phải xuống dòng (`.legend-group{flex-wrap:wrap}`). Riêng nhóm Type đã rộng 330 px; ở viewport 820 px, `max-width` chỉ còn 312 px.
 2. Ở 769–837 px (sidebar 280 px), toolbar chồng minimap. Cần ẩn minimap ở ≤ 900 px, hoặc nâng mốc căn giữa toolbar.
 3. Bỏ `transform: translateX(-50%)` khi dời legend sang trái, và viết lại rule mobile cho legend.
-4. Trả detail panel về z-order của design (z 20, nằm trên minimap).
+4. Trả detail panel về đúng design: z 20 (nằm trên minimap), top/right 12 px, và rộng 320 px ở ≤ 1024 px.
 5. `max-height` của panel cần mức sàn, ví dụ `max(200px, calc(100% − 164px))`. Trên mobile không cần chừa 164 px vì minimap đã ẩn.
 6. Gộp vào cùng đợt: ẩn badge thống kê topbar ở ≤ 768 px theo design, để hết cuộn ngang ở 375 px.
 7. Nút "Fit to screen" phải chừa chỗ cho cụm legend + toolbar ở góc trái dưới (cao ~90–120 px), để không che node.
@@ -128,3 +128,4 @@ Mô phỏng trên self-scan CBM (200 node): `graph` 125 · `parsers` 36 · `code
 - `project_name` được chèn thẳng vào `<title>` mà không escape. Rủi ro thấp (giá trị lấy từ config của chính người dùng), nhưng nên `html.escape` cho chắc.
 - Auto-fit chạy theo hẹn giờ cố định 3 giây. Nếu lúc đó graph đang ẩn (đang ở tab khác, hoặc trang mở trong tab nền) thì canvas có thể trống, hoặc console báo `translate(NaN,NaN)`. Lỗi đã có từ trước PR #155. Nên fit lại khi `simulation.on('end')` xảy ra, và khi quay về tab Graph. Điều này quan trọng với trang `/demo/` của website.
 - Chip flow: các chip dính sát nhau (gap 0 px), không dùng được bàn phím (`<span>` thay vì `<button aria-pressed>`). Badge version tương phản thấp (~1.8:1, khớp token design nhưng dưới chuẩn AA).
+- Hàng Flows và breadcrumb vẫn hiện ở các tab Executive / API Catalog / PR Diff, dù ở đó chúng không có tác dụng.
