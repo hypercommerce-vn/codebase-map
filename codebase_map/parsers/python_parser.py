@@ -10,6 +10,7 @@ import ast
 import re
 from pathlib import Path
 
+from codebase_map.fingerprint import named_hashes
 from codebase_map.graph.models import Edge, EdgeType, LayerType, Node, NodeType
 from codebase_map.parsers.base import BaseParser
 
@@ -303,6 +304,20 @@ def _file_to_module_id(file_path: str, base_module: str = "") -> str:
     return module_path.strip(".")
 
 
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# VIBE-102: content fingerprint per node, used by the snapshot diff to see
+# edits that leave the signature alone.
+def _add_body_hashes(nodes: list[Node], lines: list[str]) -> None:
+    """Store ``metadata["body_hash"]`` on every node.
+
+    A class is hashed without the lines of its methods, so editing a method
+    changes that method's fingerprint only.
+    """
+    hashes = named_hashes(lines, [(n.id, n.line_start, n.line_end) for n in nodes])
+    for node in nodes:
+        node.metadata["body_hash"] = hashes[node.id]
+
+
 class PythonParser(BaseParser):
     """Parse Python source files using AST."""
 
@@ -310,7 +325,7 @@ class PythonParser(BaseParser):
         return [".py"]
 
     def parse_file(
-        self, file_path: Path, base_module: str = ""
+        self, file_path: Path, base_module: str = "", rel_path: Path | None = None
     ) -> tuple[list[Node], list[Edge]]:
         """Parse a single Python file into nodes and edges."""
         nodes: list[Node] = []
@@ -326,10 +341,17 @@ class PythonParser(BaseParser):
         except SyntaxError:
             return nodes, edges
 
-        file_str = str(file_path)
+        # HC-AI | ticket: FDD-TOOL-CODEMAP
+        # VIBE-102: ids, layer and domain come from the project-relative path
+        # when the builder supplies one, so they are the same on every machine.
+        # The layer and domain rules look for "/folder/", so a relative path
+        # gets a leading slash and a top-level folder matches like a nested one.
+        id_path = rel_path if rel_path is not None else file_path
+        file_str = str(id_path)
+        rule_path = file_str if id_path.is_absolute() else f"/{id_path.as_posix()}"
         module_id = _file_to_module_id(file_str, base_module)
-        layer = _detect_layer(file_str)
-        domain = _detect_domain(file_str)
+        layer = _detect_layer(rule_path)
+        domain = _detect_domain(rule_path)
 
         # Collect import targets for edge resolution
         import_map: dict[str, str] = {}  # alias -> full module path
@@ -420,6 +442,8 @@ class PythonParser(BaseParser):
                     edge_type=EdgeType.IMPORTS,
                 )
             )
+
+        _add_body_hashes(nodes, source.splitlines())
 
         return nodes, edges
 

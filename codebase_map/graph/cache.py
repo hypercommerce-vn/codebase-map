@@ -30,7 +30,9 @@ from typing import Any
 
 from codebase_map.graph.models import Edge, EdgeType, LayerType, Node, NodeType
 
-CACHE_VERSION = "1.0"
+# VIBE-102: bumped from 1.0 — cached nodes now carry a body fingerprint and an
+# end line, so caches written by older versions must be rebuilt.
+CACHE_VERSION = "1.1"
 CACHE_FILENAME = ".codebase-map-cache.json"
 
 
