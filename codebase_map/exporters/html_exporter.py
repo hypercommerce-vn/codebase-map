@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from codebase_map import __version__
 from codebase_map.graph.models import Graph
 
 # HC-AI | ticket: FDD-TOOL-CODEMAP
@@ -492,6 +493,9 @@ body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
   background: var(--bg-elevated); border-bottom: 1px solid var(--border);
   font-size: 11px; flex-wrap: wrap;
 }}
+/* HC-AI | ticket: FDD-TOOL-CODEMAP — `display: flex` above would otherwise
+   override the `hidden` attribute and leave an empty "Flows:" row. */
+.flow-bar[hidden] {{ display: none; }}
 .flow-bar .lbl {{ color: var(--text-muted); }}
 .flow-chip {{
   display: inline-flex; align-items: center; gap: 4px;
@@ -549,7 +553,7 @@ svg {{ width: 100%; height: 100%; }}
   <div id="topbar">
     <div class="logo-icon">CM</div>
     <span class="logo-text">Codebase Map</span>
-    <span class="logo-ver">v2.0</span>
+    <span class="logo-ver">v{__version__}</span>
     <span class="stat-badge" id="stat-nodes"></span>
     <span class="stat-badge" id="stat-edges"></span>
     <span class="stat-badge" id="stat-domains"></span>
@@ -686,10 +690,14 @@ const edges = DATA.edges.filter(e =>
 ).map(e => ({{ source: e.source, target: e.target, type: e.type }}));
 
 // CM-S1-10: Top bar stats
+// HC-AI | ticket: FDD-TOOL-CODEMAP — singular label when the count is 1
+function statLabel(count, noun) {{
+  return `<strong>${{count.toLocaleString()}}</strong> ${{noun}}${{count === 1 ? '' : 's'}}`;
+}}
 const domainCount = DATA.stats.by_domain ? Object.keys(DATA.stats.by_domain).length : 0;
-document.getElementById('stat-nodes').innerHTML = `<strong>${{nodes.length.toLocaleString()}}</strong> nodes`;
-document.getElementById('stat-edges').innerHTML = `<strong>${{edges.length.toLocaleString()}}</strong> edges`;
-document.getElementById('stat-domains').innerHTML = `<strong>${{domainCount}}</strong> domains`;
+document.getElementById('stat-nodes').innerHTML = statLabel(nodes.length, 'node');
+document.getElementById('stat-edges').innerHTML = statLabel(edges.length, 'edge');
+document.getElementById('stat-domains').innerHTML = statLabel(domainCount, 'domain');
 document.getElementById('timestamp').textContent = `Generated: ${{DATA.generated_at || new Date().toLocaleString()}}`;
 
 // HC-AI | ticket: FDD-TOOL-CODEMAP
