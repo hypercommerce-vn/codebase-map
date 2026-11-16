@@ -31,6 +31,7 @@ CBM features status --json
 | `features[].counts` | Số tiêu chí theo `verified`, `needs_recheck`, `unchecked` |
 | `features[].files.owned` | File thuộc tính năng |
 | `features[].files.shared` | File dùng chung mà tính năng phụ thuộc |
+| `features[].affects` | Các tính năng khác đang chạy chung code với tính năng này. Sửa tính năng này thì chúng "có thể bị ảnh hưởng theo" |
 | `unowned_files[]` | File chưa thuộc tính năng nào: `path`, `kind` (`screen`, `api`, `other`), `url`, `used_by` (tính năng nào đang dùng) |
 | `summary` | Tổng số tính năng, tiêu chí theo trạng thái, file chưa gán |
 

@@ -192,6 +192,46 @@ class TestSkillFile:
             assert f"`{value}`" in text
 
 
+class TestMatchesTheApprovedDesign:
+    """The report layout is the one in the design preview the owner approved."""
+
+    PREVIEW = REPO_ROOT / "docs/active/cbm-vibecoding/CBM-VIBE-Design-Preview.html"
+    SECTIONS = (
+        "AI đã làm gì",
+        "Đúng yêu cầu chưa",
+        "Tự kiểm trong 1 phút",
+        "Có đụng gì ngoài yêu cầu không",
+    )
+
+    def test_report_sections_have_the_names_in_the_preview(self) -> None:
+        preview = self.PREVIEW.read_text(encoding="utf-8")
+        skill = SKILL_MD.read_text(encoding="utf-8")
+        example = (SKILL / "references" / "mau-bao-cao.md").read_text("utf-8")
+        for name in self.SECTIONS:
+            assert name in preview, name
+            assert name in skill, name
+            assert name in example, name
+
+    def test_sections_come_in_the_approved_order(self) -> None:
+        example = (SKILL / "references" / "mau-bao-cao.md").read_text("utf-8")
+        positions = [example.index(f"**{name}**") for name in self.SECTIONS[:2]]
+        positions.append(example.index("*Tự kiểm trong 1 phút*"))
+        positions.append(example.index(f"**{self.SECTIONS[3]}**"))
+        assert positions == sorted(positions)
+
+    def test_where_the_request_reaches_is_computed_not_guessed(self) -> None:
+        skill = SKILL_MD.read_text(encoding="utf-8")
+        for line in ("Sẽ đụng tới", "Có thể bị ảnh hưởng theo", "Không đụng tới"):
+            assert line in skill
+            assert line in self.PREVIEW.read_text(encoding="utf-8")
+        assert "`affects`" in skill
+
+    def test_verdict_has_three_levels_and_no_score(self) -> None:
+        skill = SKILL_MD.read_text(encoding="utf-8")
+        for level in ("Dùng tiếp được", "việc cần kiểm", "Có thứ đang hỏng"):
+            assert level in skill
+
+
 class TestDocumentedCommands:
     """The commands the skill tells Claude to run are commands that exist."""
 
