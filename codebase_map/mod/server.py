@@ -299,10 +299,7 @@ class _Handler(BaseHTTPRequestHandler):
         }
 
     def _replay_route(self, path: str) -> None:
-        from codebase_map.mod.replay import (
-            parse_session,
-            project_sessions_dir,
-        )
+        from codebase_map.mod.replay import parse_session, project_sessions_dir
 
         tail = path[len("/api/replay/sessions/") :]
         if not tail:
