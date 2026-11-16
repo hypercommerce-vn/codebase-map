@@ -130,6 +130,10 @@ codebase-map snapshot-diff --baseline baseline --current post-dev --format markd
 | `api-catalog` | List API routes |
 | `coverage` | Overlay test coverage |
 | `check-staleness` | Check graph freshness |
+| `mod serve` | Run CBM Mod — pane with Graph · Timeline · Claude Replay (v2.5) |
+| `mod status` | Print status JSON (sprint · branch · PR · CI · snapshot · risk) |
+| `mod enable-hooks` | Install opt-in post-commit snapshot hook |
+| `mod disable-hooks` | Uninstall the managed hook (restores any prior backup) |
 
 All commands support `--help` for detailed options.
 
@@ -157,6 +161,24 @@ All commands support `--help` for detailed options.
 - Executive view, PR Diff view, API Catalog
 - Multi-view tabs, breadcrumb navigation
 - Business Flow mapping
+
+### 🎬 CBM Mod — pane for Claude Code (v2.5, VIBE-106)
+- Loopback HTTP server at `127.0.0.1:7430` serving a 3-tab pane
+- **Graph** — live summary + top nodes from `graph.json`
+- **Timeline** — snapshot list + any-pair diff (nodes/edges added · removed · modified)
+- **Claude Replay** — scrub session JSONL (user/claude/tool steps) with player controls, speed 1×/2×/5×, **auto-highlight Graph nodes** for files touched in the current step; emails · tokens · bearer headers · card numbers redacted in output
+- Status line: sprint · branch · PR · CI · snapshot · risk, polled every 5s
+- Toast notifications on CI / snapshot / PR transitions
+- Opt-in `post-commit` hook keeps snapshots fresh after every commit, backs up any prior hook
+
+Quick start:
+
+```bash
+codebase-map mod serve   # http://127.0.0.1:7430
+```
+
+See the design preview for architecture + acceptance criteria:
+[`design-preview/active/CBM-MOD-VIBE-106-design.html`](design-preview/active/CBM-MOD-VIBE-106-design.html).
 
 ### ⚙️ CI Integration
 - `cbm-baseline.yml` — auto-baseline on merge to main

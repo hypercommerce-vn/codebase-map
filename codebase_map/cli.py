@@ -299,7 +299,14 @@ def main(argv: list[str] | None = None) -> int:
 
     # HC-AI | ticket: VIBE-106
     # CBM Mod — status line / pane / Claude Replay backend
-    mod_p = sub.add_parser("mod", help="CBM Mod server for Claude Code pane")
+    mod_p = sub.add_parser(
+        "mod",
+        help="CBM Mod server for Claude Code pane",
+        description=(
+            "Run the loopback pane server (Graph · Timeline · Claude "
+            "Replay) and manage its opt-in git hooks."
+        ),
+    )
     mod_sub = mod_p.add_subparsers(dest="mod_cmd", help="Mod subcommand")
     mod_serve = mod_sub.add_parser("serve", help="Run the local Mod server")
     mod_serve.add_argument("--host", default="127.0.0.1", help="Bind host")
