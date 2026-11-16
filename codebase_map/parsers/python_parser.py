@@ -10,6 +10,7 @@ import ast
 import re
 from pathlib import Path
 
+from codebase_map.fingerprint import named_hashes
 from codebase_map.graph.models import Edge, EdgeType, LayerType, Node, NodeType
 from codebase_map.parsers.base import BaseParser
 
@@ -303,14 +304,45 @@ def _file_to_module_id(file_path: str, base_module: str = "") -> str:
     return module_path.strip(".")
 
 
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# VIBE-102: content fingerprint per node, used by the snapshot diff to see
+# edits that leave the signature alone.
+def _add_body_hashes(nodes: list[Node], lines: list[str]) -> None:
+    """Store ``metadata["body_hash"]`` on every node.
+
+    A class is hashed without the lines of its methods, so editing a method
+    changes that method's fingerprint only.
+    """
+    hashes = named_hashes(lines, [(n.id, n.line_start, n.line_end) for n in nodes])
+    for node in nodes:
+        node.metadata["body_hash"] = hashes[node.id]
+
+
 class PythonParser(BaseParser):
     """Parse Python source files using AST."""
 
     def supported_extensions(self) -> list[str]:
         return [".py"]
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # VIBE-103: hooks for file-level dependencies and the runtime module hash
+    def module_id(self, rel_path: Path, base_module: str = "") -> str:
+        return _file_to_module_id(str(rel_path), base_module)
+
+    def non_runtime_ranges(self, lines: list[str]) -> list[tuple[int, int]]:
+        """Top-level import statements."""
+        try:
+            tree = ast.parse("\n".join(lines))
+        except (SyntaxError, ValueError):
+            return []
+        return [
+            (item.lineno, item.end_lineno or item.lineno)
+            for item in tree.body
+            if isinstance(item, (ast.Import, ast.ImportFrom))
+        ]
+
     def parse_file(
-        self, file_path: Path, base_module: str = ""
+        self, file_path: Path, base_module: str = "", rel_path: Path | None = None
     ) -> tuple[list[Node], list[Edge]]:
         """Parse a single Python file into nodes and edges."""
         nodes: list[Node] = []
@@ -326,10 +358,17 @@ class PythonParser(BaseParser):
         except SyntaxError:
             return nodes, edges
 
-        file_str = str(file_path)
+        # HC-AI | ticket: FDD-TOOL-CODEMAP
+        # VIBE-102: ids, layer and domain come from the project-relative path
+        # when the builder supplies one, so they are the same on every machine.
+        # The layer and domain rules look for "/folder/", so a relative path
+        # gets a leading slash and a top-level folder matches like a nested one.
+        id_path = rel_path if rel_path is not None else file_path
+        file_str = str(id_path)
+        rule_path = file_str if id_path.is_absolute() else f"/{id_path.as_posix()}"
         module_id = _file_to_module_id(file_str, base_module)
-        layer = _detect_layer(file_str)
-        domain = _detect_domain(file_str)
+        layer = _detect_layer(rule_path)
+        domain = _detect_domain(rule_path)
 
         # Collect import targets for edge resolution
         import_map: dict[str, str] = {}  # alias -> full module path
@@ -341,6 +380,13 @@ class PythonParser(BaseParser):
                     import_map[name] = alias.name
             elif isinstance(node, ast.ImportFrom):
                 mod = node.module or ""
+                # HC-AI | ticket: FDD-TOOL-CODEMAP
+                # VIBE-103: `from .pricing import price` — resolve a relative
+                # import against this module's package, so calls made through
+                # it point at the real function.
+                if node.level:
+                    package = module_id.split(".")[: -node.level]
+                    mod = ".".join(package + ([mod] if mod else []))
                 for alias in node.names:
                     name = alias.asname or alias.name
                     import_map[name] = f"{mod}.{alias.name}" if mod else alias.name
@@ -411,15 +457,20 @@ class PythonParser(BaseParser):
                     existing = node_obj.metadata.get("flows", [])
                     node_obj.metadata["flows"] = sorted(set(existing) | set(flows))
 
-        # Import edges (module-level)
+        # Import edges (module-level). VIBE-103: each one names the importing
+        # file, so the builder can work out which file depends on which.
+        import_file = id_path.as_posix()
         for alias_name, full_path in import_map.items():
             edges.append(
                 Edge(
                     source=module_id,
                     target=full_path,
                     edge_type=EdgeType.IMPORTS,
+                    metadata={"file": import_file},
                 )
             )
+
+        _add_body_hashes(nodes, source.splitlines())
 
         return nodes, edges
 
