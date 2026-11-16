@@ -28,8 +28,25 @@ def _edited(lines: list[str], number: int, text: str) -> list[str]:
 
 
 class TestTextHash:
-    def test_whitespace_does_not_matter(self) -> None:
-        assert text_hash("a  b\n\tc") == text_hash("a b c")
+    def test_indentation_blank_lines_and_trailing_space_do_not_matter(self) -> None:
+        assert text_hash("  a = 1  \n\n\tb = 2") == text_hash("a = 1\nb = 2")
+
+    def test_line_breaks_matter(self) -> None:
+        """In JavaScript `return` on its own line returns nothing."""
+        assert text_hash("return a + b;") != text_hash("return\n  a + b;")
+
+    def test_spaces_inside_a_line_matter(self) -> None:
+        """They may be inside a string."""
+        assert text_hash('say("xin  chào")') != text_hash('say("xin chào")')
+
+    def test_python_keeps_indentation_relative_to_the_block(self) -> None:
+        inside = "if vip:\n    discount()\n    log()"
+        outside = "if vip:\n    discount()\nlog()"
+        shifted = "    if vip:\n        discount()\n        log()"
+        assert text_hash(inside, True) != text_hash(outside, True)
+        assert text_hash(inside, True) == text_hash(shifted, True)
+        # without keep_indent the two cannot be told apart
+        assert text_hash(inside) == text_hash(outside)
 
     def test_any_token_change_matters(self) -> None:
         assert text_hash("return 24 * 60") != text_hash("return 12 * 60")

@@ -1113,11 +1113,11 @@ def _run_features(args: argparse.Namespace):
 
 def _feature_pattern_hits(pattern: str, path: str, graph) -> bool:
     """True when a feature pattern matches the file or one of its functions."""
-    from codebase_map.features import pattern_matches
+    from codebase_map.features import _is_id_pattern, pattern_matches
 
     if pattern_matches(pattern, path):
         return True
-    return any(
+    return _is_id_pattern(pattern) and any(
         pattern_matches(pattern, node.id)
         for node in graph.nodes.values()
         if node.file_path.replace("\\", "/") == path

@@ -494,7 +494,7 @@ class TestEvidenceExpires:
         self, app: Path, store: FeatureStore
     ) -> None:
         _verify_everything(store, _build(app))
-        _edit(app, "lib/db.ts", "export function readAll", "export function  readAll")
+        _edit(app, "lib/db.ts", "  return tables[table];", "\t\treturn tables[table];")
         assert set(_statuses(store, _build(app)).values()) == {STATUS_VERIFIED}
 
         _edit(

@@ -9,6 +9,20 @@ from pathlib import Path
 from codebase_map.graph.models import Edge, Node
 
 
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# VIBE-102: one way to turn a source file into text, shared by the parsers and
+# the builder, so they agree on what line 1 is.
+def decode_source(raw: bytes) -> str:
+    """Decode source bytes: UTF-8 with or without a BOM, or UTF-16 with a BOM.
+
+    Editors on Windows write the BOM; left in, it hides the first line from
+    every pattern that looks for a statement at the start of a line.
+    """
+    if raw.startswith((b"\xff\xfe", b"\xfe\xff")):
+        return raw.decode("utf-16")
+    return raw.decode("utf-8-sig")
+
+
 class BaseParser(ABC):
     """Interface for language-specific parsers."""
 
@@ -29,6 +43,9 @@ class BaseParser(ABC):
     def supported_extensions(self) -> list[str]:
         """Return list of file extensions this parser handles."""
         ...
+
+    # VIBE-102: True where indentation is syntax, so fingerprints keep it
+    indent_matters = False
 
     # HC-AI | ticket: FDD-TOOL-CODEMAP
     # VIBE-103: optional hooks, used to tell which file depends on which and

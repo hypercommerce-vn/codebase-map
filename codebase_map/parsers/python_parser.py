@@ -12,7 +12,7 @@ from pathlib import Path
 
 from codebase_map.fingerprint import named_hashes
 from codebase_map.graph.models import Edge, EdgeType, LayerType, Node, NodeType
-from codebase_map.parsers.base import BaseParser
+from codebase_map.parsers.base import BaseParser, decode_source
 
 # HC-AI | ticket: FDD-TOOL-CODEMAP
 # CM-S2-08: FDD spec linking — parse `# FDD: FDD-XXX-NNN` or `# ticket: FDD-XXX-NNN`
@@ -311,13 +311,20 @@ def _add_body_hashes(nodes: list[Node], lines: list[str]) -> None:
     A class is hashed without the lines of its methods, so editing a method
     changes that method's fingerprint only.
     """
-    hashes = named_hashes(lines, [(n.id, n.line_start, n.line_end) for n in nodes])
+    hashes = named_hashes(
+        lines, [(n.id, n.line_start, n.line_end) for n in nodes], keep_indent=True
+    )
     for node in nodes:
         node.metadata["body_hash"] = hashes[node.id]
 
 
+_DEFINITIONS = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
+
+
 class PythonParser(BaseParser):
     """Parse Python source files using AST."""
+
+    indent_matters = True
 
     def supported_extensions(self) -> list[str]:
         return [".py"]
@@ -347,8 +354,8 @@ class PythonParser(BaseParser):
         edges: list[Edge] = []
 
         try:
-            source = file_path.read_text(encoding="utf-8")
-        except (UnicodeDecodeError, PermissionError):
+            source = decode_source(file_path.read_bytes())
+        except (UnicodeDecodeError, OSError):
             return nodes, edges
 
         try:
@@ -399,6 +406,12 @@ class PythonParser(BaseParser):
                 if attr_types:
                     init_type_maps[class_id] = attr_types
 
+        # VIBE-103: names defined at the top of this module, to tell a
+        # decorator that is project code from a built-in one
+        local_names = {
+            item.name for item in tree.body if isinstance(item, _DEFINITIONS)
+        }
+
         # Parse top-level items
         for item in ast.iter_child_nodes(tree):
             if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -411,6 +424,11 @@ class PythonParser(BaseParser):
                     item, func_node.id, import_map, module_id
                 )
                 edges.extend(func_edges)
+                edges.extend(
+                    self._decorator_edges(
+                        item, func_node.id, import_map, module_id, local_names
+                    )
+                )
 
             elif isinstance(item, ast.ClassDef):
                 class_node, method_nodes, class_edges = self._parse_class(
@@ -419,6 +437,11 @@ class PythonParser(BaseParser):
                 nodes.append(class_node)
                 nodes.extend(method_nodes)
                 edges.extend(class_edges)
+                edges.extend(
+                    self._class_level_edges(
+                        item, class_node.id, import_map, module_id, local_names
+                    )
+                )
 
                 # Inheritance edges
                 for base in item.bases:
@@ -431,6 +454,20 @@ class PythonParser(BaseParser):
                                 edge_type=EdgeType.INHERITS,
                             )
                         )
+
+        # HC-AI | ticket: FDD-TOOL-CODEMAP
+        # VIBE-103: calls made by top-level code (ITEMS = seed()) are no
+        # node's calls, but the file depends on them. They are marked
+        # ``module_level``; the builder turns them into dependencies of the file.
+        top_level = [
+            stmt
+            for stmt in tree.body
+            if not isinstance(stmt, _DEFINITIONS + (ast.Import, ast.ImportFrom))
+        ]
+        holder = ast.Module(body=top_level, type_ignores=[])
+        for edge in self._extract_call_edges(holder, module_id, import_map, module_id):
+            edge.metadata["module_level"] = id_path.as_posix()
+            edges.append(edge)
 
         # HC-AI | ticket: FDD-TOOL-CODEMAP
         # CM-S2-06: Resolve self.attr.method() chains using __init__ type hints
@@ -599,9 +636,65 @@ class PythonParser(BaseParser):
 
         return class_node, method_nodes, edges
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # VIBE-103: a decorator, and a statement in a class body, run with the
+    # thing they belong to — they are dependencies of it.
+    def _decorator_edges(
+        self,
+        item: ast.AST,
+        owner_id: str,
+        import_map: dict[str, str],
+        module_id: str,
+        local_names: set[str],
+    ) -> list[Edge]:
+        """Edges for `@login_required` and `@route("/x")` on a function or class.
+
+        Only decorators that come from an import or from this module are
+        kept; `@staticmethod` and other built-ins are not dependencies.
+        """
+        calls: list[ast.stmt] = []
+        for decorator in getattr(item, "decorator_list", []):
+            call = decorator
+            if not isinstance(decorator, ast.Call):
+                call = ast.Call(func=decorator, args=[], keywords=[])
+            root = ast.unparse(call.func).split(".")[0]
+            if root in import_map or root in local_names:
+                calls.append(ast.Expr(value=call))
+        if not calls:
+            return []
+        holder = ast.Module(body=calls, type_ignores=[])
+        return self._extract_call_edges(holder, owner_id, import_map, module_id)
+
+    def _class_level_edges(
+        self,
+        item: ast.ClassDef,
+        class_id: str,
+        import_map: dict[str, str],
+        module_id: str,
+        local_names: set[str],
+    ) -> list[Edge]:
+        """Edges for the class's decorators, its body outside methods, and
+        the decorators of its methods."""
+        edges = self._decorator_edges(
+            item, class_id, import_map, module_id, local_names
+        )
+        body = [stmt for stmt in item.body if not isinstance(stmt, _DEFINITIONS)]
+        holder = ast.Module(body=body, type_ignores=[])
+        edges += self._extract_call_edges(holder, class_id, import_map, module_id)
+        for member in item.body:
+            if isinstance(member, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                edges += self._decorator_edges(
+                    member,
+                    f"{class_id}.{member.name}",
+                    import_map,
+                    module_id,
+                    local_names,
+                )
+        return edges
+
     def _extract_call_edges(
         self,
-        func_node: ast.FunctionDef | ast.AsyncFunctionDef,
+        func_node: ast.AST,
         caller_id: str,
         import_map: dict[str, str],
         module_id: str,

@@ -206,17 +206,20 @@ def format_diff_text(result: DiffResult) -> str:
         lines.append("\n[ADDED]")
         for ch in result.nodes_added[:20]:
             lines.append(f"  + {ch.node.name}  ({ch.node.file_path})")
+        lines.extend(_more(len(result.nodes_added), 20))
 
     if result.nodes_removed:
         lines.append("\n[REMOVED]")
         for ch in result.nodes_removed[:20]:
             lines.append(f"  - {ch.node.name}  ({ch.node.file_path})")
+        lines.extend(_more(len(result.nodes_removed), 20))
 
     if result.nodes_modified:
         lines.append("\n[MODIFIED]")
         for ch in result.nodes_modified[:20]:
             mods = ", ".join(ch.modifications)
             lines.append(f"  ~ {ch.node.name}  ({mods})")
+        lines.extend(_more(len(result.nodes_modified), 20))
 
     if result.nodes_body_changed:
         lines.append("\n[BODY CHANGED]")
@@ -224,6 +227,7 @@ def format_diff_text(result: DiffResult) -> str:
             lines.append(
                 f"  ~ {ch.node.name}  ({ch.node.file_path}:{_line_range(ch.node)})"
             )
+        lines.extend(_more(len(result.nodes_body_changed), 20))
 
     if result.nodes_renamed:
         lines.append("\n[RENAMED]")
@@ -236,6 +240,7 @@ def format_diff_text(result: DiffResult) -> str:
         lines.append(f"\n[AFFECTED CALLERS] ({len(result.affected_callers)})")
         for ac in result.affected_callers[:20]:
             lines.append(f"  ! {ac.name}  ({ac.file_path}) — {ac.reason}")
+        lines.extend(_more(len(result.affected_callers), 20))
 
     if result.files_changed:
         lines.append(f"\n[FILES] ({len(result.files_changed)})")
@@ -245,6 +250,7 @@ def format_diff_text(result: DiffResult) -> str:
             if fc.change_type == "modified" and fc.module_level_changed:
                 note = "  (code outside functions changed)"
             lines.append(f"  {code} {fc.path}{note}")
+        lines.extend(_more(len(result.files_changed), 50))
 
     if not _has_fingerprints(result):
         lines.append(f"\n[NOTE] {_UNTRACKED_NOTE}")
@@ -374,6 +380,13 @@ def _edge_change_dict(c: Any) -> dict:
 
 # HC-AI | ticket: FDD-TOOL-CODEMAP
 # VIBE-102: helpers for the content-level sections
+def _more(total: int, shown: int) -> list[str]:
+    """A line saying how many entries of a long list are not printed."""
+    if total <= shown:
+        return []
+    return [f"  … and {total - shown} more (use --format json for the full list)"]
+
+
 def _has_fingerprints(result: DiffResult) -> bool:
     """True when both snapshots carry per-file content fingerprints."""
     return isinstance(result.baseline_meta.get("files"), dict) and isinstance(

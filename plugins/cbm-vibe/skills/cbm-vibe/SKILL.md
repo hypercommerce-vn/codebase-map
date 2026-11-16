@@ -210,7 +210,8 @@ trăm:
      nó dùng chung phần vừa sửa.
    - `touched` là `none`: gộp tất cả vào một dòng "… không bị đụng tới."
    - `behaviour_changed` là `false`: file có bị sửa nhưng cách chạy không
-     đổi (chỉ đổi cách trình bày code); nói vậy, không báo động.
+     đổi (chỉ đổi thụt lề, dòng import hoặc khai báo kiểu); nói vậy, không
+     báo động.
    - Mỗi mục trong `unowned_changes` (phần dùng chung, chưa thuộc tính năng
      nào): một câu nói đã đổi gì và những tính năng nào đang dùng nó.
    - Không có gì ngoài phạm vi bị đụng: viết "Không đụng tới phần nào khác."

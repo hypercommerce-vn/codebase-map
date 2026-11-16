@@ -23,7 +23,7 @@ from pathlib import Path
 
 from codebase_map.fingerprint import named_hashes
 from codebase_map.graph.models import Edge, EdgeType, LayerType, Node, NodeType
-from codebase_map.parsers.base import BaseParser
+from codebase_map.parsers.base import BaseParser, decode_source
 
 # HC-AI | ticket: FDD-TOOL-CODEMAP
 # Reuse FDD comment annotation regex for parity with python_parser
@@ -98,11 +98,42 @@ _EXPORT_DEFAULT_NAME = re.compile(
 )
 
 # Call expression — best effort: name( OR obj.name(
-_CALL = re.compile(r"(?P<name>[A-Za-z_$][\w$]*)\s*\(")
+# Type arguments and an optional-call dot may sit between the name and "(":
+# getJson<Booking[]>(url), track?.("made")
+_CALL = re.compile(
+    r"(?P<name>[A-Za-z_$][\w$]*)\s*"
+    r"(?:<[^<>()=;]*(?:<[^<>()=;]*>[^<>()=;]*)*>\s*)?(?:\?\.)?\("
+)
 
 # VIBE-102: JSX element that uses a component, e.g. <BookingForm ... />.
 # The look-behind keeps generic type arguments such as Array<Slot> out.
-_JSX_TAG = re.compile(r"(?<![\w.)\]])<(?P<name>[A-Z][\w$]*)(?=[\s/>])")
+# The name may be the last thing on its line, with the props on the next ones.
+_JSX_TAG = re.compile(r"(?<![\w.)\]])<(?P<name>[A-Z][\w$]*)(?=[\s/>]|$)")
+
+# `export default memo(Chart)` — the default export is a wrapped function
+_EXPORT_DEFAULT_WRAPPED = re.compile(
+    r"^\s*export\s+default\s+[\w$.]+\s*\(\s*(?P<name>[A-Za-z_$][\w$]*)\s*[,)]"
+)
+
+# CommonJS: const x = require("./x")  /  const { a, b: c } = require("./x")
+_REQUIRE_STMT = re.compile(
+    r"^[ \t]*(?:const|let|var)\s+(?P<clause>\{[^}]*\}|[A-Za-z_$][\w$]*)\s*=\s*"
+    r"require\(\s*['\"](?P<src>[^'\"]+)['\"]\s*\)",
+    re.MULTILINE,
+)
+# import("./x") and any other require("./x"): a dependency without names
+_DYNAMIC_IMPORT = re.compile(
+    r"\b(?:import|require)\(\s*['\"](?P<src>[^'\"]+)['\"]\s*\)"
+)
+
+# A column-0 line that starts something that runs; a type declaration whose
+# end was not found must not run past it.
+_RUNTIME_START = re.compile(
+    r"^(?:export\s+)?(?:default\s+)?(?:async\s+)?"
+    r"(?:const|let|var|function|class|import|if|for|while|return)\b"
+)
+_REGEX_MAY_FOLLOW = set("(,=:[!&|?{};+-*%~^")
+_REGEX_KEYWORDS = ("return", "typeof", "case", "throw", "await", "yield", "void")
 
 # End of a function signature on the declaration line: ") {" or "): Type {"
 _SIGNATURE_END = re.compile(r"\)\s*(?::\s*[^={]+)?\s*\{")
@@ -162,6 +193,134 @@ _ROUTE_DECORATORS = {
 _MAX_SIGNATURE_LINES = 60
 
 
+class _CodeLines:
+    """Read a file line by line and tell code from strings and comments.
+
+    Structure — where a comment starts, which braces open a block — must be
+    read from code alone: the `//` of a URL inside a template literal is not a
+    comment, and a "{" inside a string does not open anything. ``clean``
+    returns two views of a line, both the same length as each other:
+
+    * ``code``: comments removed, the contents of every string, template
+      literal and regular expression replaced by spaces;
+    * ``calls``: the same, except that template literals keep their text, so
+      a call inside ``${...}`` is still seen.
+
+    Template literals and block comments may span lines; that state is kept
+    between calls.
+    """
+
+    def __init__(self) -> None:
+        self.in_block_comment = False
+        self.in_template = False
+
+    def clean(self, line: str) -> tuple[str, str]:
+        code: list[str] = []
+        calls: list[str] = []
+        length = len(line)
+        index = 0
+        quote = ""
+
+        def emit(char: str, keep_for_calls: bool = False) -> None:
+            code.append(" ")
+            calls.append(char if keep_for_calls else " ")
+
+        while index < length:
+            char = line[index]
+            if self.in_block_comment:
+                end = line.find("*/", index)
+                stop = length if end < 0 else end + 2
+                for _ in range(index, stop):
+                    emit(" ")
+                self.in_block_comment = end < 0
+                index = stop
+            elif self.in_template:
+                if char == "\\" and index + 1 < length:
+                    emit(char, True)
+                    emit(line[index + 1], True)
+                    index += 2
+                    continue
+                if char == "`":
+                    self.in_template = False
+                    code.append(char)
+                    calls.append(char)
+                else:
+                    emit(char, True)
+                index += 1
+            elif quote:
+                if char == "\\" and index + 1 < length:
+                    emit(" ")
+                    emit(" ")
+                    index += 2
+                    continue
+                if char == quote:
+                    quote = ""
+                    code.append(char)
+                    calls.append(char)
+                else:
+                    emit(" ")
+                index += 1
+            elif char == "/" and line.startswith("//", index):
+                break  # the rest of the line is a comment
+            elif char == "/" and line.startswith("/*", index):
+                self.in_block_comment = True
+            elif char == "/" and self._regex_starts(code, line, index):
+                end = self._regex_end(line, index)
+                code.append("/")
+                calls.append("/")
+                for _ in range(index + 1, end):
+                    emit(" ")
+                code.append("/")
+                calls.append("/")
+                index = end + 1
+            elif char in "\"'" and line.find(char, index + 1) > 0:
+                # an apostrophe in JSX text has no closing quote on its line
+                quote = char
+                code.append(char)
+                calls.append(char)
+                index += 1
+            elif char == "`":
+                self.in_template = True
+                code.append(char)
+                calls.append(char)
+                index += 1
+            else:
+                code.append(char)
+                calls.append(char)
+                index += 1
+        return "".join(code), "".join(calls)
+
+    @staticmethod
+    def _regex_starts(code: list[str], line: str, index: int) -> bool:
+        """True when the "/" at ``index`` opens a regular expression literal."""
+        if line.startswith("/>", index):
+            return False  # the end of a JSX tag
+        before = "".join(code).rstrip()
+        if before and before[-1] not in _REGEX_MAY_FOLLOW:
+            if not before.endswith(_REGEX_KEYWORDS):
+                return False
+        return _CodeLines._regex_end(line, index) > index
+
+    @staticmethod
+    def _regex_end(line: str, index: int) -> int:
+        """Index of the "/" that closes the literal opened at ``index``, or -1."""
+        position = index + 1
+        in_class = False
+        while position < len(line):
+            char = line[position]
+            if char == "\\":
+                position += 2
+                continue
+            if char == "[":
+                in_class = True
+            elif char == "]":
+                in_class = False
+            elif char == "/" and not in_class:
+                return position
+            position += 1
+        return -1
+
+
 class _OpenFunction:
     """A function whose end has not been seen yet."""
 
@@ -182,7 +341,7 @@ class TypeScriptParser(BaseParser):
     """Regex-based TS/JS parser. Extends BaseParser interface."""
 
     def supported_extensions(self) -> list[str]:
-        return [".ts", ".tsx", ".js", ".jsx"]
+        return [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".mts", ".cts"]
 
     # HC-AI | ticket: FDD-TOOL-CODEMAP
     # VIBE-103: hooks for file-level dependencies and the runtime module hash
@@ -191,43 +350,52 @@ class TypeScriptParser(BaseParser):
 
     def non_runtime_ranges(self, lines: list[str]) -> list[tuple[int, int]]:
         """Imports, re-exports and type-only declarations at the top level."""
+        cleaner = _CodeLines()
+        code = [cleaner.clean(raw)[0] for raw in lines]
         source = "\n".join(lines)
         ranges: list[tuple[int, int]] = []
         for pattern in (_IMPORT_STMT, _REEXPORT_STMT):
             for match in pattern.finditer(source):
-                first = source.count("\n", 0, match.start()) + 1
-                last = source.count("\n", 0, match.end()) + 1
-                ranges.append((first, last))
+                first = source.count("\n", 0, match.start())
+                last = source.count("\n", 0, match.end())
+                # a statement quoted in a comment or a string is not an import
+                if code[first].lstrip().startswith(("import", "export")):
+                    ranges.append((first + 1, last + 1))
         index = 0
-        while index < len(lines):
-            if _TYPE_DECL.match(lines[index]):
-                end = self._type_declaration_end(lines, index)
+        while index < len(code):
+            if _TYPE_DECL.match(code[index]):
+                end = self._type_declaration_end(code, index)
                 ranges.append((index + 1, end + 1))
                 index = end + 1
             else:
                 index += 1
         return ranges
 
-    def _type_declaration_end(self, lines: list[str], start: int) -> int:
-        """Index of the last line of the type declaration starting at ``start``."""
+    @staticmethod
+    def _type_declaration_end(code: list[str], start: int) -> int:
+        """Index of the last line of the type declaration starting at ``start``.
+
+        ``code`` is the code-only view of the file, so brackets inside strings
+        and comments do not count.
+        """
         balance = 0
-        for index in range(start, len(lines)):
-            text = self._strip_comment(lines[index]).strip()
+        for index in range(start, len(code)):
+            text = code[index].strip()
+            if index > start and _RUNTIME_START.match(code[index]):
+                return index - 1
             balance += sum(text.count(char) for char in "{([")
             balance -= sum(text.count(char) for char in "})]")
             if balance > 0:
                 continue
             if text.endswith(";"):
                 return index
-            following = ""
-            if index + 1 < len(lines):
-                following = self._strip_comment(lines[index + 1]).strip()
+            following = code[index + 1].strip() if index + 1 < len(code) else ""
             if text.endswith(_TYPE_CONTINUES_AFTER):
                 continue
             if following.startswith(_TYPE_CONTINUES_BEFORE):
                 continue
             return index
-        return len(lines) - 1
+        return len(code) - 1
 
     # ─────────────────────────────────────────────────────────────────
     # Public API
@@ -236,7 +404,7 @@ class TypeScriptParser(BaseParser):
         self, file_path: Path, base_module: str = "", rel_path: Path | None = None
     ) -> tuple[list[Node], list[Edge]]:
         try:
-            source = file_path.read_text(encoding="utf-8")
+            source = decode_source(file_path.read_bytes())
         except (OSError, UnicodeDecodeError) as exc:
             print(f"[WARN] TS parser: cannot read {file_path}: {exc}")
             return [], []
@@ -266,7 +434,11 @@ class TypeScriptParser(BaseParser):
 
         lines = source.splitlines()
         fdd_by_line = self._extract_fdd(lines)
-        edges: list[Edge] = self._import_edges(source, rel_module, file_path)
+        cleaner = _CodeLines()
+        cleaned = [cleaner.clean(raw) for raw in lines]
+        code_lines = [code for code, _ in cleaned]
+        importer = file_path.as_posix()
+        edges: list[Edge] = self._import_edges(lines, code_lines, rel_module, importer)
 
         # State
         class_stack: list[tuple[Node, int]] = []  # [(class node, brace depth before)]
@@ -295,6 +467,16 @@ class TypeScriptParser(BaseParser):
             )
             node.metadata["module"] = rel_module
             nodes.append(node)
+            # a decorator is a function that runs with the thing it decorates
+            for decorator in node.decorators:
+                edges.append(
+                    Edge(
+                        source=node.id,
+                        target=decorator.split(".")[0],
+                        edge_type=EdgeType.CALLS,
+                        metadata={"via": "decorator"},
+                    )
+                )
             pending_decorators.clear()
             return node
 
@@ -308,6 +490,7 @@ class TypeScriptParser(BaseParser):
             tail: str,
             is_arrow: bool,
             next_text: str,
+            call_tail: str,
         ) -> Node:
             """Add a function that starts on line ``start``.
 
@@ -329,7 +512,7 @@ class TypeScriptParser(BaseParser):
                         metadata={"via": "nested"},
                     )
                 )
-            self._harvest_calls(tail, fnode.id, edges)
+            self._harvest_calls(call_tail, fnode.id, edges)
             self._open_function(
                 open_funcs,
                 fnode,
@@ -343,16 +526,23 @@ class TypeScriptParser(BaseParser):
             )
             return fnode
 
-        for idx, raw in enumerate(lines, start=1):
-            line = self._strip_comment(raw)
+        def harvest_outside_functions(text: str) -> None:
+            """Calls in a class body belong to the class; the rest to the file."""
+            if class_stack:
+                self._harvest_calls(text, class_stack[-1][0].id, edges)
+            else:
+                self._harvest_calls(text, rel_module, edges, module_file=importer)
+
+        for idx in range(1, len(lines) + 1):
+            # ``line`` is code only; ``call_text`` also keeps template literals
+            line, call_text = cleaned[idx - 1]
             delta = line.count("{") - line.count("}")
-            next_text = ""
-            if idx < len(lines):
-                next_text = self._strip_comment(lines[idx]).strip()
+            next_text = code_lines[idx].strip() if idx < len(lines) else ""
 
             # Arguments of a multi-line decorator, e.g. `@Component({ ... })`
             if decorator_parens > 0:
                 decorator_parens += line.count("(") - line.count(")")
+                harvest_outside_functions(call_text)
                 depth += delta
                 continue
 
@@ -361,6 +551,8 @@ class TypeScriptParser(BaseParser):
             if dec_match:
                 pending_decorators.append(dec_match.group("name"))
                 decorator_parens = max(line.count("(") - line.count(")"), 0)
+                # calls in the decorator's arguments, e.g. @UseGuards(make())
+                harvest_outside_functions(call_text[dec_match.end() :])
                 depth += delta
                 continue
 
@@ -395,6 +587,7 @@ class TypeScriptParser(BaseParser):
                             rest[tail_match.end() :],
                             True,
                             next_text,
+                            call_text[closing + 1 + tail_match.end() :],
                         )
                         depth += delta
                         continue
@@ -433,6 +626,7 @@ class TypeScriptParser(BaseParser):
             if decl_match:
                 pending_arrow = None
                 is_arrow = arrow_match is not None
+                tail = self._body_tail(line, is_arrow)
                 fnode = declare_function(
                     decl_match.group("name"),
                     idx,
@@ -440,9 +634,10 @@ class TypeScriptParser(BaseParser):
                     depth + delta,
                     idx,
                     line,
-                    self._body_tail(line, is_arrow),
+                    tail,
                     is_arrow,
                     next_text,
+                    call_text[len(line) - len(tail) :] if tail else "",
                 )
                 if fn_match and fn_match.group("default"):
                     fnode.metadata["export_default"] = True
@@ -471,7 +666,10 @@ class TypeScriptParser(BaseParser):
                     parent=cls_node.id,
                 )
                 tail = self._body_tail(line, is_arrow=False)
-                self._harvest_calls(tail, mnode.id, edges)
+                if tail:
+                    self._harvest_calls(
+                        call_text[len(line) - len(tail) :], mnode.id, edges
+                    )
                 if delta > 0:
                     open_funcs.append(_OpenFunction(mnode, depth, True, False))
                 else:
@@ -482,14 +680,21 @@ class TypeScriptParser(BaseParser):
                 )
                 continue
 
-            # `export default Name;` marks an already-declared function
-            default_match = _EXPORT_DEFAULT_NAME.match(line)
+            # `export default Name;` or `export default memo(Name);` marks an
+            # already-declared function
+            default_match = _EXPORT_DEFAULT_NAME.match(
+                line
+            ) or _EXPORT_DEFAULT_WRAPPED.match(line)
             if default_match:
                 default_names.add(default_match.group("name"))
 
-            # Inside a function body → harvest call edges (best effort)
+            # Calls belong to the innermost open function. Outside every
+            # function they are still dependencies: of the class whose body
+            # this is, or of the file (inline handlers, initialisers).
             if open_funcs:
-                self._harvest_calls(line, open_funcs[-1].node.id, edges)
+                self._harvest_calls(call_text, open_funcs[-1].node.id, edges)
+            else:
+                harvest_outside_functions(call_text)
 
             # Brace tracking, then close whatever ended on this line
             depth += delta
@@ -661,20 +866,30 @@ class TypeScriptParser(BaseParser):
         return line[match.end() :] if match else ""
 
     @staticmethod
-    def _harvest_calls(text: str, caller_id: str, edges: list[Edge]) -> None:
-        """Add a CALLS edge for every call and JSX component found in ``text``."""
+    def _harvest_calls(
+        text: str, caller_id: str, edges: list[Edge], module_file: str = ""
+    ) -> None:
+        """Add a CALLS edge for every call and JSX component found in ``text``.
+
+        With ``module_file`` the call is made by the file's top-level code,
+        which is no node: the edge is marked ``module_level`` and the builder
+        turns it into a dependency of the file.
+        """
+        found: list[tuple[str, dict]] = []
         for call in _CALL.finditer(text):
-            cname = call.group("name")
-            if cname in _CALL_BLOCKLIST:
-                continue
-            edges.append(Edge(source=caller_id, target=cname, edge_type=EdgeType.CALLS))
+            if call.group("name") not in _CALL_BLOCKLIST:
+                found.append((call.group("name"), {}))
         for tag in _JSX_TAG.finditer(text):
+            found.append((tag.group("name"), {"via": "jsx"}))
+        for name, metadata in found:
+            if module_file:
+                metadata["module_level"] = module_file
             edges.append(
                 Edge(
                     source=caller_id,
-                    target=tag.group("name"),
+                    target=name,
                     edge_type=EdgeType.CALLS,
-                    metadata={"via": "jsx"},
+                    metadata=metadata,
                 )
             )
 
@@ -682,20 +897,28 @@ class TypeScriptParser(BaseParser):
     # Imports (VIBE-102)
     # ─────────────────────────────────────────────────────────────────
     def _import_edges(
-        self, source: str, rel_module: str, file_path: Path
+        self, lines: list[str], code_lines: list[str], rel_module: str, importer: str
     ) -> list[Edge]:
-        """One IMPORTS edge per import or re-export statement.
+        """One IMPORTS edge per import, re-export or require.
 
         ``metadata["names"]`` maps each local name to the name it has in the
         imported module ("default" for a default import, "*" for a namespace),
         which lets the builder resolve calls to the function they refer to.
         ``metadata["file"]`` is the importing file. A statement that brings in
         types only is marked ``type_only``; a re-export is marked ``reexport``
-        (and ``star`` for ``export * from``).
+        (and ``star`` for ``export * from``). ``code_lines`` is the code-only
+        view, used to skip statements quoted in a comment or a string.
         """
-        importer = file_path.as_posix()
+        source = "\n".join(lines)
         edges: list[Edge] = []
+
+        def starts_with(match: re.Match, words: tuple[str, ...]) -> bool:
+            line = code_lines[source.count("\n", 0, match.start())]
+            return line.lstrip().startswith(words)
+
         for match in _IMPORT_STMT.finditer(source):
+            if not starts_with(match, ("import",)):
+                continue
             src = match.group("src") or match.group("bare")
             edge = Edge(source=rel_module, target=src, edge_type=EdgeType.IMPORTS)
             edge.metadata["file"] = importer
@@ -709,6 +932,8 @@ class TypeScriptParser(BaseParser):
                     edge.metadata["type_only"] = True
             edges.append(edge)
         for match in _REEXPORT_STMT.finditer(source):
+            if not starts_with(match, ("export",)):
+                continue
             edge = Edge(
                 source=rel_module,
                 target=match.group("src"),
@@ -728,7 +953,49 @@ class TypeScriptParser(BaseParser):
                 else:
                     edge.metadata["type_only"] = True
             edges.append(edge)
+
+        # CommonJS and dynamic imports
+        named_sources: set[str] = set()
+        for match in _REQUIRE_STMT.finditer(source):
+            if not starts_with(match, ("const", "let", "var")):
+                continue
+            names = self._require_names(match.group("clause"))
+            named_sources.add(match.group("src"))
+            edges.append(
+                Edge(
+                    source=rel_module,
+                    target=match.group("src"),
+                    edge_type=EdgeType.IMPORTS,
+                    metadata={"file": importer, "names": names},
+                )
+            )
+        for number, code in enumerate(code_lines):
+            if "import(" not in code and "require(" not in code:
+                continue
+            for match in _DYNAMIC_IMPORT.finditer(lines[number]):
+                if match.group("src") not in named_sources:
+                    edges.append(
+                        Edge(
+                            source=rel_module,
+                            target=match.group("src"),
+                            edge_type=EdgeType.IMPORTS,
+                            metadata={"file": importer},
+                        )
+                    )
         return edges
+
+    @staticmethod
+    def _require_names(clause: str) -> dict[str, str]:
+        """`{ a, b: c }` or `x` on the left of a require → {local: exported}."""
+        if not clause.startswith("{"):
+            return {clause: "*"}
+        names: dict[str, str] = {}
+        for part in clause.strip("{}").split(","):
+            exported, _, local = part.partition(":")
+            exported, local = exported.strip(), local.strip()
+            if exported:
+                names[local or exported] = exported
+        return names
 
     @staticmethod
     def _import_names(clause: str) -> dict[str, str]:
@@ -956,10 +1223,3 @@ class TypeScriptParser(BaseParser):
             if cand:
                 return cand
         return ""
-
-    def _strip_comment(self, line: str) -> str:
-        # Remove `// ...` trailing comment, but preserve URLs in strings (best effort)
-        idx = line.find("//")
-        if idx >= 0 and not (line[:idx].count('"') % 2 or line[:idx].count("'") % 2):
-            return line[:idx]
-        return line
