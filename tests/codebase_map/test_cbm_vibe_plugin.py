@@ -10,6 +10,7 @@ with a bare interpreter and nothing installed.
 
 from __future__ import annotations
 
+import argparse
 import importlib.util
 import json
 import os
@@ -55,6 +56,14 @@ def _load_build_script():
     return module
 
 
+def _load_runner():
+    spec = importlib.util.spec_from_file_location("cbm_vibe_runner", RUNNER)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def _frontmatter() -> dict[str, str]:
     """Top-level frontmatter keys of SKILL.md and their raw values."""
     text = SKILL_MD.read_text(encoding="utf-8")
@@ -88,15 +97,26 @@ def _documented_commands() -> list[tuple[str, list[str]]]:
     return commands
 
 
-def _run(args: list[str], cwd: Path, **env: str) -> subprocess.CompletedProcess:
+def _run(
+    args: list[str], cwd: Path, timeout: int = 120, **env: str
+) -> subprocess.CompletedProcess:
     """Run a command with a clean environment: no PYTHONPATH, nothing extra."""
     environment = {
         key: value for key, value in os.environ.items() if key != "PYTHONPATH"
     }
     environment.update(env)
     return subprocess.run(
-        args, cwd=cwd, env=environment, capture_output=True, timeout=120, check=False
+        args,
+        cwd=cwd,
+        env=environment,
+        capture_output=True,
+        timeout=timeout,
+        check=False,
     )
+
+
+def _everything_in(folder: Path) -> list[str]:
+    return sorted(path.relative_to(folder).as_posix() for path in folder.rglob("*"))
 
 
 @pytest.fixture(scope="module")
@@ -245,14 +265,15 @@ class TestDocumentedCommands:
         _documented_commands(),
         ids=lambda value: " ".join(value)[:60] if isinstance(value, list) else value,
     )
-    def test_command_is_accepted_by_the_parser(
+    def test_command_is_accepted_by_the_parser_and_the_runner(
         self, source: str, arguments: list[str]
     ) -> None:
         try:
             args = build_parser().parse_args(arguments)
         except SystemExit:  # argparse reports a bad command line this way
             pytest.fail(f"{source}: not a valid command line: {arguments}")
-        assert args.command in {"features", "generate"}
+        assert args.command is not None
+        assert _load_runner()._refusal(args) is None, (source, arguments)
 
     def test_the_flow_in_the_skill_runs_as_written(self, app: Path) -> None:
         """Moment 1 step 5 through moment 2 step 2, with the skill's own lines."""
@@ -281,6 +302,100 @@ class TestDocumentedCommands:
         feature = status["features"][0]
         assert "app/api/bookings/[id]/route.ts" in feature["files"]["owned"]
         assert feature["criteria"][0]["status"] == "verified"
+
+        # the whole flow wrote only what the plugin's README says it writes
+        source = {path.name for path in (FIXTURE / "base").iterdir()}
+        written = {path.name for path in app.iterdir()} - source
+        assert written == {
+            ".cbm",
+            ".codebase-map-cache",
+            ".codebase-map-cache.json",
+            "docs",
+        }
+        readme = (PLUGIN / "README.md").read_text(encoding="utf-8")
+        assert "`.cbm/features.json`" in readme
+        assert "`.codebase-map-cache/`" in readme
+        assert "`.codebase-map-cache.json`" in readme
+        assert "`docs/function-map/`" in readme
+        assert [path.name for path in (app / "docs").iterdir()] == ["function-map"]
+
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+class TestRunnerScope:
+    """The skill pre-approves the runner, so the runner limits what it runs.
+
+    Whatever the runner accepts happens without the user being asked. It may
+    read the project, write the map and the snapshots into it, and keep the
+    feature store; it may not start a server, install a git hook, send a
+    notification, write to a path from the command line or delete snapshots.
+    """
+
+    REFUSED = [
+        ["mod", "serve", "--port", "0"],
+        ["mod", "status"],
+        ["mod", "enable-hooks"],
+        ["mod", "disable-hooks"],
+        ["check-staleness", "--notify"],
+        ["api-catalog", "-o", "catalog.md"],
+        ["snapshots", "clean", "--keep", "0"],
+        ["diff", "HEAD"],
+        ["coverage", "coverage.json"],
+    ]
+
+    def test_every_command_of_the_tool_is_allowed_or_refused_on_purpose(self) -> None:
+        """A command added to the CLI later must be put in one of the two sets."""
+        runner = _load_runner()
+        subcommands = next(
+            action
+            for action in build_parser()._actions
+            if isinstance(action, argparse._SubParsersAction)
+        )
+        assert not runner.ALLOWED_COMMANDS & runner.REFUSED_COMMANDS
+        assert runner.ALLOWED_COMMANDS | runner.REFUSED_COMMANDS == set(
+            subcommands.choices
+        )
+
+    @pytest.mark.parametrize("arguments", REFUSED, ids=" ".join)
+    def test_a_refused_command_changes_nothing(
+        self, app: Path, arguments: list[str]
+    ) -> None:
+        (app / ".git" / "hooks").mkdir(parents=True)
+        before = _everything_in(app)
+
+        # ``mod serve`` would run until stopped; a short timeout fails the test
+        # instead of hanging it if the refusal is ever lost.
+        result = _run([sys.executable, str(RUNNER), *arguments], app, timeout=30)
+
+        assert result.returncode == 2, (result.stdout, result.stderr)
+        assert b"is not available from the CBM-VIBE skill" in result.stdout
+        assert _everything_in(app) == before
+
+    def test_snapshots_can_be_listed_but_not_removed(self, app: Path) -> None:
+        tool = [sys.executable, str(RUNNER)]
+        made = _run(tool + ["generate", "--label", "truoc-1"], app)
+        assert made.returncode == 0, (made.stdout, made.stderr)
+        snapshots = app / ".codebase-map-cache" / "snapshots"
+        kept = _everything_in(snapshots)
+        assert kept
+
+        listed = _run(tool + ["snapshots", "list"], app)
+        assert listed.returncode == 0, (listed.stdout, listed.stderr)
+        assert b"truoc-1" in listed.stdout
+
+        removed = _run(tool + ["snapshots", "clean", "--keep", "0"], app)
+        assert removed.returncode == 2
+        assert _everything_in(snapshots) == kept
+
+    def test_asking_for_help_or_the_version_still_works(self, app: Path) -> None:
+        for arguments in (["--version"], ["--help"], ["features", "--help"]):
+            result = _run([sys.executable, str(RUNNER), *arguments], app)
+            assert result.returncode == 0, (arguments, result.stdout, result.stderr)
+
+        # no command at all: the tool itself answers with its usage text
+        bare = _run([sys.executable, str(RUNNER)], app)
+        assert bare.returncode == 1
+        assert b"usage: codebase-map" in bare.stdout
+        assert b"not available" not in bare.stdout
 
 
 class TestAppendingFiles:
@@ -317,6 +432,16 @@ class TestBuild:
         assert (vendor / "codebase_map" / "exporters" / "d3.v7.min.js").is_file()
         assert "codebase_map" in (vendor / "VERSION").read_text(encoding="utf-8")
         assert (plugin / "LICENSE").is_file()
+
+    def test_plugin_leaves_out_the_pane_server(self, built: dict[str, Path]) -> None:
+        """The pane's web server and hook installer are not part of the skill."""
+        vendor = built["plugin"] / "skills" / "cbm-vibe" / "scripts" / "vendor"
+        assert (REPO_ROOT / "codebase_map" / "mod" / "server.py").is_file()
+        assert not (vendor / "codebase_map" / "mod").exists()
+        for archive in (built["plugin_zip"], built["skill_zip"]):
+            with zipfile.ZipFile(archive) as bundle:
+                inside = [name for name in bundle.namelist() if "/mod/" in name]
+            assert inside == [], archive.name
 
     def test_no_build_leftovers(self, built: dict[str, Path]) -> None:
         names = {path.name for path in built["plugin"].rglob("*")}
@@ -381,6 +506,14 @@ class TestBundledTool:
         # nothing is written into the project by just looking
         assert not (app / ".cbm").exists()
         assert not (app / "docs").exists()
+
+    def test_pane_server_cannot_be_reached_from_the_bundle(
+        self, built: dict[str, Path], app: Path
+    ) -> None:
+        for arguments in (["mod", "status"], ["mod", "serve", "--port", "0"]):
+            result = _run(self._tool(built) + arguments, app, timeout=30)
+            assert result.returncode == 2, (result.stdout, result.stderr)
+            assert b"is not available from the CBM-VIBE skill" in result.stdout
 
     def test_the_package_used_is_the_bundled_copy(
         self, built: dict[str, Path], app: Path

@@ -14,6 +14,7 @@ thoát khác 0 khi lỗi; với `--json`, lỗi có dạng `{"error": "..."}`.
 - [generate --label](#generate---label) — chụp trạng thái code
 - [features impact](#features-impact) — thay đổi đụng tới gì
 - [Cách công cụ xác định "liên quan"](#cách-công-cụ-xác-định-liên-quan)
+- [Lệnh nào chạy được](#lệnh-nào-chạy-được)
 - [Những điều công cụ không thấy](#những-điều-công-cụ-không-thấy)
 
 ## features status
@@ -88,6 +89,13 @@ Chụp trạng thái code hiện tại dưới một nhãn. Chụp "trước" kh
 chí, chụp "sau" khi sửa xong. Hai nhãn dùng chung đuôi là `id` của tiêu chí
 đầu tiên trong lần yêu cầu đó.
 
+Khi không nhớ đã chụp những nhãn nào (ví dụ tiếp tục một việc từ cuộc trò
+chuyện trước), xem danh sách:
+
+```bash
+CBM snapshots list
+```
+
 ## features impact
 
 ```bash
@@ -120,6 +128,16 @@ của một tiêu chí hết hạn khi bất kỳ phần nào trong số đó th
 có thể làm đổi cách chạy. Đổi thụt lề, dòng import hay khai báo kiểu thì
 không làm hết hạn. Mọi thay đổi khác đều làm hết hạn, kể cả việc một công cụ
 định dạng tự ngắt lại dòng: khi không chắc, công cụ chọn yêu cầu kiểm lại.
+
+## Lệnh nào chạy được
+
+Skill được cấp sẵn quyền chạy công cụ này, nên công cụ chỉ nhận những lệnh
+đọc dự án, ghi sơ đồ và ảnh chụp vào dự án, và giữ kho tính năng:
+`generate`, `features`, `snapshots list`, `snapshot-diff`, `summary`,
+`query`, `impact`, `search`. Nó không mở kết nối mạng, không cài gì vào
+git và không xoá ảnh chụp. Lệnh khác bị từ chối với mã thoát 2 và dòng
+`is not available from the CBM-VIBE skill`. Khi gặp dòng đó, đừng tìm cách
+chạy vòng; việc đó nằm ngoài phần skill này làm.
 
 ## Những điều công cụ không thấy
 
