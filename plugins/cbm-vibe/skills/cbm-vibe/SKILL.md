@@ -57,7 +57,8 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/cbm.py" <lệnh>
   [references/lenh.md](references/lenh.md).
 
 Công cụ lưu ba thứ trong dự án: `.cbm/features.json` (tính năng, tiêu chí,
-bằng chứng), `.codebase-map-cache/` (ảnh chụp code trước và sau) và
+bằng chứng), `.codebase-map-cache/` cùng file `.codebase-map-cache.json`
+(ảnh chụp code trước và sau, và kết quả đọc code để lần sau nhanh hơn) và
 `docs/function-map/` (bản đồ dạng trang web). Đừng xoá `.cbm/`.
 
 ## Khoảnh khắc 1 — Chốt yêu cầu
@@ -255,7 +256,8 @@ Nếu người dùng muốn nhìn sơ đồ, chạy `generate` rồi mở
 Máy không có Python, hoặc lệnh báo lỗi mà bạn không sửa được:
 
 - Vẫn làm khoảnh khắc 1 bằng lời: viết tiêu chí, chờ chốt.
-- Sau khi sửa, vẫn viết báo cáo bốn phần, nhưng mở đầu bằng đúng câu này:
+- Sau khi sửa, vẫn viết báo cáo theo bố cục của khoảnh khắc 2 (dòng kết
+  luận rồi ba câu hỏi), nhưng mở đầu bằng đúng câu này:
   "Lần này tôi chưa đối chiếu bằng máy được, nên phần dưới là theo những gì
   tôi tự ghi nhận." Mọi tiêu chí khi đó là **Chưa kiểm**.
 - Nói một lần, ngắn gọn, lý do và cách khắc phục (ví dụ cần cài Python). Chỉ
