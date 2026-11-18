@@ -54,7 +54,8 @@ CBM features add --id dat-lich --append --files <mẫu mới>     # thêm file, 
   mẫu có `*` và `?`. Dấu ngoặc vuông được hiểu nguyên văn, nên
   `"app/api/bookings/[id]/route.ts"` là đúng file đó. Luôn đặt mẫu trong
   dấu nháy.
-- Một file được phép thuộc nhiều tính năng.
+- Một file được phép thuộc nhiều tính năng. Điểm nhận dữ liệu mà màn hình
+  của hai tính năng cùng gọi thì ghi vào cả hai.
 - Kết quả có `matched_files` (file khớp) và `unmatched_patterns` (mẫu không
   khớp file nào — thường là gõ sai đường dẫn; hãy sửa).
 
@@ -112,6 +113,7 @@ CBM features impact --baseline truoc-dat-lich-4 --current sau-dat-lich-4 --json
 | `features[].indirect.functions[]` | Đoạn xử lý của tính năng khác mà tính năng này gọi tới, vừa bị sửa |
 | `features[].criteria[]` | Từng tiêu chí với `status_before` và `status_after` |
 | `unowned_changes[]` | File bị đổi mà không thuộc tính năng nào; `used_by` là các tính năng đang dùng nó |
+| `unowned_changes[].behaviour_changed` | `false`: chỉ đổi khai báo kiểu, dòng import hoặc thụt lề, cách chạy không đổi. `true`: có code chạy bị đổi. Đừng suy điều này từ `module_level_changed`, vì trường đó vẫn là `false` khi chỉ một đoạn xử lý trong file bị sửa |
 | `summary.touched_direct`, `touched_indirect` | Danh sách `id` tính năng bị đụng |
 | `summary.criteria_to_recheck` | Số tiêu chí đang ở trạng thái cần kiểm lại |
 

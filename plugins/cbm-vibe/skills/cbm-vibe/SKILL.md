@@ -48,6 +48,10 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/cbm.py" <lệnh>
 ```
 
 - Chạy lệnh tại **thư mục gốc của dự án** người dùng.
+- Mỗi lần gọi là **một lệnh viết đầy đủ** như mẫu trên. Đừng cất lệnh vào
+  biến shell và đừng nối thêm `|`, `&&` hay lệnh khác: lệnh viết đúng mẫu
+  thì chạy luôn, lệnh viết khác đi có thể làm hiện câu hỏi cấp quyền mà
+  người dùng không hiểu. Kết quả dài cũng cứ để nguyên mà đọc.
 - Nếu `${CLAUDE_SKILL_DIR}` ở trên vẫn là chữ nguyên văn, hãy thay nó bằng
   thư mục chứa file SKILL.md này: công cụ nằm ở `scripts/cbm.py` ngay cạnh
   file này.
@@ -88,9 +92,12 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/cbm.py" features add --id dat-lich \
 Mỗi tính năng gồm: màn hình, điểm nhận dữ liệu mà màn hình gọi tới,
 component riêng, và file xử lý riêng của nó. Công cụ không tự thấy việc một
 màn hình gọi `fetch("/api/...")`, nên **file của điểm nhận dữ liệu phải ghi
-vào cùng tính năng với màn hình gọi nó**. File dùng chung (kết nối dữ liệu,
-khai báo kiểu, khung trang) không cần gán. `id` chỉ gồm chữ thường không
-dấu, số và gạch nối.
+vào cùng tính năng với màn hình gọi nó**. Một file được phép thuộc nhiều
+tính năng: điểm nhận dữ liệu mà màn hình của hai tính năng cùng gọi thì ghi
+vào **cả hai**. Bỏ sót thì khi phần xử lý đứng sau nó bị sửa, tính năng còn
+lại sẽ không được báo kiểm lại. File dùng chung (kết nối dữ liệu, khai báo
+kiểu, khung trang) không cần gán. `id` chỉ gồm chữ thường không dấu, số và
+gạch nối.
 
 **Bước 2. Viết tiêu chí nghiệm thu.** Mở bằng "Em hiểu yêu cầu của anh như
 sau. Làm xong thì phải đúng N điều này:" (xưng hô theo người dùng), rồi 2
@@ -190,8 +197,10 @@ trăm:
   thử và thấy sai.
 
 1. **AI đã làm gì** — một câu đếm ("Sửa 4 chỗ trong 2 tính năng"), rồi mỗi
-   tính năng bị sửa một dòng lời thường. Với tính năng nằm ngoài phạm vi của
-   yêu cầu, thêm câu "Anh/chị không yêu cầu việc này."
+   tính năng bị sửa một dòng lời thường. Số tính năng là số tính năng có
+   `touched` là `direct`; số chỗ là số việc bạn kể ở các dòng ngay dưới.
+   Với tính năng nằm ngoài phạm vi của yêu cầu, thêm câu "Anh/chị không
+   yêu cầu việc này."
 2. **Đúng yêu cầu chưa** — mỗi tiêu chí vừa chốt một dòng, kèm trạng thái
    **Có bằng chứng**, **Cần kiểm lại** hoặc **Chưa kiểm**, và nguồn bằng
    chứng ("Kiểm thử tự động: đạt", "Anh tự thử ngày 15/11", "Chưa có bằng
@@ -214,7 +223,9 @@ trăm:
      đổi (chỉ đổi thụt lề, dòng import hoặc khai báo kiểu); nói vậy, không
      báo động.
    - Mỗi mục trong `unowned_changes` (phần dùng chung, chưa thuộc tính năng
-     nào): một câu nói đã đổi gì và những tính năng nào đang dùng nó.
+     nào): một câu nói đã đổi gì và những tính năng nào đang dùng nó
+     (`used_by`). Chỉ nói phần đó không làm đổi cách chạy khi
+     `behaviour_changed` của mục ấy là `false`.
    - Không có gì ngoài phạm vi bị đụng: viết "Không đụng tới phần nào khác."
 
 Cuối báo cáo ghi một dòng: phần "Đúng yêu cầu chưa" và "Có đụng gì ngoài yêu
