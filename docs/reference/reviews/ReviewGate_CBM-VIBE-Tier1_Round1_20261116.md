@@ -154,3 +154,32 @@ This is below the 90 that the gate asks for, and it is reported as such rather t
 ## Merge order
 
 `#145 → #146 → #147 → #149 → #150 → #151 → #153`, or #151 alone and then #153. PRs #156 and #157 (CBM Mod, another session) also change `codebase_map/cli.py` and `project/board.html`; whichever stack merges second has to be rebased.
+
+## Addendum — 18/11/2026, after `main` took VIBE-106
+
+This section records what changed after the rounds above. It replaces the merge order and corrects one sentence of the verdict.
+
+**Merge with `main`.** VIBE-106 (CBM Mod) was merged into `main` on 16/11 and touched `codebase_map/cli.py`, the README and the board. #151 now contains `main` up to #168. The one hand-resolved file, `cli.py`, keeps both sides: `build_parser()` with the `features` group, and the `mod` group with `_cmd_mod`. On the merged tree: pinned black, isort and flake8 are clean, 554 tests pass on Python 3.9.6, 3.11.15, 3.12.13 and 3.14.3, and CI is green on #151.
+
+**Finding 11 — fixed.** The skill pre-approves `python3 …/scripts/cbm.py *`. The runner passed every argument through and the build copied the whole package, so after the merge the pre-approved command could start the pane's web server and install a git post-commit hook, and the plugin archive carried that code. Older commands had the same shape on a smaller scale (`check-staleness --notify` posts to Telegram, `api-catalog -o` writes to any path, `snapshots clean` deletes snapshots). The runner now parses the command line with the tool's own parser and runs only `generate`, `features`, `query`, `impact`, `summary`, `search`, `snapshot-diff` and `snapshots list`; the build leaves `codebase_map/mod` out. A test fails when the CLI gains a command that is in neither the allowed nor the refused set. With the previous runner and build script, 29 of the 62 plugin tests fail.
+
+**Second stand-in run, with the final skill.** A subagent played Claude through the three moments on a fresh copy of the sample app. Turn 1 stopped for agreement with four criteria and the three "reaches" lines; turn 2 produced the approved layout (verdict line, three questions, "Tự kiểm trong 1 phút") with all four criteria "Chưa kiểm" and no evidence recorded; turn 3 listed six features with counts per state. Re-running `features impact` on that project gave the same picture as the report. The run still does not show whether Claude triggers the skill from a user's words.
+
+**What the debrief exposed — fixed in #151.**
+
+| Gap | Fix |
+|---|---|
+| An endpoint called by screens of two features was listed in one feature only | SKILL.md: list it in both. A test pins the gap and the remedy |
+| The agent read `module_level_changed: false` on a shared file as "behaviour unchanged" | `unowned_changes[]` now carries `behaviour_changed`; the skill allows that sentence only when it is `false` |
+| Commands kept in a shell variable and piped, which would not match the pre-approved command | SKILL.md: one full command per call |
+| The count in "AI đã làm gì" was undefined | SKILL.md defines it |
+
+The three turns ran before these four fixes; the run was not repeated afterwards.
+
+**Correction to the verdict.** "No known false-reassurance case remains open" no longer holds as written. One path is known and open: the tool does not follow `fetch("/api/…")`. If an endpoint file is listed in only one of the features whose screens call it, an edit behind the endpoint leaves the other feature's evidence at "verified". Reproduced on the trial project: the criterion stayed `verified`; with the endpoint file added to the second feature it became `needs_recheck`. This is mitigated by an instruction, not by the tool. Following fetch URLs to route files is the first thing to build in tier 2.
+
+**Score.** Not re-computed. The three notes above stand, and the open path in the previous paragraph is a fourth.
+
+**Outside this stack.** `tests/codebase_map/test_mod_server.py::TestEndpoints::test_status` (VIBE-106) timed out once on CI (Python 3.10, #153): it allows 3 seconds for a request whose handler calls `gh` over the network. It passed on re-run.
+
+**Merge order, replacing the section above.** #151 first, with a merge commit as for earlier PRs; #145, #146, #147, #149 and #150 are contained in it and GitHub marks them merged. #147, #149 and #150 on their own conflict with `main` in `codebase_map/cli.py`. Then #153, #166, #167.

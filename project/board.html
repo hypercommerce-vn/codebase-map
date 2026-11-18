@@ -786,7 +786,7 @@ a:hover { text-decoration: underline; }
       </div>
       <p>Hướng mới CEO chốt 12–13/11/2026: giúp người không rành kỹ thuật kiểm soát ứng dụng do AI viết. Lõi chạy không cần cài · phát hiện thay đổi theo nội dung · kho tính năng, tiêu chí, bằng chứng · plugin <code>cbm-vibe</code> với skill tiếng Việt. <a href="#cbm-vibe-t1"><strong>Task Board ↓</strong></a></p>
       <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#0ea5e9"></div></div>
-      <div class="progress-label"><strong>0/8 SP đã merge</strong> · 7 SP code xong, nằm trong 7 PR đang mở (#145 #146 #147 #149 #150 #151 #153), CI xanh cả 7 · VIBE-105 (1 SP) chờ CEO bấm thử trên giao diện · 420 test · đã qua một vòng rà soát độc lập</div>
+      <div class="progress-label"><strong>0/8 SP đã merge</strong> · 7 SP code xong; toàn bộ code nằm trong PR #151, đã gộp với <code>main</code> ngày 18/11 (sau VIBE-106), CI xanh · VIBE-105 (1 SP) chờ CEO bấm thử trên giao diện · 554 test · đã qua một vòng rà soát độc lập và hai lượt chạy thử với agent phụ đóng vai Claude</div>
     </div>
   </div>
 
@@ -974,6 +974,24 @@ a:hover { text-decoration: underline; }
       <tr>
         <td><a href="../docs/active/cbm-claude-integration/Phase2_MCP_Explainer.md" target="_blank">MCP_Explainer</a></td>
         <td>Slash Command vs MCP auto-invoke (retention 15% → 50%)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- HC-AI | ticket: FDD-TOOL-CODEMAP — CBM-VIBE docs (15/11/2026) -->
+  <h3 style="margin-top:28px; font-size:15px;">🧭 Tài liệu CBM-VIBE — <code>docs/active/cbm-vibecoding/</code></h3>
+  <table style="margin-top:10px;">
+    <thead>
+      <tr><th>Tài liệu</th><th>Mục đích</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="../docs/active/cbm-vibecoding/CBM-VIBE-Chan-Dung-Khach-Hang.md" target="_blank">Chan_Dung_Khach_Hang</a></td>
+        <td>Chân dung 2 tập khách hàng (chủ kinh doanh tự xây công cụ · người mới học để làm nghề), hệ quả cho sản phẩm, câu hỏi cần kiểm chứng — nháp v0.1 15/11/2026, chờ CEO duyệt</td>
+      </tr>
+      <tr>
+        <td><a href="../design-preview/active/CBM-MOD-VIBE-106-design.html" target="_blank">CBM-MOD-VIBE-106 Design</a></td>
+        <td>🆕 <strong>VIBE-106 CBM Mod + Claude Replay</strong> (renamed từ VIBE-105 theo CEO decision 16/11/2026 — mã VIBE-105 để dành cho ticket "cài plugin Chat/Cowork/Code" PR #153) — biến CBM thành mod gắn Claude: status line always-on · pane 3-tab (Graph/Timeline/Replay) · toast · hooks. Tính năng chính: <em>Claude Replay</em> tua lại từng step Claude đã làm sync với graph. 21 SP tổng, 7 days. <strong>Tiến độ:</strong> ✅ D1 server + status API (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/159" target="_blank">PR #159</a>, 3 SP) · ✅ D2 pane shell + Graph tab (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/160" target="_blank">PR #160</a>, 3 SP) · ✅ D3 Timeline tab + snapshot diff (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/161" target="_blank">PR #161</a>, 3 SP) · ✅ D4 Claude Replay parser (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/162" target="_blank">PR #162</a>, 4 SP) · ✅ D5 Replay player UI + Graph sync + redaction (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/163" target="_blank">PR #163</a>, 4 SP) · ✅ D6 Hooks + Toast (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/164" target="_blank">PR #164</a>, 3 SP) · ✅ D7 polish + README + design v1.0 (<a href="https://github.com/hypercommerce-vn/codebase-map/pull/165" target="_blank">PR #165</a>, 1 SP) → <strong>21/21 SP sprint complete</strong> · 🎯 <strong>Review Gate Round 1 = 90.4% SHIPIT+NOTE</strong> (<a href="../docs/reference/reviews/ReviewGate_VIBE-106_Round1_20261116.md" target="_blank">report</a>) · 🚀 <strong>MERGED TO MAIN 16/11/2026</strong> qua #159 (D1) + #165 (D2-D7 aggregate, superseded #160-164); main tip <code>0b6e712</code>. <br><em>Note: PR cũ #156/#157/#158 bị GitHub close tự động khi branch rename; nội dung và history giữ nguyên ở PR mới.</em></td>
       </tr>
     </tbody>
   </table>
@@ -1707,7 +1725,7 @@ a:hover { text-decoration: underline; }
     <br>
     <strong>📦 Phạm vi tầng 1:</strong> skill chạy ở Chat, Cowork và Claude Code, trình bày bằng chữ trong cuộc trò chuyện. Hook (báo cáo tự động) và mod (khung bên cạnh) là tầng 2 và 3.
     <br>
-    <strong>🔎 Cập nhật:</strong> 16/11/2026. Chưa PR nào được merge.
+    <strong>🔎 Cập nhật:</strong> 18/11/2026. Chưa PR nào của chuỗi này được merge.
   </div>
 
   <table>
@@ -1766,7 +1784,7 @@ a:hover { text-decoration: underline; }
         <td>1,5</td>
         <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/151" target="_blank">#151</a></td>
         <td><code>claude plugin validate</code> đạt; chạy trọn vòng "chốt yêu cầu → báo cáo thay đổi" trên dự án mẫu</td>
-        <td>Validate đạt · 47 test · bố cục báo cáo khớp design preview đã duyệt · trọn vòng mới chạy với <strong>agent phụ đóng vai Claude</strong>; chưa chạy trong Claude thật vì phiên dòng lệnh hết hạn đăng nhập</td>
+        <td>Validate đạt · 62 test · bố cục báo cáo khớp design preview đã duyệt · lệnh mà skill được cấp quyền sẵn chỉ đọc dự án và giữ kho tính năng, không mở máy chủ, không cài git hook · trọn vòng đã chạy hai lần với <strong>agent phụ đóng vai Claude</strong> (15–16/11 và 18/11); chưa chạy trong Claude thật vì phiên dòng lệnh hết hạn đăng nhập</td>
         <td><span class="badge open">🟡 Chờ duyệt</span></td>
       </tr>
       <tr>
@@ -1787,8 +1805,10 @@ a:hover { text-decoration: underline; }
     <li><strong>Chưa cài vào tài khoản của CEO.</strong> Plugin cài vào tài khoản sẽ xuất hiện cả trong Claude Code và chen vào các phiên làm việc hằng ngày của anh; hướng dẫn VIBE-105 có hai cách thử tránh việc đó.</li>
     <li><strong>Giả định rủi ro nhất chưa được thử:</strong> người không đọc được code có hiểu báo cáo và làm theo không. Cần 5 người đúng chân dung thử báo cáo mẫu; đạt nếu 4/5 người kể lại đúng AI vừa làm gì.</li>
     <li><strong>Chưa quyết:</strong> ba file tài liệu training (Handbook, Slides, Training Plan) có đưa lên repo công khai hay không. Hiện chỉ nằm ở máy.</li>
-    <li><strong>Trùng mã việc:</strong> VIBE-105 đang được dùng cho hai việc khác nhau: "cài thử plugin ở Chat, Cowork, tab Code" (bảng trên, PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/153" target="_blank">#153</a>) và "CBM Mod + Claude Replay" (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/156" target="_blank">#156</a>, <a href="https://github.com/hypercommerce-vn/codebase-map/pull/157" target="_blank">#157</a>, do phiên khác làm). Cần CEO chọn mã cho một trong hai.</li>
-    <li><strong>Thứ tự merge với nhánh mod:</strong> chuỗi PR này và PR #156, #157 cùng sửa <code>codebase_map/cli.py</code> và board. Chuỗi nào merge sau sẽ phải rebase và gộp tay hai file đó.</li>
+    <li><strong>Mã việc (đã xử lý 16/11):</strong> VIBE-105 là việc cài thử plugin ở Chat, Cowork, tab Code (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/153" target="_blank">#153</a>). Việc "CBM Mod + Claude Replay" đã đổi mã thành VIBE-106 và đã vào <code>main</code> (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/159" target="_blank">#159</a>, <a href="https://github.com/hypercommerce-vn/codebase-map/pull/165" target="_blank">#165</a>).</li>
+    <li><strong>Gộp với VIBE-106 (đã xử lý 18/11):</strong> VIBE-106 vào <code>main</code> trước. PR #151 đã gộp <code>main</code> và giữ đủ lệnh của cả hai bên (<code>features</code> và <code>mod</code>). Các PR #147, #149, #150 đứng riêng thì xung đột với <code>main</code> ở <code>codebase_map/cli.py</code>; nội dung của chúng nằm trọn trong #151 nên không cần gộp riêng.</li>
+    <li><strong>Chỗ hở đã biết, chưa sửa tận gốc:</strong> công cụ chưa tự nối màn hình với điểm nhận dữ liệu gọi qua địa chỉ. Lần chạy thử ngày 18/11 cho thấy hệ quả: khi một điểm nhận dữ liệu chỉ được ghi vào một tính năng, sửa phần xử lý đứng sau nó không làm tiêu chí của tính năng khác cũng gọi điểm đó chuyển sang "cần kiểm lại". Skill đã có chỉ dẫn ghi vào cả hai tính năng và có test ghi lại; sửa tận gốc là việc nên làm đầu tiên ở tầng 2.</li>
+    <li><strong>Test chập chờn của VIBE-106:</strong> <code>test_mod_server.py::TestEndpoints::test_status</code> quá thời gian chờ một lần trên CI (Python 3.10, PR #153) vì gọi <code>gh</code> qua mạng với hạn 3 giây; chạy lại thì đạt. Không thuộc code CBM-VIBE.</li>
   </ul>
 
   <h3 style="margin-top:20px; font-size:15px;">🔗 Tài liệu</h3>
@@ -2091,6 +2111,10 @@ a:hover { text-decoration: underline; }
     <div class="tl-item">
       <div class="tl-date">16/11/2026</div>
       <div class="tl-content"><strong>Rà soát độc lập:</strong> một agent không tham gia viết code tái hiện được 10 trường hợp công cụ vẫn báo "có bằng chứng" dù code liên quan đã đổi hành vi (URL trong template literal làm sai điểm kết thúc hàm, thẻ component bẻ dòng, thụt lề Python, lời gọi ở ngoài hàm, bí danh import, app nằm trong thư mục con…). Đã sửa cả 10, mỗi cái có test tái hiện (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/151" target="_blank">#151</a>, 420 test). Skill được chỉnh cho khớp design preview đã duyệt. Chi tiết: <a href="../docs/reference/reviews/ReviewGate_CBM-VIBE-Tier1_Round1_20261116.md" target="_blank">báo cáo review gate</a>.<br><strong>Chờ CEO:</strong> (1) duyệt và merge chuỗi PR tầng 1; (2) bấm thử plugin ở Chat, Cowork, tab Code theo <a href="../docs/active/cbm-vibecoding/CBM-VIBE-Cai-Thu.md" target="_blank">hướng dẫn VIBE-105</a> (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/153" target="_blank">#153</a>); (3) gửi khảo sát 3 câu cho khách và chọn 5 người thử báo cáo mẫu.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">18/11/2026</div>
+      <div class="tl-content"><strong>Gộp với VIBE-106 và chạy thử lại.</strong> PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/151" target="_blank">#151</a> gộp <code>main</code> (đã có CBM Mod); 554 test đạt trên Python 3.9, 3.11, 3.12, 3.14 và CI xanh. Hai bản sửa trong ngày: (1) lệnh mà skill được cấp quyền sẵn chỉ còn chạy được phần đọc dự án và giữ kho tính năng. Trước đó, sau khi gộp, lệnh này chạy được cả máy chủ khung bên cạnh và lệnh cài git hook mà không hỏi người dùng; bản đóng gói plugin cũng không còn mang code máy chủ đó. (2) Một agent phụ đóng vai Claude chạy đủ ba khoảnh khắc với bản skill cuối: báo cáo đúng bố cục đã duyệt, khớp kết quả công cụ khi chạy lại. Phần hỏi lại sau đó lộ ra bốn chỗ hở trong chỉ dẫn, đã sửa; quan trọng nhất: điểm nhận dữ liệu mà hai tính năng cùng gọi phải ghi vào cả hai, nếu không công cụ báo "có bằng chứng" sai.</div>
     </div>
   </div>
 
@@ -2755,7 +2779,7 @@ a:hover { text-decoration: underline; }
       </tr>
       <!-- HC-AI | ticket: FDD-TOOL-CODEMAP — CBM-VIBE tier 1 status sync (16/11/2026) -->
       <tr style="background:#e0f2fe;">
-        <td colspan="5" style="text-align:center; font-weight:700; color:#075985; font-size:13px;">CBM-VIBE · Tầng 1 (12–16/11/2026) — 7 PR nối tiếp nhau, merge theo thứ tự từ trên xuống; hoặc chỉ merge #151 rồi #153</td>
+        <td colspan="5" style="text-align:center; font-weight:700; color:#075985; font-size:13px;">CBM-VIBE · Tầng 1 (12–18/11/2026) — merge #151 (chứa trọn #145–#150; merge bằng nút Merge thường thì GitHub tự chuyển các PR đó sang Merged), rồi #153, #166, #167</td>
       </tr>
       <tr>
         <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/145" target="_blank">#145</a></td>
@@ -2776,27 +2800,27 @@ a:hover { text-decoration: underline; }
         <td>feat(config): VIBE-101 run without a config file and without PyYAML</td>
         <td><code>feat/vibe-101-zero-install-core</code></td>
         <td>TechLead · 1,5 SP · app mẫu <code>so-dat-lich</code> · 19 test mới</td>
-        <td><span class="badge open">🟡 Chờ CEO duyệt · CI xanh</span></td>
+        <td><span class="badge open">🟡 CI xanh · đứng riêng thì xung đột với main, nội dung đã nằm trong #151</span></td>
       </tr>
       <tr>
         <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/149" target="_blank">#149</a></td>
         <td>feat(diff): VIBE-102 report function-body and file changes</td>
         <td><code>feat/vibe-102-content-change-detection</code></td>
         <td>TechLead · 2 SP · parser TS viết lại phần phạm vi hàm · 72 test mới</td>
-        <td><span class="badge open">🟡 Chờ CEO duyệt · CI xanh</span></td>
+        <td><span class="badge open">🟡 CI xanh · đứng riêng thì xung đột với main, nội dung đã nằm trong #151</span></td>
       </tr>
       <tr>
         <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/150" target="_blank">#150</a></td>
         <td>feat(features): VIBE-103 features, acceptance criteria and evidence</td>
         <td><code>feat/vibe-103-feature-store</code></td>
         <td>TechLead · 2 SP · lệnh <code>features</code> · 72 test mới</td>
-        <td><span class="badge open">🟡 Chờ CEO duyệt · CI xanh</span></td>
+        <td><span class="badge open">🟡 CI xanh · đứng riêng thì xung đột với main, nội dung đã nằm trong #151</span></td>
       </tr>
       <tr>
         <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/151" target="_blank">#151</a></td>
         <td>feat(vibe): CBM-VIBE tier 1 — zero-install core, content diff, feature store, cbm-vibe plugin</td>
         <td><code>feat/vibe-104-cbm-vibe-plugin</code></td>
-        <td>TechLead · VIBE-104 1,5 SP · plugin <code>cbm-vibe</code> · chứa cả chuỗi #145–#150 và bản sửa sau rà soát độc lập · 92 test mới</td>
+        <td>TechLead · VIBE-104 1,5 SP · plugin <code>cbm-vibe</code> · chứa cả chuỗi #145–#150, bản sửa sau rà soát độc lập, bản gộp với <code>main</code> sau VIBE-106 và hai bản sửa ngày 18/11 (giới hạn lệnh mà skill được chạy; bốn chỗ hở lộ ra khi chạy thử) · cả repo 554 test</td>
         <td><span class="badge open">🟡 Chờ CEO duyệt · CI xanh</span></td>
       </tr>
       <tr>
@@ -2805,6 +2829,20 @@ a:hover { text-decoration: underline; }
         <td><code>docs/vibe-105-install-test</code></td>
         <td>PM · hướng dẫn cài thử + bảng kết quả chờ CEO điền</td>
         <td><span class="badge open">🟡 Chờ CEO duyệt · CI xanh</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/166" target="_blank">#166</a></td>
+        <td>chore(board): CBM-VIBE tier 1 status, review gate report and corrections</td>
+        <td><code>chore/vibe-tier1-status-sync</code></td>
+        <td>PM · board, BRIEF, báo cáo review gate, sửa mục "3 plugins LIVE"</td>
+        <td><span class="badge open">🟡 Chờ CEO duyệt</span></td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/167" target="_blank">#167</a></td>
+        <td>chore(board): put the board's sections into reading order</td>
+        <td><code>chore/board-section-order</code></td>
+        <td>PM · sắp xếp các mục của board theo phương án đã duyệt tháng 4, bằng <code>scripts/reorder_board.py</code></td>
+        <td><span class="badge open">🟡 Chờ CEO duyệt</span></td>
       </tr>
     </tbody>
   </table>
