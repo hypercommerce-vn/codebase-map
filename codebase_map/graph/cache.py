@@ -22,6 +22,7 @@ Cache format (JSON):
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 from dataclasses import dataclass, field
@@ -30,7 +31,11 @@ from typing import Any
 
 from codebase_map.graph.models import Edge, EdgeType, LayerType, Node, NodeType
 
-CACHE_VERSION = "1.0"
+# VIBE-102: bumped from 1.0 — cached nodes now carry a body fingerprint and an
+# end line, so caches written by older versions must be rebuilt.
+# VIBE-103: 1.2 — cached import edges now name the importing file.
+# 1.3 — fingerprints keep line breaks; calls outside functions are recorded.
+CACHE_VERSION = "1.3"
 CACHE_FILENAME = ".codebase-map-cache.json"
 
 
@@ -96,7 +101,7 @@ class BuildCache:
             return False
 
         try:
-            with open(cache_path) as f:
+            with open(cache_path, encoding="utf-8") as f:
                 data = json.load(f)
 
             # Validate cache version and project
@@ -143,7 +148,7 @@ class BuildCache:
 
         try:
             cache_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(cache_path, "w") as f:
+            with open(cache_path, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=None, separators=(",", ":"))
             return True
         except OSError as e:
@@ -205,10 +210,12 @@ class BuildCache:
         edges: list[Edge],
     ) -> None:
         """Update cache entry for a file."""
+        # A copy: later build steps add to node metadata (flows from the
+        # config, for one), and that must not end up in the cache.
         self._entries[file_path] = CacheEntry(
             file_hash=content_hash,
-            nodes=[n.to_dict() for n in nodes],
-            edges=[e.to_dict() for e in edges],
+            nodes=copy.deepcopy([n.to_dict() for n in nodes]),
+            edges=copy.deepcopy([e.to_dict() for e in edges]),
         )
 
     def remove_stale(self, current_files: set[str]) -> int:
