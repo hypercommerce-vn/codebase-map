@@ -54,7 +54,8 @@ Nếu đây là lần đầu dùng với ứng dụng này, thêm một dòng tr
 Kết quả `features impact` của ví dụ này: Đặt lịch `direct` (trong phạm vi
 yêu cầu); Nhắc lịch `direct` dù không được yêu cầu, hai tiêu chí của nó
 chuyển từ `verified` sang `needs_recheck`; ba tính năng còn lại `none`; một
-file dùng chung bị đổi (`unowned_changes`). Dự án có kiểm thử tự động cho hai
+file dùng chung bị đổi (`unowned_changes`, với `behaviour_changed` là
+`false` vì chỉ thêm một khai báo kiểu). Dự án có kiểm thử tự động cho hai
 tiêu chí đầu, đã chạy đạt và đã ghi bằng chứng loại `test`.
 
 > **Còn 3 việc cần kiểm.** Làm xong cả 3 thì dùng tiếp được.

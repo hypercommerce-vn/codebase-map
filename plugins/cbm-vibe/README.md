@@ -53,7 +53,13 @@ Plugin không gửi code hay dữ liệu của bạn đi đâu. Công cụ chạ
 
 - `.cbm/features.json` — các phần của ứng dụng, những điều đã chốt, bằng chứng
 - `.codebase-map-cache/` — ảnh chụp code trước và sau mỗi lần sửa
+- `.codebase-map-cache.json` — ghi nhớ kết quả đọc code để lần sau nhanh hơn
 - `docs/function-map/` — sơ đồ ứng dụng dạng trang web
+
+Công cụ đi kèm plugin không mở kết nối mạng, không cài gì vào git và không
+xoá ảnh chụp cũ. Bản Codebase Map đầy đủ có những lệnh làm các việc đó (ví
+dụ khung bên cạnh trong Claude Code); plugin này không mang theo và không
+chạy chúng.
 
 Hãy giữ thư mục `.cbm/` cùng với dự án.
 

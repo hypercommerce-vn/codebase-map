@@ -124,6 +124,7 @@ codebase-map/
 | Slash commands | **`.claude/commands/`** |
 | Docs index + cấu trúc | **`docs/README.md`** |
 | Onboarding | **`docs/active/ONBOARDING.md`** |
+| Website dự án (build + deploy VPS) | **`website/README.md`** |
 | CBM Claude Integration initiative | **`docs/active/cbm-claude-integration/`** (7 docs) |
 | CBM Dual-Snapshot proposal | **`docs/reference/cbm-dual-snapshot/Proposal_Dual_Snapshot_CBM.md`** |
 | CBM CTO review | **`docs/reference/cbm-dual-snapshot/CTO_Review_Dual_Snapshot.md`** |
@@ -198,6 +199,7 @@ Cập nhật `BRIEF.md` + Board HTML (SSOT):
 | **v2.0.1** | Hotfix | Classifier fix, coverage hook, generate --diff | 3 | ✅ Done (08/04/2026) |
 | **v2.1** | CBM-P1 | Graph metadata + snapshot versioning | 7 | ✅ Done (12/04/2026) |
 | **v2.2** | CBM-P2 | Dual-snapshot diff engine | 12 | ✅ Done (12/04/2026) |
+| **v2.5** | VIBE-106 | CBM Mod: status line + pane 3-tab (Graph/Timeline/Replay) + Claude Replay + hooks + toasts | 21 | ✅ Done (16/11/2026) |
 
 ---
 
