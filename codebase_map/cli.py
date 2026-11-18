@@ -10,7 +10,8 @@ from pathlib import Path
 from codebase_map import __version__
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The command-line parser, separate from running a command."""
     parser = argparse.ArgumentParser(
         prog="codebase-map",
         description="Function dependency graph generator for any codebase.",
@@ -26,8 +27,12 @@ def main(argv: list[str] | None = None) -> int:
     gen.add_argument(
         "-c",
         "--config",
-        default="codebase-map.yaml",
-        help="Path to config file (default: codebase-map.yaml)",
+        default=None,
+        help=(
+            "Path to a YAML or JSON config file. Default: codebase-map.yaml, "
+            "then codebase-map.json; if neither exists the sources are "
+            "auto-detected."
+        ),
     )
     # HC-AI | ticket: FDD-TOOL-CODEMAP
     # CM-S2-02: Incremental cache flag
@@ -251,6 +256,10 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # VIBE-103: features, acceptance criteria and evidence
+    _add_features_parser(sub)
+
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
     # CBM-P2-05/06/07/08: Snapshot diff — compare two graph snapshots
     sdiff_p = sub.add_parser(
         "snapshot-diff",
@@ -329,7 +338,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     mod_hooks_status.add_argument("--repo", default=".", help="Repository root")
 
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
+    _use_utf8_output()
 
     if not args.command:
         parser.print_help()
@@ -357,6 +372,8 @@ def main(argv: list[str] | None = None) -> int:
         return _cmd_snapshots(args)
     elif args.command == "snapshot-diff":
         return _cmd_snapshot_diff(args)
+    elif args.command == "features":
+        return _cmd_features(args)
     elif args.command == "mod":
         return _cmd_mod(args)
 
@@ -403,19 +420,63 @@ def _cmd_mod(args: argparse.Namespace) -> int:
     return 1
 
 
-def _cmd_generate(args: argparse.Namespace) -> int:
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# VIBE-104: output is UTF-8 whatever the platform default is. On Windows a
+# redirected stdout uses a legacy code page, and printing a Vietnamese feature
+# name to it raises UnicodeEncodeError.
+def _use_utf8_output() -> None:
+    for stream in (sys.stdout, sys.stderr):
+        encoding = (getattr(stream, "encoding", "") or "").lower().replace("-", "")
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None and encoding != "utf8":
+            try:
+                reconfigure(encoding="utf-8", errors="replace")
+            except (OSError, ValueError):
+                pass
+
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# VIBE-101: a config file is optional. An explicit -c path must exist; with no
+# flag the default file names are tried, then the sources are auto-detected.
+_DEFAULT_CONFIG_NAMES = ("codebase-map.yaml", "codebase-map.json")
+
+
+def _load_generate_config(config_arg: str | None):
+    """Return the Config for ``generate``, or None after printing an error."""
     from codebase_map.config import Config
+
+    candidates = [config_arg] if config_arg else list(_DEFAULT_CONFIG_NAMES)
+    for candidate in candidates:
+        if Path(candidate).exists():
+            try:
+                return Config.from_file(candidate)
+            except RuntimeError as exc:
+                print(f"[ERROR] {exc}")
+                return None
+
+    if config_arg:
+        print(f"[ERROR] Config not found: {config_arg}")
+        print("Create a codebase-map.yaml or use --config to specify path.")
+        return None
+
+    config = Config.auto_detect(Path("."))
+    if not config.sources:
+        print("[ERROR] No config file and no Python or TypeScript/JavaScript")
+        print(f"        source files found in {Path.cwd()}.")
+        return None
+    languages = ", ".join(source.language for source in config.sources)
+    print(f"[AUTO] No config file found. Auto-detected sources: {languages}.")
+    return config
+
+
+def _cmd_generate(args: argparse.Namespace) -> int:
     from codebase_map.exporters.html_exporter import export_html
     from codebase_map.exporters.json_exporter import export_json
     from codebase_map.graph.builder import GraphBuilder
 
-    config_path = Path(args.config)
-    if not config_path.exists():
-        print(f"[ERROR] Config not found: {config_path}")
-        print("Create a codebase-map.yaml or use --config to specify path.")
+    config = _load_generate_config(getattr(args, "config", None))
+    if config is None:
         return 1
-
-    config = Config.from_yaml(config_path)
     # HC-AI | ticket: FDD-TOOL-CODEMAP
     # CM-S2-02: Incremental cache support
     use_cache = not getattr(args, "no_cache", False)
@@ -942,3 +1003,213 @@ def _cmd_snapshot_diff(args: argparse.Namespace) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# VIBE-103: `features` — the store of features, acceptance criteria and
+# evidence kept in .cbm/features.json, and what a change does to them.
+def _add_features_parser(sub) -> None:
+    feat_p = sub.add_parser(
+        "features",
+        help="Features, acceptance criteria and evidence (.cbm/features.json)",
+    )
+    feat_sub = feat_p.add_subparsers(dest="features_command")
+
+    def command(name: str, help_text: str) -> argparse.ArgumentParser:
+        parser = feat_sub.add_parser(name, help=help_text)
+        parser.add_argument(
+            "-c",
+            "--config",
+            default=None,
+            help="Config file. Default: codebase-map.yaml / .json, else auto-detect.",
+        )
+        parser.add_argument(
+            "--store",
+            default=None,
+            help="Feature store file (default: .cbm/features.json in the project)",
+        )
+        parser.add_argument(
+            "--json", action="store_true", dest="json_output", help="Output as JSON"
+        )
+        return parser
+
+    command("status", "Features with their screens, files and criterion status")
+
+    impact_p = command("impact", "What the change between two snapshots touches")
+    impact_p.add_argument("--baseline", required=True, help="Snapshot before")
+    impact_p.add_argument("--current", required=True, help="Snapshot after")
+
+    add_p = command("add", "Add a feature, or update an existing one")
+    add_p.add_argument("--id", required=True, dest="feature_id", help="e.g. booking")
+    add_p.add_argument("--name", default=None, help="Name shown to the owner")
+    add_p.add_argument(
+        "--files",
+        default=None,
+        nargs="+",
+        help="Files, folders or globs (* and ?) that implement the feature",
+    )
+    add_p.add_argument(
+        "--append",
+        action="store_true",
+        help="Add --files to the feature's existing ones instead of replacing them",
+    )
+    add_p.add_argument("--summary", default=None, help="One sentence about it")
+
+    crit_p = command("criterion", "Add an acceptance criterion to a feature")
+    crit_p.add_argument("--feature", required=True, help="Feature id")
+    crit_p.add_argument("--text", required=True, help="The criterion, in plain words")
+    crit_p.add_argument("--id", default=None, dest="criterion_id", help="Optional id")
+
+    ev_p = command("evidence", "Record that a criterion was checked just now")
+    ev_p.add_argument("--criterion", required=True, help="Criterion id")
+    ev_p.add_argument(
+        "--kind",
+        required=True,
+        choices=["manual", "test"],
+        help="manual: a person tried it; test: an automated test passed",
+    )
+    ev_p.add_argument("--note", default="", help="Who checked, or which test")
+
+
+def _cmd_features(args: argparse.Namespace) -> int:
+    """Features, acceptance criteria and evidence."""
+    import json as json_mod
+
+    from codebase_map.features import FeatureStoreError
+
+    if not args.features_command:
+        print("Usage: codebase-map features {status,impact,add,criterion,evidence}")
+        return 1
+    try:
+        output = _run_features(args)
+    except FeatureStoreError as exc:
+        if args.json_output:
+            print(json_mod.dumps({"error": str(exc)}, ensure_ascii=False))
+        else:
+            print(f"[ERROR] {exc}")
+        return 1
+    if output is None:
+        return 1
+    data, text = output
+    if args.json_output:
+        print(json_mod.dumps(data, ensure_ascii=False, indent=2))
+    else:
+        print(text)
+    return 0
+
+
+def _run_features(args: argparse.Namespace):
+    """Run one `features` command; return (data for JSON, text) or None on error."""
+    from codebase_map.features import (
+        FeatureMap,
+        FeatureStore,
+        FeatureStoreError,
+        compute_impact,
+        format_impact_text,
+        format_status_text,
+    )
+    from codebase_map.snapshot import SnapshotManager
+
+    command = args.features_command
+    config_path = Path(args.config) if args.config else None
+    root = config_path.parent if config_path and config_path.exists() else Path(".")
+    store_path = Path(args.store) if args.store else FeatureStore.default_path(root)
+    store = FeatureStore.load(store_path)
+
+    if command == "impact":
+        snapshots = SnapshotManager(str(root / ".codebase-map-cache" / "snapshots"))
+        graphs = []
+        for label in (args.baseline, args.current):
+            try:
+                graphs.append(snapshots.load(label))
+            except FileNotFoundError:
+                raise FeatureStoreError(f"Snapshot not found: {label}") from None
+        data = compute_impact(store, graphs[0], graphs[1])
+        return data, format_impact_text(data)
+
+    if command == "criterion":
+        criterion = store.add_criterion(args.feature, args.text, args.criterion_id)
+        store.save(store_path)
+        return criterion.to_dict(), f"[OK] Criterion {criterion.id} added."
+
+    # The remaining commands look at the code as it is now
+    graph = _current_graph(args.config)
+    if graph is None:
+        return None
+
+    if command == "add":
+        # An existing feature keeps whatever the command does not give
+        known = next((f for f in store.features if f.id == args.feature_id), None)
+        name = args.name or (known.name if known else None)
+        files = args.files or (list(known.files) if known else None)
+        if name is None or files is None:
+            raise FeatureStoreError("A new feature needs --name and --files.")
+        if args.append and known and args.files:
+            files = known.files + [p for p in args.files if p not in known.files]
+        summary = args.summary
+        if summary is None:
+            summary = known.summary if known else ""
+        feature = store.upsert_feature(args.feature_id, name, files, summary)
+        store.save(store_path)
+        scope = FeatureMap(store, graph).scope(feature.id)
+        files = graph.metadata["files"]
+        unmatched = [
+            pattern
+            for pattern in feature.files
+            if not any(_feature_pattern_hits(pattern, path, graph) for path in files)
+        ]
+        data = {
+            **feature.to_dict(),
+            "matched_files": scope.owned_files,
+            "unmatched_patterns": unmatched,
+        }
+        text = (
+            f"[OK] Feature {feature.id} saved: {len(scope.owned_files)} file(s), "
+            f"{len(scope.owned_nodes)} function(s)."
+        )
+        if unmatched:
+            text += "\n[WARN] Patterns that match nothing: " + ", ".join(unmatched)
+        return data, text
+
+    feature_map = FeatureMap(store, graph)
+    if command == "evidence":
+        feature, _ = store.criterion(args.criterion)
+        fingerprint = feature_map.scope(feature.id).fingerprint
+        criterion = store.record_evidence(
+            args.criterion, args.kind, args.note, fingerprint
+        )
+        store.save(store_path)
+        return criterion.to_dict(), f"[OK] Evidence recorded for {criterion.id}."
+
+    data = feature_map.to_dict()
+    data["store"] = str(store_path)
+    return data, format_status_text(data)
+
+
+def _feature_pattern_hits(pattern: str, path: str, graph) -> bool:
+    """True when a feature pattern matches the file or one of its functions."""
+    from codebase_map.features import _is_id_pattern, pattern_matches
+
+    if pattern_matches(pattern, path):
+        return True
+    return _is_id_pattern(pattern) and any(
+        pattern_matches(pattern, node.id)
+        for node in graph.nodes.values()
+        if node.file_path.replace("\\", "/") == path
+    )
+
+
+def _current_graph(config_arg: str | None):
+    """Build the graph of the code as it is now, without writing any file.
+
+    Progress and warnings go to stderr, so stdout carries only the result.
+    """
+    import contextlib
+
+    from codebase_map.graph.builder import GraphBuilder
+
+    with contextlib.redirect_stdout(sys.stderr):
+        config = _load_generate_config(config_arg)
+        if config is None:
+            return None
+        return GraphBuilder(config, use_cache=False).build()

@@ -1,0 +1,20 @@
+{
+  "name": "cbm-vibe",
+  "displayName": "CBM-VIBE",
+  "version": "0.1.0",
+  "description": "Giữ quyền kiểm soát ứng dụng do AI viết: chốt yêu cầu thành tiêu chí nghiệm thu trước khi sửa, và nhận báo cáo bằng tiếng Việt thường sau khi sửa — đã làm gì, tiêu chí nào có bằng chứng, có đụng tới phần nào ngoài yêu cầu.",
+  "author": {
+    "name": "Hyper Commerce",
+    "url": "https://github.com/hypercommerce-vn"
+  },
+  "homepage": "https://github.com/hypercommerce-vn/codebase-map",
+  "repository": "https://github.com/hypercommerce-vn/codebase-map",
+  "license": "MIT",
+  "keywords": [
+    "vibecoding",
+    "vietnamese",
+    "acceptance-criteria",
+    "change-report",
+    "non-technical"
+  ]
+}

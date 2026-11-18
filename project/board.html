@@ -471,6 +471,7 @@ a:hover { text-decoration: underline; }
       <a class="nav-sub-item" onclick="showPage('board')">CBM-P2 · v2.2 — Diff Engine ✅</a>
       <a class="nav-sub-item active" href="#cbm-int-s1" onclick="showPage('board')">CBM-INT-S1 · v2.3 — PyPI + Skill 🚀</a>
       <a class="nav-sub-item active" onclick="showPage('board')">CBM-LANG-P1 · v2.4 — JS + Java 🚀</a>
+      <a class="nav-sub-item active" href="#cbm-vibe-t1" onclick="showPage('board')">CBM-VIBE · Tầng 1 — Skill vibecoding 🟡</a>
     </div>
   </div>
 
@@ -736,6 +737,7 @@ a:hover { text-decoration: underline; }
       <p>Cowork plugin manifest + post-install hook (pipx install CBM+MCP) · <strong>AI Agent Knowledge Pack</strong> + <strong>SaaS Onboarding Pack</strong> (CEO D5 · bilingual EN/VI) · marketplace listing · launch blog + demo video + HN/Reddit/Viblo/Zalo posts. <strong>Final sprint of initiative.</strong> <a href="#cbm-int-s3"><strong>Task Board ↓</strong></a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">Kickoff brief →</a></p>
       <div class="progress-bar"><div class="progress-fill" style="width:100%;background:#10b981"></div></div>
       <div class="progress-label"><strong>🎉 5/5 SP · S3 COMPLETE</strong> · All Day 1-4 ✅ · 3 plugins LIVE (<a href="https://github.com/hypercommerce-vn/claude-plugins" target="_blank">hypercommerce-vn/claude-plugins</a>) · Launch blog ready · Rule #S2-1 validated 7× · <strong>Day 5 LAUNCH gating on CEO hands-on</strong></div>
+      <div class="progress-label" style="color:#b45309;">⚠️ <strong>Đính chính 12/11/2026:</strong> ba plugin đã đăng lên marketplace nhưng <strong>chưa theo định dạng chuẩn của Claude</strong> (dùng <code>manifest.json</code>, <code>mcp/config.json</code>, <code>hooks/post-install.sh</code> thay cho <code>.claude-plugin/plugin.json</code>, <code>.mcp.json</code>, <code>hooks/hooks.json</code>). Theo tài liệu chính thức: skill và lệnh vẫn được nạp, MCP server không được nối, và không có bước nào tự cài gói. Chưa cài thử để xác nhận. Chi tiết: <a href="../docs/active/cbm-vibecoding/CBM-VIBE-Concept.md" target="_blank">CBM-VIBE Concept</a>, mục "Đóng gói trên Claude".</div>
     </div>
 
     <div class="sprint-card" style="border-left: 3px solid #8b5cf6;">
@@ -774,6 +776,17 @@ a:hover { text-decoration: underline; }
         </ul>
         <strong style="color:var(--text);">Phát hiện khi làm:</strong> parser Python đọc nhầm comment tài liệu có chữ <code>flow:</code> thành chú thích flow → demo hiện chip "name1, name2" (<code>python_parser.py</code> <code>_FLOW_PATTERN</code>). ✅ Đã sửa ở PR #148 (merge 15/11), nhánh website đã merge main và build lại: demo hết chip giả.
       </div>
+    </div>
+
+    <!-- HC-AI | ticket: FDD-TOOL-CODEMAP — CBM-VIBE tier 1 status sync (16/11/2026) -->
+    <div class="sprint-card" style="border-left: 3px solid #0ea5e9;">
+      <div class="sprint-card-header">
+        <h3>CBM-VIBE · Tầng 1 — Skill cho người vibecoding</h3>
+        <span class="badge open">🟡 CODE XONG · CHỜ CEO DUYỆT</span>
+      </div>
+      <p>Hướng mới CEO chốt 12–13/11/2026: giúp người không rành kỹ thuật kiểm soát ứng dụng do AI viết. Lõi chạy không cần cài · phát hiện thay đổi theo nội dung · kho tính năng, tiêu chí, bằng chứng · plugin <code>cbm-vibe</code> với skill tiếng Việt. <a href="#cbm-vibe-t1"><strong>Task Board ↓</strong></a></p>
+      <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#0ea5e9"></div></div>
+      <div class="progress-label"><strong>0/8 SP đã merge</strong> · 7 SP code xong; toàn bộ code nằm trong PR #151, đã gộp với <code>main</code> ngày 18/11 (sau VIBE-106), CI xanh · VIBE-105 (1 SP) chờ CEO bấm thử trên giao diện · 554 test · đã qua một vòng rà soát độc lập và hai lượt chạy thử với agent phụ đóng vai Claude</div>
     </div>
   </div>
 
@@ -1072,6 +1085,1050 @@ a:hover { text-decoration: underline; }
       </tr>
     </tbody>
   </table>
+
+  <!-- CM-S2 Task Board -->
+  <h2 id="cm-s2"><span class="h2-icon">✅</span> CM-S2 · v1.2 — Workflow + Smart <span class="badge done" style="font-size:12px;margin-left:8px;">18/18 SP · COMPLETE 🎉</span></h2>
+  <table>
+    <thead>
+      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>PR</th><th>Review Gate</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>CM-S2-01</code></td>
+        <td>BE: Git diff integration — <code>codebase-map diff HEAD~1</code></td>
+        <td>3</td><td>Day 1</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/9" target="_blank">PR #9</a></td>
+        <td>CTO 99/100</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-02</code></td>
+        <td>BE: Incremental update — cache AST hash, re-parse only changed</td>
+        <td>3</td><td>Day 2</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/11" target="_blank">PR #11</a></td>
+        <td>CTO 100/100</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-06</code></td>
+        <td>BE: Edge resolution — resolve self.repo chain from __init__</td>
+        <td>2</td><td>Day 3</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/13" target="_blank">PR #13</a></td>
+        <td>CTO 99/100</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-03</code></td>
+        <td>BE+FE: Test coverage overlay — coverage bar in detail panel</td>
+        <td>2</td><td>Day 3</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/13" target="_blank">PR #13</a></td>
+        <td>CTO 99/100</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-07</code></td>
+        <td>BE+FE: API Catalog auto-gen — routes grouped by domain</td>
+        <td>2</td><td>Day 4</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/15" target="_blank">PR #15</a></td>
+        <td>CTO 99/100</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-04</code></td>
+        <td>Workflow: /implement integration — Step 2 auto-query impact</td>
+        <td>1</td><td>Day 4</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/15" target="_blank">PR #15</a></td>
+        <td>CTO 99/100</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-05</code></td>
+        <td>Workflow: /review-gate integration — impact graph in review</td>
+        <td>1</td><td>Day 4</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/15" target="_blank">PR #15</a></td>
+        <td>CTO 99/100</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-08</code></td>
+        <td>Metadata: FDD Spec linking — node → FDD ID in detail panel</td>
+        <td>1</td><td>Day 5</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/17" target="_blank">PR #17</a></td>
+        <td>CEO merged</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-09</code></td>
+        <td>DevOps: PR impact comment bot — CI auto-comment (+ fix PR #19)</td>
+        <td>1</td><td>Day 5</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/17" target="_blank">PR #17</a></td>
+        <td>CEO merged</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-10</code></td>
+        <td>Process: Sprint metric — impact per PR, alert > 50 nodes</td>
+        <td>1</td><td>Day 5</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/17" target="_blank">PR #17</a></td>
+        <td>CEO merged</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S2-11</code></td>
+        <td>DevOps: Staleness alert — graph > 7 days → Telegram notify</td>
+        <td>1</td><td>Day 5</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/17" target="_blank">PR #17</a></td>
+        <td>CEO merged</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CM-S3 Task Board -->
+  <h2 id="cm-s3"><span class="h2-icon">✅</span> CM-S3 · v2.0 — Multi-View + AI <span class="badge done" style="font-size:12px;margin-left:8px;">22/22 SP COMPLETE</span></h2>
+  <table>
+    <thead>
+      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>PR</th><th>Review Gate</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>CM-S3-06</code></td>
+        <td>TypeScript/JavaScript parser — TS/TSX/JS/JSX support</td>
+        <td>5</td><td>Day 1</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/24" target="_blank">PR #24</a></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S3-01</code></td>
+        <td>Multi-view mode — Executive/Architecture/Developer/PR Diff tabs</td>
+        <td>3</td><td>Day 2</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/25" target="_blank">PR #25</a></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S3-05</code></td>
+        <td>Breadcrumb navigation — zoom domain drill-down</td>
+        <td>2</td><td>Day 2</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/25" target="_blank">PR #25</a></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S3-02</code></td>
+        <td>Executive view — domain boxes + route counts + flow connections</td>
+        <td>3</td><td>Day 3</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/28" target="_blank">PR #28</a></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S3-07</code></td>
+        <td>Detail panel v2 — visual hierarchy, coverage, FDD, impact</td>
+        <td>2</td><td>Day 3</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/28" target="_blank">PR #28</a></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S3-03</code></td>
+        <td>PR Diff view — changed/impacted nodes highlighted</td>
+        <td>3</td><td>Day 4</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/29" target="_blank">PR #29</a></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S3-04</code></td>
+        <td>Business Flow Mapping — tag functions to user journeys</td>
+        <td>3</td><td>Day 4</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/29" target="_blank">PR #29</a></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+      <tr>
+        <td><code>CM-S3-08</code></td>
+        <td>Responsive sidebar — collapsible, mobile-friendly</td>
+        <td>1</td><td>Day 5</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/30" target="_blank">PR #30</a></td>
+        <td>100/100 SHIPIT</td>
+        <td><span class="badge done">✅ Done</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="margin-top:8px;"><em>✅ COMPLETE 07/04/2026 — 5 feature PRs (#24 #25 #28 #29 #30) + sprint close PR #31. v2.0.0 shipped.</em></p>
+
+  <!-- ═══════════════════════════════════════════════════════
+       CBM-INT-S1 Task Board — NEW SPRINT KICKOFF 18/04/2026
+  ═══════════════════════════════════════════════════════ -->
+  <h2 id="cbm-int-s1"><span class="h2-icon">🎉</span> CBM-INT-S1 · v2.3 — PyPI + Claude Skill <span class="badge merged" style="font-size:12px;margin-left:8px;background:#10b981;color:#fff;">🎉 5/5 SP · SEALED 20/04/2026 · v2.2.1 + v2.3.0 LIVE on PyPI · E2E 20/20</span></h2>
+
+  <div style="padding:12px 14px; background:linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-left:4px solid #10b981; border-radius:8px; margin:14px 0 10px; font-size:12px; color:#064e3b; line-height:1.7;">
+    <strong>✅ Pre-flight confirmed (19/04/2026):</strong> A1 PyPI token ✅ (<code>PYPI_API_TOKEN</code> secret added) · A2 Repo PUBLIC ✅ · A3 TechLead full-time 5 tuần ✅ · A4 Tester = Claude ✅ · A5 Sunday 17:00 weekly review ✅
+    <br>
+    <strong>✅ Pre-flight blockers B1-B4 ALL CLOSED (19/04/2026):</strong> B1 <code>SECURITY.md</code> (102 lines) · B2 Git audit CLEAN · B3 <code>CONTRIBUTING.md</code> (165 lines) · B4 PR/issue templates (4 files) · GitHub Discussions ENABLED. Day 1 Mon 20/04 09:00 READY. <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-B2-Git-Audit-Report.md" target="_blank">B2 report ↗</a>
+  </div>
+
+  <div style="padding:12px 14px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left:4px solid #f59e0b; border-radius:8px; margin:0 0 16px; font-size:13px; color:#78350f; line-height:1.7;">
+    <strong>🎯 Sprint Goal:</strong> Biến CBM thành OSS package cài được qua <code>pipx install codebase-map</code> trong 30 giây, có Claude Code Skill trigger tự động + 3 slash command (/cbm-onboard, /cbm-impact, /cbm-diff). Gate G1 Sun 26/04/2026.
+    <br>
+    <strong>📅 Duration:</strong> <strong>Mon 20/04 → Sun 26/04/2026</strong> (5 ngày làm việc + Sat buffer + Sun G1 review) · <strong>Capacity:</strong> 5 SP (TechLead full-time + Tester=Claude + AI pair)
+    <br>
+    <strong>🎯 Exit criteria G1:</strong> PyPI package public · Claude Skill installable · 3 slash commands chạy end-to-end trên HC repo · QUICKSTART tested macOS + Linux + WSL
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>Owner</th><th>DoD / Output</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-101</code></td>
+        <td>Publish <code>codebase-map</code> lên PyPI — pyproject.toml v2.2.1 + publish-pypi.yml workflow + build verify. Tag push trigger CI auto-upload.</td>
+        <td>1</td><td>Day 1 ✅ (Sun 19/04 early start)</td>
+        <td>TechLead</td>
+        <td>✅ <strong>🎉 v2.2.1 LIVE trên PyPI 19/04/2026</strong> — CEO authorize PM push tag · Workflow run 24626431411 SUCCESS in 24s · <a href="https://pypi.org/project/codebase-map/" target="_blank">pypi.org/project/codebase-map</a> HTTP 200 · <code>pipx install codebase-map</code> works (Python 3.14.3 verified) · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a> MERGED · Build sdist 166KB + wheel 174KB · twine check PASS · lint PASS · 158/158 tests PASS</td>
+        <td><span class="badge merged">✅ LIVE</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-102</code></td>
+        <td>Viết <code>SKILL.md</code> cho Claude Code — prerequisite check, workflow mô tả, slash command mapping, rule to trigger khi nhắc "impact"/"breaks"/"refactor"</td>
+        <td>1</td><td>Day 2 ✅ (Sun 19/04 — parallel Day 1)</td>
+        <td>TechLead + CTO review (PR gate)</td>
+        <td>✅ <code>SKILL.md</code> 197 dòng (< 500 limit) · ✅ frontmatter YAML valid (name=codebase-map, desc 444 chars) · ✅ 11 trigger phrases · ✅ 7 sections · ✅ TRIGGER_TEST_PROMPTS.md (10 pos + 5 neg) · Commands verified against CBM v2.2.1 CLI · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-103</code></td>
+        <td>Slash command <code>/cbm-onboard</code> — generate graph + summary 5 bullet cho repo lạ, chạy trên Python/TS project bất kỳ</td>
+        <td>1</td><td>Day 3 ✅ (Sun 19/04)</td>
+        <td>TechLead</td>
+        <td>✅ <code>commands/cbm-onboard.md</code> 80 dòng · detect Python/TS · 5-bullet summary · graceful coverage · frontmatter YAML valid · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/110" target="_blank">#110</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-104</code></td>
+        <td>Slash command <code>/cbm-impact</code> — wrap <code>codebase-map impact &lt;name&gt;</code>, hiện warning khi impact > 50 nodes, gợi ý test plan</td>
+        <td>0.5</td><td>Day 3 ✅ (Sun 19/04)</td>
+        <td>TechLead</td>
+        <td>✅ <code>commands/cbm-impact.md</code> 48 dòng · compact risk-tier table · empty-arg guard · "nearest match" · <code>--depth 2</code> · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/110" target="_blank">#110</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-105</code></td>
+        <td>Slash command <code>/cbm-diff</code> — chạy <code>codebase-map diff &lt;branch&gt;</code>, output markdown, kèm affected callers</td>
+        <td>0.5</td><td>Day 3 ✅ (Sun 19/04)</td>
+        <td>TechLead</td>
+        <td>✅ <code>commands/cbm-diff.md</code> 91 dòng · dual-snapshot + git-diff fallback · <code>snapshots list --json</code> · pbcopy/xclip · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/110" target="_blank">#110</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-106</code></td>
+        <td>Integration test (5 case matrix) + <code>QUICKSTART.md</code> 30-second install guide + launch dry-run</td>
+        <td>1</td><td>Day 4 + Day 5 ✅ (Sun 19/04)</td>
+        <td>Tester (Claude) + TechLead · AI pair lo docs</td>
+        <td>✅ <strong>Day 4:</strong> 5/5 test PASS · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/111" target="_blank">#111</a> MERGED · <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Day4-Test-Report.md" target="_blank">Test Report</a> · ✅ <strong>Day 5:</strong> QUICKSTART.md 114 dòng · v2.2.1→2.3.0 bump · release notes 75 dòng · Build PASS · Lint PASS · 158/158 tests · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/114" target="_blank">#114</a> MERGED · <strong>🎉 v2.3.0 LIVE trên PyPI</strong> (workflow 24630124733 · 24s)</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:20px; font-size:15px;">📅 Day Plan — Week 1 (Mon 20/04 → Sun 26/04/2026)</h3>
+  <table>
+    <thead>
+      <tr><th>Day</th><th>Date</th><th>SP</th><th>Tasks</th><th>Focus</th><th>CEO touchpoint</th></tr>
+    </thead>
+    <tbody>
+      <tr style="background:#d1fae5;"><td>Day 0</td><td>Sun 19/04 ✅</td><td>—</td><td>Pre-flight B1-B4 DONE</td><td>✅ CEO 5/5 A1-A5 · B1 SECURITY.md · B2 audit CLEAN · B3 CONTRIBUTING.md · B4 templates · Discussions enabled. 3 PRs merged (#104 #105 #106)</td><td>Pre-flight CLOSED</td></tr>
+      <tr style="background:#d1fae5;"><td>Day 1</td><td>Sun 19/04 ✅</td><td>1</td><td>CBM-INT-101 ✅ MERGED</td><td>PyPI publish — pyproject.toml v2.2.1 + publish-pypi.yml workflow + build verify. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a></td><td>⚠️ tag v2.2.1 pending CEO</td></tr>
+      <tr style="background:#d1fae5;"><td>Day 2</td><td>Sun 19/04 ✅</td><td>1</td><td>CBM-INT-102 ✅ MERGED</td><td>SKILL.md 197 dòng · 11 trigger phrases · TRIGGER_TEST_PROMPTS fixture. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a></td><td>Parallel Day 1 — 2 ngày sớm</td></tr>
+      <tr style="background:#d1fae5;"><td>Day 3</td><td>Sun 19/04 ✅</td><td>2</td><td>CBM-INT-103, 104, 105 ✅ MERGED</td><td>3 slash commands — /cbm-onboard + /cbm-impact + /cbm-diff. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/110" target="_blank">#110</a></td><td>3 ngày sớm</td></tr>
+      <tr style="background:#d1fae5;"><td>Day 4</td><td>Sun 19/04 ✅</td><td>0.5</td><td>CBM-INT-106 p1 ✅ MERGED</td><td>Integration test matrix 5/5 PASS. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/111" target="_blank">#111</a></td><td>4 ngày sớm</td></tr>
+      <tr style="background:#fef3c7;"><td>Day 5</td><td>Sun 19/04 🔄</td><td>0.5</td><td>CBM-INT-106 p2 🔄 PR</td><td>QUICKSTART.md 114 dòng + v2.3.0 bump + release notes 75 dòng. 158/158 tests PASS</td><td>5 ngày sớm · Sprint close</td></tr>
+      <tr style="background:var(--bg-muted);"><td>Buffer</td><td>Sat 25/04</td><td>—</td><td>Fix blockers</td><td>Buffer nếu Day 5 slip</td><td>—</td></tr>
+      <tr style="background:var(--c-green-bg);"><td>Gate G1</td><td>Sun 26/04</td><td>—</td><td>Review + Retro</td><td>CEO review 17:00 · Sign-off G1 · Retro 18:00</td><td><strong>🎯 Gate G1 Sun 17:00</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:20px; font-size:15px;">✅ Acceptance Criteria (Sprint-level)</h3>
+  <div class="ac-grid">
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-INT-01:</strong> <code>pipx install codebase-map</code> < 30s trên macOS/Linux/WSL · Version 2.2.1</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-INT-02:</strong> Claude Skill trigger đúng khi user hỏi "what breaks if I change X" / "impact của Y"</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-INT-03:</strong> 3 slash command (<code>/cbm-onboard</code>, <code>/cbm-impact</code>, <code>/cbm-diff</code>) end-to-end OK</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-INT-04:</strong> QUICKSTART.md + integration test 5/5 case pass</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-INT-05:</strong> <code>v2.3.0</code> tag + GitHub Release + PyPI version đồng bộ</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-INT-06:</strong> Lint gate pass (black + isort + flake8) · 582+ tests pass · No regression v2.2</div>
+  </div>
+
+  <h3 style="margin-top:20px; font-size:15px;">⚠️ Sprint Risks (PM tracking)</h3>
+  <table>
+    <thead>
+      <tr><th style="width:200px;">Risk</th><th style="width:70px;">P×I</th><th>Mitigation</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>PyPI tên <code>codebase-map</code> đã bị chiếm</td>
+        <td><span style="color:#ef4444;">🔴 3×3=9</span></td>
+        <td>Day 0 (Sun 19/04) check trước · Fallback: <code>cbm-graph</code> hoặc <code>codebase-map-hc</code> · Decision 30 phút</td>
+      </tr>
+      <tr>
+        <td><strong>Repo public chưa có SECURITY.md</strong> (B1) · <del>B2 git history audit</del> ✅ CLEAN</td>
+        <td><span style="color:#f59e0b;">🟡 2×2=4</span> <em>(downgrade từ 🔴9 sau B2 CLEAN)</em></td>
+        <td>✅ <strong>B2 DONE 19/04:</strong> CTO gitleaks v8.30.1 scan 168 commits · 0 credential findings · 2 LOW non-blocker (hostname + legacy stash email) — no rewrite needed · <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-B2-Git-Audit-Report.md" target="_blank">Full report</a> · ⏳ B1 TechLead viết SECURITY.md trước Day 1</td>
+      </tr>
+      <tr>
+        <td>Claude Skill trigger không fire (SKILL.md description không match)</td>
+        <td><span style="color:#f59e0b;">🟡 2×3=6</span></td>
+        <td>Day 2 test ≥5 user prompt variants · CTO review trigger rules · Iterate description nếu cần</td>
+      </tr>
+      <tr>
+        <td>AI pair pace (docs + QUICKSTART chậm)</td>
+        <td><span style="color:#f59e0b;">🟡 2×2=4</span></td>
+        <td>Day 4 check-in · Nếu slip: TechLead take over QUICKSTART · Cut AC-INT-05 tag dry-run sang S2</td>
+      </tr>
+      <tr>
+        <td>pipx install fail trên Windows/WSL</td>
+        <td><span style="color:#6366f1;">🟢 1×2=2</span></td>
+        <td>Day 5 Tester test WSL · Document workaround trong QUICKSTART nếu có issue · Không block launch</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:20px; font-size:15px;">📋 Definition of Done (Sprint)</h3>
+  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
+    <li>✅ 6/6 tasks CBM-INT-101→106 complete với DoD riêng của từng task</li>
+    <li>✅ 6/6 Acceptance Criteria pass</li>
+    <li>✅ <code>/review-gate</code> 3 tầng (Tester + CTO + Designer) pass cho tất cả PR</li>
+    <li>✅ CEO approve merge · Tag <code>v2.3.0</code> push · GitHub Release published</li>
+    <li>✅ Board (SSOT) + BRIEF.md cập nhật reflecting completion</li>
+    <li>✅ Retrospective done · Action items sang S2</li>
+  </ul>
+
+  <h3 style="margin-top:20px; font-size:15px;">🔗 References</h3>
+  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
+    <li><strong>Tech Plan:</strong> <a href="../docs/active/cbm-claude-integration/Technical_Plan_CBM_Claude_Integration.md#1-phase-1--pypi--skill--slash-commands-5-sp--tuần-1" target="_blank">Technical_Plan · §1 Phase 1 (5 SP)</a></li>
+    <li><strong>Strategy context:</strong> <a href="../docs/active/cbm-claude-integration/Strategy_Memo_CBM_Claude_Integration.md" target="_blank">Strategy_Memo</a></li>
+    <li><strong>Initiative panel:</strong> <a href="#cbm-claude-int">Initiative Panel (cùng trang)</a> · Gate G1 exit criteria</li>
+    <li><strong>Next sprint:</strong> CBM-INT-S2 · v2.4 — MCP Server (8 SP · LIVE Mon 20/04 — 7 ngày sớm)</li>
+    <li><strong>Kickoff briefing S1:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-KICKOFF.md" target="_blank">CBM-INT-S1-KICKOFF.md</a></li>
+    <li><strong>Kickoff briefing S2:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">CBM-INT-S2-KICKOFF.md</a></li>
+    <li><strong>Verification Report S1:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Verification-Report.md" target="_blank">20/20 PASS</a></li>
+    <li><strong>Retrospective S1:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">Retro v1.1</a></li>
+  </ul>
+
+  <p style="margin-top:14px; padding:10px 14px; background:var(--bg-muted); border-radius:6px; font-size:12px; color:var(--text-muted);">
+    <strong>PM Note (20/04 sprint transition):</strong> <strong>🎉 S1 SEALED — 5/5 SP · E2E verified 20/20 · Gate G1 GO · v2.2.1 + v2.3.0 LIVE trên PyPI.</strong> S1 PRs #104-#116 all merged (12 PRs · 1 day sprint · 5 days ahead). 🚀 <strong>S2 LIVE từ Mon 20/04 (fast-track 7 ngày sớm).</strong> MCP Server scaffold + 5 tools + graph cache + PyPI <code>codebase-map-mcp</code>. Gate G2 Sun 26/04 mid · G3 Sun 03/05 end (likely compress). ⚠️ Pre-S2 backlog: AI-#6 44 uncommitted files cleanup · AI-#7 GitHub Settings enable. AI-#1-5 + 9-10 nice-to-have parallel track.
+  </p>
+
+  <!-- ═══════════════════════════════════════════════════════
+       CBM-INT-S2 Task Board — NEW SPRINT KICKOFF 20/04/2026
+  ═══════════════════════════════════════════════════════ -->
+  <h2 id="cbm-int-s2" style="margin-top:40px;"><span class="h2-icon">🎉</span> CBM-INT-S2 · v2.4 — MCP Server (Core Moat) <span class="badge merged" style="font-size:12px;margin-left:8px;background:#10b981;color:#fff;">🎉 8/8 SP · SEALED 20/04/2026 · v2.4.0 LIVE · 5 MCP tools · 40× cache · E2E 18/20</span></h2>
+
+  <div style="padding:12px 14px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left:4px solid #f59e0b; border-radius:8px; margin:14px 0 16px; font-size:13px; color:#78350f; line-height:1.7;">
+    <strong>🎯 Sprint Goal:</strong> Build MCP Server (Python, reuse <code>codebase_map</code> package) expose 5 query tools cho Claude Code / Cowork / Desktop qua stdio transport. Moves Phase 1 slash-command UX → Phase 2 auto-invoke UX. Retention 15% → 50%.
+    <br>
+    <strong>📅 Duration:</strong> Mon 20/04 → Sun 03/05/2026 (fast-track, 7 ngày sớm gốc 27/04 → 10/05) · <strong>Capacity:</strong> 8 SP (TechLead full-time critical path + Tester=Claude + AI pair)
+    <br>
+    <strong>🎯 Exit criteria G3:</strong> 5 tools pass MCP Inspector · Graph 10MB < 500ms load · Claude auto-invoke 20 test questions PASS · PyPI <code>codebase-map-mcp</code> LIVE · Registry submission opened
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>Owner</th><th>DoD / Output</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-201</code></td>
+        <td>MCP server scaffold — <code>mcp_server/</code> folder · <code>server.py</code> stdio entrypoint · <code>python -m mcp_server</code></td>
+        <td>1</td><td>Day 1 ✅ (Mon 20/04)</td>
+        <td>TechLead</td>
+        <td>✅ MCP SDK <code>mcp==1.27.0</code> optional extra · ✅ 167 LoC (5 files, all ≤300) · ✅ <code>TOOL_REGISTRY</code> + <code>register_tool()</code> helper cho D2-D4 drop-in · ✅ Graceful ImportError hint · ✅ 158/158 tests PASS · ✅ Lint clean · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/121" target="_blank">#121</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-202</code></td>
+        <td>Tools <code>cbm_query</code> + <code>cbm_search</code> — JSON schema · Integrate QueryEngine · Input validation</td>
+        <td>1</td><td>Day 2 ✅ (Mon 20/04)</td>
+        <td>TechLead</td>
+        <td>✅ <code>query.py</code> 67 LoC · <code>search.py</code> 79 LoC · Auto-register via <code>register_tool(TOOL, handle)</code> · QueryEngine <code>query_node(depth=3)</code> + <code>search()</code> (limit handler-side) · Smoke test PASS · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/124" target="_blank">#124</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-203</code></td>
+        <td>Tool <code>cbm_impact</code> — blast radius với depth param · Layer grouping</td>
+        <td>1</td><td>Day 2 ✅ (Mon 20/04)</td>
+        <td>TechLead</td>
+        <td>✅ <code>impact.py</code> 100 LoC · depth 1-5 · Risk tier Low(0-10)/Medium(11-50)/HIGH(51+) khớp slash cmd · Smoke test: QueryEngine → 1 node Low · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/124" target="_blank">#124</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-204</code></td>
+        <td>Tool <code>cbm_snapshot_diff</code> — <strong>most complex</strong> · baseline/current labels · markdown/json output · depth · breaking_only · test_plan flags</td>
+        <td>2</td><td>Day 3 ✅ (Mon 20/04)</td>
+        <td>TechLead (critical)</td>
+        <td>✅ <code>snapshot_diff.py</code> 138 LoC · <strong>Python API no subprocess</strong> (<code>SnapshotManager.load()</code> + <code>SnapshotDiff.compute()</code> + <code>diff_formatter</code>) · 6/6 smoke tests PASS · TOOL_REGISTRY 4 keys · default depth=2 format=markdown · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/125" target="_blank">#125</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-205</code></td>
+        <td>Tool <code>cbm_api_catalog</code> — method + domain filters</td>
+        <td>0.5</td><td>Day 4 ✅ (Mon 20/04)</td>
+        <td>TechLead</td>
+        <td>✅ <code>api_catalog.py</code> 96 LoC · Reuse <code>APICatalog.from_graph().filter()</code> · 4 params · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/128" target="_blank">#128</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-206</code></td>
+        <td>Graph cache manager — <code>graph_cache.py</code> mtime-based invalidation · lazy load</td>
+        <td>1</td><td>Day 4 ✅ (Mon 20/04)</td>
+        <td>TechLead</td>
+        <td>✅ <code>graph_cache.py</code> 72 LoC · Thread-safe · mtime invalidation · <strong>Benchmark:</strong> Cold 2.8ms · Hot 0.071ms (<strong>40× speedup</strong>, AC-S2-02 closed) · 4 tools migrated · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/128" target="_blank">#128</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-207</code></td>
+        <td>PyPI publish <code>codebase-map-mcp</code> — entry point <code>cbm-mcp</code> · OIDC trusted publisher</td>
+        <td>1</td><td>Day 5 ✅ (Mon 20/04)</td>
+        <td>TechLead</td>
+        <td>✅ <strong>Path A</strong> chosen · Version 2.3.0 → 2.4.0 synced · <code>cbm-mcp</code> entry callable (stdio block correct) · Build wheel 181KB + sdist 170KB twine PASS · Release notes <code>v2.4.0.md</code> 102 dòng · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/131" target="_blank">#131</a> MERGED · <strong>🎉 v2.4.0 LIVE trên PyPI</strong></td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-208</code></td>
+        <td>Integration test + Claude Desktop config docs + MCP registry submission</td>
+        <td>0.5</td><td>Day 5 ✅ (Mon 20/04)</td>
+        <td>Tester (Claude) + TechLead</td>
+        <td>✅ <strong>5/5 tools smoke test PASS</strong> · Cache re-bench 12.1× · <code>integrations/mcp/README.md</code> 120 dòng (Desktop config + tool ref) · <code>REGISTRY_SUBMISSION.md</code> prep (updated 22/04 với mcp-publisher CLI flow) · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/131" target="_blank">#131</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:20px; font-size:15px;">✅ Acceptance Criteria (Sprint-level)</h3>
+  <div class="ac-grid">
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-01:</strong> 5 tools pass schema validation (Anthropic MCP Inspector)</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-02:</strong> Graph 10MB load < 500ms · query < 100ms (benchmark)</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-03:</strong> Claude Code auto-invoke 5 tools correctly trên 20 test questions</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-04:</strong> <code>pipx install codebase-map-mcp</code> → <code>cbm-mcp</code> entry point works</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-05:</strong> MCP registry submission (PR to anthropic-mcp) opened</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-06:</strong> Lint + 158/158 existing CBM tests PASS · No regression</div>
+  </div>
+
+  <h3 style="margin-top:20px; font-size:15px;">⚠️ Sprint Risks (PM tracking)</h3>
+  <table>
+    <thead>
+      <tr><th style="width:200px;">Risk</th><th style="width:70px;">P×I</th><th>Mitigation</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>MCP protocol schema thay đổi (Anthropic side)</td>
+        <td><span style="color:#f59e0b;">🟡 2×3=6</span></td>
+        <td>Pin <code>mcp&gt;=X</code> version · semver-strict · follow Anthropic changelog weekly</td>
+      </tr>
+      <tr>
+        <td><code>cbm_snapshot_diff</code> complexity underscoped (5 flags)</td>
+        <td><span style="color:#f59e0b;">🟡 2×3=6</span></td>
+        <td>2 SP budget · TechLead prioritize D3 full day · Fallback MVP (labels only, drop breaking_only + test_plan sang S3)</td>
+      </tr>
+      <tr>
+        <td>Graph 10MB+ perf regression</td>
+        <td><span style="color:#f59e0b;">🟡 2×2=4</span></td>
+        <td>D4 benchmark · Lazy load · mtime cache; fallback stream response nếu cần</td>
+      </tr>
+      <tr>
+        <td>44 uncommitted S1 files drift → merge conflict</td>
+        <td><span style="color:#f59e0b;">🟡 2×2=4</span></td>
+        <td><strong>AI-#6 priority:</strong> PM clean before Day 3 OR isolate S2 branches strictly</td>
+      </tr>
+      <tr>
+        <td>PyPI name <code>codebase-map-mcp</code> taken</td>
+        <td><span style="color:#6366f1;">🟢 1×2=2</span></td>
+        <td>Day 1 check · Fallback <code>cbm-mcp</code> hoặc <code>cbm-mcp-server</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:20px; font-size:15px;">📋 Definition of Done (Sprint)</h3>
+  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
+    <li>✅ 8/8 tasks CBM-INT-201→208 complete với DoD</li>
+    <li>✅ 6/6 Acceptance Criteria pass</li>
+    <li>✅ <code>pipx install codebase-map-mcp</code> LIVE trên PyPI</li>
+    <li>✅ MCP Inspector validates all 5 tool schemas</li>
+    <li>✅ Claude Desktop config example tested end-to-end</li>
+    <li>✅ Benchmark thresholds met (10MB < 500ms, query < 100ms)</li>
+    <li>✅ <code>/review-gate</code> 3 tầng PASS cho tất cả PR</li>
+    <li>✅ CEO approve merge · Tag <code>v2.4.0</code> push · GitHub Release published</li>
+    <li>✅ Board SSOT + BRIEF.md updated · Retrospective done</li>
+    <li>✅ Registry submission opened (Anthropic MCP)</li>
+  </ul>
+
+  <h3 style="margin-top:20px; font-size:15px;">🔗 References</h3>
+  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
+    <li><strong>Kickoff brief:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">CBM-INT-S2-KICKOFF.md</a></li>
+    <li><strong>Tech Plan §2:</strong> <a href="../docs/active/cbm-claude-integration/Technical_Plan_CBM_Claude_Integration.md#2-phase-2--mcp-server-8-sp--tuần-2" target="_blank">Technical_Plan · Phase 2 (8 SP)</a></li>
+    <li><strong>Phase 2 Explainer:</strong> <a href="../docs/active/cbm-claude-integration/Phase2_MCP_Explainer.md" target="_blank">Phase2_MCP_Explainer.md</a> (retention 15% → 50%)</li>
+    <li><strong>S1 Retrospective v1.1:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">CBM-INT-S1-Retrospective.md</a> (AI-#1-10 action items)</li>
+    <li><strong>Next sprint:</strong> CBM-INT-S3 · v2.5 — Plugin Marketplace + 2 Packs (5 SP · LIVE 21/04)</li>
+  </ul>
+
+  <p style="margin-top:14px; padding:10px 14px; background:var(--bg-muted); border-radius:6px; font-size:12px; color:var(--text-muted);">
+    <strong>PM Note S2 (20/04):</strong> Sprint là core moat vs competitors (repomix/serena). Fast-track Mon 20/04 thay vì Mon 27/04 — dựa S1 velocity. Expected completion 2-3 ngày thật nếu maintain pace. Pre-S2 blocker AI-#6 (44 uncommitted files cleanup) sẽ xử lý ở PR kế tiếp sau kickoff merge.
+  </p>
+
+  <!-- ═══════════════════════════════════════════════════════
+       CBM-INT-S3 Task Board — FINAL SPRINT KICKOFF 21/04/2026
+  ═══════════════════════════════════════════════════════ -->
+  <h2 id="cbm-int-s3" style="margin-top:40px;"><span class="h2-icon">🎉</span> CBM-INT-S3 · v2.5 — Plugin Marketplace + 2 Archetype Packs <span class="badge merged" style="font-size:12px;margin-left:8px;background:#10b981;color:#fff;">🎉 5/5 SP · SEALED 22/04/2026 · 3 plugins LIVE · INITIATIVE COMPLETE · E2E 22/25</span></h2>
+
+  <div style="padding:12px 14px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left:4px solid #f59e0b; border-radius:8px; margin:14px 0 16px; font-size:13px; color:#78350f; line-height:1.7;">
+    <strong>🎯 Sprint Goal:</strong> Đóng gói CBM v2.4 (CLI + Skill + 3 slash cmds + MCP server) thành Claude Plugin cho 1-click install qua Cowork, kèm 2 archetype packs (AI Agent Knowledge + SaaS Onboarding per CEO D5), và launch marketing. <strong>Final sprint of Claude Integration initiative.</strong>
+    <br>
+    <strong>📅 Duration:</strong> Tue 21/04 → ~Sat 25/04/2026 (fast-track, 20 ngày sớm gốc Mon 11/05 → Sun 24/05) · <strong>Capacity:</strong> 5 SP (TechLead + AI pair)
+    <br>
+    <strong>🎯 Exit criteria G5 LAUNCH:</strong> Plugin install < 30s trên Claude Code + Cowork · 2 Packs installable · Blog + demo video live · HN/Reddit/Viblo/Zalo launch posts published · 100+ views 48h
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>Owner</th><th>DoD / Output</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-301</code></td>
+        <td>Plugin manifest + bundle — <code>manifest.json</code> · <code>plugins/codebase-map/</code> dir structure · reuse S1 skill + commands + S2 MCP config</td>
+        <td>1</td><td>Day 1 ✅ (Tue 21/04)</td>
+        <td>TechLead</td>
+        <td>✅ <strong>Pure file assembly</strong> (CTO leverage plan validated) · manifest.json 31 dòng · README.md 139 dòng · mcp/config.json points to <code>cbm-mcp</code> entry · 4 S1 files copied (diff MATCHES zero drift) · ~10 min wall-clock · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-302</code></td>
+        <td>Post-install hook — <code>hooks/post-install.sh</code> idempotent pipx install CBM+MCP · <code>pre-uninstall.sh</code> cleanup</td>
+        <td>1</td><td>Day 1 ✅ (Tue 21/04)</td>
+        <td>TechLead</td>
+        <td>✅ <code>post-install.sh</code> 44 dòng · idempotent · uses exact S2 verified command <code>pipx install 'codebase-map[mcp]>=2.4.0'</code> · <code>pre-uninstall.sh</code> 16 dòng · both executable mode 100755 · <code>bash -n</code> syntax PASS · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-303</code></td>
+        <td>Publish to marketplace — Tạo <code>hypercommerce-vn/claude-plugins</code> repo · marketplace.json · plugin discoverable</td>
+        <td>1</td><td>Day 2 ✅ (Tue 21/04)</td>
+        <td>TechLead + CEO</td>
+        <td>✅ <strong>Staged</strong> tại <code>claude-plugins-repo/</code> (CEO pushes new public repo per PUBLISH_INSTRUCTIONS.md) · Community schema <code>.claude-plugin/marketplace.json</code> (no official Anthropic registry 21/04) · Plugin tree copy no drift · 15 files 975 insertions · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/136" target="_blank">#136</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-304</code></td>
+        <td>Cowork variant (2 Archetype Packs) — <strong>AI Agent Knowledge Pack</strong> (bilingual EN/VI · <code>/agent-overview</code> · <code>/agent-impact</code> · <code>/agent-refactor-plan</code>) + <strong>SaaS Onboarding Pack</strong> (<code>/saas-onboard</code> · <code>/saas-apis</code> · <code>/saas-tier-logic</code>)</td>
+        <td>1.5</td><td>Day 3 ✅ (Tue 21/04)</td>
+        <td>TechLead + AI pair</td>
+        <td>✅ <strong>2 packs shipped · 38 files · ~2,600 LoC</strong> · AI Agent Pack 615 LoC · SaaS Pack 673 LoC · Bilingual EN/VI confirmed · 6 slash commands · <code>mcp/config.json</code> + <code>hooks/*.sh</code> IDENTICAL to main plugin (leverage · diff MATCHES) · marketplace.json v1.0.0 → v1.1.0 (3 plugins) · Zero new Python · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/138" target="_blank">#138</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+      <tr style="background:#d1fae5;">
+        <td><code>CBM-INT-305</code></td>
+        <td>Launch blog + demo video — 800-word blog (dev.to + Medium + HC blog) · 2-min Loom demo video</td>
+        <td>0.5</td><td>Day 4 ✅ (Tue 21/04)</td>
+        <td>AI pair + CEO</td>
+        <td>✅ <strong>Blog 824 words</strong> ready for dev.to/Medium/HC (5 sections) · <strong>Demo video script</strong> 167 LoC · 12 scenes × 10s (CEO records) · SaaS typo fixes sync · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/140" target="_blank">#140</a> MERGED</td>
+        <td><span class="badge merged">✅ Merged</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:20px; font-size:15px;">✅ Acceptance Criteria (Sprint-level)</h3>
+  <div class="ac-grid">
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-01:</strong> Plugin install < 30s trên Claude Code</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-02:</strong> Plugin install < 30s trên Cowork (non-dev user)</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-03:</strong> Post-install hook PASS macOS + Linux + WSL</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-04:</strong> 2 Archetype Packs installable + tested (CEO sign-off)</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-05:</strong> Blog post published · 100+ views 48h</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-06:</strong> Demo video 100+ views tuần đầu</div>
+    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-07:</strong> Lint + 158/158 tests + no regression</div>
+  </div>
+
+  <h3 style="margin-top:20px; font-size:15px;">⚠️ Sprint Risks (PM tracking)</h3>
+  <table>
+    <thead>
+      <tr><th style="width:260px;">Risk</th><th style="width:70px;">P×I</th><th>Mitigation</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Claude Plugin Marketplace schema/API thay đổi (research preview)</td>
+        <td><span style="color:#ef4444;">🔴 3×3=9</span></td>
+        <td>Follow Cowork changelog weekly · Phase 1 + 2 stand-alone usable if Phase 3 breaks · documented fallback</td>
+      </tr>
+      <tr>
+        <td>Cowork marketplace rejection (quality bar uncertain)</td>
+        <td><span style="color:#f59e0b;">🟡 2×3=6</span></td>
+        <td>Pre-submit CTO checklist · fallback: self-host via GitHub raw URL</td>
+      </tr>
+      <tr>
+        <td>Post-install hook Windows/WSL path edge cases</td>
+        <td><span style="color:#f59e0b;">🟡 2×2=4</span></td>
+        <td>Day 4 AI-#5 smoke tests · fallback manual install docs</td>
+      </tr>
+      <tr>
+        <td>2 Archetype Packs content quality (bilingual)</td>
+        <td><span style="color:#f59e0b;">🟡 2×2=4</span></td>
+        <td>D3 PM + CEO review · borrow templates từ Cowork skills conventions</td>
+      </tr>
+      <tr>
+        <td>Launch day: low HN/Reddit engagement</td>
+        <td><span style="color:#6366f1;">🟢 1×2=2</span></td>
+        <td>Peak HN time (Tue-Thu 8-10am PT) · blog emphasize 30s quick win · demo video visual-first</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:20px; font-size:15px;">📋 Definition of Done (Sprint)</h3>
+  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
+    <li>✅ 5/5 tasks CBM-INT-301→305 complete</li>
+    <li>✅ 7/7 Acceptance Criteria pass</li>
+    <li>✅ Plugin installable via <code>/plugin install cbm</code> trong Cowork</li>
+    <li>✅ 2 Archetype Packs shipped với content reviewed</li>
+    <li>✅ Blog post + demo video live</li>
+    <li>✅ HN/Reddit/Viblo/Zalo launch posts published</li>
+    <li>✅ <code>/review-gate</code> 3 tầng PASS</li>
+    <li>✅ CEO approve merge · Tag <code>v2.5.0</code> push · GitHub Release published</li>
+    <li>✅ Board SSOT + BRIEF.md updated · Retrospective done</li>
+    <li>✅ <strong>INITIATIVE CBM × Claude Integration OFFICIALLY COMPLETE</strong> (S1 + S2 + S3)</li>
+  </ul>
+
+  <h3 style="margin-top:20px; font-size:15px;">🔗 References</h3>
+  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
+    <li><strong>Kickoff brief:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">CBM-INT-S3-KICKOFF.md</a></li>
+    <li><strong>Tech Plan §3:</strong> <a href="../docs/active/cbm-claude-integration/Technical_Plan_CBM_Claude_Integration.md#3-phase-3--plugin-marketplace-5-sp--tuần-3" target="_blank">Phase 3 Plugin Marketplace (5 SP)</a></li>
+    <li><strong>Archetype GTM:</strong> <a href="../docs/active/cbm-claude-integration/Project_Archetype_GTM_Strategy.md" target="_blank">7 archetype analysis (Tier 1 AI Agent + SaaS B2B)</a></li>
+    <li><strong>S1 Retro:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">CBM-INT-S1-Retrospective.md</a></li>
+    <li><strong>S2 Retro:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-Retrospective.md" target="_blank">CBM-INT-S2-Retrospective.md</a> (AI items + S2-1/2/3)</li>
+    <li><strong>After S3:</strong> Initiative complete · Post-launch monitoring · CBM-LANG-P1 (JS+Java) scheduling</li>
+  </ul>
+
+  <p style="margin-top:14px; padding:10px 14px; background:var(--bg-muted); border-radius:6px; font-size:12px; color:var(--text-muted);">
+    <strong>PM Note S3 (21/04):</strong> <strong>FINAL sprint.</strong> Pattern từ S1+S2 (8 SP / 1.5 ngày) → expect S3 complete trong 1-2 ngày. <strong>Rule #S2-1 applied:</strong> feature PRs skip <code>project/board.html</code> progress label — PM ships separate board sync after each feature merge (giảm recurring conflict pattern từ S2 3 lần). Pre-S3 blockers: AI-#1 PyPI OIDC · AI-#7 GitHub Settings (still open from S1 retro).
+  </p>
+
+
+  <!-- HC-AI | ticket: FDD-TOOL-CODEMAP — CBM-VIBE tier 1 status sync (16/11/2026) -->
+  <!-- ══════════════════════════════════════════════
+       CBM-VIBE · TẦNG 1 — TASK BOARD
+  ═══════════════════════════════════════════════════ -->
+  <h2 id="cbm-vibe-t1" style="margin-top:40px;"><span class="h2-icon">🧭</span> CBM-VIBE · Tầng 1 — Skill cho người vibecoding <span class="badge open" style="font-size:12px;margin-left:8px;">🟡 7/8 SP code xong · chờ CEO duyệt</span></h2>
+
+  <div style="padding:12px 14px; background:linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border-left:4px solid #0ea5e9; border-radius:8px; margin:14px 0 16px; font-size:13px; color:#075985; line-height:1.7;">
+    <strong>🎯 Mục tiêu:</strong> sau mỗi lần nhờ AI sửa, người không đọc được code biết ba điều bằng tiếng Việt thường: AI đã làm gì, có đúng điều mình yêu cầu không, có đụng tới thứ đang chạy không.
+    <br>
+    <strong>👤 Người dùng:</strong> chưa từng mở terminal hoặc là tay mơ, vibecode bằng Claude (CEO chốt 12/11/2026).
+    <br>
+    <strong>📦 Phạm vi tầng 1:</strong> skill chạy ở Chat, Cowork và Claude Code, trình bày bằng chữ trong cuộc trò chuyện. Hook (báo cáo tự động) và mod (khung bên cạnh) là tầng 2 và 3.
+    <br>
+    <strong>🔎 Cập nhật:</strong> 18/11/2026. Chưa PR nào của chuỗi này được merge.
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>PR</th><th>Xong khi</th><th>Kết quả đã kiểm</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>CM-S4-01</code></td>
+        <td>Domain do người dùng khai báo trong config (<code>domains: {tên: [mẫu]}</code>) — nền để gán code vào tính năng</td>
+        <td>—</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/145" target="_blank">#145</a></td>
+        <td>Node được gán domain theo mẫu đường dẫn hoặc id; có test</td>
+        <td>7 test · CI xanh</td>
+        <td><span class="badge open">🟡 Chờ duyệt</span></td>
+      </tr>
+      <tr>
+        <td><code>VIBE-DOC</code></td>
+        <td>Concept, design preview v0.1, khảo sát 3 câu cho khách</td>
+        <td>—</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/146" target="_blank">#146</a></td>
+        <td>CEO duyệt nội dung</td>
+        <td>CEO duyệt 13/11/2026</td>
+        <td><span class="badge open">🟡 Chờ merge</span></td>
+      </tr>
+      <tr>
+        <td><code>VIBE-101</code></td>
+        <td>Lõi chạy không cần cài: không cần file cấu hình, không cần PyYAML</td>
+        <td>1,5</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/147" target="_blank">#147</a></td>
+        <td><code>generate</code> chạy trên Python 3.9 không có PyYAML, cho một dự án Python mẫu và một dự án TS mẫu</td>
+        <td>Đạt · 19 test · chạy thật bằng Python 3.9.6 của macOS</td>
+        <td><span class="badge open">🟡 Chờ duyệt</span></td>
+      </tr>
+      <tr>
+        <td><code>VIBE-102</code></td>
+        <td>Phát hiện thay đổi theo nội dung từng hàm và từng file; parser TS biết hàm kết thúc ở đâu, nhận hàm generic, nối lời gọi về đúng hàm</td>
+        <td>2</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/149" target="_blank">#149</a></td>
+        <td>Trên app mẫu, báo đúng <code>lib/reminders.ts</code> bị sửa; hai hàm truy cập dữ liệu có trong đồ thị</td>
+        <td>Đạt · 72 test · trước đó công cụ báo "0 hàm sửa" cho cùng thay đổi</td>
+        <td><span class="badge open">🟡 Chờ duyệt</span></td>
+      </tr>
+      <tr>
+        <td><code>VIBE-103</code></td>
+        <td>Kho tính năng, tiêu chí, bằng chứng (<code>.cbm/features.json</code>); quy thay đổi về tính năng; bằng chứng tự hết hạn khi code liên quan đổi</td>
+        <td>2</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/150" target="_blank">#150</a></td>
+        <td>Từ hai ảnh chụp trước–sau của app mẫu, ra đúng "Đặt lịch và Nhắc lịch bị đụng" và danh sách tiêu chí cần kiểm lại</td>
+        <td>Đạt · 72 test · 5 tiêu chí cần kiểm lại, 3 tính năng khác không bị đụng</td>
+        <td><span class="badge open">🟡 Chờ duyệt</span></td>
+      </tr>
+      <tr>
+        <td><code>VIBE-104</code></td>
+        <td>Plugin <code>cbm-vibe</code> đúng định dạng chuẩn; skill tiếng Việt cho ba khoảnh khắc; mã nguồn CBM kèm trong skill</td>
+        <td>1,5</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/151" target="_blank">#151</a></td>
+        <td><code>claude plugin validate</code> đạt; chạy trọn vòng "chốt yêu cầu → báo cáo thay đổi" trên dự án mẫu</td>
+        <td>Validate đạt · 62 test · bố cục báo cáo khớp design preview đã duyệt · lệnh mà skill được cấp quyền sẵn chỉ đọc dự án và giữ kho tính năng, không mở máy chủ, không cài git hook · trọn vòng đã chạy hai lần với <strong>agent phụ đóng vai Claude</strong> (15–16/11 và 18/11); chưa chạy trong Claude thật vì phiên dòng lệnh hết hạn đăng nhập</td>
+        <td><span class="badge open">🟡 Chờ duyệt</span></td>
+      </tr>
+      <tr>
+        <td><code>VIBE-105</code></td>
+        <td>Cài thử qua giao diện ở Chat, Cowork và tab Code trên máy CEO</td>
+        <td>1</td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/153" target="_blank">#153</a></td>
+        <td>Có bảng ghi rõ nơi nào chạy đủ, nơi nào thiếu gì</td>
+        <td>Hướng dẫn và phần kiểm bằng máy đã xong; <strong>bảng kết quả còn trống, chờ CEO bấm thử</strong></td>
+        <td><span class="badge planned">⏳ Chờ CEO</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:20px; font-size:15px;">⚠️ Điều chưa làm được và việc cần CEO</h3>
+  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
+    <li><strong>Chưa chạy plugin trong Claude thật.</strong> Lệnh <code>claude -p</code> trên máy báo phiên đăng nhập hết hạn. Việc Claude có tự bật skill từ lời người dùng hay không chỉ kiểm được khi anh cài thử (VIBE-105).</li>
+    <li><strong>Chưa cài vào tài khoản của CEO.</strong> Plugin cài vào tài khoản sẽ xuất hiện cả trong Claude Code và chen vào các phiên làm việc hằng ngày của anh; hướng dẫn VIBE-105 có hai cách thử tránh việc đó.</li>
+    <li><strong>Giả định rủi ro nhất chưa được thử:</strong> người không đọc được code có hiểu báo cáo và làm theo không. Cần 5 người đúng chân dung thử báo cáo mẫu; đạt nếu 4/5 người kể lại đúng AI vừa làm gì.</li>
+    <li><strong>Chưa quyết:</strong> ba file tài liệu training (Handbook, Slides, Training Plan) có đưa lên repo công khai hay không. Hiện chỉ nằm ở máy.</li>
+    <li><strong>Mã việc (đã xử lý 16/11):</strong> VIBE-105 là việc cài thử plugin ở Chat, Cowork, tab Code (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/153" target="_blank">#153</a>). Việc "CBM Mod + Claude Replay" đã đổi mã thành VIBE-106 và đã vào <code>main</code> (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/159" target="_blank">#159</a>, <a href="https://github.com/hypercommerce-vn/codebase-map/pull/165" target="_blank">#165</a>).</li>
+    <li><strong>Gộp với VIBE-106 (đã xử lý 18/11):</strong> VIBE-106 vào <code>main</code> trước. PR #151 đã gộp <code>main</code> và giữ đủ lệnh của cả hai bên (<code>features</code> và <code>mod</code>). Các PR #147, #149, #150 đứng riêng thì xung đột với <code>main</code> ở <code>codebase_map/cli.py</code>; nội dung của chúng nằm trọn trong #151 nên không cần gộp riêng.</li>
+    <li><strong>Chỗ hở đã biết, chưa sửa tận gốc:</strong> công cụ chưa tự nối màn hình với điểm nhận dữ liệu gọi qua địa chỉ. Lần chạy thử ngày 18/11 cho thấy hệ quả: khi một điểm nhận dữ liệu chỉ được ghi vào một tính năng, sửa phần xử lý đứng sau nó không làm tiêu chí của tính năng khác cũng gọi điểm đó chuyển sang "cần kiểm lại". Skill đã có chỉ dẫn ghi vào cả hai tính năng và có test ghi lại; sửa tận gốc là việc nên làm đầu tiên ở tầng 2.</li>
+    <li><strong>Test chập chờn của VIBE-106:</strong> <code>test_mod_server.py::TestEndpoints::test_status</code> quá thời gian chờ một lần trên CI (Python 3.10, PR #153) vì gọi <code>gh</code> qua mạng với hạn 3 giây; chạy lại thì đạt. Không thuộc code CBM-VIBE.</li>
+  </ul>
+
+  <h3 style="margin-top:20px; font-size:15px;">🔗 Tài liệu</h3>
+  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
+    <li><strong>Concept:</strong> <a href="../docs/active/cbm-vibecoding/CBM-VIBE-Concept.md" target="_blank">CBM-VIBE-Concept.md</a> — người dùng, mô hình "một chuỗi, ba khoảnh khắc", đóng gói ba tầng, sản phẩm tương tự</li>
+    <li><strong>Design preview v0.1:</strong> <a href="../docs/active/cbm-vibecoding/CBM-VIBE-Design-Preview.html" target="_blank">CBM-VIBE-Design-Preview.html</a></li>
+    <li><strong>Khảo sát khách (3 câu):</strong> <a href="../docs/active/cbm-vibecoding/CBM-VIBE-Khao-Sat-Khach.md" target="_blank">CBM-VIBE-Khao-Sat-Khach.md</a></li>
+    <li><strong>Hướng dẫn cài thử (VIBE-105):</strong> <a href="../docs/active/cbm-vibecoding/CBM-VIBE-Cai-Thu.md" target="_blank">CBM-VIBE-Cai-Thu.md</a></li>
+    <li><strong>Plugin:</strong> <a href="../plugins/cbm-vibe/README.md" target="_blank">plugins/cbm-vibe/README.md</a> · skill: <a href="../plugins/cbm-vibe/skills/cbm-vibe/SKILL.md" target="_blank">SKILL.md</a></li>
+    <li><strong>Review gate:</strong> <a href="../docs/reference/reviews/ReviewGate_CBM-VIBE-Tier1_Round1_20261116.md" target="_blank">ReviewGate_CBM-VIBE-Tier1_Round1_20261116.md</a></li>
+  </ul>
+
+  <!-- Acceptance Criteria -->
+  <h2><span class="h2-icon">🎯</span> Acceptance Criteria — CM-S1 <span class="badge done" style="font-size:12px;margin-left:8px;">10/10 PASSED</span></h2>
+  <div class="ac-grid">
+    <div class="ac-item"><span class="check">✅</span> CM-AC-01: HTML offline (D3.js bundled 280KB)</div>
+    <div class="ac-item"><span class="check">✅</span> CM-AC-02: Sidebar tree collapse/expand</div>
+    <div class="ac-item"><span class="check">✅</span> CM-AC-03: Domain clustering visible</div>
+    <div class="ac-item"><span class="check">✅</span> CM-AC-04: CI generate map on Actions</div>
+    <div class="ac-item"><span class="check">✅</span> CM-AC-05: Unknown layer < 1%</div>
+    <div class="ac-item"><span class="check">✅</span> CM-AC-06: Minimap + viewport</div>
+    <div class="ac-item"><span class="check">✅</span> CM-AC-07: Toolbar 8 buttons</div>
+    <div class="ac-item"><span class="check">✅</span> CM-AC-08: Dual legend</div>
+    <div class="ac-item"><span class="check">✅</span> CM-AC-09: Font min 11px</div>
+    <div class="ac-item"><span class="check">✅</span> CM-AC-10: Empty state on search</div>
+  </div>
+
+  <!-- Key Decisions -->
+  <h2><span class="h2-icon">📋</span> Quyết định quan trọng</h2>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-date">05/04/2026</div>
+      <div class="tl-content"><strong>Tách repo</strong> — codebase-map là standalone tool, không commit vào HC repo. CEO Decision.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">05/04/2026</div>
+      <div class="tl-content"><strong>Design approved</strong> — v2.0 tổng thể + CM-S1 chi tiết. FDD Spec: 3 sprints, 29 tasks, 55 SP.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">05/04/2026</div>
+      <div class="tl-content"><strong>Quy trình Day</strong> — Implement → Lint → PR → CI → /review-gate 3 tầng → CEO approve.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">05/04/2026</div>
+      <div class="tl-content"><strong>Retroactive approve Day 1</strong> — CM-S1 Day 1 đã review ở HC repo cũ (PR #82/#84).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">06/04/2026</div>
+      <div class="tl-content"><strong>AI Infrastructure Migration</strong> — 7 agents, 5 commands, settings, 7 memory files.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">06/04/2026</div>
+      <div class="tl-content"><strong>Telegram Bot</strong> — @CodebaseMap_Project_bot cho CI notify. Secrets configured.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">06/04/2026</div>
+      <div class="tl-content"><strong>CM-S1 Sprint COMPLETE</strong> — 15/15 SP, 10/10 tasks, 5 PRs merged. All review gates passed.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">06/04/2026</div>
+      <div class="tl-content"><strong>Board sync rule</strong> — Rule #8: update project/board.html khi update BRIEF.md/task board.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">06/04/2026</div>
+      <div class="tl-content"><strong>CM-S2 Design approved</strong> — 11 task mockups, PR #8 merged.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">06/04/2026</div>
+      <div class="tl-content"><strong>CM-S2 Sprint START</strong> — Day 1 done: Git diff integration (CM-S2-01, 3 SP). PR #9 merged.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">06/04/2026</div>
+      <div class="tl-content"><strong>CM-S2 Day 2 Done</strong> — Incremental cache (CM-S2-02, 3 SP). 80%+ faster builds. PR #11 merged. CTO 100/100 SHIPIT.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">06/04/2026</div>
+      <div class="tl-content"><strong>CM-S2 Day 3 Done</strong> — Edge resolution (CM-S2-06) + Coverage overlay (CM-S2-03), 4 SP. PR #13 merged. CTO 99/100 SHIPIT.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">07/04/2026</div>
+      <div class="tl-content"><strong>CM-S2 Day 4 Done</strong> — API Catalog (CM-S2-07) + /implement (CM-S2-04) + /review-gate (CM-S2-05), 4 SP. PR #15 merged. CTO 99/100 SHIPIT.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">07/04/2026</div>
+      <div class="tl-content"><strong>2-tier Review Gate approved</strong> — <code>/review-gate --local</code> Pre-flight TRƯỚC <code>git push</code> + Remote Full SAU push + CI. Áp dụng từ CM-S3. Giảm force-push, tiết kiệm CI minutes + CEO review time. Critical Rule #6.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">07/04/2026</div>
+      <div class="tl-content"><strong>CM-S2 Day 5 Done</strong> — FDD linking (CM-S2-08) + PR Impact Bot (CM-S2-09) + Sprint Metric (CM-S2-10) + Staleness Alert (CM-S2-11), 4 SP. PR #17 merged, fix PR #19 (bot JSON).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">07/04/2026</div>
+      <div class="tl-content"><strong>🎉 CM-S2 Sprint COMPLETE</strong> — 18/18 SP, 11/11 tasks, 5 feature PRs (#9, #11, #13, #15, #17) + 4 chore PRs + bot fix #19 + 2-tier workflow #20. v1.2 shipped. Tool trưởng thành từ visual tool sang workflow tool.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">07/04/2026</div>
+      <div class="tl-content"><strong>CM-S3 Kickoff</strong> — 3 agents (PM + CTO + Designer) phân công: design HTML (8 mockup sections) + task board + Day plan. Spec đã approved. Chờ CEO approve design để bắt đầu Day 1.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">08/04/2026</div>
+      <div class="tl-content"><strong>v2.0.1 SHIPPED</strong> — Hotfix sprint closed: PR #38 + #39 merged, tag v2.0.1 pushed, GitHub release published. HC unknown 173→0.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">09/04/2026</div>
+      <div class="tl-content"><strong>Repo PRIVATE</strong> — Chuyển public → private. PR #49: SSH install URLs + auth guide + ONBOARDING.md troubleshooting.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">12/04/2026</div>
+      <div class="tl-content"><strong>CBM Phase 1 Kickoff</strong> — CEO approved Dual-Snapshot Phase 1 start. KMP M1 COMPLETE (26/26 SP, CTO 20/20). CBM v2.1: graph metadata + snapshot versioning (7 SP, 5 Days). Design: CBM-Dual-Snapshot-Design.html (6 tabs). CTO review 48/60.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">12/04/2026</div>
+      <div class="tl-content"><strong>CBM-P1 Day 1 MERGED</strong> — PR #66: Graph metadata v2.1 + CLI --label + backward compat (3 SP). CTO 100/100 SHIPIT. 459 tests, 329→338 nodes.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">12/04/2026</div>
+      <div class="tl-content"><strong>CBM-P1 Day 2 MERGED</strong> — PR #67: SnapshotManager save/list/clean/load (1 SP). CTO 100/100 SHIPIT. 485 tests. Auto-save snapshot on generate.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">12/04/2026</div>
+      <div class="tl-content"><strong>CBM-P1 Day 3 MERGED</strong> — PR #68: CLI snapshots list + clean (1.5 SP). CTO 100/100 SHIPIT. 494 tests. Table + JSON output, --keep N flag.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">12/04/2026</div>
+      <div class="tl-content"><strong>CBM-P1 Day 4 MERGED + SPRINT CLOSED</strong> — PR #69: CI baseline generator + post-merge rotate (1.5 SP). CTO 100/100 SHIPIT. Phương án B: artifact + zero commit noise. Sprint 7/7 SP COMPLETE.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">12/04/2026</div>
+      <div class="tl-content"><strong>CBM-P2 Day 1 MERGED</strong> — PR #71: SnapshotDiff core engine + edge diff + rename detection + affected callers (9 SP in 1 day). CTO 100/100 SHIPIT. 525 tests.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">12/04/2026</div>
+      <div class="tl-content"><strong>CBM-P2 Day 2 MERGED</strong> — PR #72: Output formatters (markdown/json/text) + --breaking-only + --test-plan + CLI snapshot-diff (3 SP). CTO 100/100 SHIPIT. 556 tests. Board SSOT Rule #8 upgraded.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">12/04/2026</div>
+      <div class="tl-content"><strong>CBM-P2 Day 3</strong> — PR #74: CI workflow cbm-pr-impact.yml (dual-snapshot auto PR comment) + 26 integration tests. 582 tests. Sprint 12/12 SP (100%).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">12/04/2026</div>
+      <div class="tl-content"><strong>🏷️ v2.2.0 RELEASED</strong> — Dual-Snapshot Diff Engine shipped. Tag + GitHub Release published. CBM Phase 2 sprint closed (PR #75 merged). 85 SP total across 7 sprints.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">16/04/2026</div>
+      <div class="tl-content"><strong>🔀 KMP repo split</strong> — Knowledge AI Platform tách sang repo riêng (private) <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">knowledge-AI-platform ↗</a>. CBM repo chuyển thành standalone public OSS (unlimited free CI GitHub Actions).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">16/04/2026</div>
+      <div class="tl-content"><strong>📦 CBM Claude Integration — 7 tài liệu chiến lược</strong> soạn xong trong <code>docs/active/cbm-claude-integration/</code>. Strategy_Memo + Technical_Plan + Language_Coverage + Archetype_GTM + UI_Preview_Integration + OSS_Publishing + MCP_Explainer. Chờ CEO quyết định D1-D7.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">18/04/2026</div>
+      <div class="tl-content"><strong>🧹 Docs cleanup (Option B)</strong> — Refactor <code>docs/</code> thành <code>active/</code> (work in progress) vs <code>reference/</code> (shipped, historical). Design-preview split <code>active/</code> vs <code>archive/</code>. Created docs/README.md. Cập nhật CLAUDE.md v1.3.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">18/04/2026</div>
+      <div class="tl-content"><strong>🎯 CEO CHỐT 7/7 Decisions</strong> — D1 MIT giữ · D2 2 archetype (AI Agent + SaaS B2B) · D3 Song song Claude Integration + Language Expansion · D4 Java · D5 Ship 2 pack · D6 TechLead lead + CEO review weekly · D7 70% coverage (75% qua Phương án B).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">18/04/2026</div>
+      <div class="tl-content"><strong>🚀 CBM Claude Integration KICKOFF</strong> — Option B chốt: 1 TechLead full-time + AI pair. Scope 33 SP (20 SP Claude Integration + 13 SP Language) chia 3 sprint CBM-INT-S1/S2/S3 song song với CBM-LANG-P1. 5 tuần · 5 milestone gates G1-G5 · Launch 23/05/2026 · ROI 17x năm 1.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">18/04/2026</div>
+      <div class="tl-content"><strong>📋 CBM-INT-S1 SPRINT PLAN READY</strong> — PM chia 5 SP thành 6 tasks CBM-INT-101→106: PyPI (D1) · SKILL.md (D2) · /cbm-onboard + /cbm-impact + /cbm-diff (D3) · Integration test + QUICKSTART (D4-5). Duration 21/04 → 27/04/2026. Gate G1 Sunday. 6 AC sprint-level, 4 risks tracked. <a href="#cbm-int-s1">Task board ↓</a></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>✅ CEO APPROVE 5/5 KICKOFF A1-A5</strong> — A1 PyPI token uploaded (<code>PYPI_API_TOKEN</code> secret verified) · A2 Repo PUBLIC verified · A3 TechLead full-time 5 tuần · A4 <strong>Tester role = Claude</strong> · A5 Sunday 17:00 weekly review cadence. PM fix date calendar (Mon 20/04, not 21/04). Sprint LIVE Day 1 Mon 20/04/2026. Pre-flight blockers B1-B4 (SECURITY.md, git history audit, CONTRIBUTING.md, PR templates) phải close trước Day 1 09:00.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>🚀 CBM-INT-S1 Day 0 (Sun 19/04) — Pre-flight execution</strong> — TechLead delegated B2 git history audit (gitleaks/trufflehog scan). SECURITY.md + CONTRIBUTING.md + PR/issue templates soạn today. <strong>CEO quyết định: bỏ Telegram group, track toàn bộ sprint qua board.html (SSOT).</strong> PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/104" target="_blank">#104</a> merged — board + BRIEF sync.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>✅ B2 GIT HISTORY AUDIT CLEAN</strong> — CTO agent chạy <code>gitleaks v8.30.1</code> (full ruleset 200+ patterns) + manual regex sweep cho 12 secret family patterns. Scan scope: 53 refs (21 local + 32 remote), <strong>168 unique commits</strong>, 3.22 MB blob data, 733ms runtime. <strong>Zero credential findings.</strong> 2 LOW non-blocker: laptop hostname trong committer email + 2 commits legacy <code>git@stash</code> từ monorepo era — không warrant history rewrite. Day 1 Mon 20/04 UNBLOCKED. Risk downgrade 🔴9 → 🟡4. <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-B2-Git-Audit-Report.md" target="_blank">Full B2 report ↗</a></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>✅ B1 + B3 + B4 COMMUNITY HEALTH SHIPPED</strong> — CTO agent tạo 6 files: <code>SECURITY.md</code> (102 dòng, supported versions v2.2.x, GHSA private inbox hypercdp@gmail.com, 48h ACK + 7d triage, scope rõ ràng) · <code>CONTRIBUTING.md</code> (165 dòng, dev setup + lint gate + PR workflow + architecture principles) · <code>.github/ISSUE_TEMPLATE/</code> bug_report + feature_request + config.yml · <code>.github/pull_request_template.md</code>. GitHub Discussions ENABLED. <strong>PRE-FLIGHT 100% COMPLETE</strong> — Day 1 ready.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-101 Day 1 MERGED — PyPI v2.2.1 ready</strong> — TechLead agent: pyproject.toml v2.2.1 + enhanced metadata, <code>__init__.py</code> stale version fix (1.0.0→2.2.1), <code>.github/workflows/publish-pypi.yml</code> (tag trigger, OIDC-ready). Build sdist 166KB + wheel 174KB, d3 bundled, twine check PASS, lint PASS, 158/158 tests PASS. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a> MERGED 09:26 UTC. ⚠️ Tag <code>v2.2.1</code> chưa push (CEO action) → PyPI vẫn 404.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-102 Day 2 MERGED — Claude Code Skill shipped</strong> — TechLead agent parallel với Day 1: <code>integrations/claude-code/skills/codebase-map/SKILL.md</code> 197 dòng (< 500 limit), frontmatter YAML valid, desc 444 chars, 11 trigger phrases ("impact"/"callers"/"who calls"/"dependency graph"/"onboard this repo"/"what breaks if I change X"/"blast radius"/"API endpoints in this project"/"diff vs main"/"before/after refactor"/"is this safe to delete"), 7 body sections, commands verified vs CBM v2.2.1 CLI. Fixture <code>TRIGGER_TEST_PROMPTS.md</code> (10 pos + 5 neg) cho dry-run ≥8/10 target. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a> MERGED 09:38 UTC.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>📊 Sprint CBM-INT-S1 — 2/5 SP (40%) DONE in 1 day</strong> — Day 1+Day 2 song song thay vì tuần tự → 2 ngày sớm schedule gốc. Day 3 CBM-INT-103/104/105 (3 slash commands, 2 SP) starting. CEO decision ghi nhận: bỏ Telegram, track full qua board SSOT + PR history. ⏳ Outstanding: CEO tag <code>v2.2.1</code> push để trigger PyPI publish (workflow publish-pypi.yml đã sẵn sàng).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-103/104/105 Day 3 MERGED — 3 slash commands shipped</strong> — TechLead delivered <code>/cbm-onboard</code> (80 dòng) · <code>/cbm-impact</code> (48 dòng) · <code>/cbm-diff</code> (91 dòng). Fixed Tech Plan template bugs: <code>diff</code> default HEAD~1→main, <code>snapshot-diff --depth</code> 1→2 cho PR review. Uses <code>snapshots list --json</code> + <code>check-staleness --json</code> cho parseable baseline detection. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/110" target="_blank">#110</a> MERGED.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-106 Day 4 MERGED — Integration test 5/5 PASS</strong> — Tester (Claude) executed 5-case matrix. Case 2 skill trigger 10/10 (exceeds AC 8/10). Case 3 dogfood 200 nodes/992 edges/24ms. Case 4 threshold OK. Case 5 dual-mode OK. Lint PASS. No P0/P1 defects · 2 P3 non-blocker. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/111" target="_blank">#111</a> MERGED. Full report: <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Day4-Test-Report.md" target="_blank">Day4-Test-Report.md</a>.</div>
+    </div>
+    <div class="tl-item" style="background:#f0fdf4; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
+      <div class="tl-date">19/04/2026 · 🎉 MILESTONE</div>
+      <div class="tl-content"><strong>🎉 v2.2.1 LIVE trên PyPI — First PyPI publication ever!</strong> CEO authorize PM push tag <code>v2.2.1</code>. Workflow <code>publish-pypi.yml</code> run <code>24626431411</code> SUCCESS in <strong>24s</strong>. <a href="https://pypi.org/project/codebase-map/" target="_blank">pypi.org/project/codebase-map</a> HTTP 200 · Version 2.2.1 · MIT · Python ≥3.10. <strong>Case 1 REAL install test:</strong> <code>pipx install codebase-map</code> → <code>codebase-map 2.2.1</code> (Python 3.14.3 compat verified). <strong>AC-INT-01 CLOSED genuinely.</strong> 4.5/5 SP (90%) · chỉ còn Day 5 QUICKSTART.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">19/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-106 Day 5 MERGED — QUICKSTART + v2.3.0 bump</strong> — TechLead shipped <code>QUICKSTART.md</code> 114 dòng (30s install · curl one-liner · baseline workflow · troubleshooting) + version bump 2.2.1→2.3.0 + release notes <code>docs/releases/v2.3.0.md</code> 75 dòng. Build wheel 174KB + sdist 167KB twine PASS · Lint PASS · 158/158 tests PASS. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/114" target="_blank">#114</a> MERGED. Status sync PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/113" target="_blank">#113</a> MERGED.</div>
+    </div>
+    <div class="tl-item" style="background:#f0fdf4; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
+      <div class="tl-date">19/04/2026 · 🎉 MILESTONE #2</div>
+      <div class="tl-content"><strong>🎉 v2.3.0 LIVE trên PyPI — Second release, sprint closure!</strong> CEO authorize PM push tag <code>v2.3.0</code>. Workflow run <code>24630124733</code> SUCCESS in <strong>24s</strong>. <code>pipx install codebase-map==2.3.0</code> verified trên Python 3.14.3 → prints <code>codebase-map 2.3.0</code>. Both v2.2.1 + v2.3.0 available trên PyPI simple index.</div>
+    </div>
+    <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
+      <div class="tl-date">19/04/2026 · 🎉 SPRINT CLOSE</div>
+      <div class="tl-content"><strong>🎉 SPRINT CBM-INT-S1 COMPLETE — 5/5 SP (100%) trong 1 ngày · 5 ngày sớm schedule gốc!</strong> All 6 tasks CBM-INT-101→106 ✅ DONE · All 6 AC met · 10 PRs merged · 0 P0/P1 defects · 158/158 tests PASS · 2 PyPI releases LIVE. <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">Retrospective doc ↗</a> · Gate G1 Sun 26/04 chỉ còn ceremony formality. Next: CBM-INT-S2 MCP Server (8 SP, Week 2-3).</div>
+    </div>
+    <div class="tl-item" style="background:#d1fae5; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
+      <div class="tl-date">20/04/2026 · 🏆 E2E VERIFICATION SEALED</div>
+      <div class="tl-content"><strong>🏆 CEO E2E Verification: 20/20 CHECKPOINTS PASS — Gate G1 GO!</strong> CEO (tự chạy test, CTO guide) verified 4/4 sprint pillars live trên FastAPI repo thật: <strong>Level 1</strong> smoke 5/5 (pipx install · version · CLI help · PyPI 200 · dogfood FastAPI 332 nodes/1607 edges/139ms) · <strong>Level 2A</strong> skill trigger 5/5 (4 positive triggered + 1 negative correct — AC-INT-02 closed genuinely beyond heuristic) · <strong>Level 2B</strong> slash commands 3/3 (onboard smart cache skip · impact Medium tier threshold correct · <strong>/cbm-diff graceful master/main fallback</strong> ⭐) · <strong>Level 2C</strong> QUICKSTART 7/7 boxes. <strong>0 P0/P1/P2 defects.</strong> 2 P3 findings (AI-#9 config path UX, AI-#10 diff default branch) added to S2 backlog. <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Verification-Report.md" target="_blank">Verification Report ↗</a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">Retro v1.1 ↗</a>. <strong>Sprint CBM-INT-S1 OFFICIALLY SEALED.</strong></div>
+    </div>
+    <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
+      <div class="tl-date">20/04/2026 · 🚀 S2 KICKOFF</div>
+      <div class="tl-content"><strong>🚀 CBM-INT-S2 KICKOFF — MCP Server 8 SP · Fast-track Mon 20/04 (7 ngày sớm schedule gốc 27/04)</strong>. CEO decision: skip Gate G1 ceremony formality, go S2 ngay. Sprint goal: Python MCP server reuse <code>codebase_map</code> package · 5 tools (<code>cbm_query</code>/<code>cbm_search</code>/<code>cbm_impact</code>/<code>cbm_snapshot_diff</code>/<code>cbm_api_catalog</code>) · graph cache mtime-based · PyPI <code>codebase-map-mcp</code>. Tasks CBM-INT-201→208. AC-S2-01→06 defined. Gate G2 mid Sun 26/04 · Gate G3 end Sun 03/05 (nominal — likely compress). Retention target 15% → 50% (slash command → MCP auto-invoke UX). <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">Kickoff brief ↗</a> · <a href="#cbm-int-s2">Task board ↓</a>. ⚠️ Pre-S2 blockers: AI-#6 44 uncommitted files · AI-#7 GitHub Settings enable.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">20/04/2026</div>
+      <div class="tl-content"><strong>🧹 AI-#6 CLEANUP COMPLETE — 44/44 uncommitted files closed</strong> — 3 PRs shipped theo PM Option 1 plan: PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/118" target="_blank">#118</a> 7 strategy foundation docs (CRITICAL recovery · lived only trên working tree từ 16/04) · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/119" target="_blank">#119</a> Option B refactor 34 files (docs active/reference + design-preview active/archive split) · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/120" target="_blank">#120</a> misc path refs 3 files. Working tree CLEAN. S2 Day 1 unblocked.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">20/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-201 Day 1 MERGED — MCP server scaffold</strong> — TechLead delivered <code>mcp_server/</code> package 167 LoC (server.py 116 + graph_cache.py stub 28 + 3 meta files). MCP SDK <code>mcp==1.27.0</code> pinned optional extra <code>[mcp]</code> (không phải hard dep — base install stays lean). <strong>Architecture wins:</strong> <code>TOOL_REGISTRY</code> dict + <code>register_tool()</code> helper để D2-D4 tool modules self-register không đụng <code>server.py</code>; graceful ImportError hint <code>pip install codebase-map[mcp]</code>; sync <code>main()</code> wrapper cho clean <code>python -m mcp_server</code> UX. 158/158 tests PASS · Lint clean. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/121" target="_blank">#121</a> MERGED. Sprint progress 1/8 SP (12.5%).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">20/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-202 + 203 Day 2 MERGED — 3 MCP tools (query + search + impact)</strong> — TechLead 255 LoC total: <code>query.py</code> 67 (QueryEngine.query_node) · <code>search.py</code> 79 (handler-side limit since CBM search() no kwarg) · <code>impact.py</code> 100 (risk tier Low/Medium/HIGH matching slash cmd). Auto-register pattern established D1 paid off — zero changes to <code>server.py</code> module top (1-line lazy import inside <code>main()</code> to avoid circular). Smoke tests PASS 3/3. 158/158 tests · Lint clean. <strong>Note:</strong> PR #123 had merge conflict với #122, closed + replaced by PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/124" target="_blank">#124</a> (rebased v2) MERGED. Sprint progress 3/8 SP (37.5%).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">20/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-204 Day 3 MERGED — cbm_snapshot_diff (MOST COMPLEX tool)</strong> — TechLead 138 LoC (budget 150) · <strong>pure Python API no subprocess</strong>: <code>SnapshotManager.load()</code> handles label↔path duality + <code>SnapshotDiff.compute()</code> engine + <code>diff_formatter</code> multi-format. 5 flags all wired: baseline/current/depth/breaking_only/test_plan/format. Defaults depth=2 + format=markdown match slash cmd. 6/6 smoke tests PASS (markdown · breaking_only filter · bad label graceful · json · text · test_plan). TOOL_REGISTRY 4 keys. 158/158 tests · Lint clean. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/125" target="_blank">#125</a> MERGED. <strong>Sprint progress 5/8 SP (62.5%) — most complex task done smoothly.</strong></div>
+    </div>
+    <div class="tl-item" style="background:#d1fae5; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
+      <div class="tl-date">20/04/2026 · 🎯 5/5 MCP TOOLS COMPLETE</div>
+      <div class="tl-content"><strong>✅ CBM-INT-205 + 206 Day 4 MERGED — api_catalog + GraphCache (40× speedup)</strong> — TechLead delivered 2 tasks: <code>api_catalog.py</code> 96 LoC (reuse <code>APICatalog.from_graph().filter()</code>, 4 params: graph_file/method/domain/format) + <code>graph_cache.py</code> 72 LoC (replaces D1 stub, thread-safe Lock, mtime-based invalidation, CACHE singleton). <strong>Benchmark AC-S2-02 CLOSED:</strong> Cold 2.8ms · Hot 0.071ms (<strong>40× cache speedup</strong>, well under 100ms target). 4 tools migrated to shared CACHE (snapshot_diff untouched — uses SnapshotManager). <strong>TOOL_REGISTRY 5 keys — all 5 MCP tools per Tech Plan §2 LIVE!</strong> PR #127 had conflict với #126, closed + replaced by PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/128" target="_blank">#128</a> MERGED. 158/158 tests · lint clean. <strong>Sprint 6.5/8 SP (81.25%) — only Day 5 PyPI publish + docs remaining.</strong></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">20/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-207 + 208 Day 5 MERGED — PyPI packaging + docs + registry prep (SPRINT CLOSURE)</strong> — TechLead Path A decision (single package + <code>[mcp]</code> extra, not separate <code>codebase-map-mcp</code>): <code>pipx install codebase-map[mcp]</code> → <code>cbm-mcp</code> entry point. Version bump 2.3.0 → 2.4.0 synced across 3 files. Build wheel 181KB + sdist 170KB twine PASS. 10 files: 5 new docs (<code>v2.4.0.md</code> release notes 102 lines · <code>integrations/mcp/README.md</code> Claude Desktop 120 lines · <code>REGISTRY_SUBMISSION.md</code> prep · Day 5 test report 5/5 tools PASS) + README + QUICKSTART MCP sections. PR #130 conflict với #129, closed + replaced by PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/131" target="_blank">#131</a> MERGED. <strong>Sprint 8/8 SP (100%) COMPLETE in 1.5 days.</strong></div>
+    </div>
+    <div class="tl-item" style="background:#f0fdf4; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
+      <div class="tl-date">20/04/2026 · 🎉 MILESTONE</div>
+      <div class="tl-content"><strong>🎉 v2.4.0 LIVE trên PyPI — MCP Server shipped!</strong> CEO authorize PM push tag <code>v2.4.0</code>. Workflow <code>publish-pypi.yml</code> run <code>24679777408</code> SUCCESS in <strong>29s</strong>. PyPI simple index: <code>codebase_map-2.4.0-py3-none-any.whl</code> + tar. <strong>Real install test:</strong> <code>pipx install 'codebase-map[mcp]==2.4.0'</code> → installs 2 entries (<code>codebase-map</code> + <code>cbm-mcp</code>) · <code>cbm-mcp</code> blocks on stdio correctly (exit 0 after alarm). AC-S2-04 CLOSED genuinely.</div>
+    </div>
+    <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
+      <div class="tl-date">20/04/2026 · 🎉 SPRINT CLOSE</div>
+      <div class="tl-content"><strong>🎉 SPRINT CBM-INT-S2 SEALED — 8/8 SP (100%) in 1.5 days · 8.5 ngày sớm schedule</strong>. 13 PRs merged · 3 conflicts resolved qua Option C pattern · 5 MCP tools LIVE (query/search/impact/snapshot_diff/api_catalog) · Cache 40× speedup · 158/158 tests · 0 P0/P1/P2 defects. <strong>E2E Verification 18/20 PASS</strong> (2 deferred CEO action: live Claude Desktop dry-run + MCP registry PR submission). Retro + Verify report shipped. <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-Retrospective.md" target="_blank">Retro ↗</a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-Verification-Report.md" target="_blank">Verify Report ↗</a>. Gate G2 + G3 both rolled into this compression. Next: CBM-INT-S3 Plugin Marketplace + 2 Packs (5 SP).</div>
+    </div>
+    <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
+      <div class="tl-date">21/04/2026 · 🚀 S3 KICKOFF</div>
+      <div class="tl-content"><strong>🚀 CBM-INT-S3 KICKOFF — Plugin Marketplace + 2 Archetype Packs · Final sprint · 5 SP</strong>. Fast-track Tue 21/04 (20 ngày sớm schedule gốc Mon 11/05). CEO decision: skip Gate G3 ceremony formality, go S3 ngay. Sprint goal: Đóng gói CBM thành Claude Plugin 1-click install · AI Agent Knowledge Pack + SaaS Onboarding Pack (CEO D5 bilingual EN/VI) · Launch blog + demo video + HN/Reddit/Viblo/Zalo posts. Tasks CBM-INT-301→305. AC-S3-01→07 defined. Gate G4 mid · Gate G5 LAUNCH. <strong>Rule #S2-1 applied</strong> — feature PRs skip board.html progress, PM ships separate status sync (giảm recurring conflict pattern từ S2). <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">Kickoff brief ↗</a> · <a href="#cbm-int-s3">Task board ↓</a>. ⚠️ Pre-S3 blockers: AI-#1 PyPI OIDC · AI-#7 GitHub Settings (still open from S1).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">21/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-301 + 302 Day 1 MERGED — Plugin bundle + post-install hook (CTO leverage plan VALIDATED)</strong> — TechLead execute Day 1 trong <strong>~10 phút wall-clock</strong> (vs 40-min budget). <strong>Zero new Python</strong> — pure file assembly composing S1+S2 assets: 4 S1 files copied (SKILL.md + 3 slash commands · diff MATCHES zero drift) + 5 new files (manifest.json 31 dòng · README.md 139 dòng · mcp/config.json points to <code>cbm-mcp</code> entry · post-install.sh 44 dòng idempotent · pre-uninstall.sh 16 dòng). Hook dùng exact S2 verified command <code>pipx install 'codebase-map[mcp]>=2.4.0'</code>. <strong>Rule #S2-1 passed first test</strong> — PR không đụng board.html, PM ships separate status sync. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a> MERGED. <strong>Sprint progress 2/5 SP (40%).</strong></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">21/04/2026</div>
+      <div class="tl-content"><strong>✅ CBM-INT-303 Day 2 MERGED — Marketplace staging (no Anthropic registry found)</strong> — TechLead research: <strong>no official Anthropic/MCP plugin registry</strong> exists (21/04/2026) — <code>anthropic/claude-plugins</code>, <code>anthropic/mcp-servers</code> both 404. Community convention verified via 3 existing marketplaces (buildwithclaude, superpowers-marketplace, cc-marketplace): schema <code>.claude-plugin/marketplace.json</code> + <code>/plugin marketplace add</code> pattern. Decision: self-host at <code>hypercommerce-vn/claude-plugins</code>. Staged 15 files (975 insertions) trong <code>claude-plugins-repo/</code>: marketplace.json + README + CONTRIBUTING + LICENSE + <strong>PUBLISH_INSTRUCTIONS.md</strong> (CEO 4-step plan) + full plugin tree copy (no drift). <strong>Rule #S2-1 validated 3rd time</strong> (3 consecutive PRs clean-split — #134 #135 #136). PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/136" target="_blank">#136</a> MERGED. <strong>Sprint progress 3/5 SP (60%).</strong></div>
+    </div>
+    <div class="tl-item" style="background:#d1fae5; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
+      <div class="tl-date">21/04/2026 · 🎯 2 ARCHETYPE PACKS SHIPPED</div>
+      <div class="tl-content"><strong>✅ CBM-INT-304 Day 3 MERGED — AI Agent Knowledge Pack + SaaS Onboarding Pack (CEO D5 delivered · bilingual EN/VI)</strong>. TechLead delivered 38 files · ~2,600 LoC trong ~40 phút wall-clock (65% thời gian là bilingual content translation, khớp dự đoán retro S2). <strong>AI Agent Pack 615 LoC:</strong> SKILL.md 158 dòng bilingual · 3 commands (<code>/agent-overview</code> · <code>/agent-impact</code> · <code>/agent-refactor-plan</code>) wrapping cbm_search + cbm_impact + cbm_query. <strong>SaaS Pack 673 LoC:</strong> SKILL.md 165 dòng · 3 commands (<code>/saas-onboard</code> · <code>/saas-apis</code> · <code>/saas-tier-logic</code>) với 6-domain scan + tenant-isolation cross-check. <strong>Leverage architecture:</strong> cả 2 packs dùng <code>mcp/config.json</code> + <code>hooks/*.sh</code> IDENTICAL main plugin (diff MATCHES) — zero new backend. Marketplace.json v1.0.0 → v1.1.0 với 3 plugins. <strong>Rule #S2-1 validated 4th time</strong> (board.html untouched). PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/138" target="_blank">#138</a> MERGED. <strong>Sprint progress 4.5/5 SP (90%)</strong> — chỉ còn Day 4 launch prep + Day 5 LAUNCH.</div>
+    </div>
+    <div class="tl-item" style="background:#d1fae5; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
+      <div class="tl-date">22/04/2026 · 🎉 MARKETPLACE LIVE</div>
+      <div class="tl-content"><strong>🎉 Action #5 DONE — <a href="https://github.com/hypercommerce-vn/claude-plugins" target="_blank">hypercommerce-vn/claude-plugins</a> public LIVE</strong>. PM executed: <code>gh repo create --public</code> + push staging · 3 plugins LIVE: codebase-map (2.5.0) · codebase-map-ai-agent (0.1.0 bilingual) · codebase-map-saas (0.1.0 bilingual). Users chạy <code>/plugin marketplace add hypercommerce-vn/claude-plugins</code>. <strong>Action #6 prep:</strong> REGISTRY_SUBMISSION.md updated với 22/04 research — registry landscape shift (real registry = registry.modelcontextprotocol.io via <code>mcp-publisher</code> CLI, not PR to servers repo). CEO submits post-launch. <strong>Blog wording fix:</strong> v2.5.0 plugin vs v2.4.0 PyPI distinction added. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/141" target="_blank">#141</a> MERGED.</div>
+    </div>
+    <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
+      <div class="tl-date">22/04/2026 · 🎉 S3 SEALED + INITIATIVE COMPLETE</div>
+      <div class="tl-content"><strong>🎉 SPRINT CBM-INT-S3 SEALED — 5/5 SP (100%) in ~1 calendar day · 13 days ahead of schedule</strong>. 10 PRs merged · <strong>Rule #S2-1 validated 7× consecutive</strong> (ZERO S3 conflicts vs S2's 3) · 0 P0/P1/P2 defects · 158/158 tests · 3 plugins LIVE · marketplace public · launch content ready. <strong>E2E Verification 22/25 PASS</strong> (3 deferred to CEO launch-day hands-on: Loom record, blog publish, HN/Reddit posts). <strong>🎉🎉🎉 INITIATIVE CBM × Claude Integration OFFICIALLY COMPLETE</strong> — S1 v2.3.0 + S2 v2.4.0 + S3 v2.5.0 plugin all SEALED. <strong>20 SP shipped in ~3 calendar days (vs original 6-week plan · 25.5 days saved)</strong>. 3 PyPI releases · 3 plugins · 5 MCP tools · 40× cache speedup · ~36 PRs merged. <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-Retrospective.md" target="_blank">S3 Retro ↗</a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-Verification-Report.md" target="_blank">S3 Verify Report ↗</a>. Next: CEO Day 5 launch-day actions → CBM-LANG-P1 (JS + Java, 13 SP, metrics gate).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">15/11/2026 · CBM-WEB</div>
+      <div class="tl-content"><strong>CEO duyệt website dự án v0.1 làm design</strong> (landing song ngữ + demo <code>/demo/</code> + deploy VPS), giữ khối "Sắp tới" hướng CBM-VIBE. PR #152 qua review gate 3 vòng (85.2% → 93.0% → 94.4% SHIPIT+NOTE), CEO duyệt merge 16/11/2026 (<code>e7a9b91</code>). Bug parser <code># flow:</code> phát hiện khi làm demo đã sửa và merge ở PR #148. Còn chờ: tên miền + VPS để deploy.</div>
+    </div>
+    <!-- HC-AI | ticket: FDD-TOOL-CODEMAP — CBM-VIBE tier 1 status sync (16/11/2026) -->
+    <div class="tl-item" style="background:#e0f2fe; border-left:4px solid #0ea5e9; padding:12px; border-radius:6px;">
+      <div class="tl-date">12/11/2026 · 🧭 HƯỚNG MỚI CBM-VIBE</div>
+      <div class="tl-content"><strong>CEO chốt hướng CBM chuyên cho vibecoding.</strong> Người dùng mục tiêu: chưa từng mở terminal, hoặc từng mở nhưng là tay mơ, không chuyên IT. Kênh: khách vibecode bằng Claude. Đóng gói ba tầng (skill → hook → mod), làm tầng skill trước để chạy được ở Chat, Cowork và Claude Code. Đối chiếu tài liệu chính thức cho thấy 3 plugin đã đăng chưa theo định dạng chuẩn. → <a href="../docs/active/cbm-vibecoding/CBM-VIBE-Concept.md" target="_blank">Concept</a></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">13/11/2026</div>
+      <div class="tl-content"><strong>CEO duyệt nội dung Concept, design preview v0.1 và bảng việc tầng 1 (VIBE-101…105, 8 SP).</strong> Chốt QD-02: CM-S4-01 (<code>domains</code>) đi trước vì là nơi lưu "tính năng". Phép thử trên app mẫu <code>so-dat-lich</code> cho thấy <code>snapshot-diff</code> chỉ thấy đổi chữ ký, bỏ sót sửa nội dung → thêm VIBE-102. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/145" target="_blank">#145</a> <a href="https://github.com/hypercommerce-vn/codebase-map/pull/146" target="_blank">#146</a> <a href="https://github.com/hypercommerce-vn/codebase-map/pull/147" target="_blank">#147</a> mở.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">15/11/2026</div>
+      <div class="tl-content"><strong>VIBE-102, 103, 104 xong code</strong> (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/149" target="_blank">#149</a> <a href="https://github.com/hypercommerce-vn/codebase-map/pull/150" target="_blank">#150</a> <a href="https://github.com/hypercommerce-vn/codebase-map/pull/151" target="_blank">#151</a>). Trên app mẫu: báo đúng "Đặt lịch và Nhắc lịch bị đụng" và 5 tiêu chí cần kiểm lại; plugin <code>cbm-vibe</code> đạt <code>claude plugin validate</code>. <strong>Sự cố:</strong> GitHub Actions không chạy job nào vì tài khoản tổ chức bị khoá do thanh toán; đã mở lại trong ngày, CI chạy lại xanh. <strong>Giới hạn:</strong> phiên Claude dòng lệnh trên máy hết hạn đăng nhập nên chưa chạy được plugin trong Claude thật; đã thử thay bằng agent phụ đóng vai Claude.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">16/11/2026</div>
+      <div class="tl-content"><strong>Rà soát độc lập:</strong> một agent không tham gia viết code tái hiện được 10 trường hợp công cụ vẫn báo "có bằng chứng" dù code liên quan đã đổi hành vi (URL trong template literal làm sai điểm kết thúc hàm, thẻ component bẻ dòng, thụt lề Python, lời gọi ở ngoài hàm, bí danh import, app nằm trong thư mục con…). Đã sửa cả 10, mỗi cái có test tái hiện (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/151" target="_blank">#151</a>, 420 test). Skill được chỉnh cho khớp design preview đã duyệt. Chi tiết: <a href="../docs/reference/reviews/ReviewGate_CBM-VIBE-Tier1_Round1_20261116.md" target="_blank">báo cáo review gate</a>.<br><strong>Chờ CEO:</strong> (1) duyệt và merge chuỗi PR tầng 1; (2) bấm thử plugin ở Chat, Cowork, tab Code theo <a href="../docs/active/cbm-vibecoding/CBM-VIBE-Cai-Thu.md" target="_blank">hướng dẫn VIBE-105</a> (PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/153" target="_blank">#153</a>); (3) gửi khảo sát 3 câu cho khách và chọn 5 người thử báo cáo mẫu.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">18/11/2026</div>
+      <div class="tl-content"><strong>Gộp với VIBE-106 và chạy thử lại.</strong> PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/151" target="_blank">#151</a> gộp <code>main</code> (đã có CBM Mod); 554 test đạt trên Python 3.9, 3.11, 3.12, 3.14 và CI xanh. Hai bản sửa trong ngày: (1) lệnh mà skill được cấp quyền sẵn chỉ còn chạy được phần đọc dự án và giữ kho tính năng. Trước đó, sau khi gộp, lệnh này chạy được cả máy chủ khung bên cạnh và lệnh cài git hook mà không hỏi người dùng; bản đóng gói plugin cũng không còn mang code máy chủ đó. (2) Một agent phụ đóng vai Claude chạy đủ ba khoảnh khắc với bản skill cuối: báo cáo đúng bố cục đã duyệt, khớp kết quả công cụ khi chạy lại. Phần hỏi lại sau đó lộ ra bốn chỗ hở trong chỉ dẫn, đã sửa; quan trọng nhất: điểm nhận dữ liệu mà hai tính năng cùng gọi phải ghi vào cả hai, nếu không công cụ báo "có bằng chứng" sai.</div>
+    </div>
+  </div>
+
+  <!-- CI Pipeline -->
+  <h2><span class="h2-icon">🔄</span> CI Pipeline — 4 Jobs</h2>
+  <div class="ci-diagram">
+    <span class="ci-job">lint</span> (black+isort+flake8) ──────────┐<br>
+    <span class="ci-job">test</span> (Python 3.10 · 3.11 · 3.12) ──┤<br>
+    <span class="ci-job">generate</span> (JSON+HTML verify) ────────┘<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+    <span class="ci-job">notify</span> → Telegram <span style="color:var(--c-green);">@CodebaseMap_Project_bot</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── ✅ CI PASSED → CEO notification<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── ❌ CI FAILED → Dev fix → re-push
+  </div>
 
   <!-- PR History -->
   <h2><span class="h2-icon">📝</span> PR History</h2>
@@ -1720,921 +2777,75 @@ a:hover { text-decoration: underline; }
         <td><a href="../docs/reference/reviews/ReviewGate_PR152_Round3_2026-11-15.md" target="_blank">3 vòng · 94.4% SHIPIT+NOTE</a></td>
         <td><span class="badge merged">✅ Merged 16/11</span></td>
       </tr>
-    </tbody>
-  </table>
-
-  <!-- CI Pipeline -->
-  <h2><span class="h2-icon">🔄</span> CI Pipeline — 4 Jobs</h2>
-  <div class="ci-diagram">
-    <span class="ci-job">lint</span> (black+isort+flake8) ──────────┐<br>
-    <span class="ci-job">test</span> (Python 3.10 · 3.11 · 3.12) ──┤<br>
-    <span class="ci-job">generate</span> (JSON+HTML verify) ────────┘<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
-    <span class="ci-job">notify</span> → Telegram <span style="color:var(--c-green);">@CodebaseMap_Project_bot</span><br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── ✅ CI PASSED → CEO notification<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── ❌ CI FAILED → Dev fix → re-push
-  </div>
-
-  <!-- Acceptance Criteria -->
-  <h2><span class="h2-icon">🎯</span> Acceptance Criteria — CM-S1 <span class="badge done" style="font-size:12px;margin-left:8px;">10/10 PASSED</span></h2>
-  <div class="ac-grid">
-    <div class="ac-item"><span class="check">✅</span> CM-AC-01: HTML offline (D3.js bundled 280KB)</div>
-    <div class="ac-item"><span class="check">✅</span> CM-AC-02: Sidebar tree collapse/expand</div>
-    <div class="ac-item"><span class="check">✅</span> CM-AC-03: Domain clustering visible</div>
-    <div class="ac-item"><span class="check">✅</span> CM-AC-04: CI generate map on Actions</div>
-    <div class="ac-item"><span class="check">✅</span> CM-AC-05: Unknown layer < 1%</div>
-    <div class="ac-item"><span class="check">✅</span> CM-AC-06: Minimap + viewport</div>
-    <div class="ac-item"><span class="check">✅</span> CM-AC-07: Toolbar 8 buttons</div>
-    <div class="ac-item"><span class="check">✅</span> CM-AC-08: Dual legend</div>
-    <div class="ac-item"><span class="check">✅</span> CM-AC-09: Font min 11px</div>
-    <div class="ac-item"><span class="check">✅</span> CM-AC-10: Empty state on search</div>
-  </div>
-
-  <!-- Key Decisions -->
-  <h2><span class="h2-icon">📋</span> Quyết định quan trọng</h2>
-  <div class="timeline">
-    <div class="tl-item">
-      <div class="tl-date">05/04/2026</div>
-      <div class="tl-content"><strong>Tách repo</strong> — codebase-map là standalone tool, không commit vào HC repo. CEO Decision.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">05/04/2026</div>
-      <div class="tl-content"><strong>Design approved</strong> — v2.0 tổng thể + CM-S1 chi tiết. FDD Spec: 3 sprints, 29 tasks, 55 SP.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">05/04/2026</div>
-      <div class="tl-content"><strong>Quy trình Day</strong> — Implement → Lint → PR → CI → /review-gate 3 tầng → CEO approve.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">05/04/2026</div>
-      <div class="tl-content"><strong>Retroactive approve Day 1</strong> — CM-S1 Day 1 đã review ở HC repo cũ (PR #82/#84).</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">06/04/2026</div>
-      <div class="tl-content"><strong>AI Infrastructure Migration</strong> — 7 agents, 5 commands, settings, 7 memory files.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">06/04/2026</div>
-      <div class="tl-content"><strong>Telegram Bot</strong> — @CodebaseMap_Project_bot cho CI notify. Secrets configured.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">06/04/2026</div>
-      <div class="tl-content"><strong>CM-S1 Sprint COMPLETE</strong> — 15/15 SP, 10/10 tasks, 5 PRs merged. All review gates passed.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">06/04/2026</div>
-      <div class="tl-content"><strong>Board sync rule</strong> — Rule #8: update project/board.html khi update BRIEF.md/task board.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">06/04/2026</div>
-      <div class="tl-content"><strong>CM-S2 Design approved</strong> — 11 task mockups, PR #8 merged.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">06/04/2026</div>
-      <div class="tl-content"><strong>CM-S2 Sprint START</strong> — Day 1 done: Git diff integration (CM-S2-01, 3 SP). PR #9 merged.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">06/04/2026</div>
-      <div class="tl-content"><strong>CM-S2 Day 2 Done</strong> — Incremental cache (CM-S2-02, 3 SP). 80%+ faster builds. PR #11 merged. CTO 100/100 SHIPIT.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">06/04/2026</div>
-      <div class="tl-content"><strong>CM-S2 Day 3 Done</strong> — Edge resolution (CM-S2-06) + Coverage overlay (CM-S2-03), 4 SP. PR #13 merged. CTO 99/100 SHIPIT.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">07/04/2026</div>
-      <div class="tl-content"><strong>CM-S2 Day 4 Done</strong> — API Catalog (CM-S2-07) + /implement (CM-S2-04) + /review-gate (CM-S2-05), 4 SP. PR #15 merged. CTO 99/100 SHIPIT.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">07/04/2026</div>
-      <div class="tl-content"><strong>2-tier Review Gate approved</strong> — <code>/review-gate --local</code> Pre-flight TRƯỚC <code>git push</code> + Remote Full SAU push + CI. Áp dụng từ CM-S3. Giảm force-push, tiết kiệm CI minutes + CEO review time. Critical Rule #6.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">07/04/2026</div>
-      <div class="tl-content"><strong>CM-S2 Day 5 Done</strong> — FDD linking (CM-S2-08) + PR Impact Bot (CM-S2-09) + Sprint Metric (CM-S2-10) + Staleness Alert (CM-S2-11), 4 SP. PR #17 merged, fix PR #19 (bot JSON).</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">07/04/2026</div>
-      <div class="tl-content"><strong>🎉 CM-S2 Sprint COMPLETE</strong> — 18/18 SP, 11/11 tasks, 5 feature PRs (#9, #11, #13, #15, #17) + 4 chore PRs + bot fix #19 + 2-tier workflow #20. v1.2 shipped. Tool trưởng thành từ visual tool sang workflow tool.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">07/04/2026</div>
-      <div class="tl-content"><strong>CM-S3 Kickoff</strong> — 3 agents (PM + CTO + Designer) phân công: design HTML (8 mockup sections) + task board + Day plan. Spec đã approved. Chờ CEO approve design để bắt đầu Day 1.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">08/04/2026</div>
-      <div class="tl-content"><strong>v2.0.1 SHIPPED</strong> — Hotfix sprint closed: PR #38 + #39 merged, tag v2.0.1 pushed, GitHub release published. HC unknown 173→0.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">09/04/2026</div>
-      <div class="tl-content"><strong>Repo PRIVATE</strong> — Chuyển public → private. PR #49: SSH install URLs + auth guide + ONBOARDING.md troubleshooting.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">12/04/2026</div>
-      <div class="tl-content"><strong>CBM Phase 1 Kickoff</strong> — CEO approved Dual-Snapshot Phase 1 start. KMP M1 COMPLETE (26/26 SP, CTO 20/20). CBM v2.1: graph metadata + snapshot versioning (7 SP, 5 Days). Design: CBM-Dual-Snapshot-Design.html (6 tabs). CTO review 48/60.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">12/04/2026</div>
-      <div class="tl-content"><strong>CBM-P1 Day 1 MERGED</strong> — PR #66: Graph metadata v2.1 + CLI --label + backward compat (3 SP). CTO 100/100 SHIPIT. 459 tests, 329→338 nodes.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">12/04/2026</div>
-      <div class="tl-content"><strong>CBM-P1 Day 2 MERGED</strong> — PR #67: SnapshotManager save/list/clean/load (1 SP). CTO 100/100 SHIPIT. 485 tests. Auto-save snapshot on generate.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">12/04/2026</div>
-      <div class="tl-content"><strong>CBM-P1 Day 3 MERGED</strong> — PR #68: CLI snapshots list + clean (1.5 SP). CTO 100/100 SHIPIT. 494 tests. Table + JSON output, --keep N flag.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">12/04/2026</div>
-      <div class="tl-content"><strong>CBM-P1 Day 4 MERGED + SPRINT CLOSED</strong> — PR #69: CI baseline generator + post-merge rotate (1.5 SP). CTO 100/100 SHIPIT. Phương án B: artifact + zero commit noise. Sprint 7/7 SP COMPLETE.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">12/04/2026</div>
-      <div class="tl-content"><strong>CBM-P2 Day 1 MERGED</strong> — PR #71: SnapshotDiff core engine + edge diff + rename detection + affected callers (9 SP in 1 day). CTO 100/100 SHIPIT. 525 tests.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">12/04/2026</div>
-      <div class="tl-content"><strong>CBM-P2 Day 2 MERGED</strong> — PR #72: Output formatters (markdown/json/text) + --breaking-only + --test-plan + CLI snapshot-diff (3 SP). CTO 100/100 SHIPIT. 556 tests. Board SSOT Rule #8 upgraded.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">12/04/2026</div>
-      <div class="tl-content"><strong>CBM-P2 Day 3</strong> — PR #74: CI workflow cbm-pr-impact.yml (dual-snapshot auto PR comment) + 26 integration tests. 582 tests. Sprint 12/12 SP (100%).</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">12/04/2026</div>
-      <div class="tl-content"><strong>🏷️ v2.2.0 RELEASED</strong> — Dual-Snapshot Diff Engine shipped. Tag + GitHub Release published. CBM Phase 2 sprint closed (PR #75 merged). 85 SP total across 7 sprints.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">16/04/2026</div>
-      <div class="tl-content"><strong>🔀 KMP repo split</strong> — Knowledge AI Platform tách sang repo riêng (private) <a href="https://github.com/hypercommerce-vn/knowledge-AI-platform" target="_blank">knowledge-AI-platform ↗</a>. CBM repo chuyển thành standalone public OSS (unlimited free CI GitHub Actions).</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">16/04/2026</div>
-      <div class="tl-content"><strong>📦 CBM Claude Integration — 7 tài liệu chiến lược</strong> soạn xong trong <code>docs/active/cbm-claude-integration/</code>. Strategy_Memo + Technical_Plan + Language_Coverage + Archetype_GTM + UI_Preview_Integration + OSS_Publishing + MCP_Explainer. Chờ CEO quyết định D1-D7.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">18/04/2026</div>
-      <div class="tl-content"><strong>🧹 Docs cleanup (Option B)</strong> — Refactor <code>docs/</code> thành <code>active/</code> (work in progress) vs <code>reference/</code> (shipped, historical). Design-preview split <code>active/</code> vs <code>archive/</code>. Created docs/README.md. Cập nhật CLAUDE.md v1.3.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">18/04/2026</div>
-      <div class="tl-content"><strong>🎯 CEO CHỐT 7/7 Decisions</strong> — D1 MIT giữ · D2 2 archetype (AI Agent + SaaS B2B) · D3 Song song Claude Integration + Language Expansion · D4 Java · D5 Ship 2 pack · D6 TechLead lead + CEO review weekly · D7 70% coverage (75% qua Phương án B).</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">18/04/2026</div>
-      <div class="tl-content"><strong>🚀 CBM Claude Integration KICKOFF</strong> — Option B chốt: 1 TechLead full-time + AI pair. Scope 33 SP (20 SP Claude Integration + 13 SP Language) chia 3 sprint CBM-INT-S1/S2/S3 song song với CBM-LANG-P1. 5 tuần · 5 milestone gates G1-G5 · Launch 23/05/2026 · ROI 17x năm 1.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">18/04/2026</div>
-      <div class="tl-content"><strong>📋 CBM-INT-S1 SPRINT PLAN READY</strong> — PM chia 5 SP thành 6 tasks CBM-INT-101→106: PyPI (D1) · SKILL.md (D2) · /cbm-onboard + /cbm-impact + /cbm-diff (D3) · Integration test + QUICKSTART (D4-5). Duration 21/04 → 27/04/2026. Gate G1 Sunday. 6 AC sprint-level, 4 risks tracked. <a href="#cbm-int-s1">Task board ↓</a></div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">19/04/2026</div>
-      <div class="tl-content"><strong>✅ CEO APPROVE 5/5 KICKOFF A1-A5</strong> — A1 PyPI token uploaded (<code>PYPI_API_TOKEN</code> secret verified) · A2 Repo PUBLIC verified · A3 TechLead full-time 5 tuần · A4 <strong>Tester role = Claude</strong> · A5 Sunday 17:00 weekly review cadence. PM fix date calendar (Mon 20/04, not 21/04). Sprint LIVE Day 1 Mon 20/04/2026. Pre-flight blockers B1-B4 (SECURITY.md, git history audit, CONTRIBUTING.md, PR templates) phải close trước Day 1 09:00.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">19/04/2026</div>
-      <div class="tl-content"><strong>🚀 CBM-INT-S1 Day 0 (Sun 19/04) — Pre-flight execution</strong> — TechLead delegated B2 git history audit (gitleaks/trufflehog scan). SECURITY.md + CONTRIBUTING.md + PR/issue templates soạn today. <strong>CEO quyết định: bỏ Telegram group, track toàn bộ sprint qua board.html (SSOT).</strong> PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/104" target="_blank">#104</a> merged — board + BRIEF sync.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">19/04/2026</div>
-      <div class="tl-content"><strong>✅ B2 GIT HISTORY AUDIT CLEAN</strong> — CTO agent chạy <code>gitleaks v8.30.1</code> (full ruleset 200+ patterns) + manual regex sweep cho 12 secret family patterns. Scan scope: 53 refs (21 local + 32 remote), <strong>168 unique commits</strong>, 3.22 MB blob data, 733ms runtime. <strong>Zero credential findings.</strong> 2 LOW non-blocker: laptop hostname trong committer email + 2 commits legacy <code>git@stash</code> từ monorepo era — không warrant history rewrite. Day 1 Mon 20/04 UNBLOCKED. Risk downgrade 🔴9 → 🟡4. <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-B2-Git-Audit-Report.md" target="_blank">Full B2 report ↗</a></div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">19/04/2026</div>
-      <div class="tl-content"><strong>✅ B1 + B3 + B4 COMMUNITY HEALTH SHIPPED</strong> — CTO agent tạo 6 files: <code>SECURITY.md</code> (102 dòng, supported versions v2.2.x, GHSA private inbox hypercdp@gmail.com, 48h ACK + 7d triage, scope rõ ràng) · <code>CONTRIBUTING.md</code> (165 dòng, dev setup + lint gate + PR workflow + architecture principles) · <code>.github/ISSUE_TEMPLATE/</code> bug_report + feature_request + config.yml · <code>.github/pull_request_template.md</code>. GitHub Discussions ENABLED. <strong>PRE-FLIGHT 100% COMPLETE</strong> — Day 1 ready.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">19/04/2026</div>
-      <div class="tl-content"><strong>✅ CBM-INT-101 Day 1 MERGED — PyPI v2.2.1 ready</strong> — TechLead agent: pyproject.toml v2.2.1 + enhanced metadata, <code>__init__.py</code> stale version fix (1.0.0→2.2.1), <code>.github/workflows/publish-pypi.yml</code> (tag trigger, OIDC-ready). Build sdist 166KB + wheel 174KB, d3 bundled, twine check PASS, lint PASS, 158/158 tests PASS. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a> MERGED 09:26 UTC. ⚠️ Tag <code>v2.2.1</code> chưa push (CEO action) → PyPI vẫn 404.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">19/04/2026</div>
-      <div class="tl-content"><strong>✅ CBM-INT-102 Day 2 MERGED — Claude Code Skill shipped</strong> — TechLead agent parallel với Day 1: <code>integrations/claude-code/skills/codebase-map/SKILL.md</code> 197 dòng (< 500 limit), frontmatter YAML valid, desc 444 chars, 11 trigger phrases ("impact"/"callers"/"who calls"/"dependency graph"/"onboard this repo"/"what breaks if I change X"/"blast radius"/"API endpoints in this project"/"diff vs main"/"before/after refactor"/"is this safe to delete"), 7 body sections, commands verified vs CBM v2.2.1 CLI. Fixture <code>TRIGGER_TEST_PROMPTS.md</code> (10 pos + 5 neg) cho dry-run ≥8/10 target. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a> MERGED 09:38 UTC.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">19/04/2026</div>
-      <div class="tl-content"><strong>📊 Sprint CBM-INT-S1 — 2/5 SP (40%) DONE in 1 day</strong> — Day 1+Day 2 song song thay vì tuần tự → 2 ngày sớm schedule gốc. Day 3 CBM-INT-103/104/105 (3 slash commands, 2 SP) starting. CEO decision ghi nhận: bỏ Telegram, track full qua board SSOT + PR history. ⏳ Outstanding: CEO tag <code>v2.2.1</code> push để trigger PyPI publish (workflow publish-pypi.yml đã sẵn sàng).</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">19/04/2026</div>
-      <div class="tl-content"><strong>✅ CBM-INT-103/104/105 Day 3 MERGED — 3 slash commands shipped</strong> — TechLead delivered <code>/cbm-onboard</code> (80 dòng) · <code>/cbm-impact</code> (48 dòng) · <code>/cbm-diff</code> (91 dòng). Fixed Tech Plan template bugs: <code>diff</code> default HEAD~1→main, <code>snapshot-diff --depth</code> 1→2 cho PR review. Uses <code>snapshots list --json</code> + <code>check-staleness --json</code> cho parseable baseline detection. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/110" target="_blank">#110</a> MERGED.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">19/04/2026</div>
-      <div class="tl-content"><strong>✅ CBM-INT-106 Day 4 MERGED — Integration test 5/5 PASS</strong> — Tester (Claude) executed 5-case matrix. Case 2 skill trigger 10/10 (exceeds AC 8/10). Case 3 dogfood 200 nodes/992 edges/24ms. Case 4 threshold OK. Case 5 dual-mode OK. Lint PASS. No P0/P1 defects · 2 P3 non-blocker. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/111" target="_blank">#111</a> MERGED. Full report: <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Day4-Test-Report.md" target="_blank">Day4-Test-Report.md</a>.</div>
-    </div>
-    <div class="tl-item" style="background:#f0fdf4; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
-      <div class="tl-date">19/04/2026 · 🎉 MILESTONE</div>
-      <div class="tl-content"><strong>🎉 v2.2.1 LIVE trên PyPI — First PyPI publication ever!</strong> CEO authorize PM push tag <code>v2.2.1</code>. Workflow <code>publish-pypi.yml</code> run <code>24626431411</code> SUCCESS in <strong>24s</strong>. <a href="https://pypi.org/project/codebase-map/" target="_blank">pypi.org/project/codebase-map</a> HTTP 200 · Version 2.2.1 · MIT · Python ≥3.10. <strong>Case 1 REAL install test:</strong> <code>pipx install codebase-map</code> → <code>codebase-map 2.2.1</code> (Python 3.14.3 compat verified). <strong>AC-INT-01 CLOSED genuinely.</strong> 4.5/5 SP (90%) · chỉ còn Day 5 QUICKSTART.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">19/04/2026</div>
-      <div class="tl-content"><strong>✅ CBM-INT-106 Day 5 MERGED — QUICKSTART + v2.3.0 bump</strong> — TechLead shipped <code>QUICKSTART.md</code> 114 dòng (30s install · curl one-liner · baseline workflow · troubleshooting) + version bump 2.2.1→2.3.0 + release notes <code>docs/releases/v2.3.0.md</code> 75 dòng. Build wheel 174KB + sdist 167KB twine PASS · Lint PASS · 158/158 tests PASS. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/114" target="_blank">#114</a> MERGED. Status sync PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/113" target="_blank">#113</a> MERGED.</div>
-    </div>
-    <div class="tl-item" style="background:#f0fdf4; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
-      <div class="tl-date">19/04/2026 · 🎉 MILESTONE #2</div>
-      <div class="tl-content"><strong>🎉 v2.3.0 LIVE trên PyPI — Second release, sprint closure!</strong> CEO authorize PM push tag <code>v2.3.0</code>. Workflow run <code>24630124733</code> SUCCESS in <strong>24s</strong>. <code>pipx install codebase-map==2.3.0</code> verified trên Python 3.14.3 → prints <code>codebase-map 2.3.0</code>. Both v2.2.1 + v2.3.0 available trên PyPI simple index.</div>
-    </div>
-    <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
-      <div class="tl-date">19/04/2026 · 🎉 SPRINT CLOSE</div>
-      <div class="tl-content"><strong>🎉 SPRINT CBM-INT-S1 COMPLETE — 5/5 SP (100%) trong 1 ngày · 5 ngày sớm schedule gốc!</strong> All 6 tasks CBM-INT-101→106 ✅ DONE · All 6 AC met · 10 PRs merged · 0 P0/P1 defects · 158/158 tests PASS · 2 PyPI releases LIVE. <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">Retrospective doc ↗</a> · Gate G1 Sun 26/04 chỉ còn ceremony formality. Next: CBM-INT-S2 MCP Server (8 SP, Week 2-3).</div>
-    </div>
-    <div class="tl-item" style="background:#d1fae5; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
-      <div class="tl-date">20/04/2026 · 🏆 E2E VERIFICATION SEALED</div>
-      <div class="tl-content"><strong>🏆 CEO E2E Verification: 20/20 CHECKPOINTS PASS — Gate G1 GO!</strong> CEO (tự chạy test, CTO guide) verified 4/4 sprint pillars live trên FastAPI repo thật: <strong>Level 1</strong> smoke 5/5 (pipx install · version · CLI help · PyPI 200 · dogfood FastAPI 332 nodes/1607 edges/139ms) · <strong>Level 2A</strong> skill trigger 5/5 (4 positive triggered + 1 negative correct — AC-INT-02 closed genuinely beyond heuristic) · <strong>Level 2B</strong> slash commands 3/3 (onboard smart cache skip · impact Medium tier threshold correct · <strong>/cbm-diff graceful master/main fallback</strong> ⭐) · <strong>Level 2C</strong> QUICKSTART 7/7 boxes. <strong>0 P0/P1/P2 defects.</strong> 2 P3 findings (AI-#9 config path UX, AI-#10 diff default branch) added to S2 backlog. <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Verification-Report.md" target="_blank">Verification Report ↗</a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">Retro v1.1 ↗</a>. <strong>Sprint CBM-INT-S1 OFFICIALLY SEALED.</strong></div>
-    </div>
-    <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
-      <div class="tl-date">20/04/2026 · 🚀 S2 KICKOFF</div>
-      <div class="tl-content"><strong>🚀 CBM-INT-S2 KICKOFF — MCP Server 8 SP · Fast-track Mon 20/04 (7 ngày sớm schedule gốc 27/04)</strong>. CEO decision: skip Gate G1 ceremony formality, go S2 ngay. Sprint goal: Python MCP server reuse <code>codebase_map</code> package · 5 tools (<code>cbm_query</code>/<code>cbm_search</code>/<code>cbm_impact</code>/<code>cbm_snapshot_diff</code>/<code>cbm_api_catalog</code>) · graph cache mtime-based · PyPI <code>codebase-map-mcp</code>. Tasks CBM-INT-201→208. AC-S2-01→06 defined. Gate G2 mid Sun 26/04 · Gate G3 end Sun 03/05 (nominal — likely compress). Retention target 15% → 50% (slash command → MCP auto-invoke UX). <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">Kickoff brief ↗</a> · <a href="#cbm-int-s2">Task board ↓</a>. ⚠️ Pre-S2 blockers: AI-#6 44 uncommitted files · AI-#7 GitHub Settings enable.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">20/04/2026</div>
-      <div class="tl-content"><strong>🧹 AI-#6 CLEANUP COMPLETE — 44/44 uncommitted files closed</strong> — 3 PRs shipped theo PM Option 1 plan: PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/118" target="_blank">#118</a> 7 strategy foundation docs (CRITICAL recovery · lived only trên working tree từ 16/04) · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/119" target="_blank">#119</a> Option B refactor 34 files (docs active/reference + design-preview active/archive split) · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/120" target="_blank">#120</a> misc path refs 3 files. Working tree CLEAN. S2 Day 1 unblocked.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">20/04/2026</div>
-      <div class="tl-content"><strong>✅ CBM-INT-201 Day 1 MERGED — MCP server scaffold</strong> — TechLead delivered <code>mcp_server/</code> package 167 LoC (server.py 116 + graph_cache.py stub 28 + 3 meta files). MCP SDK <code>mcp==1.27.0</code> pinned optional extra <code>[mcp]</code> (không phải hard dep — base install stays lean). <strong>Architecture wins:</strong> <code>TOOL_REGISTRY</code> dict + <code>register_tool()</code> helper để D2-D4 tool modules self-register không đụng <code>server.py</code>; graceful ImportError hint <code>pip install codebase-map[mcp]</code>; sync <code>main()</code> wrapper cho clean <code>python -m mcp_server</code> UX. 158/158 tests PASS · Lint clean. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/121" target="_blank">#121</a> MERGED. Sprint progress 1/8 SP (12.5%).</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">20/04/2026</div>
-      <div class="tl-content"><strong>✅ CBM-INT-202 + 203 Day 2 MERGED — 3 MCP tools (query + search + impact)</strong> — TechLead 255 LoC total: <code>query.py</code> 67 (QueryEngine.query_node) · <code>search.py</code> 79 (handler-side limit since CBM search() no kwarg) · <code>impact.py</code> 100 (risk tier Low/Medium/HIGH matching slash cmd). Auto-register pattern established D1 paid off — zero changes to <code>server.py</code> module top (1-line lazy import inside <code>main()</code> to avoid circular). Smoke tests PASS 3/3. 158/158 tests · Lint clean. <strong>Note:</strong> PR #123 had merge conflict với #122, closed + replaced by PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/124" target="_blank">#124</a> (rebased v2) MERGED. Sprint progress 3/8 SP (37.5%).</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">20/04/2026</div>
-      <div class="tl-content"><strong>✅ CBM-INT-204 Day 3 MERGED — cbm_snapshot_diff (MOST COMPLEX tool)</strong> — TechLead 138 LoC (budget 150) · <strong>pure Python API no subprocess</strong>: <code>SnapshotManager.load()</code> handles label↔path duality + <code>SnapshotDiff.compute()</code> engine + <code>diff_formatter</code> multi-format. 5 flags all wired: baseline/current/depth/breaking_only/test_plan/format. Defaults depth=2 + format=markdown match slash cmd. 6/6 smoke tests PASS (markdown · breaking_only filter · bad label graceful · json · text · test_plan). TOOL_REGISTRY 4 keys. 158/158 tests · Lint clean. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/125" target="_blank">#125</a> MERGED. <strong>Sprint progress 5/8 SP (62.5%) — most complex task done smoothly.</strong></div>
-    </div>
-    <div class="tl-item" style="background:#d1fae5; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
-      <div class="tl-date">20/04/2026 · 🎯 5/5 MCP TOOLS COMPLETE</div>
-      <div class="tl-content"><strong>✅ CBM-INT-205 + 206 Day 4 MERGED — api_catalog + GraphCache (40× speedup)</strong> — TechLead delivered 2 tasks: <code>api_catalog.py</code> 96 LoC (reuse <code>APICatalog.from_graph().filter()</code>, 4 params: graph_file/method/domain/format) + <code>graph_cache.py</code> 72 LoC (replaces D1 stub, thread-safe Lock, mtime-based invalidation, CACHE singleton). <strong>Benchmark AC-S2-02 CLOSED:</strong> Cold 2.8ms · Hot 0.071ms (<strong>40× cache speedup</strong>, well under 100ms target). 4 tools migrated to shared CACHE (snapshot_diff untouched — uses SnapshotManager). <strong>TOOL_REGISTRY 5 keys — all 5 MCP tools per Tech Plan §2 LIVE!</strong> PR #127 had conflict với #126, closed + replaced by PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/128" target="_blank">#128</a> MERGED. 158/158 tests · lint clean. <strong>Sprint 6.5/8 SP (81.25%) — only Day 5 PyPI publish + docs remaining.</strong></div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">20/04/2026</div>
-      <div class="tl-content"><strong>✅ CBM-INT-207 + 208 Day 5 MERGED — PyPI packaging + docs + registry prep (SPRINT CLOSURE)</strong> — TechLead Path A decision (single package + <code>[mcp]</code> extra, not separate <code>codebase-map-mcp</code>): <code>pipx install codebase-map[mcp]</code> → <code>cbm-mcp</code> entry point. Version bump 2.3.0 → 2.4.0 synced across 3 files. Build wheel 181KB + sdist 170KB twine PASS. 10 files: 5 new docs (<code>v2.4.0.md</code> release notes 102 lines · <code>integrations/mcp/README.md</code> Claude Desktop 120 lines · <code>REGISTRY_SUBMISSION.md</code> prep · Day 5 test report 5/5 tools PASS) + README + QUICKSTART MCP sections. PR #130 conflict với #129, closed + replaced by PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/131" target="_blank">#131</a> MERGED. <strong>Sprint 8/8 SP (100%) COMPLETE in 1.5 days.</strong></div>
-    </div>
-    <div class="tl-item" style="background:#f0fdf4; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
-      <div class="tl-date">20/04/2026 · 🎉 MILESTONE</div>
-      <div class="tl-content"><strong>🎉 v2.4.0 LIVE trên PyPI — MCP Server shipped!</strong> CEO authorize PM push tag <code>v2.4.0</code>. Workflow <code>publish-pypi.yml</code> run <code>24679777408</code> SUCCESS in <strong>29s</strong>. PyPI simple index: <code>codebase_map-2.4.0-py3-none-any.whl</code> + tar. <strong>Real install test:</strong> <code>pipx install 'codebase-map[mcp]==2.4.0'</code> → installs 2 entries (<code>codebase-map</code> + <code>cbm-mcp</code>) · <code>cbm-mcp</code> blocks on stdio correctly (exit 0 after alarm). AC-S2-04 CLOSED genuinely.</div>
-    </div>
-    <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
-      <div class="tl-date">20/04/2026 · 🎉 SPRINT CLOSE</div>
-      <div class="tl-content"><strong>🎉 SPRINT CBM-INT-S2 SEALED — 8/8 SP (100%) in 1.5 days · 8.5 ngày sớm schedule</strong>. 13 PRs merged · 3 conflicts resolved qua Option C pattern · 5 MCP tools LIVE (query/search/impact/snapshot_diff/api_catalog) · Cache 40× speedup · 158/158 tests · 0 P0/P1/P2 defects. <strong>E2E Verification 18/20 PASS</strong> (2 deferred CEO action: live Claude Desktop dry-run + MCP registry PR submission). Retro + Verify report shipped. <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-Retrospective.md" target="_blank">Retro ↗</a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-Verification-Report.md" target="_blank">Verify Report ↗</a>. Gate G2 + G3 both rolled into this compression. Next: CBM-INT-S3 Plugin Marketplace + 2 Packs (5 SP).</div>
-    </div>
-    <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
-      <div class="tl-date">21/04/2026 · 🚀 S3 KICKOFF</div>
-      <div class="tl-content"><strong>🚀 CBM-INT-S3 KICKOFF — Plugin Marketplace + 2 Archetype Packs · Final sprint · 5 SP</strong>. Fast-track Tue 21/04 (20 ngày sớm schedule gốc Mon 11/05). CEO decision: skip Gate G3 ceremony formality, go S3 ngay. Sprint goal: Đóng gói CBM thành Claude Plugin 1-click install · AI Agent Knowledge Pack + SaaS Onboarding Pack (CEO D5 bilingual EN/VI) · Launch blog + demo video + HN/Reddit/Viblo/Zalo posts. Tasks CBM-INT-301→305. AC-S3-01→07 defined. Gate G4 mid · Gate G5 LAUNCH. <strong>Rule #S2-1 applied</strong> — feature PRs skip board.html progress, PM ships separate status sync (giảm recurring conflict pattern từ S2). <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">Kickoff brief ↗</a> · <a href="#cbm-int-s3">Task board ↓</a>. ⚠️ Pre-S3 blockers: AI-#1 PyPI OIDC · AI-#7 GitHub Settings (still open from S1).</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">21/04/2026</div>
-      <div class="tl-content"><strong>✅ CBM-INT-301 + 302 Day 1 MERGED — Plugin bundle + post-install hook (CTO leverage plan VALIDATED)</strong> — TechLead execute Day 1 trong <strong>~10 phút wall-clock</strong> (vs 40-min budget). <strong>Zero new Python</strong> — pure file assembly composing S1+S2 assets: 4 S1 files copied (SKILL.md + 3 slash commands · diff MATCHES zero drift) + 5 new files (manifest.json 31 dòng · README.md 139 dòng · mcp/config.json points to <code>cbm-mcp</code> entry · post-install.sh 44 dòng idempotent · pre-uninstall.sh 16 dòng). Hook dùng exact S2 verified command <code>pipx install 'codebase-map[mcp]>=2.4.0'</code>. <strong>Rule #S2-1 passed first test</strong> — PR không đụng board.html, PM ships separate status sync. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a> MERGED. <strong>Sprint progress 2/5 SP (40%).</strong></div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">21/04/2026</div>
-      <div class="tl-content"><strong>✅ CBM-INT-303 Day 2 MERGED — Marketplace staging (no Anthropic registry found)</strong> — TechLead research: <strong>no official Anthropic/MCP plugin registry</strong> exists (21/04/2026) — <code>anthropic/claude-plugins</code>, <code>anthropic/mcp-servers</code> both 404. Community convention verified via 3 existing marketplaces (buildwithclaude, superpowers-marketplace, cc-marketplace): schema <code>.claude-plugin/marketplace.json</code> + <code>/plugin marketplace add</code> pattern. Decision: self-host at <code>hypercommerce-vn/claude-plugins</code>. Staged 15 files (975 insertions) trong <code>claude-plugins-repo/</code>: marketplace.json + README + CONTRIBUTING + LICENSE + <strong>PUBLISH_INSTRUCTIONS.md</strong> (CEO 4-step plan) + full plugin tree copy (no drift). <strong>Rule #S2-1 validated 3rd time</strong> (3 consecutive PRs clean-split — #134 #135 #136). PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/136" target="_blank">#136</a> MERGED. <strong>Sprint progress 3/5 SP (60%).</strong></div>
-    </div>
-    <div class="tl-item" style="background:#d1fae5; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
-      <div class="tl-date">21/04/2026 · 🎯 2 ARCHETYPE PACKS SHIPPED</div>
-      <div class="tl-content"><strong>✅ CBM-INT-304 Day 3 MERGED — AI Agent Knowledge Pack + SaaS Onboarding Pack (CEO D5 delivered · bilingual EN/VI)</strong>. TechLead delivered 38 files · ~2,600 LoC trong ~40 phút wall-clock (65% thời gian là bilingual content translation, khớp dự đoán retro S2). <strong>AI Agent Pack 615 LoC:</strong> SKILL.md 158 dòng bilingual · 3 commands (<code>/agent-overview</code> · <code>/agent-impact</code> · <code>/agent-refactor-plan</code>) wrapping cbm_search + cbm_impact + cbm_query. <strong>SaaS Pack 673 LoC:</strong> SKILL.md 165 dòng · 3 commands (<code>/saas-onboard</code> · <code>/saas-apis</code> · <code>/saas-tier-logic</code>) với 6-domain scan + tenant-isolation cross-check. <strong>Leverage architecture:</strong> cả 2 packs dùng <code>mcp/config.json</code> + <code>hooks/*.sh</code> IDENTICAL main plugin (diff MATCHES) — zero new backend. Marketplace.json v1.0.0 → v1.1.0 với 3 plugins. <strong>Rule #S2-1 validated 4th time</strong> (board.html untouched). PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/138" target="_blank">#138</a> MERGED. <strong>Sprint progress 4.5/5 SP (90%)</strong> — chỉ còn Day 4 launch prep + Day 5 LAUNCH.</div>
-    </div>
-    <div class="tl-item" style="background:#d1fae5; border-left:4px solid #10b981; padding:12px; border-radius:6px;">
-      <div class="tl-date">22/04/2026 · 🎉 MARKETPLACE LIVE</div>
-      <div class="tl-content"><strong>🎉 Action #5 DONE — <a href="https://github.com/hypercommerce-vn/claude-plugins" target="_blank">hypercommerce-vn/claude-plugins</a> public LIVE</strong>. PM executed: <code>gh repo create --public</code> + push staging · 3 plugins LIVE: codebase-map (2.5.0) · codebase-map-ai-agent (0.1.0 bilingual) · codebase-map-saas (0.1.0 bilingual). Users chạy <code>/plugin marketplace add hypercommerce-vn/claude-plugins</code>. <strong>Action #6 prep:</strong> REGISTRY_SUBMISSION.md updated với 22/04 research — registry landscape shift (real registry = registry.modelcontextprotocol.io via <code>mcp-publisher</code> CLI, not PR to servers repo). CEO submits post-launch. <strong>Blog wording fix:</strong> v2.5.0 plugin vs v2.4.0 PyPI distinction added. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/141" target="_blank">#141</a> MERGED.</div>
-    </div>
-    <div class="tl-item" style="background:#fef3c7; border-left:4px solid #f59e0b; padding:12px; border-radius:6px;">
-      <div class="tl-date">22/04/2026 · 🎉 S3 SEALED + INITIATIVE COMPLETE</div>
-      <div class="tl-content"><strong>🎉 SPRINT CBM-INT-S3 SEALED — 5/5 SP (100%) in ~1 calendar day · 13 days ahead of schedule</strong>. 10 PRs merged · <strong>Rule #S2-1 validated 7× consecutive</strong> (ZERO S3 conflicts vs S2's 3) · 0 P0/P1/P2 defects · 158/158 tests · 3 plugins LIVE · marketplace public · launch content ready. <strong>E2E Verification 22/25 PASS</strong> (3 deferred to CEO launch-day hands-on: Loom record, blog publish, HN/Reddit posts). <strong>🎉🎉🎉 INITIATIVE CBM × Claude Integration OFFICIALLY COMPLETE</strong> — S1 v2.3.0 + S2 v2.4.0 + S3 v2.5.0 plugin all SEALED. <strong>20 SP shipped in ~3 calendar days (vs original 6-week plan · 25.5 days saved)</strong>. 3 PyPI releases · 3 plugins · 5 MCP tools · 40× cache speedup · ~36 PRs merged. <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-Retrospective.md" target="_blank">S3 Retro ↗</a> · <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-Verification-Report.md" target="_blank">S3 Verify Report ↗</a>. Next: CEO Day 5 launch-day actions → CBM-LANG-P1 (JS + Java, 13 SP, metrics gate).</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">15/11/2026 · CBM-WEB</div>
-      <div class="tl-content"><strong>CEO duyệt website dự án v0.1 làm design</strong> (landing song ngữ + demo <code>/demo/</code> + deploy VPS), giữ khối "Sắp tới" hướng CBM-VIBE. PR #152 qua review gate 3 vòng (85.2% → 93.0% → 94.4% SHIPIT+NOTE), CEO duyệt merge 16/11/2026 (<code>e7a9b91</code>). Bug parser <code># flow:</code> phát hiện khi làm demo đã sửa và merge ở PR #148. Còn chờ: tên miền + VPS để deploy.</div>
-    </div>
-  </div>
-
-  <!-- CM-S2 Task Board -->
-  <h2 id="cm-s2"><span class="h2-icon">✅</span> CM-S2 · v1.2 — Workflow + Smart <span class="badge done" style="font-size:12px;margin-left:8px;">18/18 SP · COMPLETE 🎉</span></h2>
-  <table>
-    <thead>
-      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>PR</th><th>Review Gate</th><th>Status</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>CM-S2-01</code></td>
-        <td>BE: Git diff integration — <code>codebase-map diff HEAD~1</code></td>
-        <td>3</td><td>Day 1</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/9" target="_blank">PR #9</a></td>
-        <td>CTO 99/100</td>
-        <td><span class="badge done">✅ Done</span></td>
+      <!-- HC-AI | ticket: FDD-TOOL-CODEMAP — CBM-VIBE tier 1 status sync (16/11/2026) -->
+      <tr style="background:#e0f2fe;">
+        <td colspan="5" style="text-align:center; font-weight:700; color:#075985; font-size:13px;">CBM-VIBE · Tầng 1 (12–18/11/2026) — merge #151 (chứa trọn #145–#150; merge bằng nút Merge thường thì GitHub tự chuyển các PR đó sang Merged), rồi #153, #166, #167</td>
       </tr>
       <tr>
-        <td><code>CM-S2-02</code></td>
-        <td>BE: Incremental update — cache AST hash, re-parse only changed</td>
-        <td>3</td><td>Day 2</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/11" target="_blank">PR #11</a></td>
-        <td>CTO 100/100</td>
-        <td><span class="badge done">✅ Done</span></td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/145" target="_blank">#145</a></td>
+        <td>feat(config): CM-S4-01 config-driven domain overrides (+tests)</td>
+        <td><code>feat/cm-s4-01-config-domains</code></td>
+        <td>TechLead · <code>domains</code> là nơi lưu tính năng (QD-02) · 7 test mới</td>
+        <td><span class="badge open">🟡 Chờ CEO duyệt · CI xanh</span></td>
       </tr>
       <tr>
-        <td><code>CM-S2-06</code></td>
-        <td>BE: Edge resolution — resolve self.repo chain from __init__</td>
-        <td>2</td><td>Day 3</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/13" target="_blank">PR #13</a></td>
-        <td>CTO 99/100</td>
-        <td><span class="badge done">✅ Done</span></td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/146" target="_blank">#146</a></td>
+        <td>docs(vibe): CBM-VIBE concept, design preview v0.1 and customer survey</td>
+        <td><code>docs/cbm-vibe-concept</code></td>
+        <td>PO+BA · CEO duyệt nội dung 13/11</td>
+        <td><span class="badge open">🟡 Chờ CEO duyệt · CI xanh</span></td>
       </tr>
       <tr>
-        <td><code>CM-S2-03</code></td>
-        <td>BE+FE: Test coverage overlay — coverage bar in detail panel</td>
-        <td>2</td><td>Day 3</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/13" target="_blank">PR #13</a></td>
-        <td>CTO 99/100</td>
-        <td><span class="badge done">✅ Done</span></td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/147" target="_blank">#147</a></td>
+        <td>feat(config): VIBE-101 run without a config file and without PyYAML</td>
+        <td><code>feat/vibe-101-zero-install-core</code></td>
+        <td>TechLead · 1,5 SP · app mẫu <code>so-dat-lich</code> · 19 test mới</td>
+        <td><span class="badge open">🟡 CI xanh · đứng riêng thì xung đột với main, nội dung đã nằm trong #151</span></td>
       </tr>
       <tr>
-        <td><code>CM-S2-07</code></td>
-        <td>BE+FE: API Catalog auto-gen — routes grouped by domain</td>
-        <td>2</td><td>Day 4</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/15" target="_blank">PR #15</a></td>
-        <td>CTO 99/100</td>
-        <td><span class="badge done">✅ Done</span></td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/149" target="_blank">#149</a></td>
+        <td>feat(diff): VIBE-102 report function-body and file changes</td>
+        <td><code>feat/vibe-102-content-change-detection</code></td>
+        <td>TechLead · 2 SP · parser TS viết lại phần phạm vi hàm · 72 test mới</td>
+        <td><span class="badge open">🟡 CI xanh · đứng riêng thì xung đột với main, nội dung đã nằm trong #151</span></td>
       </tr>
       <tr>
-        <td><code>CM-S2-04</code></td>
-        <td>Workflow: /implement integration — Step 2 auto-query impact</td>
-        <td>1</td><td>Day 4</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/15" target="_blank">PR #15</a></td>
-        <td>CTO 99/100</td>
-        <td><span class="badge done">✅ Done</span></td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/150" target="_blank">#150</a></td>
+        <td>feat(features): VIBE-103 features, acceptance criteria and evidence</td>
+        <td><code>feat/vibe-103-feature-store</code></td>
+        <td>TechLead · 2 SP · lệnh <code>features</code> · 72 test mới</td>
+        <td><span class="badge open">🟡 CI xanh · đứng riêng thì xung đột với main, nội dung đã nằm trong #151</span></td>
       </tr>
       <tr>
-        <td><code>CM-S2-05</code></td>
-        <td>Workflow: /review-gate integration — impact graph in review</td>
-        <td>1</td><td>Day 4</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/15" target="_blank">PR #15</a></td>
-        <td>CTO 99/100</td>
-        <td><span class="badge done">✅ Done</span></td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/151" target="_blank">#151</a></td>
+        <td>feat(vibe): CBM-VIBE tier 1 — zero-install core, content diff, feature store, cbm-vibe plugin</td>
+        <td><code>feat/vibe-104-cbm-vibe-plugin</code></td>
+        <td>TechLead · VIBE-104 1,5 SP · plugin <code>cbm-vibe</code> · chứa cả chuỗi #145–#150, bản sửa sau rà soát độc lập, bản gộp với <code>main</code> sau VIBE-106 và hai bản sửa ngày 18/11 (giới hạn lệnh mà skill được chạy; bốn chỗ hở lộ ra khi chạy thử) · cả repo 554 test</td>
+        <td><span class="badge open">🟡 Chờ CEO duyệt · CI xanh</span></td>
       </tr>
       <tr>
-        <td><code>CM-S2-08</code></td>
-        <td>Metadata: FDD Spec linking — node → FDD ID in detail panel</td>
-        <td>1</td><td>Day 5</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/17" target="_blank">PR #17</a></td>
-        <td>CEO merged</td>
-        <td><span class="badge done">✅ Done</span></td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/153" target="_blank">#153</a></td>
+        <td>docs(vibe): VIBE-105 install test guide and results table</td>
+        <td><code>docs/vibe-105-install-test</code></td>
+        <td>PM · hướng dẫn cài thử + bảng kết quả chờ CEO điền</td>
+        <td><span class="badge open">🟡 Chờ CEO duyệt · CI xanh</span></td>
       </tr>
       <tr>
-        <td><code>CM-S2-09</code></td>
-        <td>DevOps: PR impact comment bot — CI auto-comment (+ fix PR #19)</td>
-        <td>1</td><td>Day 5</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/17" target="_blank">PR #17</a></td>
-        <td>CEO merged</td>
-        <td><span class="badge done">✅ Done</span></td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/166" target="_blank">#166</a></td>
+        <td>chore(board): CBM-VIBE tier 1 status, review gate report and corrections</td>
+        <td><code>chore/vibe-tier1-status-sync</code></td>
+        <td>PM · board, BRIEF, báo cáo review gate, sửa mục "3 plugins LIVE"</td>
+        <td><span class="badge open">🟡 Chờ CEO duyệt</span></td>
       </tr>
       <tr>
-        <td><code>CM-S2-10</code></td>
-        <td>Process: Sprint metric — impact per PR, alert > 50 nodes</td>
-        <td>1</td><td>Day 5</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/17" target="_blank">PR #17</a></td>
-        <td>CEO merged</td>
-        <td><span class="badge done">✅ Done</span></td>
-      </tr>
-      <tr>
-        <td><code>CM-S2-11</code></td>
-        <td>DevOps: Staleness alert — graph > 7 days → Telegram notify</td>
-        <td>1</td><td>Day 5</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/17" target="_blank">PR #17</a></td>
-        <td>CEO merged</td>
-        <td><span class="badge done">✅ Done</span></td>
+        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/167" target="_blank">#167</a></td>
+        <td>chore(board): put the board's sections into reading order</td>
+        <td><code>chore/board-section-order</code></td>
+        <td>PM · sắp xếp các mục của board theo phương án đã duyệt tháng 4, bằng <code>scripts/reorder_board.py</code></td>
+        <td><span class="badge open">🟡 Chờ CEO duyệt</span></td>
       </tr>
     </tbody>
   </table>
-
-  <!-- CM-S3 Task Board -->
-  <h2 id="cm-s3"><span class="h2-icon">✅</span> CM-S3 · v2.0 — Multi-View + AI <span class="badge done" style="font-size:12px;margin-left:8px;">22/22 SP COMPLETE</span></h2>
-  <table>
-    <thead>
-      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>PR</th><th>Review Gate</th><th>Status</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>CM-S3-06</code></td>
-        <td>TypeScript/JavaScript parser — TS/TSX/JS/JSX support</td>
-        <td>5</td><td>Day 1</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/24" target="_blank">PR #24</a></td>
-        <td>100/100 SHIPIT</td>
-        <td><span class="badge done">✅ Done</span></td>
-      </tr>
-      <tr>
-        <td><code>CM-S3-01</code></td>
-        <td>Multi-view mode — Executive/Architecture/Developer/PR Diff tabs</td>
-        <td>3</td><td>Day 2</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/25" target="_blank">PR #25</a></td>
-        <td>100/100 SHIPIT</td>
-        <td><span class="badge done">✅ Done</span></td>
-      </tr>
-      <tr>
-        <td><code>CM-S3-05</code></td>
-        <td>Breadcrumb navigation — zoom domain drill-down</td>
-        <td>2</td><td>Day 2</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/25" target="_blank">PR #25</a></td>
-        <td>100/100 SHIPIT</td>
-        <td><span class="badge done">✅ Done</span></td>
-      </tr>
-      <tr>
-        <td><code>CM-S3-02</code></td>
-        <td>Executive view — domain boxes + route counts + flow connections</td>
-        <td>3</td><td>Day 3</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/28" target="_blank">PR #28</a></td>
-        <td>100/100 SHIPIT</td>
-        <td><span class="badge done">✅ Done</span></td>
-      </tr>
-      <tr>
-        <td><code>CM-S3-07</code></td>
-        <td>Detail panel v2 — visual hierarchy, coverage, FDD, impact</td>
-        <td>2</td><td>Day 3</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/28" target="_blank">PR #28</a></td>
-        <td>100/100 SHIPIT</td>
-        <td><span class="badge done">✅ Done</span></td>
-      </tr>
-      <tr>
-        <td><code>CM-S3-03</code></td>
-        <td>PR Diff view — changed/impacted nodes highlighted</td>
-        <td>3</td><td>Day 4</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/29" target="_blank">PR #29</a></td>
-        <td>100/100 SHIPIT</td>
-        <td><span class="badge done">✅ Done</span></td>
-      </tr>
-      <tr>
-        <td><code>CM-S3-04</code></td>
-        <td>Business Flow Mapping — tag functions to user journeys</td>
-        <td>3</td><td>Day 4</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/29" target="_blank">PR #29</a></td>
-        <td>100/100 SHIPIT</td>
-        <td><span class="badge done">✅ Done</span></td>
-      </tr>
-      <tr>
-        <td><code>CM-S3-08</code></td>
-        <td>Responsive sidebar — collapsible, mobile-friendly</td>
-        <td>1</td><td>Day 5</td>
-        <td><a href="https://github.com/hypercommerce-vn/codebase-map/pull/30" target="_blank">PR #30</a></td>
-        <td>100/100 SHIPIT</td>
-        <td><span class="badge done">✅ Done</span></td>
-      </tr>
-    </tbody>
-  </table>
-  <p style="margin-top:8px;"><em>✅ COMPLETE 07/04/2026 — 5 feature PRs (#24 #25 #28 #29 #30) + sprint close PR #31. v2.0.0 shipped.</em></p>
-
-  <!-- ═══════════════════════════════════════════════════════
-       CBM-INT-S1 Task Board — NEW SPRINT KICKOFF 18/04/2026
-  ═══════════════════════════════════════════════════════ -->
-  <h2 id="cbm-int-s1"><span class="h2-icon">🎉</span> CBM-INT-S1 · v2.3 — PyPI + Claude Skill <span class="badge merged" style="font-size:12px;margin-left:8px;background:#10b981;color:#fff;">🎉 5/5 SP · SEALED 20/04/2026 · v2.2.1 + v2.3.0 LIVE on PyPI · E2E 20/20</span></h2>
-
-  <div style="padding:12px 14px; background:linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-left:4px solid #10b981; border-radius:8px; margin:14px 0 10px; font-size:12px; color:#064e3b; line-height:1.7;">
-    <strong>✅ Pre-flight confirmed (19/04/2026):</strong> A1 PyPI token ✅ (<code>PYPI_API_TOKEN</code> secret added) · A2 Repo PUBLIC ✅ · A3 TechLead full-time 5 tuần ✅ · A4 Tester = Claude ✅ · A5 Sunday 17:00 weekly review ✅
-    <br>
-    <strong>✅ Pre-flight blockers B1-B4 ALL CLOSED (19/04/2026):</strong> B1 <code>SECURITY.md</code> (102 lines) · B2 Git audit CLEAN · B3 <code>CONTRIBUTING.md</code> (165 lines) · B4 PR/issue templates (4 files) · GitHub Discussions ENABLED. Day 1 Mon 20/04 09:00 READY. <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-B2-Git-Audit-Report.md" target="_blank">B2 report ↗</a>
-  </div>
-
-  <div style="padding:12px 14px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left:4px solid #f59e0b; border-radius:8px; margin:0 0 16px; font-size:13px; color:#78350f; line-height:1.7;">
-    <strong>🎯 Sprint Goal:</strong> Biến CBM thành OSS package cài được qua <code>pipx install codebase-map</code> trong 30 giây, có Claude Code Skill trigger tự động + 3 slash command (/cbm-onboard, /cbm-impact, /cbm-diff). Gate G1 Sun 26/04/2026.
-    <br>
-    <strong>📅 Duration:</strong> <strong>Mon 20/04 → Sun 26/04/2026</strong> (5 ngày làm việc + Sat buffer + Sun G1 review) · <strong>Capacity:</strong> 5 SP (TechLead full-time + Tester=Claude + AI pair)
-    <br>
-    <strong>🎯 Exit criteria G1:</strong> PyPI package public · Claude Skill installable · 3 slash commands chạy end-to-end trên HC repo · QUICKSTART tested macOS + Linux + WSL
-  </div>
-
-  <table>
-    <thead>
-      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>Owner</th><th>DoD / Output</th><th>Status</th></tr>
-    </thead>
-    <tbody>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-101</code></td>
-        <td>Publish <code>codebase-map</code> lên PyPI — pyproject.toml v2.2.1 + publish-pypi.yml workflow + build verify. Tag push trigger CI auto-upload.</td>
-        <td>1</td><td>Day 1 ✅ (Sun 19/04 early start)</td>
-        <td>TechLead</td>
-        <td>✅ <strong>🎉 v2.2.1 LIVE trên PyPI 19/04/2026</strong> — CEO authorize PM push tag · Workflow run 24626431411 SUCCESS in 24s · <a href="https://pypi.org/project/codebase-map/" target="_blank">pypi.org/project/codebase-map</a> HTTP 200 · <code>pipx install codebase-map</code> works (Python 3.14.3 verified) · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a> MERGED · Build sdist 166KB + wheel 174KB · twine check PASS · lint PASS · 158/158 tests PASS</td>
-        <td><span class="badge merged">✅ LIVE</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-102</code></td>
-        <td>Viết <code>SKILL.md</code> cho Claude Code — prerequisite check, workflow mô tả, slash command mapping, rule to trigger khi nhắc "impact"/"breaks"/"refactor"</td>
-        <td>1</td><td>Day 2 ✅ (Sun 19/04 — parallel Day 1)</td>
-        <td>TechLead + CTO review (PR gate)</td>
-        <td>✅ <code>SKILL.md</code> 197 dòng (< 500 limit) · ✅ frontmatter YAML valid (name=codebase-map, desc 444 chars) · ✅ 11 trigger phrases · ✅ 7 sections · ✅ TRIGGER_TEST_PROMPTS.md (10 pos + 5 neg) · Commands verified against CBM v2.2.1 CLI · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-103</code></td>
-        <td>Slash command <code>/cbm-onboard</code> — generate graph + summary 5 bullet cho repo lạ, chạy trên Python/TS project bất kỳ</td>
-        <td>1</td><td>Day 3 ✅ (Sun 19/04)</td>
-        <td>TechLead</td>
-        <td>✅ <code>commands/cbm-onboard.md</code> 80 dòng · detect Python/TS · 5-bullet summary · graceful coverage · frontmatter YAML valid · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/110" target="_blank">#110</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-104</code></td>
-        <td>Slash command <code>/cbm-impact</code> — wrap <code>codebase-map impact &lt;name&gt;</code>, hiện warning khi impact > 50 nodes, gợi ý test plan</td>
-        <td>0.5</td><td>Day 3 ✅ (Sun 19/04)</td>
-        <td>TechLead</td>
-        <td>✅ <code>commands/cbm-impact.md</code> 48 dòng · compact risk-tier table · empty-arg guard · "nearest match" · <code>--depth 2</code> · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/110" target="_blank">#110</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-105</code></td>
-        <td>Slash command <code>/cbm-diff</code> — chạy <code>codebase-map diff &lt;branch&gt;</code>, output markdown, kèm affected callers</td>
-        <td>0.5</td><td>Day 3 ✅ (Sun 19/04)</td>
-        <td>TechLead</td>
-        <td>✅ <code>commands/cbm-diff.md</code> 91 dòng · dual-snapshot + git-diff fallback · <code>snapshots list --json</code> · pbcopy/xclip · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/110" target="_blank">#110</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-106</code></td>
-        <td>Integration test (5 case matrix) + <code>QUICKSTART.md</code> 30-second install guide + launch dry-run</td>
-        <td>1</td><td>Day 4 + Day 5 ✅ (Sun 19/04)</td>
-        <td>Tester (Claude) + TechLead · AI pair lo docs</td>
-        <td>✅ <strong>Day 4:</strong> 5/5 test PASS · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/111" target="_blank">#111</a> MERGED · <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Day4-Test-Report.md" target="_blank">Test Report</a> · ✅ <strong>Day 5:</strong> QUICKSTART.md 114 dòng · v2.2.1→2.3.0 bump · release notes 75 dòng · Build PASS · Lint PASS · 158/158 tests · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/114" target="_blank">#114</a> MERGED · <strong>🎉 v2.3.0 LIVE trên PyPI</strong> (workflow 24630124733 · 24s)</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3 style="margin-top:20px; font-size:15px;">📅 Day Plan — Week 1 (Mon 20/04 → Sun 26/04/2026)</h3>
-  <table>
-    <thead>
-      <tr><th>Day</th><th>Date</th><th>SP</th><th>Tasks</th><th>Focus</th><th>CEO touchpoint</th></tr>
-    </thead>
-    <tbody>
-      <tr style="background:#d1fae5;"><td>Day 0</td><td>Sun 19/04 ✅</td><td>—</td><td>Pre-flight B1-B4 DONE</td><td>✅ CEO 5/5 A1-A5 · B1 SECURITY.md · B2 audit CLEAN · B3 CONTRIBUTING.md · B4 templates · Discussions enabled. 3 PRs merged (#104 #105 #106)</td><td>Pre-flight CLOSED</td></tr>
-      <tr style="background:#d1fae5;"><td>Day 1</td><td>Sun 19/04 ✅</td><td>1</td><td>CBM-INT-101 ✅ MERGED</td><td>PyPI publish — pyproject.toml v2.2.1 + publish-pypi.yml workflow + build verify. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/107" target="_blank">#107</a></td><td>⚠️ tag v2.2.1 pending CEO</td></tr>
-      <tr style="background:#d1fae5;"><td>Day 2</td><td>Sun 19/04 ✅</td><td>1</td><td>CBM-INT-102 ✅ MERGED</td><td>SKILL.md 197 dòng · 11 trigger phrases · TRIGGER_TEST_PROMPTS fixture. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/108" target="_blank">#108</a></td><td>Parallel Day 1 — 2 ngày sớm</td></tr>
-      <tr style="background:#d1fae5;"><td>Day 3</td><td>Sun 19/04 ✅</td><td>2</td><td>CBM-INT-103, 104, 105 ✅ MERGED</td><td>3 slash commands — /cbm-onboard + /cbm-impact + /cbm-diff. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/110" target="_blank">#110</a></td><td>3 ngày sớm</td></tr>
-      <tr style="background:#d1fae5;"><td>Day 4</td><td>Sun 19/04 ✅</td><td>0.5</td><td>CBM-INT-106 p1 ✅ MERGED</td><td>Integration test matrix 5/5 PASS. PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/111" target="_blank">#111</a></td><td>4 ngày sớm</td></tr>
-      <tr style="background:#fef3c7;"><td>Day 5</td><td>Sun 19/04 🔄</td><td>0.5</td><td>CBM-INT-106 p2 🔄 PR</td><td>QUICKSTART.md 114 dòng + v2.3.0 bump + release notes 75 dòng. 158/158 tests PASS</td><td>5 ngày sớm · Sprint close</td></tr>
-      <tr style="background:var(--bg-muted);"><td>Buffer</td><td>Sat 25/04</td><td>—</td><td>Fix blockers</td><td>Buffer nếu Day 5 slip</td><td>—</td></tr>
-      <tr style="background:var(--c-green-bg);"><td>Gate G1</td><td>Sun 26/04</td><td>—</td><td>Review + Retro</td><td>CEO review 17:00 · Sign-off G1 · Retro 18:00</td><td><strong>🎯 Gate G1 Sun 17:00</strong></td></tr>
-    </tbody>
-  </table>
-
-  <h3 style="margin-top:20px; font-size:15px;">✅ Acceptance Criteria (Sprint-level)</h3>
-  <div class="ac-grid">
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-INT-01:</strong> <code>pipx install codebase-map</code> < 30s trên macOS/Linux/WSL · Version 2.2.1</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-INT-02:</strong> Claude Skill trigger đúng khi user hỏi "what breaks if I change X" / "impact của Y"</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-INT-03:</strong> 3 slash command (<code>/cbm-onboard</code>, <code>/cbm-impact</code>, <code>/cbm-diff</code>) end-to-end OK</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-INT-04:</strong> QUICKSTART.md + integration test 5/5 case pass</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-INT-05:</strong> <code>v2.3.0</code> tag + GitHub Release + PyPI version đồng bộ</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-INT-06:</strong> Lint gate pass (black + isort + flake8) · 582+ tests pass · No regression v2.2</div>
-  </div>
-
-  <h3 style="margin-top:20px; font-size:15px;">⚠️ Sprint Risks (PM tracking)</h3>
-  <table>
-    <thead>
-      <tr><th style="width:200px;">Risk</th><th style="width:70px;">P×I</th><th>Mitigation</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>PyPI tên <code>codebase-map</code> đã bị chiếm</td>
-        <td><span style="color:#ef4444;">🔴 3×3=9</span></td>
-        <td>Day 0 (Sun 19/04) check trước · Fallback: <code>cbm-graph</code> hoặc <code>codebase-map-hc</code> · Decision 30 phút</td>
-      </tr>
-      <tr>
-        <td><strong>Repo public chưa có SECURITY.md</strong> (B1) · <del>B2 git history audit</del> ✅ CLEAN</td>
-        <td><span style="color:#f59e0b;">🟡 2×2=4</span> <em>(downgrade từ 🔴9 sau B2 CLEAN)</em></td>
-        <td>✅ <strong>B2 DONE 19/04:</strong> CTO gitleaks v8.30.1 scan 168 commits · 0 credential findings · 2 LOW non-blocker (hostname + legacy stash email) — no rewrite needed · <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-B2-Git-Audit-Report.md" target="_blank">Full report</a> · ⏳ B1 TechLead viết SECURITY.md trước Day 1</td>
-      </tr>
-      <tr>
-        <td>Claude Skill trigger không fire (SKILL.md description không match)</td>
-        <td><span style="color:#f59e0b;">🟡 2×3=6</span></td>
-        <td>Day 2 test ≥5 user prompt variants · CTO review trigger rules · Iterate description nếu cần</td>
-      </tr>
-      <tr>
-        <td>AI pair pace (docs + QUICKSTART chậm)</td>
-        <td><span style="color:#f59e0b;">🟡 2×2=4</span></td>
-        <td>Day 4 check-in · Nếu slip: TechLead take over QUICKSTART · Cut AC-INT-05 tag dry-run sang S2</td>
-      </tr>
-      <tr>
-        <td>pipx install fail trên Windows/WSL</td>
-        <td><span style="color:#6366f1;">🟢 1×2=2</span></td>
-        <td>Day 5 Tester test WSL · Document workaround trong QUICKSTART nếu có issue · Không block launch</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3 style="margin-top:20px; font-size:15px;">📋 Definition of Done (Sprint)</h3>
-  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
-    <li>✅ 6/6 tasks CBM-INT-101→106 complete với DoD riêng của từng task</li>
-    <li>✅ 6/6 Acceptance Criteria pass</li>
-    <li>✅ <code>/review-gate</code> 3 tầng (Tester + CTO + Designer) pass cho tất cả PR</li>
-    <li>✅ CEO approve merge · Tag <code>v2.3.0</code> push · GitHub Release published</li>
-    <li>✅ Board (SSOT) + BRIEF.md cập nhật reflecting completion</li>
-    <li>✅ Retrospective done · Action items sang S2</li>
-  </ul>
-
-  <h3 style="margin-top:20px; font-size:15px;">🔗 References</h3>
-  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
-    <li><strong>Tech Plan:</strong> <a href="../docs/active/cbm-claude-integration/Technical_Plan_CBM_Claude_Integration.md#1-phase-1--pypi--skill--slash-commands-5-sp--tuần-1" target="_blank">Technical_Plan · §1 Phase 1 (5 SP)</a></li>
-    <li><strong>Strategy context:</strong> <a href="../docs/active/cbm-claude-integration/Strategy_Memo_CBM_Claude_Integration.md" target="_blank">Strategy_Memo</a></li>
-    <li><strong>Initiative panel:</strong> <a href="#cbm-claude-int">Initiative Panel (cùng trang)</a> · Gate G1 exit criteria</li>
-    <li><strong>Next sprint:</strong> CBM-INT-S2 · v2.4 — MCP Server (8 SP · LIVE Mon 20/04 — 7 ngày sớm)</li>
-    <li><strong>Kickoff briefing S1:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-KICKOFF.md" target="_blank">CBM-INT-S1-KICKOFF.md</a></li>
-    <li><strong>Kickoff briefing S2:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">CBM-INT-S2-KICKOFF.md</a></li>
-    <li><strong>Verification Report S1:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Verification-Report.md" target="_blank">20/20 PASS</a></li>
-    <li><strong>Retrospective S1:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">Retro v1.1</a></li>
-  </ul>
-
-  <p style="margin-top:14px; padding:10px 14px; background:var(--bg-muted); border-radius:6px; font-size:12px; color:var(--text-muted);">
-    <strong>PM Note (20/04 sprint transition):</strong> <strong>🎉 S1 SEALED — 5/5 SP · E2E verified 20/20 · Gate G1 GO · v2.2.1 + v2.3.0 LIVE trên PyPI.</strong> S1 PRs #104-#116 all merged (12 PRs · 1 day sprint · 5 days ahead). 🚀 <strong>S2 LIVE từ Mon 20/04 (fast-track 7 ngày sớm).</strong> MCP Server scaffold + 5 tools + graph cache + PyPI <code>codebase-map-mcp</code>. Gate G2 Sun 26/04 mid · G3 Sun 03/05 end (likely compress). ⚠️ Pre-S2 backlog: AI-#6 44 uncommitted files cleanup · AI-#7 GitHub Settings enable. AI-#1-5 + 9-10 nice-to-have parallel track.
-  </p>
-
-  <!-- ═══════════════════════════════════════════════════════
-       CBM-INT-S2 Task Board — NEW SPRINT KICKOFF 20/04/2026
-  ═══════════════════════════════════════════════════════ -->
-  <h2 id="cbm-int-s2" style="margin-top:40px;"><span class="h2-icon">🎉</span> CBM-INT-S2 · v2.4 — MCP Server (Core Moat) <span class="badge merged" style="font-size:12px;margin-left:8px;background:#10b981;color:#fff;">🎉 8/8 SP · SEALED 20/04/2026 · v2.4.0 LIVE · 5 MCP tools · 40× cache · E2E 18/20</span></h2>
-
-  <div style="padding:12px 14px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left:4px solid #f59e0b; border-radius:8px; margin:14px 0 16px; font-size:13px; color:#78350f; line-height:1.7;">
-    <strong>🎯 Sprint Goal:</strong> Build MCP Server (Python, reuse <code>codebase_map</code> package) expose 5 query tools cho Claude Code / Cowork / Desktop qua stdio transport. Moves Phase 1 slash-command UX → Phase 2 auto-invoke UX. Retention 15% → 50%.
-    <br>
-    <strong>📅 Duration:</strong> Mon 20/04 → Sun 03/05/2026 (fast-track, 7 ngày sớm gốc 27/04 → 10/05) · <strong>Capacity:</strong> 8 SP (TechLead full-time critical path + Tester=Claude + AI pair)
-    <br>
-    <strong>🎯 Exit criteria G3:</strong> 5 tools pass MCP Inspector · Graph 10MB < 500ms load · Claude auto-invoke 20 test questions PASS · PyPI <code>codebase-map-mcp</code> LIVE · Registry submission opened
-  </div>
-
-  <table>
-    <thead>
-      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>Owner</th><th>DoD / Output</th><th>Status</th></tr>
-    </thead>
-    <tbody>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-201</code></td>
-        <td>MCP server scaffold — <code>mcp_server/</code> folder · <code>server.py</code> stdio entrypoint · <code>python -m mcp_server</code></td>
-        <td>1</td><td>Day 1 ✅ (Mon 20/04)</td>
-        <td>TechLead</td>
-        <td>✅ MCP SDK <code>mcp==1.27.0</code> optional extra · ✅ 167 LoC (5 files, all ≤300) · ✅ <code>TOOL_REGISTRY</code> + <code>register_tool()</code> helper cho D2-D4 drop-in · ✅ Graceful ImportError hint · ✅ 158/158 tests PASS · ✅ Lint clean · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/121" target="_blank">#121</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-202</code></td>
-        <td>Tools <code>cbm_query</code> + <code>cbm_search</code> — JSON schema · Integrate QueryEngine · Input validation</td>
-        <td>1</td><td>Day 2 ✅ (Mon 20/04)</td>
-        <td>TechLead</td>
-        <td>✅ <code>query.py</code> 67 LoC · <code>search.py</code> 79 LoC · Auto-register via <code>register_tool(TOOL, handle)</code> · QueryEngine <code>query_node(depth=3)</code> + <code>search()</code> (limit handler-side) · Smoke test PASS · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/124" target="_blank">#124</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-203</code></td>
-        <td>Tool <code>cbm_impact</code> — blast radius với depth param · Layer grouping</td>
-        <td>1</td><td>Day 2 ✅ (Mon 20/04)</td>
-        <td>TechLead</td>
-        <td>✅ <code>impact.py</code> 100 LoC · depth 1-5 · Risk tier Low(0-10)/Medium(11-50)/HIGH(51+) khớp slash cmd · Smoke test: QueryEngine → 1 node Low · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/124" target="_blank">#124</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-204</code></td>
-        <td>Tool <code>cbm_snapshot_diff</code> — <strong>most complex</strong> · baseline/current labels · markdown/json output · depth · breaking_only · test_plan flags</td>
-        <td>2</td><td>Day 3 ✅ (Mon 20/04)</td>
-        <td>TechLead (critical)</td>
-        <td>✅ <code>snapshot_diff.py</code> 138 LoC · <strong>Python API no subprocess</strong> (<code>SnapshotManager.load()</code> + <code>SnapshotDiff.compute()</code> + <code>diff_formatter</code>) · 6/6 smoke tests PASS · TOOL_REGISTRY 4 keys · default depth=2 format=markdown · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/125" target="_blank">#125</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-205</code></td>
-        <td>Tool <code>cbm_api_catalog</code> — method + domain filters</td>
-        <td>0.5</td><td>Day 4 ✅ (Mon 20/04)</td>
-        <td>TechLead</td>
-        <td>✅ <code>api_catalog.py</code> 96 LoC · Reuse <code>APICatalog.from_graph().filter()</code> · 4 params · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/128" target="_blank">#128</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-206</code></td>
-        <td>Graph cache manager — <code>graph_cache.py</code> mtime-based invalidation · lazy load</td>
-        <td>1</td><td>Day 4 ✅ (Mon 20/04)</td>
-        <td>TechLead</td>
-        <td>✅ <code>graph_cache.py</code> 72 LoC · Thread-safe · mtime invalidation · <strong>Benchmark:</strong> Cold 2.8ms · Hot 0.071ms (<strong>40× speedup</strong>, AC-S2-02 closed) · 4 tools migrated · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/128" target="_blank">#128</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-207</code></td>
-        <td>PyPI publish <code>codebase-map-mcp</code> — entry point <code>cbm-mcp</code> · OIDC trusted publisher</td>
-        <td>1</td><td>Day 5 ✅ (Mon 20/04)</td>
-        <td>TechLead</td>
-        <td>✅ <strong>Path A</strong> chosen · Version 2.3.0 → 2.4.0 synced · <code>cbm-mcp</code> entry callable (stdio block correct) · Build wheel 181KB + sdist 170KB twine PASS · Release notes <code>v2.4.0.md</code> 102 dòng · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/131" target="_blank">#131</a> MERGED · <strong>🎉 v2.4.0 LIVE trên PyPI</strong></td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-208</code></td>
-        <td>Integration test + Claude Desktop config docs + MCP registry submission</td>
-        <td>0.5</td><td>Day 5 ✅ (Mon 20/04)</td>
-        <td>Tester (Claude) + TechLead</td>
-        <td>✅ <strong>5/5 tools smoke test PASS</strong> · Cache re-bench 12.1× · <code>integrations/mcp/README.md</code> 120 dòng (Desktop config + tool ref) · <code>REGISTRY_SUBMISSION.md</code> prep (updated 22/04 với mcp-publisher CLI flow) · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/131" target="_blank">#131</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3 style="margin-top:20px; font-size:15px;">✅ Acceptance Criteria (Sprint-level)</h3>
-  <div class="ac-grid">
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-01:</strong> 5 tools pass schema validation (Anthropic MCP Inspector)</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-02:</strong> Graph 10MB load < 500ms · query < 100ms (benchmark)</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-03:</strong> Claude Code auto-invoke 5 tools correctly trên 20 test questions</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-04:</strong> <code>pipx install codebase-map-mcp</code> → <code>cbm-mcp</code> entry point works</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-05:</strong> MCP registry submission (PR to anthropic-mcp) opened</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S2-06:</strong> Lint + 158/158 existing CBM tests PASS · No regression</div>
-  </div>
-
-  <h3 style="margin-top:20px; font-size:15px;">⚠️ Sprint Risks (PM tracking)</h3>
-  <table>
-    <thead>
-      <tr><th style="width:200px;">Risk</th><th style="width:70px;">P×I</th><th>Mitigation</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>MCP protocol schema thay đổi (Anthropic side)</td>
-        <td><span style="color:#f59e0b;">🟡 2×3=6</span></td>
-        <td>Pin <code>mcp&gt;=X</code> version · semver-strict · follow Anthropic changelog weekly</td>
-      </tr>
-      <tr>
-        <td><code>cbm_snapshot_diff</code> complexity underscoped (5 flags)</td>
-        <td><span style="color:#f59e0b;">🟡 2×3=6</span></td>
-        <td>2 SP budget · TechLead prioritize D3 full day · Fallback MVP (labels only, drop breaking_only + test_plan sang S3)</td>
-      </tr>
-      <tr>
-        <td>Graph 10MB+ perf regression</td>
-        <td><span style="color:#f59e0b;">🟡 2×2=4</span></td>
-        <td>D4 benchmark · Lazy load · mtime cache; fallback stream response nếu cần</td>
-      </tr>
-      <tr>
-        <td>44 uncommitted S1 files drift → merge conflict</td>
-        <td><span style="color:#f59e0b;">🟡 2×2=4</span></td>
-        <td><strong>AI-#6 priority:</strong> PM clean before Day 3 OR isolate S2 branches strictly</td>
-      </tr>
-      <tr>
-        <td>PyPI name <code>codebase-map-mcp</code> taken</td>
-        <td><span style="color:#6366f1;">🟢 1×2=2</span></td>
-        <td>Day 1 check · Fallback <code>cbm-mcp</code> hoặc <code>cbm-mcp-server</code></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3 style="margin-top:20px; font-size:15px;">📋 Definition of Done (Sprint)</h3>
-  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
-    <li>✅ 8/8 tasks CBM-INT-201→208 complete với DoD</li>
-    <li>✅ 6/6 Acceptance Criteria pass</li>
-    <li>✅ <code>pipx install codebase-map-mcp</code> LIVE trên PyPI</li>
-    <li>✅ MCP Inspector validates all 5 tool schemas</li>
-    <li>✅ Claude Desktop config example tested end-to-end</li>
-    <li>✅ Benchmark thresholds met (10MB < 500ms, query < 100ms)</li>
-    <li>✅ <code>/review-gate</code> 3 tầng PASS cho tất cả PR</li>
-    <li>✅ CEO approve merge · Tag <code>v2.4.0</code> push · GitHub Release published</li>
-    <li>✅ Board SSOT + BRIEF.md updated · Retrospective done</li>
-    <li>✅ Registry submission opened (Anthropic MCP)</li>
-  </ul>
-
-  <h3 style="margin-top:20px; font-size:15px;">🔗 References</h3>
-  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
-    <li><strong>Kickoff brief:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-KICKOFF.md" target="_blank">CBM-INT-S2-KICKOFF.md</a></li>
-    <li><strong>Tech Plan §2:</strong> <a href="../docs/active/cbm-claude-integration/Technical_Plan_CBM_Claude_Integration.md#2-phase-2--mcp-server-8-sp--tuần-2" target="_blank">Technical_Plan · Phase 2 (8 SP)</a></li>
-    <li><strong>Phase 2 Explainer:</strong> <a href="../docs/active/cbm-claude-integration/Phase2_MCP_Explainer.md" target="_blank">Phase2_MCP_Explainer.md</a> (retention 15% → 50%)</li>
-    <li><strong>S1 Retrospective v1.1:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">CBM-INT-S1-Retrospective.md</a> (AI-#1-10 action items)</li>
-    <li><strong>Next sprint:</strong> CBM-INT-S3 · v2.5 — Plugin Marketplace + 2 Packs (5 SP · LIVE 21/04)</li>
-  </ul>
-
-  <p style="margin-top:14px; padding:10px 14px; background:var(--bg-muted); border-radius:6px; font-size:12px; color:var(--text-muted);">
-    <strong>PM Note S2 (20/04):</strong> Sprint là core moat vs competitors (repomix/serena). Fast-track Mon 20/04 thay vì Mon 27/04 — dựa S1 velocity. Expected completion 2-3 ngày thật nếu maintain pace. Pre-S2 blocker AI-#6 (44 uncommitted files cleanup) sẽ xử lý ở PR kế tiếp sau kickoff merge.
-  </p>
-
-  <!-- ═══════════════════════════════════════════════════════
-       CBM-INT-S3 Task Board — FINAL SPRINT KICKOFF 21/04/2026
-  ═══════════════════════════════════════════════════════ -->
-  <h2 id="cbm-int-s3" style="margin-top:40px;"><span class="h2-icon">🎉</span> CBM-INT-S3 · v2.5 — Plugin Marketplace + 2 Archetype Packs <span class="badge merged" style="font-size:12px;margin-left:8px;background:#10b981;color:#fff;">🎉 5/5 SP · SEALED 22/04/2026 · 3 plugins LIVE · INITIATIVE COMPLETE · E2E 22/25</span></h2>
-
-  <div style="padding:12px 14px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left:4px solid #f59e0b; border-radius:8px; margin:14px 0 16px; font-size:13px; color:#78350f; line-height:1.7;">
-    <strong>🎯 Sprint Goal:</strong> Đóng gói CBM v2.4 (CLI + Skill + 3 slash cmds + MCP server) thành Claude Plugin cho 1-click install qua Cowork, kèm 2 archetype packs (AI Agent Knowledge + SaaS Onboarding per CEO D5), và launch marketing. <strong>Final sprint of Claude Integration initiative.</strong>
-    <br>
-    <strong>📅 Duration:</strong> Tue 21/04 → ~Sat 25/04/2026 (fast-track, 20 ngày sớm gốc Mon 11/05 → Sun 24/05) · <strong>Capacity:</strong> 5 SP (TechLead + AI pair)
-    <br>
-    <strong>🎯 Exit criteria G5 LAUNCH:</strong> Plugin install < 30s trên Claude Code + Cowork · 2 Packs installable · Blog + demo video live · HN/Reddit/Viblo/Zalo launch posts published · 100+ views 48h
-  </div>
-
-  <table>
-    <thead>
-      <tr><th>Task ID</th><th>Task</th><th>SP</th><th>Day</th><th>Owner</th><th>DoD / Output</th><th>Status</th></tr>
-    </thead>
-    <tbody>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-301</code></td>
-        <td>Plugin manifest + bundle — <code>manifest.json</code> · <code>plugins/codebase-map/</code> dir structure · reuse S1 skill + commands + S2 MCP config</td>
-        <td>1</td><td>Day 1 ✅ (Tue 21/04)</td>
-        <td>TechLead</td>
-        <td>✅ <strong>Pure file assembly</strong> (CTO leverage plan validated) · manifest.json 31 dòng · README.md 139 dòng · mcp/config.json points to <code>cbm-mcp</code> entry · 4 S1 files copied (diff MATCHES zero drift) · ~10 min wall-clock · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-302</code></td>
-        <td>Post-install hook — <code>hooks/post-install.sh</code> idempotent pipx install CBM+MCP · <code>pre-uninstall.sh</code> cleanup</td>
-        <td>1</td><td>Day 1 ✅ (Tue 21/04)</td>
-        <td>TechLead</td>
-        <td>✅ <code>post-install.sh</code> 44 dòng · idempotent · uses exact S2 verified command <code>pipx install 'codebase-map[mcp]>=2.4.0'</code> · <code>pre-uninstall.sh</code> 16 dòng · both executable mode 100755 · <code>bash -n</code> syntax PASS · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/134" target="_blank">#134</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-303</code></td>
-        <td>Publish to marketplace — Tạo <code>hypercommerce-vn/claude-plugins</code> repo · marketplace.json · plugin discoverable</td>
-        <td>1</td><td>Day 2 ✅ (Tue 21/04)</td>
-        <td>TechLead + CEO</td>
-        <td>✅ <strong>Staged</strong> tại <code>claude-plugins-repo/</code> (CEO pushes new public repo per PUBLISH_INSTRUCTIONS.md) · Community schema <code>.claude-plugin/marketplace.json</code> (no official Anthropic registry 21/04) · Plugin tree copy no drift · 15 files 975 insertions · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/136" target="_blank">#136</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-304</code></td>
-        <td>Cowork variant (2 Archetype Packs) — <strong>AI Agent Knowledge Pack</strong> (bilingual EN/VI · <code>/agent-overview</code> · <code>/agent-impact</code> · <code>/agent-refactor-plan</code>) + <strong>SaaS Onboarding Pack</strong> (<code>/saas-onboard</code> · <code>/saas-apis</code> · <code>/saas-tier-logic</code>)</td>
-        <td>1.5</td><td>Day 3 ✅ (Tue 21/04)</td>
-        <td>TechLead + AI pair</td>
-        <td>✅ <strong>2 packs shipped · 38 files · ~2,600 LoC</strong> · AI Agent Pack 615 LoC · SaaS Pack 673 LoC · Bilingual EN/VI confirmed · 6 slash commands · <code>mcp/config.json</code> + <code>hooks/*.sh</code> IDENTICAL to main plugin (leverage · diff MATCHES) · marketplace.json v1.0.0 → v1.1.0 (3 plugins) · Zero new Python · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/138" target="_blank">#138</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-      <tr style="background:#d1fae5;">
-        <td><code>CBM-INT-305</code></td>
-        <td>Launch blog + demo video — 800-word blog (dev.to + Medium + HC blog) · 2-min Loom demo video</td>
-        <td>0.5</td><td>Day 4 ✅ (Tue 21/04)</td>
-        <td>AI pair + CEO</td>
-        <td>✅ <strong>Blog 824 words</strong> ready for dev.to/Medium/HC (5 sections) · <strong>Demo video script</strong> 167 LoC · 12 scenes × 10s (CEO records) · SaaS typo fixes sync · PR <a href="https://github.com/hypercommerce-vn/codebase-map/pull/140" target="_blank">#140</a> MERGED</td>
-        <td><span class="badge merged">✅ Merged</span></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3 style="margin-top:20px; font-size:15px;">✅ Acceptance Criteria (Sprint-level)</h3>
-  <div class="ac-grid">
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-01:</strong> Plugin install < 30s trên Claude Code</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-02:</strong> Plugin install < 30s trên Cowork (non-dev user)</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-03:</strong> Post-install hook PASS macOS + Linux + WSL</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-04:</strong> 2 Archetype Packs installable + tested (CEO sign-off)</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-05:</strong> Blog post published · 100+ views 48h</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-06:</strong> Demo video 100+ views tuần đầu</div>
-    <div class="ac-item"><span class="check">⏳</span> <strong>AC-S3-07:</strong> Lint + 158/158 tests + no regression</div>
-  </div>
-
-  <h3 style="margin-top:20px; font-size:15px;">⚠️ Sprint Risks (PM tracking)</h3>
-  <table>
-    <thead>
-      <tr><th style="width:260px;">Risk</th><th style="width:70px;">P×I</th><th>Mitigation</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Claude Plugin Marketplace schema/API thay đổi (research preview)</td>
-        <td><span style="color:#ef4444;">🔴 3×3=9</span></td>
-        <td>Follow Cowork changelog weekly · Phase 1 + 2 stand-alone usable if Phase 3 breaks · documented fallback</td>
-      </tr>
-      <tr>
-        <td>Cowork marketplace rejection (quality bar uncertain)</td>
-        <td><span style="color:#f59e0b;">🟡 2×3=6</span></td>
-        <td>Pre-submit CTO checklist · fallback: self-host via GitHub raw URL</td>
-      </tr>
-      <tr>
-        <td>Post-install hook Windows/WSL path edge cases</td>
-        <td><span style="color:#f59e0b;">🟡 2×2=4</span></td>
-        <td>Day 4 AI-#5 smoke tests · fallback manual install docs</td>
-      </tr>
-      <tr>
-        <td>2 Archetype Packs content quality (bilingual)</td>
-        <td><span style="color:#f59e0b;">🟡 2×2=4</span></td>
-        <td>D3 PM + CEO review · borrow templates từ Cowork skills conventions</td>
-      </tr>
-      <tr>
-        <td>Launch day: low HN/Reddit engagement</td>
-        <td><span style="color:#6366f1;">🟢 1×2=2</span></td>
-        <td>Peak HN time (Tue-Thu 8-10am PT) · blog emphasize 30s quick win · demo video visual-first</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3 style="margin-top:20px; font-size:15px;">📋 Definition of Done (Sprint)</h3>
-  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
-    <li>✅ 5/5 tasks CBM-INT-301→305 complete</li>
-    <li>✅ 7/7 Acceptance Criteria pass</li>
-    <li>✅ Plugin installable via <code>/plugin install cbm</code> trong Cowork</li>
-    <li>✅ 2 Archetype Packs shipped với content reviewed</li>
-    <li>✅ Blog post + demo video live</li>
-    <li>✅ HN/Reddit/Viblo/Zalo launch posts published</li>
-    <li>✅ <code>/review-gate</code> 3 tầng PASS</li>
-    <li>✅ CEO approve merge · Tag <code>v2.5.0</code> push · GitHub Release published</li>
-    <li>✅ Board SSOT + BRIEF.md updated · Retrospective done</li>
-    <li>✅ <strong>INITIATIVE CBM × Claude Integration OFFICIALLY COMPLETE</strong> (S1 + S2 + S3)</li>
-  </ul>
-
-  <h3 style="margin-top:20px; font-size:15px;">🔗 References</h3>
-  <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:20px;">
-    <li><strong>Kickoff brief:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S3-KICKOFF.md" target="_blank">CBM-INT-S3-KICKOFF.md</a></li>
-    <li><strong>Tech Plan §3:</strong> <a href="../docs/active/cbm-claude-integration/Technical_Plan_CBM_Claude_Integration.md#3-phase-3--plugin-marketplace-5-sp--tuần-3" target="_blank">Phase 3 Plugin Marketplace (5 SP)</a></li>
-    <li><strong>Archetype GTM:</strong> <a href="../docs/active/cbm-claude-integration/Project_Archetype_GTM_Strategy.md" target="_blank">7 archetype analysis (Tier 1 AI Agent + SaaS B2B)</a></li>
-    <li><strong>S1 Retro:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S1-Retrospective.md" target="_blank">CBM-INT-S1-Retrospective.md</a></li>
-    <li><strong>S2 Retro:</strong> <a href="../docs/active/cbm-claude-integration/CBM-INT-S2-Retrospective.md" target="_blank">CBM-INT-S2-Retrospective.md</a> (AI items + S2-1/2/3)</li>
-    <li><strong>After S3:</strong> Initiative complete · Post-launch monitoring · CBM-LANG-P1 (JS+Java) scheduling</li>
-  </ul>
-
-  <p style="margin-top:14px; padding:10px 14px; background:var(--bg-muted); border-radius:6px; font-size:12px; color:var(--text-muted);">
-    <strong>PM Note S3 (21/04):</strong> <strong>FINAL sprint.</strong> Pattern từ S1+S2 (8 SP / 1.5 ngày) → expect S3 complete trong 1-2 ngày. <strong>Rule #S2-1 applied:</strong> feature PRs skip <code>project/board.html</code> progress label — PM ships separate board sync after each feature merge (giảm recurring conflict pattern từ S2 3 lần). Pre-S3 blockers: AI-#1 PyPI OIDC · AI-#7 GitHub Settings (still open from S1 retro).
-  </p>
 
 </div><!-- /page-board -->
 

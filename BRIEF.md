@@ -6,6 +6,39 @@
 
 ## 🎯 TRẠNG THÁI HIỆN TẠI
 
+### 🧭 Đang làm — CBM-VIBE Tầng 1 (cập nhật 18/11/2026)
+
+Hướng mới CEO chốt 12–13/11/2026: CBM chuyên cho vibecoding, giúp người không rành kỹ thuật kiểm soát ứng dụng do AI viết. Concept: `docs/active/cbm-vibecoding/CBM-VIBE-Concept.md` · Board: `project/board.html#cbm-vibe-t1`.
+
+| Việc | PR | Trạng thái 18/11 |
+|---|---|---|
+| CM-S4-01 domain theo config | #145 | Chờ CEO duyệt · CI xanh |
+| Concept + design preview v0.1 + khảo sát | #146 | CEO duyệt nội dung 13/11 · chờ merge |
+| VIBE-101 chạy không cần cài, không cần config | #147 | Nằm trong #151 · đứng riêng thì xung đột với `main` |
+| VIBE-102 phát hiện sửa nội dung hàm và file | #149 | Nằm trong #151 · đứng riêng thì xung đột với `main` |
+| VIBE-103 kho tính năng, tiêu chí, bằng chứng | #150 | Nằm trong #151 · đứng riêng thì xung đột với `main` |
+| VIBE-104 plugin `cbm-vibe` + skill tiếng Việt | #151 (chứa cả chuỗi #145–#150, đã gộp `main` sau VIBE-106) | Chờ CEO duyệt · CI xanh · merge được |
+| VIBE-105 cài thử ở Chat, Cowork, tab Code | #153 (hướng dẫn) | **Chờ CEO bấm thử và điền bảng** |
+
+Thứ tự merge: #151 trước (bằng nút Merge thường; GitHub tự chuyển #145, #146, #147, #149, #150 sang Merged vì code của chúng nằm trọn trong #151), rồi #153 → #166 → #167.
+
+**Chờ CEO:** duyệt chuỗi PR · bấm thử plugin theo `docs/active/cbm-vibecoding/CBM-VIBE-Cai-Thu.md` · gửi khảo sát 3 câu và chọn 5 người thử báo cáo mẫu · quyết định có đưa 3 file training lên repo công khai không.
+
+**Rà soát độc lập (16/11):** một agent không tham gia viết code tái hiện 10 trường hợp báo an toàn sai; đã sửa cả 10 trong PR #151, mỗi cái có test. Báo cáo: `docs/reference/reviews/ReviewGate_CBM-VIBE-Tier1_Round1_20261116.md`.
+
+**Gộp với VIBE-106 và chạy thử lại (18/11):** #151 đã gộp `main`; 554 test đạt trên Python 3.9–3.14, CI xanh. Hai bản sửa: (1) lệnh mà skill được cấp quyền sẵn chỉ còn chạy phần đọc dự án và giữ kho tính năng (sau khi gộp, nó từng chạy được cả `mod serve` và lệnh cài git hook mà không hỏi); bản đóng gói plugin không mang code máy chủ đó. (2) Agent phụ đóng vai Claude chạy đủ ba khoảnh khắc với bản skill cuối, báo cáo đúng bố cục đã duyệt; phần hỏi lại lộ ra bốn chỗ hở trong chỉ dẫn, đã sửa.
+**Chỗ hở đã biết, chưa sửa tận gốc:** công cụ chưa nối màn hình với điểm nhận dữ liệu gọi qua `fetch`. Điểm nhận dữ liệu mà hai tính năng cùng gọi phải ghi vào cả hai, nếu không tiêu chí của tính năng kia vẫn ghi "có bằng chứng" khi phần xử lý phía sau bị sửa. Việc nên làm đầu tiên ở tầng 2.
+**Chưa làm được:** chạy plugin trong Claude thật (phiên `claude` dòng lệnh trên máy hết hạn đăng nhập, thử lại 18/11 vẫn vậy; mới thử bằng agent phụ đóng vai Claude).
+
+**Lệnh mới:** `codebase-map generate` chạy không cần file cấu hình · `codebase-map features {status,impact,add,criterion,evidence}` · `python3 scripts/build_cbm_vibe.py` dựng plugin vào `dist/`.
+
+**Mã việc và nhánh mod (đã xử lý):** CBM Mod đổi mã thành VIBE-106 và đã vào `main` ngày 16/11 (PR #159, #165); VIBE-105 là việc cài thử plugin. #151 đã gộp phần `mod` vào `codebase_map/cli.py`. Bản dựng sẵn để cài thử nằm ở `dist/` trên máy (không lên git).
+
+**Lưu ý cho phiên sau:** ngày 15–16/11 có nhiều phiên Claude cùng làm trong thư mục này. Trước khi đổi nhánh hay commit, xem `git status` có thay đổi của phiên khác không; việc mới nên làm trong worktree riêng.
+
+**Đính chính:** dòng "3 plugins LIVE" ở dưới đúng về việc đã đăng, nhưng ba plugin đó chưa theo định dạng chuẩn của Claude (xem Concept, mục "Đóng gói trên Claude").
+
+
 **Codebase Map v2.2 — Production ready — Public OSS**
 
 Tất cả sprints COMPLETE (85 SP, 582 tests):
