@@ -66,7 +66,9 @@ class QueryEngine:
         Supports both v1.x (no metadata) and v2.1+ (with metadata) formats
         via ``Graph.from_dict()``.
         """
-        with open(json_path) as f:
+        # VIBE-104: graph.json is written as UTF-8; read it the same way on
+        # every platform (the Windows default is a legacy code page).
+        with open(json_path, encoding="utf-8") as f:
             data = json.load(f)
         # HC-AI | ticket: FDD-TOOL-CODEMAP
         # CBM-P1-01: Delegate to Graph.from_dict for v1.x + v2.1 compat

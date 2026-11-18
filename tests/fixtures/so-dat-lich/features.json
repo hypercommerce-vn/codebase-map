@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "features": [
+    {
+      "id": "dat-lich",
+      "name": "Đặt lịch",
+      "summary": "Khách chọn giờ còn trống, đặt lịch và xem lại lịch của mình.",
+      "files": [
+        "app/dat-lich",
+        "app/lich-cua-toi",
+        "app/api/bookings",
+        "app/api/slots",
+        "components/BookingForm.tsx",
+        "components/SlotPicker.tsx",
+        "components/BookingList.tsx",
+        "lib/bookings.ts",
+        "lib/slots.ts"
+      ],
+      "criteria": [
+        {
+          "id": "dat-lich-1",
+          "text": "Khách chọn được một giờ còn trống và đặt lịch thành công.",
+          "evidence": null
+        },
+        {
+          "id": "dat-lich-2",
+          "text": "Giờ đã có người đặt thì không đặt được nữa.",
+          "evidence": null
+        },
+        {
+          "id": "dat-lich-3",
+          "text": "Khách xem được danh sách lịch mình đã đặt.",
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "khach-hang",
+      "name": "Danh sách khách",
+      "summary": "Chủ tiệm xem và thêm khách.",
+      "files": [
+        "app/khach-hang",
+        "app/api/customers",
+        "components/CustomerTable.tsx",
+        "lib/customers.ts"
+      ],
+      "criteria": [
+        {
+          "id": "khach-hang-1",
+          "text": "Chủ tiệm xem được danh sách khách kèm số điện thoại.",
+          "evidence": null
+        },
+        {
+          "id": "khach-hang-2",
+          "text": "Thêm được khách mới.",
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "nhac-lich",
+      "name": "Nhắc lịch",
+      "summary": "Tự gửi tin nhắc khách trước giờ hẹn.",
+      "files": [
+        "app/api/reminders",
+        "lib/reminders.ts"
+      ],
+      "criteria": [
+        {
+          "id": "nhac-lich-1",
+          "text": "Khách nhận tin nhắc trước giờ hẹn 24 tiếng.",
+          "evidence": null
+        },
+        {
+          "id": "nhac-lich-2",
+          "text": "Tin nhắc có tên khách và giờ hẹn.",
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "bao-cao",
+      "name": "Báo cáo doanh thu",
+      "summary": "Chủ tiệm xem doanh thu theo ngày.",
+      "files": [
+        "app/bao-cao",
+        "app/api/reports",
+        "components/RevenueChart.tsx",
+        "lib/reports.ts"
+      ],
+      "criteria": [
+        {
+          "id": "bao-cao-1",
+          "text": "Chủ tiệm xem được doanh thu 7 ngày gần nhất.",
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "dang-nhap",
+      "name": "Đăng nhập",
+      "summary": "Chủ tiệm đăng nhập để xem khách và doanh thu.",
+      "files": [
+        "app/dang-nhap",
+        "app/api/auth",
+        "lib/auth.ts"
+      ],
+      "criteria": [
+        {
+          "id": "dang-nhap-1",
+          "text": "Chủ tiệm đăng nhập được bằng mật khẩu.",
+          "evidence": null
+        }
+      ]
+    }
+  ]
+}

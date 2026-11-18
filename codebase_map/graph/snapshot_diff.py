@@ -13,7 +13,8 @@ from codebase_map.graph.models import Edge, Graph, Node
 class NodeChange:
     """Represents a single node change between two snapshots."""
 
-    change_type: str  # "added" | "removed" | "modified" | "renamed"
+    # "added" | "removed" | "modified" | "renamed" | "body_changed"
+    change_type: str
     node: Node
     old_node: Optional[Node] = None
     modifications: list[str] = field(default_factory=list)
@@ -41,6 +42,19 @@ class AffectedCaller:
     source_changes: list[str] = field(default_factory=list)
 
 
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# VIBE-102: a source file whose content differs between the two snapshots
+@dataclass
+class FileChange:
+    """A source file that was added, removed or edited."""
+
+    path: str
+    change_type: str  # "added" | "removed" | "modified"
+    # True when code outside every function and class differs: constants,
+    # imports, type declarations. Always True for added and removed files.
+    module_level_changed: bool = False
+
+
 @dataclass
 class DiffResult:
     """Complete diff result between two graph snapshots."""
@@ -54,6 +68,12 @@ class DiffResult:
     edges_added: list[EdgeChange] = field(default_factory=list)
     edges_removed: list[EdgeChange] = field(default_factory=list)
     affected_callers: list[AffectedCaller] = field(default_factory=list)
+    # VIBE-102: content-level changes. ``content_tracking`` is False when
+    # either snapshot was written before fingerprints existed; the two lists
+    # are then empty and say nothing about whether content changed.
+    nodes_body_changed: list[NodeChange] = field(default_factory=list)
+    files_changed: list[FileChange] = field(default_factory=list)
+    content_tracking: bool = False
 
     @property
     def summary(self) -> dict:
@@ -66,6 +86,8 @@ class DiffResult:
             "edges_added": len(self.edges_added),
             "edges_removed": len(self.edges_removed),
             "affected_callers": len(self.affected_callers),
+            "functions_body_changed": len(self.nodes_body_changed),
+            "files_changed": len(self.files_changed),
         }
 
     def has_changes(self) -> bool:
@@ -102,12 +124,22 @@ class SnapshotDiff:
         )
 
         # Step 1: Node diff
-        added_ids, removed_ids, modified = self._diff_nodes()
-        result.nodes_added = [NodeChange("added", self._c_by_id[i]) for i in added_ids]
-        result.nodes_removed = [
-            NodeChange("removed", self._b_by_id[i]) for i in removed_ids
-        ]
-        result.nodes_modified = modified
+        pairs, added_ids, removed_ids = self._match_nodes()
+        modified = _signature_changes(pairs)
+        # VIBE-102: sorted, so the same two snapshots always give the same report
+        result.nodes_added = sorted(
+            (NodeChange("added", self._c_by_id[i]) for i in added_ids),
+            key=_by_location,
+        )
+        result.nodes_removed = sorted(
+            (NodeChange("removed", self._b_by_id[i]) for i in removed_ids),
+            key=_by_location,
+        )
+        result.nodes_modified = sorted(modified, key=_by_location)
+
+        # VIBE-102: content-level diff (bodies and files)
+        result.nodes_body_changed = _body_changes(pairs, modified)
+        result.files_changed, result.content_tracking = self._diff_files()
 
         # Step 2: Rename detection (reduces false removed+added pairs)
         if include_renames:
@@ -136,49 +168,51 @@ class SnapshotDiff:
 
         return result
 
-    def _diff_nodes(
-        self,
-    ) -> tuple[set[str], set[str], list[NodeChange]]:
-        """Compare nodes: returns (added_ids, removed_ids, modified)."""
+    def _match_nodes(self) -> tuple[list[tuple[Node, Node]], set[str], set[str]]:
+        """Pair up nodes present in both snapshots.
+
+        Returns (matched pairs as (baseline, current), added ids, removed ids).
+        """
         # Step 1: Match by ID (exact)
         matched_by_id = self._b_by_id.keys() & self._c_by_id.keys()
         unmatched_b = set(self._b_by_id.keys()) - matched_by_id
         unmatched_c = set(self._c_by_id.keys()) - matched_by_id
+        pairs = [(self._b_by_id[i], self._c_by_id[i]) for i in matched_by_id]
 
         # Step 2: Fallback match by (name, file) for unmatched
         # Handles line shifts where ID changes but function is same
-        fallback_matched: set[tuple[str, str]] = set()
         for b_id in list(unmatched_b):
             b_node = self._b_by_id[b_id]
             key = (b_node.name, b_node.file_path)
             if key in self._c_by_name_file:
                 c_node = self._c_by_name_file[key]
                 if c_node.id in unmatched_c:
-                    fallback_matched.add((b_id, c_node.id))
+                    pairs.append((b_node, c_node))
                     unmatched_b.discard(b_id)
                     unmatched_c.discard(c_node.id)
 
-        added_ids = unmatched_c
-        removed_ids = unmatched_b
+        return pairs, unmatched_c, unmatched_b
 
-        # Check modifications in ID-matched nodes
-        modified: list[NodeChange] = []
-        for b_id in matched_by_id:
-            b_node = self._b_by_id[b_id]
-            c_node = self._c_by_id[b_id]
-            mods = _detect_modifications(b_node, c_node)
-            if mods:
-                modified.append(NodeChange("modified", c_node, b_node, mods))
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # VIBE-102: which source files differ, from the fingerprints in the metadata
+    def _diff_files(self) -> tuple[list[FileChange], bool]:
+        """Compare per-file fingerprints; (changes, whether both sides have them)."""
+        before = self.baseline.metadata.get("files")
+        after = self.current.metadata.get("files")
+        if not isinstance(before, dict) or not isinstance(after, dict):
+            return [], False
 
-        # Check modifications in fallback-matched nodes
-        for b_id, c_id in fallback_matched:
-            b_node = self._b_by_id[b_id]
-            c_node = self._c_by_id[c_id]
-            mods = _detect_modifications(b_node, c_node)
-            if mods:
-                modified.append(NodeChange("modified", c_node, b_node, mods))
-
-        return added_ids, removed_ids, modified
+        changes: list[FileChange] = []
+        for path in sorted(set(before) | set(after)):
+            old, new = before.get(path), after.get(path)
+            if old is None:
+                changes.append(FileChange(path, "added", True))
+            elif new is None:
+                changes.append(FileChange(path, "removed", True))
+            elif old.get("hash") != new.get("hash"):
+                module_level = old.get("module_hash") != new.get("module_hash")
+                changes.append(FileChange(path, "modified", module_level))
+        return changes, True
 
     def _diff_edges(
         self,
@@ -201,14 +235,14 @@ class SnapshotDiff:
         # Detect cascade: edge removed because node was removed
         removed_node_ids = self._b_by_id.keys() - self._c_by_id.keys()
 
-        added = [EdgeChange("added", c_edge_map[k]) for k in added_keys]
+        added = [EdgeChange("added", c_edge_map[k]) for k in sorted(added_keys)]
         removed = [
             EdgeChange(
                 "removed",
                 b_edge_map[k],
                 is_cascade=(k[0] in removed_node_ids or k[1] in removed_node_ids),
             )
-            for k in removed_keys
+            for k in sorted(removed_keys)
         ]
 
         return added, removed
@@ -315,6 +349,43 @@ class SnapshotDiff:
         )
 
 
+def _by_location(change: NodeChange) -> tuple[str, int, str]:
+    """Sort key: file, then position in the file, then id."""
+    return (change.node.file_path, change.node.line_start, change.node.id)
+
+
+def _signature_changes(pairs: list[tuple[Node, Node]]) -> list[NodeChange]:
+    """Matched nodes whose signature differs between the two snapshots."""
+    modified: list[NodeChange] = []
+    for b_node, c_node in pairs:
+        mods = _detect_modifications(b_node, c_node)
+        if mods:
+            modified.append(NodeChange("modified", c_node, b_node, mods))
+    return modified
+
+
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# VIBE-102: a function whose signature is unchanged but whose body differs
+def _body_changes(
+    pairs: list[tuple[Node, Node]], modified: list[NodeChange]
+) -> list[NodeChange]:
+    """Matched nodes whose content fingerprint changed but whose signature did not.
+
+    A node without a fingerprint on either side (a snapshot written before
+    VIBE-102) is skipped: nothing can be said about its body.
+    """
+    already_reported = {id(change.node) for change in modified}
+    changed: list[NodeChange] = []
+    for b_node, c_node in pairs:
+        if id(c_node) in already_reported:
+            continue
+        before = b_node.metadata.get("body_hash")
+        after = c_node.metadata.get("body_hash")
+        if before and after and before != after:
+            changed.append(NodeChange("body_changed", c_node, b_node, ["body_changed"]))
+    return sorted(changed, key=_by_location)
+
+
 def _detect_modifications(old: Node, new: Node) -> list[str]:
     """Compare two matched nodes to detect modifications."""
     mods: list[str] = []
@@ -332,10 +403,20 @@ def _detect_modifications(old: Node, new: Node) -> list[str]:
 
 
 def _signature_match(a: Node, b: Node) -> bool:
-    """Match two nodes by signature: same name+params+return_type, different file."""
-    return (
-        a.name == b.name
-        and a.params == b.params
-        and a.return_type == b.return_type
-        and a.file_path != b.file_path
-    )
+    """Match two nodes by signature: same name+params+return_type, different file.
+
+    VIBE-102: a node with no recorded signature at all (the TypeScript parser
+    records none) would match any other node of the same name, and two
+    unrelated `GET` handlers would be reported as one that moved. Such nodes
+    are a rename only when their bodies are identical.
+    """
+    if a.name != b.name or a.file_path == b.file_path:
+        return False
+    if a.params != b.params or a.return_type != b.return_type:
+        return False
+    if a.params or a.return_type:
+        return True
+    body_a, body_b = a.metadata.get("body_hash"), b.metadata.get("body_hash")
+    if body_a is None or body_b is None:
+        return True  # snapshots without fingerprints: keep the old behaviour
+    return body_a == body_b
