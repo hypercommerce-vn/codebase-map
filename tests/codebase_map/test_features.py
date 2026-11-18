@@ -630,6 +630,8 @@ class TestImpactOfTheSampleChange:
                 "path": "lib/types.ts",
                 "change": "modified",
                 "module_level_changed": False,
+                # only a type declaration was edited
+                "behaviour_changed": False,
                 "used_by": [],
             }
         ]
@@ -641,7 +643,10 @@ class TestImpactOfTheSampleChange:
         assert "edited   buildReminderMessage  (body, lib/reminders.ts)" in text
         assert "recheck  nhac-lich-1" in text
         assert "Not touched: Danh sách khách, Báo cáo doanh thu, Đăng nhập" in text
-        assert "Changed, in no feature: lib/types.ts" in text
+        assert (
+            "Changed, in no feature: lib/types.ts  "
+            "(modified; no behaviour change; used by: nothing)"
+        ) in text
         assert "Criteria to recheck: 5" in text
 
 
@@ -716,6 +721,87 @@ class TestImpactRules:
         assert login["behaviour_changed"] is False
         assert login["criteria"][0]["status_after"] == STATUS_VERIFIED
         assert "(no behaviour change)" in format_impact_text(impact)
+
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    def test_function_edit_in_a_shared_file_can_change_behaviour(
+        self, app: Path, store: FeatureStore
+    ) -> None:
+        """lib/db.ts is in no feature; editing a function in it is not harmless.
+
+        ``module_level_changed`` is False for such an edit, so a reader who
+        took that flag for "nothing that runs changed" would be reassured
+        wrongly. ``behaviour_changed`` is the flag that answers the question.
+        """
+        before = _build(app)
+        _verify_everything(store, before)
+        _edit(app, "lib/db.ts", "return tables[table];", "return [...tables[table]];")
+        impact = compute_impact(store, before, _build(app))
+
+        (shared,) = impact["unowned_changes"]
+        assert shared["path"] == "lib/db.ts"
+        assert shared["module_level_changed"] is False
+        assert shared["behaviour_changed"] is True
+        assert shared["used_by"]
+        assert impact["summary"]["criteria_to_recheck"] > 0
+        assert "no behaviour change" not in format_impact_text(impact)
+
+    def test_endpoint_called_by_two_features_must_be_in_both(self, app: Path) -> None:
+        """A screen reaches its endpoint through a URL, which the tool cannot see.
+
+        "My bookings" fetches /api/bookings, an endpoint owned by "Booking".
+        Unless the endpoint file is listed in both features, an edit behind
+        it leaves the evidence of "My bookings" standing. The skill tells
+        Claude to list it in both; this pins why. When the tool learns to
+        follow fetch() URLs, the first half of this test should start failing.
+        """
+        handler = (
+            "lib/bookings.ts",
+            "b.customerId === customerId",
+            "b.customerId == customerId",
+        )
+
+        def status_after_the_edit(files: list[str], root: Path) -> str:
+            shutil.copytree(app, root)
+            store = FeatureStore()
+            store.upsert_feature("dat-lich", "Đặt lịch", ["app/api/bookings"])
+            store.upsert_feature("lich-cua-toi", "Lịch của tôi", files)
+            store.add_criterion("lich-cua-toi", "Khách xem được lịch đã đặt.")
+            _verify_everything(store, _build(root))
+            _edit(root, *handler)
+            return _statuses(store, _build(root))["lich-cua-toi-1"]
+
+        screen = ["app/lich-cua-toi", "components/BookingList.tsx"]
+        alone = status_after_the_edit(screen, app.parent / "screen-only")
+        both = status_after_the_edit(
+            screen + ["app/api/bookings"], app.parent / "with-endpoint"
+        )
+
+        assert alone == STATUS_VERIFIED  # the gap: nothing asks for a re-check
+        assert both == STATUS_NEEDS_RECHECK
+
+    def test_top_level_edit_in_a_shared_file_can_change_behaviour(
+        self, app: Path, store: FeatureStore
+    ) -> None:
+        before = _build(app)
+        _edit(app, "lib/db.ts", "priceVnd: 120000", "priceVnd: 150000")
+        impact = compute_impact(store, before, _build(app))
+
+        (shared,) = impact["unowned_changes"]
+        assert shared["module_level_changed"] is True
+        assert shared["behaviour_changed"] is True
+
+    def test_added_and_removed_shared_files_count_as_behaviour_changes(
+        self, app: Path, store: FeatureStore
+    ) -> None:
+        before = _build(app)
+        _write(app, "lib/extra.ts", "export const LIMIT = 3;\n")
+        (app / "app" / "page.tsx").unlink()
+        impact = compute_impact(store, before, _build(app))
+
+        changes = {item["path"]: item for item in impact["unowned_changes"]}
+        assert changes["lib/extra.ts"]["change"] == "added"
+        assert changes["app/page.tsx"]["change"] == "removed"
+        assert all(item["behaviour_changed"] for item in changes.values())
 
 
 class TestReExports:

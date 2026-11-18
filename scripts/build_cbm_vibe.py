@@ -31,6 +31,20 @@ SKILL_PATH = Path("skills") / SKILL_NAME
 VENDOR_PATH = SKILL_PATH / "scripts" / "vendor"
 
 _IGNORED = shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo", ".DS_Store")
+# HC-AI | ticket: FDD-TOOL-CODEMAP
+# Parts of the package the skill never runs. ``mod`` is the Claude Code pane:
+# a local web server that also serves Claude session transcripts, plus a git
+# hook installer. The skill's runner refuses that command, so the plugin does
+# not carry its code either.
+_NOT_BUNDLED = ("mod",)
+
+
+def _ignored_in_package(folder: str, names: list[str]) -> set[str]:
+    """What copytree skips: build leftovers, and the parts left out on purpose."""
+    ignored = set(_IGNORED(folder, names))
+    if Path(folder) == PACKAGE_SOURCE:
+        ignored.update(name for name in names if name in _NOT_BUNDLED)
+    return ignored
 
 
 def build(out_dir: Path) -> dict[str, Path]:
@@ -42,7 +56,9 @@ def build(out_dir: Path) -> dict[str, Path]:
 
     shutil.copytree(PLUGIN_SOURCE, plugin_dir, ignore=_IGNORED)
     shutil.copytree(
-        PACKAGE_SOURCE, plugin_dir / VENDOR_PATH / "codebase_map", ignore=_IGNORED
+        PACKAGE_SOURCE,
+        plugin_dir / VENDOR_PATH / "codebase_map",
+        ignore=_ignored_in_package,
     )
     license_file = REPO_ROOT / "LICENSE"
     if license_file.exists():

@@ -14,6 +14,7 @@ thoát khác 0 khi lỗi; với `--json`, lỗi có dạng `{"error": "..."}`.
 - [generate --label](#generate---label) — chụp trạng thái code
 - [features impact](#features-impact) — thay đổi đụng tới gì
 - [Cách công cụ xác định "liên quan"](#cách-công-cụ-xác-định-liên-quan)
+- [Lệnh nào chạy được](#lệnh-nào-chạy-được)
 - [Những điều công cụ không thấy](#những-điều-công-cụ-không-thấy)
 
 ## features status
@@ -53,7 +54,8 @@ CBM features add --id dat-lich --append --files <mẫu mới>     # thêm file, 
   mẫu có `*` và `?`. Dấu ngoặc vuông được hiểu nguyên văn, nên
   `"app/api/bookings/[id]/route.ts"` là đúng file đó. Luôn đặt mẫu trong
   dấu nháy.
-- Một file được phép thuộc nhiều tính năng.
+- Một file được phép thuộc nhiều tính năng. Điểm nhận dữ liệu mà màn hình
+  của hai tính năng cùng gọi thì ghi vào cả hai.
 - Kết quả có `matched_files` (file khớp) và `unmatched_patterns` (mẫu không
   khớp file nào — thường là gõ sai đường dẫn; hãy sửa).
 
@@ -88,6 +90,13 @@ Chụp trạng thái code hiện tại dưới một nhãn. Chụp "trước" kh
 chí, chụp "sau" khi sửa xong. Hai nhãn dùng chung đuôi là `id` của tiêu chí
 đầu tiên trong lần yêu cầu đó.
 
+Khi không nhớ đã chụp những nhãn nào (ví dụ tiếp tục một việc từ cuộc trò
+chuyện trước), xem danh sách:
+
+```bash
+CBM snapshots list
+```
+
 ## features impact
 
 ```bash
@@ -104,6 +113,7 @@ CBM features impact --baseline truoc-dat-lich-4 --current sau-dat-lich-4 --json
 | `features[].indirect.functions[]` | Đoạn xử lý của tính năng khác mà tính năng này gọi tới, vừa bị sửa |
 | `features[].criteria[]` | Từng tiêu chí với `status_before` và `status_after` |
 | `unowned_changes[]` | File bị đổi mà không thuộc tính năng nào; `used_by` là các tính năng đang dùng nó |
+| `unowned_changes[].behaviour_changed` | `false`: chỉ đổi khai báo kiểu, dòng import hoặc thụt lề, cách chạy không đổi. `true`: có code chạy bị đổi. Đừng suy điều này từ `module_level_changed`, vì trường đó vẫn là `false` khi chỉ một đoạn xử lý trong file bị sửa |
 | `summary.touched_direct`, `touched_indirect` | Danh sách `id` tính năng bị đụng |
 | `summary.criteria_to_recheck` | Số tiêu chí đang ở trạng thái cần kiểm lại |
 
@@ -120,6 +130,16 @@ của một tiêu chí hết hạn khi bất kỳ phần nào trong số đó th
 có thể làm đổi cách chạy. Đổi thụt lề, dòng import hay khai báo kiểu thì
 không làm hết hạn. Mọi thay đổi khác đều làm hết hạn, kể cả việc một công cụ
 định dạng tự ngắt lại dòng: khi không chắc, công cụ chọn yêu cầu kiểm lại.
+
+## Lệnh nào chạy được
+
+Skill được cấp sẵn quyền chạy công cụ này, nên công cụ chỉ nhận những lệnh
+đọc dự án, ghi sơ đồ và ảnh chụp vào dự án, và giữ kho tính năng:
+`generate`, `features`, `snapshots list`, `snapshot-diff`, `summary`,
+`query`, `impact`, `search`. Nó không mở kết nối mạng, không cài gì vào
+git và không xoá ảnh chụp. Lệnh khác bị từ chối với mã thoát 2 và dòng
+`is not available from the CBM-VIBE skill`. Khi gặp dòng đó, đừng tìm cách
+chạy vòng; việc đó nằm ngoài phần skill này làm.
 
 ## Những điều công cụ không thấy
 

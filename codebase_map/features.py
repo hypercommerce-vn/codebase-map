@@ -686,11 +686,21 @@ def compute_impact(store: FeatureStore, baseline: Graph, current: Graph) -> dict
             }
         )
 
+    # HC-AI | ticket: FDD-TOOL-CODEMAP
+    # A file in no feature has no fingerprint of its own, so say here whether
+    # its change can alter behaviour. ``module_level_changed`` alone does not
+    # answer that: it is False when only a function inside the file was edited.
+    files_with_function_changes = {entry["file"] for entry in node_changes}
     unowned = [
         {
             "path": change.path,
             "change": change.change_type,
             "module_level_changed": change.module_level_changed,
+            "behaviour_changed": (
+                change.change_type != "modified"
+                or change.module_level_changed
+                or change.path in files_with_function_changes
+            ),
             "used_by": after.users_of_file(change.path)
             or before.users_of_file(change.path),
         }
@@ -806,8 +816,9 @@ def format_impact_text(data: dict[str, Any]) -> str:
         lines.append("Not touched: " + ", ".join(untouched))
     for item in data["unowned_changes"]:
         used = ", ".join(item["used_by"]) or "nothing"
+        note = "" if item["behaviour_changed"] else "; no behaviour change"
         lines.append(
-            f"Changed, in no feature: {item['path']}  ({item['change']}; "
+            f"Changed, in no feature: {item['path']}  ({item['change']}{note}; "
             f"used by: {used})"
         )
     summary = data["summary"]
