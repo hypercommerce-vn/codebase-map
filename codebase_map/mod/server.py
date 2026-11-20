@@ -14,9 +14,37 @@ Routes:
     GET /                                 the pane shell (index.html)
     GET /<asset>                          pane assets — same dir only
 
-Binds to 127.0.0.1 so nothing on the network can reach it, and sends
-permissive CORS headers so the Claude Code pane (rendered from another
-origin, e.g. a devtools iframe) can fetch /api/* when the mod is enabled.
+Who may call it
+---------------
+The API returns things that must stay on this machine: the repo's Claude
+Code conversation transcripts (/api/replay/*), the code graph and its
+snapshots. There is no login, so every request is checked before a route
+runs and gets 403 unless all of these hold:
+
+* ``Host`` is one of this server's own names with the bound port:
+  ``127.0.0.1``, ``localhost`` or ``[::1]`` (plus the address passed to
+  ``--host`` when that is one specific address). A browser sends the name
+  it was told to open, so a page that reaches this socket under a foreign
+  name (DNS rebinding) is refused.
+* ``Origin``, when the client sends one, is ``http://`` + that ``Host``,
+  i.e. the request comes from a page this server served. Browsers add
+  ``Origin`` to cross-origin reads, so those are refused.
+* On /api/*, ``Sec-Fetch-Site``, when the client sends one, is
+  ``same-origin`` or ``none`` (the user typed the address). Browsers attach
+  it to say where a request comes from, which catches the cross-site
+  requests that carry no ``Origin``: a ``<script>`` or ``<img>`` tag,
+  ``fetch(..., {mode: "no-cors"})``, a link or frame aimed at an API URL.
+  The pane shell and its assets stay reachable from a link or a frame.
+
+No ``Access-Control-Allow-*`` header is sent, so a browser never hands a
+response to a page from another origin either. The pane does not need one:
+index.html, its assets and /api/* all come from this one origin, and
+app.js only uses relative URLs.
+
+Binding to 127.0.0.1 (the default) keeps other machines out. It does not
+keep out a web page open in a browser on this machine; the checks above
+do. They are not authentication: any local program can still call the API,
+and so can the network if you bind to a non-loopback address.
 """
 
 from __future__ import annotations
@@ -36,6 +64,16 @@ from codebase_map.mod.status import collect_status
 
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 7430
+
+# HC-AI | ticket: VIBE-106
+# Names under which a browser on this machine reaches the loopback
+# interface. A request whose ``Host`` is anything else was addressed to some
+# other name that merely resolves here.
+_LOOPBACK_HOSTS = ("127.0.0.1", "localhost", "[::1]")
+_WILDCARD_BINDS = ("", "0.0.0.0", "::")
+# ``Sec-Fetch-Site`` values the API answers to. "" stands for no header:
+# curl, scripts and browsers too old to send it.
+_OWN_FETCH_SITES = ("", "same-origin", "none")
 
 PANE_DIR = Path(__file__).parent / "pane"
 
@@ -88,16 +126,70 @@ def _snapshot_by_id(snap_dir: Path, snap_id: str) -> Optional[Path]:
     return p
 
 
+# HC-AI | ticket: VIBE-106
+def allowed_hosts(bind_host: str, port: int) -> frozenset[str]:
+    """Return the ``Host`` header values (lower-case) the server answers to.
+
+    Always the loopback names with the bound port. When the socket is bound
+    to one specific address (``--host 192.168.1.5``), that address counts
+    too, since the operator chose to serve it. A wildcard bind adds nothing:
+    it names no address a browser could be told to open.
+    """
+    names = set(_LOOPBACK_HOSTS)
+    if bind_host not in _WILDCARD_BINDS:
+        names.add(f"[{bind_host}]" if ":" in bind_host else bind_host)
+    hosts = {f"{name}:{port}" for name in names}
+    if port == 80:
+        hosts |= names  # clients leave the default port out
+    return frozenset(h.lower() for h in hosts)
+
+
 class _Handler(BaseHTTPRequestHandler):
     repo_root: Path = Path(".")
     pane_dir: Path = PANE_DIR
 
+    # HC-AI | ticket: VIBE-106
+    def _gate(self) -> bool:
+        """Answer 403 unless the request is this server's own business.
+
+        That means: addressed to one of the server's own names, and not sent
+        by a page from another origin (see "Who may call it" in the module
+        docstring). Returns True when the request may go on to a route.
+        """
+        bind_host, port = self.server.server_address[:2]
+        allowed = allowed_hosts(bind_host, port)
+        hosts = self.headers.get_all("Host") or []
+        host = hosts[0].strip().lower() if len(hosts) == 1 else ""
+        origin = self.headers.get("Origin")
+        site = (self.headers.get("Sec-Fetch-Site") or "").strip().lower()
+        if host not in allowed:
+            reason = "host not allowed"
+        elif origin is not None and origin.strip().lower() != f"http://{host}":
+            reason = "origin not allowed"
+        elif site not in _OWN_FETCH_SITES and self.path.startswith("/api/"):
+            reason = "cross-site request"
+        else:
+            return True
+        log.warning(
+            "refused %s %r: %s (Host: %r, Origin: %r, Sec-Fetch-Site: %r)",
+            self.command,
+            self.path,
+            reason,
+            ", ".join(hosts) or None,
+            origin,
+            site or None,
+        )
+        self._json(
+            403,
+            {"error": "forbidden", "reason": reason, "allowed_hosts": sorted(allowed)},
+        )
+        return False
+
     def _send(self, status: int, body: bytes, content_type: str) -> None:
+        # No Access-Control-* headers: nothing here is for other origins.
         self.send_response(status)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
         self.wfile.write(body)
@@ -127,13 +219,19 @@ class _Handler(BaseHTTPRequestHandler):
         return True
 
     def do_OPTIONS(self) -> None:  # noqa: N802
+        # HC-AI | ticket: VIBE-106
+        # A CORS preflight gets no Access-Control-* answer (and 403 from the
+        # gate when it names another origin), so the browser never sends the
+        # real request.
+        if not self._gate():
+            return
         self.send_response(204)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Allow", "GET, OPTIONS")
         self.end_headers()
 
     def do_GET(self) -> None:  # noqa: N802
+        if not self._gate():
+            return
         path = self.path.split("?", 1)[0]
 
         if path == "/api/health":
