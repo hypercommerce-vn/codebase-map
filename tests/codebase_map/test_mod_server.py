@@ -12,7 +12,7 @@ from urllib.request import Request, urlopen
 
 import pytest
 
-from codebase_map.mod.server import PANE_DIR, make_server
+from codebase_map.mod.server import PANE_DIR, allowed_hosts, make_server
 
 
 def _free_port() -> int:
@@ -22,6 +22,30 @@ def _free_port() -> int:
     port = s.getsockname()[1]
     s.close()
     return port
+
+
+# HC-AI | ticket: VIBE-106
+def _request(url: str, headers: dict | None = None, method: str = "GET"):
+    """Send one request; return (status, headers, body), errors included."""
+    req = Request(url, headers=headers or {}, method=method)
+    try:
+        with urlopen(req, timeout=3) as r:
+            return r.status, r.headers, r.read()
+    except HTTPError as e:
+        return e.code, e.headers, e.read()
+
+
+def _raw(port: int, request: bytes) -> bytes:
+    """Send bytes as they are (urllib always adds one Host header)."""
+    with socket.create_connection(("127.0.0.1", port), timeout=3) as s:
+        s.sendall(request)
+        chunks = []
+        while True:
+            chunk = s.recv(65536)
+            if not chunk:
+                break
+            chunks.append(chunk)
+    return b"".join(chunks)
 
 
 @pytest.fixture()
@@ -45,15 +69,31 @@ class TestEndpoints:
             body = json.loads(r.read().decode())
             assert body == {"ok": True}
 
-    def test_status(self, server):
+    def test_status(self, server, monkeypatch):
+        # HC-AI | ticket: VIBE-106
+        # collect_status shells out to git and gh, and gh may wait 8s on the
+        # network, longer than this client does. Stub the one function that
+        # runs commands so the endpoint is tested without spawning anything.
+        from codebase_map.mod import status as status_mod
+
+        ran = []
+
+        def fake_run(cmd, cwd, timeout=5.0):
+            ran.append(cmd[0])
+            return "feat/vibe-106-cbm-mod" if cmd[0] == "git" else None
+
+        monkeypatch.setattr(status_mod, "_run", fake_run)
         with urlopen(f"{server}/api/status", timeout=3) as r:
             assert r.status == 200
             data = json.loads(r.read().decode())
-            # Status always collects, even without git/gh/snapshot.
-            assert "sprint" in data
-            assert "branch" in data
-            assert "risk_level" in data
-            assert data["errors"] == {}
+        assert "git" in ran
+        assert data["branch"] == "feat/vibe-106-cbm-mod"
+        assert data["sprint"] == "VIBE-106"
+        # No PR and no snapshot in an empty folder: neutral values, no errors.
+        assert data["pr_number"] is None
+        assert data["ci_state"] == "unknown"
+        assert data["risk_level"] == "unknown"
+        assert data["errors"] == {}
 
     def test_root_returns_pane_html(self, server):
         with urlopen(f"{server}/", timeout=3) as r:
@@ -431,13 +471,253 @@ class TestSnapshotsEndpoint:
             httpd.server_close()
             thread.join(timeout=2)
 
-    def test_cors_headers(self, server):
-        with urlopen(f"{server}/api/health", timeout=3) as r:
-            assert r.headers["Access-Control-Allow-Origin"] == "*"
 
-    def test_options_preflight(self, server):
-        req = Request(f"{server}/api/status", method="OPTIONS")
-        with urlopen(req, timeout=3) as r:
-            assert r.status == 204
-            assert r.headers["Access-Control-Allow-Origin"] == "*"
-            assert "GET" in r.headers["Access-Control-Allow-Methods"]
+# HC-AI | ticket: VIBE-106
+FOREIGN_ORIGIN = "https://example.com"
+
+# (path, bytes that only a served response contains)
+PROTECTED = [
+    ("/api/replay/sessions", b'"abcd"'),
+    ("/api/replay/sessions/abcd", b"do thing"),
+    ("/api/graph", b'"fx"'),
+    ("/api/snapshots", b'"snap1"'),
+]
+
+PANE_FILES = [
+    ("/", b"CBM Mod Pane"),
+    ("/index.html", b'data-tab="replay"'),
+    ("/styles.css", b"status-line"),
+    ("/app.js", b"fetchStatus"),
+]
+
+
+def _cors_headers(headers) -> list[str]:
+    return [k for k in headers.keys() if k.lower().startswith("access-control-")]
+
+
+@pytest.fixture(scope="class")
+def base(tmp_path_factory):
+    """Base URL of one server per class: a graph, a snapshot and a session."""
+    from codebase_map.mod import replay as replay_mod
+    from codebase_map.mod.replay import encode_project_dir
+
+    tmp_path = tmp_path_factory.mktemp("same-origin")
+    repo = tmp_path / "project"
+    gdir = repo / "docs" / "function-map"
+    gdir.mkdir(parents=True)
+    payload = {"project": "fx", "nodes": [{"id": "a"}], "edges": []}
+    (gdir / "graph.json").write_text(json.dumps(payload))
+    snap_dir = repo / ".codebase-map-cache" / "snapshots"
+    snap_dir.mkdir(parents=True)
+    _write_min_snapshot(snap_dir / "snap1.json", nodes=2)
+    projects_root = tmp_path / "projects"
+    sdir = projects_root / encode_project_dir(repo)
+    sdir.mkdir(parents=True)
+    _write_min_session(sdir / "abcd.jsonl", "abcd")
+
+    port = _free_port()
+    httpd = make_server(repo, host="127.0.0.1", port=port)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(replay_mod, "DEFAULT_PROJECTS_DIR", projects_root)
+        thread.start()
+        try:
+            yield f"http://127.0.0.1:{port}"
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+            thread.join(timeout=2)
+
+
+class TestSameOriginOnly:
+    """Only this server's own pages may read it: no other site, no other name."""
+
+    @staticmethod
+    def _port(base: str) -> int:
+        return int(base.rsplit(":", 1)[1])
+
+    # ------ what must keep working ------
+
+    @pytest.mark.parametrize("path,marker", PROTECTED + PANE_FILES)
+    def test_served_to_a_plain_request(self, base, path, marker):
+        # curl, scripts and a browser's same-origin GET send no Origin.
+        status, _, body = _request(f"{base}{path}")
+        assert status == 200
+        assert marker in body
+
+    @pytest.mark.parametrize("path,marker", PROTECTED + PANE_FILES)
+    def test_served_to_own_origin(self, base, path, marker):
+        status, _, body = _request(f"{base}{path}", {"Origin": base})
+        assert status == 200
+        assert marker in body
+
+    @pytest.mark.parametrize("name", ["localhost", "LocalHost", "[::1]"])
+    def test_served_under_every_loopback_name(self, base, name):
+        # The pane opened as http://localhost:<port>/ instead of 127.0.0.1.
+        host = f"{name}:{self._port(base)}"
+        for path, marker in PROTECTED + PANE_FILES:
+            for headers in ({"Host": host}, {"Host": host, "Origin": f"http://{host}"}):
+                status, _, body = _request(f"{base}{path}", headers)
+                assert status == 200, (path, headers)
+                assert marker in body, (path, headers)
+
+    # ------ what must be refused ------
+
+    @pytest.mark.parametrize(
+        "origin",
+        [
+            FOREIGN_ORIGIN,
+            "null",  # sandboxed frame, file:// page
+            "",
+            "http://localhost:3000",  # another local app
+            "http://127.0.0.1",  # right name, port missing
+            "https://127.0.0.1:{port}",  # right name and port, other scheme
+            "http://localhost:{port}",  # this server, but not the name asked
+            "http://127.0.0.1:{port}.example.com",
+        ],
+    )
+    def test_foreign_origin_refused(self, base, origin):
+        origin = origin.format(port=self._port(base))
+        for path, marker in PROTECTED + PANE_FILES:
+            status, headers, body = _request(f"{base}{path}", {"Origin": origin})
+            assert status == 403, path
+            assert json.loads(body)["reason"] == "origin not allowed", path
+            assert marker not in body, path
+            assert _cors_headers(headers) == [], path
+
+    @pytest.mark.parametrize(
+        "host",
+        [
+            "attacker.example:{port}",  # DNS rebinding: foreign name, our port
+            "attacker.example",
+            "127.0.0.1.attacker.example:{port}",
+            "localhost.:{port}",
+            "127.0.0.1",  # port missing
+            "127.0.0.1:1",  # another port
+            "0.0.0.0:{port}",
+            "",
+        ],
+    )
+    def test_foreign_host_refused(self, base, host):
+        port = self._port(base)
+        host = host.format(port=port)
+        for path, marker in PROTECTED + PANE_FILES:
+            status, headers, body = _request(f"{base}{path}", {"Host": host})
+            assert status == 403, path
+            answer = json.loads(body)
+            assert answer["reason"] == "host not allowed", path
+            assert f"127.0.0.1:{port}" in answer["allowed_hosts"], path
+            assert marker not in body, path
+            assert _cors_headers(headers) == [], path
+
+    def test_foreign_host_refused_even_with_matching_origin(self, base):
+        # A rebound page is same-origin with itself; Host gives it away.
+        host = f"attacker.example:{self._port(base)}"
+        headers = {"Host": host, "Origin": f"http://{host}"}
+        status, _, body = _request(f"{base}/api/replay/sessions/abcd", headers)
+        assert status == 403
+        assert b"do thing" not in body
+
+    def test_missing_or_repeated_host_refused(self, base):
+        port = self._port(base)
+        own = f"Host: 127.0.0.1:{port}\r\n".encode()
+        for head in (b"", own + b"Host: attacker.example\r\n", own + own):
+            raw = _raw(port, b"GET /api/graph HTTP/1.1\r\n" + head + b"\r\n")
+            assert raw.split(b"\r\n", 1)[0].endswith(b"403 Forbidden"), head
+            assert b'"fx"' not in raw
+        # Control: the same bytes with exactly one good Host are served.
+        raw = _raw(port, b"GET /api/graph HTTP/1.1\r\n" + own + b"\r\n")
+        assert raw.split(b"\r\n", 1)[0].endswith(b"200 OK")
+        assert b'"fx"' in raw
+
+    @pytest.mark.parametrize("site", ["cross-site", "same-site", "Cross-Site", "bogus"])
+    def test_cross_site_fetch_refused_on_api(self, base, site):
+        # <script src>, <img>, fetch(mode="no-cors"), a link or a frame aimed at
+        # the API carry no Origin, but the browser says where they come from.
+        for path, marker in PROTECTED:
+            for mode in ("no-cors", "navigate"):
+                asked = {"Sec-Fetch-Site": site, "Sec-Fetch-Mode": mode}
+                status, headers, body = _request(f"{base}{path}", asked)
+                assert status == 403, (path, mode)
+                assert json.loads(body)["reason"] == "cross-site request"
+                assert marker not in body, (path, mode)
+                assert _cors_headers(headers) == [], (path, mode)
+
+    @pytest.mark.parametrize("site", ["same-origin", "none"])
+    def test_own_fetch_served(self, base, site):
+        # The pane's own requests, and an address the user typed.
+        for path, marker in PROTECTED + PANE_FILES:
+            status, _, body = _request(f"{base}{path}", {"Sec-Fetch-Site": site})
+            assert status == 200, path
+            assert marker in body, path
+
+    def test_pane_shell_opens_from_a_link_or_frame(self, base):
+        # Only the API is closed to other sites. The pane may be linked to or
+        # framed; once loaded, its own requests are same-origin.
+        asked = {"Sec-Fetch-Site": "cross-site", "Sec-Fetch-Mode": "navigate"}
+        for path, marker in PANE_FILES:
+            status, _, body = _request(f"{base}{path}", asked)
+            assert status == 200, path
+            assert marker in body, path
+
+    def test_refused_request_never_reaches_a_route(self, base, monkeypatch):
+        from codebase_map.mod import server as server_mod
+
+        called = []
+        monkeypatch.setattr(server_mod, "collect_status", called.append)
+        for headers in (
+            {"Origin": FOREIGN_ORIGIN},
+            {"Host": "attacker.example"},
+            {"Sec-Fetch-Site": "cross-site"},
+        ):
+            status, _, _ = _request(f"{base}/api/status", headers)
+            assert status == 403, headers
+        assert called == []
+
+    # ------ CORS is gone ------
+
+    def test_no_response_carries_cors_headers(self, base):
+        paths = [p for p, _ in PROTECTED + PANE_FILES]
+        paths += ["/api/health", "/api/snapshots/nope", "/api/snapshots/snap1/diff"]
+        paths += ["/api/replay/sessions/nope", "/no-such-path"]
+        for path in paths:
+            for method in ("GET", "OPTIONS"):
+                for origin in (None, base, FOREIGN_ORIGIN, "null"):
+                    headers = {} if origin is None else {"Origin": origin}
+                    _, got, _ = _request(f"{base}{path}", headers, method)
+                    assert _cors_headers(got) == [], (method, path, origin)
+
+    def test_options_is_not_a_cors_preflight_answer(self, base):
+        status, headers, body = _request(f"{base}/api/graph", method="OPTIONS")
+        assert status == 204
+        assert body == b""
+        assert headers["Allow"] == "GET, OPTIONS"
+        assert _cors_headers(headers) == []
+
+    def test_preflight_from_another_origin_refused(self, base):
+        asked = {"Origin": FOREIGN_ORIGIN, "Access-Control-Request-Method": "GET"}
+        status, headers, _ = _request(f"{base}/api/graph", asked, "OPTIONS")
+        assert status == 403
+        assert _cors_headers(headers) == []
+
+
+class TestAllowedHosts:
+    def test_loopback_names_with_the_bound_port(self):
+        assert allowed_hosts("127.0.0.1", 7430) == {
+            "127.0.0.1:7430",
+            "localhost:7430",
+            "[::1]:7430",
+        }
+
+    @pytest.mark.parametrize("bind", ["0.0.0.0", "::", ""])
+    def test_wildcard_bind_adds_no_name(self, bind):
+        assert allowed_hosts(bind, 7430) == allowed_hosts("127.0.0.1", 7430)
+
+    def test_specific_bind_address_is_served_too(self):
+        assert "192.168.1.5:7430" in allowed_hosts("192.168.1.5", 7430)
+        assert "[2001:db8::5]:7430" in allowed_hosts("2001:db8::5", 7430)
+        assert "192.168.1.5:7430" not in allowed_hosts("127.0.0.1", 7430)
+
+    def test_default_port_may_be_left_out(self):
+        assert {"localhost", "localhost:80"} <= allowed_hosts("127.0.0.1", 80)
+        assert "localhost" not in allowed_hosts("127.0.0.1", 7430)
